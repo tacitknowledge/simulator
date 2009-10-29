@@ -1,0 +1,17 @@
+<csv>
+	<row>
+		<value>yo</value>
+		<value>tu</value>
+		<value>el</value>
+		<value>nosotros</value>
+		<value>ustedes</value>
+		<value>ellos</value>
+	</row>
+	<row>
+		<value>hoy</value>
+		<value>mañana</value>
+		<value>ayer</value>
+		<value>pasado mañana</value>
+		<value>antier</value>
+	</row>
+</csv>

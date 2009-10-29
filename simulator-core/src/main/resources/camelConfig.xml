@@ -12,6 +12,8 @@
     </camel:camelContext>
 
     <bean id="addTimestampToMessage" class="com.tacitknowledge.simulator.processors.AddTimeStampToMessage"/>
+    <bean id="csvFileToPojo" class="com.tacitknowledge.simulator.processors.CsvFileToPojo"/>
+    <bean id="csvPojoToXml" class="com.tacitknowledge.simulator.processors.CsvPojoToXml"/>
 
     <bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">
         <property name="brokerURL" value="tcp://localhost:61616"/>

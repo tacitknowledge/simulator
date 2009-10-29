@@ -1,25 +1,13 @@
 package com.tacitknowledge.simulator.test;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.apache.camel.spring.SpringCamelContext;
-
 import java.util.List;
 import java.util.ArrayList;
-
-import org.apache.camel.ContextTestSupport;
-import org.apache.camel.CamelContext;
 
 import com.tacitknowledge.simulator.DynamicRouteBuilder;
 import com.tacitknowledge.simulator.common.SimulatorConstants;
 
 
-import javax.jms.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.io.*;
-
-import junit.framework.TestCase;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,33 +16,13 @@ import junit.framework.TestCase;
  * Time: 10:21:42 AM
  * To change this template use File | Settings | File Templates.
  */
-public class DynamicRouteBuilderTest extends TestCase {
-    private final static String RESOURCES_FOLDER = "simulator-core/src/main/resources/";
-    private final static String SOURCE_FOLDER = "original_files/";
-    private final static String INBOX_FOLDER = "inbox/";
-    private final static String OUTBOX_FOLDER = "outbox";
-
+public class DynamicRouteBuilderTest extends SimulatorTestBase {
     private final static String PLAIN_TEXT_FILE_NAME = "plain-text-test";
     private final static String LOG_FILE_NAME = "log";
 
-    private CamelContext context;
-
-    @Override
-    protected void setUp() throws Exception {
-        ApplicationContext appContext = new ClassPathXmlApplicationContext(SimulatorConstants.SPRING_CAMEL_CONFIG_FILE);
-        context = new SpringCamelContext(appContext);
-        context.start();
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-        context.stop();
-    }
-
     public void testNewSimpleRoute() {
         // --- First, create new route on the fly
-        DynamicRouteBuilder builder = new DynamicRouteBuilder(context);
+        DynamicRouteBuilder builder = new DynamicRouteBuilder(getContext());
 
         String logFilePath = RESOURCES_FOLDER + OUTBOX_FOLDER;
         String logFileName = LOG_FILE_NAME + SimulatorConstants.EXT_PLAIN_TEXT;
@@ -107,32 +75,6 @@ public class DynamicRouteBuilderTest extends TestCase {
             assertTrue("Log file should have something at least!", logFile.length() > 0);
             
             System.out.println("Finished");
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void copyFile(File origFile, File copiedFile) {
-        try {
-            // Sleep for a couple seconds
-            Thread.sleep(2 * 2000);
-
-            // --- Make sure file1 exists
-            if (!origFile.exists()) {
-                throw new Exception("Original file must exist: " + origFile.getAbsolutePath());
-            }
-
-            InputStream in = new FileInputStream(origFile);
-            OutputStream out = new FileOutputStream(copiedFile);
-
-            byte[] buf = new byte[1024];
-            int len;
-            while ((len = in.read(buf)) > 0) {
-                out.write(buf, 0, len);
-            }
-            in.close();
-            out.close();
-            System.out.println("File copied into " + copiedFile.getAbsolutePath());
         } catch(Exception e) {
             e.printStackTrace();
         }
