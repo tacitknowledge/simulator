@@ -9,8 +9,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.tacitknowledge.simulator</groupId>
     <artifactId>web-ui</artifactId>
-    <version>1.0</version>
-    <packaging>war</packaging>
+    <packaging>pom</packaging>
     <properties>
         <rubyapp.dir>src/main/rubyapp</rubyapp.dir>
         <rubyapp.target.war>${rubyapp.dir}/rubyapp.war</rubyapp.target.war>
@@ -86,5 +85,4 @@
             <version>${project.version}</version>
         </dependency>
     </dependencies>
-
 </project>
