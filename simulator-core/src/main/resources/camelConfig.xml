@@ -15,14 +15,14 @@
     <bean id="csvFileToPojo" class="com.tacitknowledge.simulator.processors.CsvFileToPojo"/>
     <bean id="csvPojoToXml" class="com.tacitknowledge.simulator.processors.CsvPojoToXml"/>
 
-    <bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">
-        <property name="brokerURL" value="tcp://localhost:61616"/>
-    </bean>
+    <!--<bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">-->
+        <!--<property name="brokerURL" value="tcp://localhost:61616"/>-->
+    <!--</bean>-->
 
     <!-- lets configure the ActiveMQ JMS broker server to listen on TCP 61616 -->
-    <broker:broker useJmx="false" persistent="false"  brokerName="localhost">
-        <broker:transportConnectors>
-            <broker:transportConnector  name="tcp" uri="tcp://localhost:61616"/>
-        </broker:transportConnectors>
-    </broker:broker>
+    <!--<broker:broker useJmx="false" persistent="false"  brokerName="localhost">-->
+        <!--<broker:transportConnectors>-->
+            <!--<broker:transportConnector  name="tcp" uri="tcp://localhost:61616"/>-->
+        <!--</broker:transportConnectors>-->
+    <!--</broker:broker>-->
 </beans>

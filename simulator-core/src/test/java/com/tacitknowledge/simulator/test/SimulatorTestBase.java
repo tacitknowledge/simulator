@@ -17,7 +17,7 @@ import java.io.*;
  * To change this template use File | Settings | File Templates.
  */
 public class SimulatorTestBase extends TestCase {
-    protected final static String RESOURCES_FOLDER = "simulator-core/src/main/resources/";
+    protected final static String RESOURCES_FOLDER = "src/main/resources/";
     protected final static String SOURCE_FOLDER = "original_files/";
     protected final static String INBOX_FOLDER = "inbox/";
     protected final static String OUTBOX_FOLDER = "outbox";    
