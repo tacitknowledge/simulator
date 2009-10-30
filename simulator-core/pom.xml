@@ -28,7 +28,7 @@
                 <executions>
                 	<execution>
 			            <id>copy-installed</id>
-			            <phase>install</phase>
+			            <phase>package</phase>
 			            <goals>
 			              <goal>copy</goal>
 			            </goals>
