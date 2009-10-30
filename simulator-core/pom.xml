@@ -26,25 +26,25 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
-                	<execution>
-			            <id>copy-installed</id>
-			            <phase>package</phase>
-			            <goals>
-			              <goal>copy</goal>
-			            </goals>
-			            <configuration>
-			              <artifactItems>
-			                <artifactItem>
-			                  <groupId>${project.groupId}</groupId>
-			                  <artifactId>${project.artifactId}</artifactId>
-			                  <version>${project.version}</version>
-			                  <type>${project.packaging}</type>
-			                </artifactItem>
-			              </artifactItems>
-			              <outputDirectory>${lib.output.directory}</outputDirectory>
-			            </configuration>
-			        </execution>
-                	
+                    <execution>
+                        <id>copy-installed</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>${project.groupId}</groupId>
+                                    <artifactId>${project.artifactId}</artifactId>
+                                    <version>${project.version}</version>
+                                    <type>${project.packaging}</type>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>${lib.output.directory}</outputDirectory>
+                        </configuration>
+                    </execution>
+
                     <execution>
                         <id>copy-dependencies</id>
                         <phase>package</phase>
@@ -60,6 +60,19 @@
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
     </build>
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>2.3</version>
+                <configuration>
+                    <configLocation>config/checkstyle-config.xml</configLocation>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
 </project>
