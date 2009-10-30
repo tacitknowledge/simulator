@@ -6,6 +6,7 @@
         <artifactId>simulator</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
+    <name>Simulator User Interface</name>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.tacitknowledge.simulator</groupId>
     <artifactId>web-ui</artifactId>
@@ -22,7 +23,7 @@
                 <executions>
                     <execution>
                         <id>build</id>
-                        <phase>install</phase>
+                        <phase>package</phase>
                         <configuration>
                             <tasks>
                                 <exec executable="${jruby.home}/bin/warble"  dir="${rubyapp.dir}">
