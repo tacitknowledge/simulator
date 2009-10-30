@@ -12,9 +12,47 @@
     <artifactId>web-ui</artifactId>
     <packaging>pom</packaging>
     <properties>
-        <rubyapp.dir>src/main/rubyapp</rubyapp.dir>
-        <rubyapp.target.war>${rubyapp.dir}/rubyapp.war</rubyapp.target.war>
+    	<app.name>rubyapp</app.name>
+        <rubyapp.dir>src/main/${app.name}</rubyapp.dir>
+        <rubyapp.target.war>${rubyapp.dir}/${app.name}.war</rubyapp.target.war>
+        <tomcat.manager.url>http://localhost:8080/manager/html</tomcat.manager.url>
+        <tomcat.manager.deploy.url>${tomcat.manager.url}/upload</tomcat.manager.deploy.url>
+        <tomcat.manager.undeploy.url>${tomcat.manager.url}/undeploy?path=/${app.name}</tomcat.manager.undeploy.url>
     </properties>
+    
+    <profiles>
+    	<profile>
+    		<id>simulator-deploy</id>
+    		<build>
+	        	<plugins>
+			      <plugin>
+			        <groupId>org.codehaus.mojo</groupId>
+			        <artifactId>exec-maven-plugin</artifactId>
+			        <executions>
+			          <execution>
+			            <id>deploy-to-tomcat-using-curl</id>
+			            <phase>package</phase>
+			            <configuration>
+			              <executable>/bin/sh</executable>
+			              <workingDirectory>.</workingDirectory>
+			              <arguments>
+			                <argument>-c</argument>
+			                <argument>
+			                	curl -o /dev/null ${tomcat.manager.undeploy.url} -u both:tomcat
+			                    curl -o /dev/null -F deployWar=@${rubyapp.target.war} ${tomcat.manager.deploy.url} -u both:tomcat
+			                </argument>
+			              </arguments>
+			            </configuration>
+			            <goals>
+			              <goal>exec</goal>
+			            </goals>
+			          </execution>
+			        </executions>
+			      </plugin>
+			     </plugins>
+		    </build>
+    	</profile>
+    </profiles>
 
     <build>
         <plugins>
