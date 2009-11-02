@@ -7,6 +7,17 @@ RAILS_GEM_VERSION = '2.3.4' unless defined? RAILS_GEM_VERSION
 require File.join(File.dirname(__FILE__), 'boot')
 
 Rails::Initializer.run do |config|
+
+  class SimulatorLogger < Logger
+  Format = "[%s#%d]%5s|%s: %s\n"
+    def format_message(severity, timestamp, prog, message)
+        formatted_time = timestamp.strftime('%y%m%d %H:%M:%S')
+        Format % [formatted_time, $$, severity, prog, message]
+    end
+  end
+    
+  config.logger = SimulatorLogger.new "#{RAILS_ROOT}/log/#{RAILS_ENV}.log"
+    
   # Settings in config/environments/* take precedence over those specified here.
   # Application configuration should go into files in config/initializers
   # -- all .rb files in that directory are automatically loaded.

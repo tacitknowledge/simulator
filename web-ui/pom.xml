@@ -60,12 +60,31 @@
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>build</id>
+                        <id>create-war-file</id>
                         <phase>package</phase>
                         <configuration>
                             <tasks>
                                 <exec executable="${jruby.home}/bin/warble"  dir="${rubyapp.dir}">
                                     <arg value="war"/>
+                                </exec>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>checkstyle-ruby</id>
+                        <phase>site</phase>
+                        <configuration>
+                            <tasks>
+                                <exec executable="${jruby.home}/bin/roodi"  dir="${rubyapp.dir}">
+                                    <arg value="rails_app/**/*.rb"/>
                                 </exec>
                             </tasks>
                         </configuration>
@@ -105,7 +124,7 @@
 								<goal>install-gems</goal>
 							</goals>
 							<configuration>
-								<gems>warbler,rails</gems>
+								<gems>warbler, rails, roodi</gems>
 							</configuration>
 					</execution>
 				</executions>
