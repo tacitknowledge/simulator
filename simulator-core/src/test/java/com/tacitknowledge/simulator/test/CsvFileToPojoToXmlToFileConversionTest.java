@@ -8,11 +8,9 @@ import java.util.ArrayList;
 import java.io.File;
 
 /**
- * Created by IntelliJ IDEA.
- * User: galo
- * Date: Oct 29, 2009
- * Time: 10:45:52 AM
- * To change this template use File | Settings | File Templates.
+ *
+ *
+ * @author galo
  */
 public class CsvFileToPojoToXmlToFileConversionTest extends SimulatorTestBase {
     private final static String CSV_FILE_NAME = "csv-test";

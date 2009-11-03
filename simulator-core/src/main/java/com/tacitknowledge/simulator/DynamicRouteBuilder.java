@@ -9,11 +9,9 @@ import org.apache.camel.builder.RouteBuilder;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
- * User: galo
- * Date: Oct 28, 2009
- * Time: 9:40:09 AM
- * To change this template use File | Settings | File Templates.
+ *
+ *
+ * @author galo
  */
 public class DynamicRouteBuilder extends RouteBuilder {
     /**

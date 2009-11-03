@@ -4,11 +4,9 @@ import java.util.Date;
 import java.io.File;
 
 /**
- * Created by IntelliJ IDEA.
- * User: galo
- * Date: Oct 28, 2009
- * Time: 2:24:28 PM
- * To change this template use File | Settings | File Templates.
+ *
+ *
+ * @author galo
  */
 public class AddTimeStampToMessage {
     public String addTimestampToMessage(String body) {

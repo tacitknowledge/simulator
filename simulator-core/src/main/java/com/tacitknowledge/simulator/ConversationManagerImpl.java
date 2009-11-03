@@ -1,12 +1,36 @@
 package com.tacitknowledge.simulator;
 
-/**
- * Created by IntelliJ IDEA.
- * User: galo
- * Date: Nov 3, 2009
- * Time: 10:14:55 AM
- * To change this template use File | Settings | File Templates.
- */
-public class ConversationManagerImpl {
+import com.tacitknowledge.simulator.adapters.AdapterFactory;
+import com.tacitknowledge.simulator.adapters.Adapter;
 
+/**
+ * @author galo
+ */
+public class ConversationManagerImpl implements ConversationManager {
+
+    private static ConversationManager instance = new ConversationManagerImpl();
+
+    public static ConversationManager getInstance() {
+        return instance;
+    }
+
+    public Conversation createConversation(Transport inboundTransport, Transport outboundTransport, String inboundFormat, String outboundFormat) throws UnsupportedFormatException {
+        Adapter inAdapter = AdapterFactory.getAdapter(inboundFormat);
+        Adapter outAdapter = AdapterFactory.getAdapter(inboundFormat);
+         if(inAdapter==null||outAdapter==null) throw new UnsupportedFormatException();
+
+        return new Conversation(inboundTransport, outboundTransport, inAdapter, outAdapter);
+    }
+
+    public void createConversationScenario(int conversationId, String language, String criteria, String transformation) {
+
+    }
+
+    public void activate(int conversationId) {
+
+    }
+
+    public void deactivate(int conversationId) {
+
+    }
 }

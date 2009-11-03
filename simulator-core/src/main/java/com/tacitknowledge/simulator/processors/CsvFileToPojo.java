@@ -8,11 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
- * User: galo
- * Date: Oct 29, 2009
- * Time: 9:25:56 AM
- * To change this template use File | Settings | File Templates.
+ *
+ *
+ * @author galo
  */
 public class CsvFileToPojo {
     public CsvPojo csvFileToPojo(File body) {

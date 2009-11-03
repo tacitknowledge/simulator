@@ -10,11 +10,9 @@ import com.tacitknowledge.simulator.common.SimulatorConstants;
 import java.io.*;
 
 /**
- * Created by IntelliJ IDEA.
- * User: galo
- * Date: Oct 29, 2009
- * Time: 10:39:57 AM
- * To change this template use File | Settings | File Templates.
+ *
+ *
+ * @author galo
  */
 public class SimulatorTestBase extends TestCase {
     protected final static String RESOURCES_FOLDER = "src/main/resources/";

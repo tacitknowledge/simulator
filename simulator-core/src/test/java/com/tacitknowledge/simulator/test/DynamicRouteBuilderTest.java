@@ -10,11 +10,9 @@ import com.tacitknowledge.simulator.common.SimulatorConstants;
 import java.io.*;
 
 /**
- * Created by IntelliJ IDEA.
- * User: galo
- * Date: Oct 28, 2009
- * Time: 10:21:42 AM
- * To change this template use File | Settings | File Templates.
+ *
+ *
+ * @author galo
  */
 public class DynamicRouteBuilderTest extends SimulatorTestBase {
     private final static String PLAIN_TEXT_FILE_NAME = "plain-text-test";

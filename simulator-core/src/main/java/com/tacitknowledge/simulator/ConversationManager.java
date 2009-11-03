@@ -16,8 +16,8 @@ public interface ConversationManager {
      * @param outboundFormat
      * @return
      */
-    public void createConversation(
-            Transport inboundTransport, Transport outboundTransport, String inboundFormat, String outboundFormat);
+    public Conversation createConversation(
+            Transport inboundTransport, Transport outboundTransport, String inboundFormat, String outboundFormat) throws UnsupportedFormatException;
 
     /**
      * Creates a new scenario for an existing conversation

@@ -1,11 +1,9 @@
 package com.tacitknowledge.simulator.common;
 
 /**
- * Created by IntelliJ IDEA.
- * User: galo
- * Date: Oct 28, 2009
- * Time: 2:47:38 PM
- * To change this template use File | Settings | File Templates.
+ *
+ *
+ * @author galo
  */
 public class SimulatorConstants {
     /**

@@ -5,11 +5,9 @@ import com.tacitknowledge.simulator.pojos.CsvPojo;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
- * User: galo
- * Date: Oct 29, 2009
- * Time: 12:36:39 PM
- * To change this template use File | Settings | File Templates.
+ *
+ *
+ * @author galo
  */
 public class CsvPojoToXml {
     private final static String LB = System.getProperty("line.separator");

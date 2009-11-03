@@ -32,7 +32,34 @@ public class Conversation {
      */
     private List<ConversationScenario> scenarios;
 
-    public void createScenario(String language, String criteria, String transformation) {
+    Conversation(Transport entryTransport, Transport exitTransport, Adapter entryAdapter, Adapter exitAdapter) {
+        this.entryTransport = entryTransport;
+        this.exitTransport = exitTransport;
+        this.entryAdapter = entryAdapter;
+        this.exitAdapter = exitAdapter;
+    }
 
+    public ConversationScenario addScenario(String language, String criteria, String transformation) {
+       return null;
+    }
+
+    public Transport getEntryTransport() {
+        return entryTransport;
+    }
+
+    public Transport getExitTransport() {
+        return exitTransport;
+    }
+
+    public Adapter getEntryAdapter() {
+        return entryAdapter;
+    }
+
+    public Adapter getExitAdapter() {
+        return exitAdapter;
+    }
+
+    public List<ConversationScenario> getScenarios() {
+        return scenarios;
     }
 }

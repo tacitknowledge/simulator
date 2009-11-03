@@ -5,11 +5,9 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 /**
- * Created by IntelliJ IDEA.
- * User: galo
- * Date: Nov 3, 2009
- * Time: 9:57:17 AM
- * To change this template use File | Settings | File Templates.
+ *
+ *
+ * @author galo
  */
 public class StructuredSimulatorPojo implements SimulatorPojo {
     private Map root;
