@@ -2,9 +2,8 @@ package com.tacitknowledge.simulator;
 
 
 import org.apache.camel.CamelContext;
-import org.apache.camel.Route;
-import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.model.RouteDefinition;
 
 import java.util.List;
 
@@ -13,7 +12,7 @@ import java.util.List;
  *
  * @author galo
  */
-public class DynamicRouteBuilder extends RouteBuilder {
+ class DynamicRouteBuilder extends RouteBuilder {
     /**
      *
      * @param context The CamelContext to which the newly created routes will be added to.

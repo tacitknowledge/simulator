@@ -1,7 +1,6 @@
-package com.tacitknowledge.simulator.processors;
+package com.tacitknowledge.simulator.test;
 
 import java.util.Date;
-import java.io.File;
 
 /**
  *

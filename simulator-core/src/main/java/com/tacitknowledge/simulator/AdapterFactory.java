@@ -1,14 +1,15 @@
-package com.tacitknowledge.simulator.adapters;
+package com.tacitknowledge.simulator;
 
-import com.tacitknowledge.simulator.FormatConstants;
+import com.tacitknowledge.simulator.formats.XmlAdapter;
+import com.tacitknowledge.simulator.formats.JsonAdapter;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author galo
  */
-public class AdapterFactory {
+ class AdapterFactory {
     private static Map<String, Adapter> adapters = new HashMap<String, Adapter>(){{
         put(FormatConstants.JSON, new JsonAdapter());
         put(FormatConstants.XML, new XmlAdapter());

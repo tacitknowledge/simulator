@@ -1,6 +1,7 @@
-package com.tacitknowledge.simulator.adapters;
+package com.tacitknowledge.simulator.formats;
 
-import com.tacitknowledge.simulator.pojos.SimulatorPojo;
+import com.tacitknowledge.simulator.Adapter;
+import com.tacitknowledge.simulator.SimulatorPojo;
 
 /**
  * @author galo

@@ -1,6 +1,4 @@
-package com.tacitknowledge.simulator.adapters;
-
-import com.tacitknowledge.simulator.pojos.SimulatorPojo;
+package com.tacitknowledge.simulator;
 
 /**
  * A format converter.

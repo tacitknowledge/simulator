@@ -1,7 +1,5 @@
 package com.tacitknowledge.simulator;
 
-import com.tacitknowledge.simulator.adapters.Adapter;
-
 import java.util.List;
 
 /**

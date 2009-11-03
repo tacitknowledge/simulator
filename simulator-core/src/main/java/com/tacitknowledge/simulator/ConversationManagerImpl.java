@@ -1,8 +1,5 @@
 package com.tacitknowledge.simulator;
 
-import com.tacitknowledge.simulator.adapters.AdapterFactory;
-import com.tacitknowledge.simulator.adapters.Adapter;
-
 /**
  * @author galo
  */

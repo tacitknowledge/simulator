@@ -1,6 +1,6 @@
-package com.tacitknowledge.simulator.processors;
+package com.tacitknowledge.simulator.test;
 
-import com.tacitknowledge.simulator.pojos.CsvPojo;
+import com.tacitknowledge.simulator.test.CsvPojo;
 
 import java.util.List;
 

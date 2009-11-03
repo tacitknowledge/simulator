@@ -1,4 +1,4 @@
-package com.tacitknowledge.simulator.common;
+package com.tacitknowledge.simulator.test;
 
 /**
  *

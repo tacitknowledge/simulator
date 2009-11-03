@@ -1,9 +1,5 @@
 package com.tacitknowledge.simulator;
 
-import com.tacitknowledge.simulator.pojos.SimulatorPojo;
-
-import java.util.Map;
-
 /**
  * @author galo
  */

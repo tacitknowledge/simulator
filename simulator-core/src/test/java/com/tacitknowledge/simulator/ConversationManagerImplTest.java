@@ -50,18 +50,18 @@ public class ConversationManagerImplTest  {
          assertNull(conversation);
 
     }
-    @Test
-    public void testCreateConversationScenario() {
-         fail();
-    }
-
-    @Test
-    public void testActivate() {
-        fail();
-    }
-
-    @Test
-    public void testDeactivate() {
-        fail();
-    }
+//    @Test
+//    public void testCreateConversationScenario() {
+//         fail();
+//    }
+//
+//    @Test
+//    public void testActivate() {
+//        fail();
+//    }
+//
+//    @Test
+//    public void testDeactivate() {
+//        fail();
+//    }
 }

@@ -1,4 +1,4 @@
-package com.tacitknowledge.simulator.pojos;
+package com.tacitknowledge.simulator.test;
 
 /**
  *
