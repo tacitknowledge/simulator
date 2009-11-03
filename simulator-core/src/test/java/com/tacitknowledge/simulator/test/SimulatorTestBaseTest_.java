@@ -10,11 +10,10 @@ package com.tacitknowledge.simulator.test;
 //import java.io.*;
 
 /**
- *
- *
- * @author galo
+ * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class SimulatorTestBaseTest_ /* extends TestCase */{
+public class SimulatorTestBaseTest_ /* extends TestCase */
+{
 //    protected final static String RESOURCES_FOLDER = "src/main/resources/";
 //    protected final static String SOURCE_FOLDER = "original_files/";
 //    protected final static String INBOX_FOLDER = "inbox/";

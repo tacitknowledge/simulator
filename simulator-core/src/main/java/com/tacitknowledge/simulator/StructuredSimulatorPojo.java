@@ -5,32 +5,34 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 /**
- *
- *
- * @author galo
+ * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class StructuredSimulatorPojo implements SimulatorPojo {
+public class StructuredSimulatorPojo implements SimulatorPojo
+{
     private Map root;
 
-    public StructuredSimulatorPojo() {
+    public StructuredSimulatorPojo()
+    {
         root = new HashMap();
     }
 
     /**
-     *
      * @param name The full-path to the attribute to return. e.g.: order.shippinginfo.address1
      * @return
      */
-    public String getAttribute(String name) {
+    public String getAttribute(String name)
+    {
         String attr = null;
 
         // --- 
         StringTokenizer st = new StringTokenizer(name, ".");
-        while (st.hasMoreTokens()) {
+        while (st.hasMoreTokens())
+        {
             String token = st.nextToken();
             Object tmpObj = root;
 
-            if (tmpObj instanceof Map) {
+            if (tmpObj instanceof Map)
+            {
 
             }
 

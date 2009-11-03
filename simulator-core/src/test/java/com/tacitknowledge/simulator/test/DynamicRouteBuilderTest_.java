@@ -10,11 +10,10 @@ package com.tacitknowledge.simulator.test;
 //import java.io.*;
 
 /**
- *
- *
- * @author galo
+ * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class DynamicRouteBuilderTest_ /*extends SimulatorTestBaseTest_*/ {
+public class DynamicRouteBuilderTest_ /*extends SimulatorTestBaseTest_*/
+{
 //    private final static String PLAIN_TEXT_FILE_NAME = "plain-text-test";
 //    private final static String LOG_FILE_NAME = "log";
 //

@@ -5,11 +5,13 @@ import java.util.List;
 /**
  * The Simulator conversation as set up by the user.
  * Works as a wrapper arround Camel route definition for entry and exit endpoints.
- * @author galo
+ *
+ * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class Conversation {
+public class Conversation
+{
     /**
-     * 
+     *
      */
     private Transport entryTransport;
     /**
@@ -30,34 +32,41 @@ public class Conversation {
      */
     private List<ConversationScenario> scenarios;
 
-    Conversation(Transport entryTransport, Transport exitTransport, Adapter entryAdapter, Adapter exitAdapter) {
+    Conversation(Transport entryTransport, Transport exitTransport, Adapter entryAdapter, Adapter exitAdapter)
+    {
         this.entryTransport = entryTransport;
         this.exitTransport = exitTransport;
         this.entryAdapter = entryAdapter;
         this.exitAdapter = exitAdapter;
     }
 
-    public ConversationScenario addScenario(String language, String criteria, String transformation) {
-       return null;
+    public ConversationScenario addScenario(String language, String criteria, String transformation)
+    {
+        return null;
     }
 
-    public Transport getEntryTransport() {
+    public Transport getEntryTransport()
+    {
         return entryTransport;
     }
 
-    public Transport getExitTransport() {
+    public Transport getExitTransport()
+    {
         return exitTransport;
     }
 
-    public Adapter getEntryAdapter() {
+    public Adapter getEntryAdapter()
+    {
         return entryAdapter;
     }
 
-    public Adapter getExitAdapter() {
+    public Adapter getExitAdapter()
+    {
         return exitAdapter;
     }
 
-    public List<ConversationScenario> getScenarios() {
+    public List<ConversationScenario> getScenarios()
+    {
         return scenarios;
     }
 }

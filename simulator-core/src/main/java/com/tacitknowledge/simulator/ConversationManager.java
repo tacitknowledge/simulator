@@ -1,11 +1,13 @@
 package com.tacitknowledge.simulator;
 
 /**
- * @author galo
+ * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public interface ConversationManager {
+public interface ConversationManager
+{
     /**
      * Creates a new Conversation from the provided transports and formats
+     *
      * @param inboundTransport
      * @param outboundTransport
      * @param inboundFormat
@@ -17,21 +19,20 @@ public interface ConversationManager {
 
     /**
      * Creates a new scenario for an existing conversation
+     *
      * @param conversationId
-     * @param language The scripting language for the scenario. This would be System wide.
-     * @param criteria The criteria script
+     * @param language       The scripting language for the scenario. This would be System wide.
+     * @param criteria       The criteria script
      * @param transformation The transformation script
      */
     void createConversationScenario(int conversationId, String language, String criteria, String transformation);
 
     /**
-     * 
      * @param conversationId
      */
     void activate(int conversationId);
 
     /**
-     * 
      * @param conversationId
      */
     void deactivate(int conversationId);

@@ -8,11 +8,10 @@ package com.tacitknowledge.simulator.test;
 //import java.io.File;
 
 /**
- *
- *
- * @author galo
+ * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class CsvFileToPojoToXmlToFileConversionTest_ /*extends SimulatorTestBaseTest_ */{
+public class CsvFileToPojoToXmlToFileConversionTest_ /*extends SimulatorTestBaseTest_ */
+{
 //    private final static String CSV_FILE_NAME = "csv-test";
 //
 //    public void testCsvFileToPojoToLogFile() {

@@ -1,10 +1,9 @@
 package com.tacitknowledge.simulator;
 
 /**
- *
- *
- * @author galo
+ * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public interface SimulatorPojo {
+public interface SimulatorPojo
+{
     public String getAttribute(String name);
 }

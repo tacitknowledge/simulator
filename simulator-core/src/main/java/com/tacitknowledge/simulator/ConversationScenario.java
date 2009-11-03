@@ -1,9 +1,10 @@
 package com.tacitknowledge.simulator;
 
 /**
- * @author galo
+ * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class ConversationScenario {
+public class ConversationScenario
+{
     /**
      * The scripting language used for this conversation's scenarios
      */
@@ -20,23 +21,23 @@ public class ConversationScenario {
     private String transformationScript;
 
     /**
-     * 
      * @param scriptLanguage
      * @param criteriaScript
      * @param transformationScript
      */
-    public ConversationScenario(String scriptLanguage, String criteriaScript, String transformationScript) {
+    public ConversationScenario(String scriptLanguage, String criteriaScript, String transformationScript)
+    {
         this.scriptLanguage = scriptLanguage;
         this.criteriaScript = criteriaScript;
         this.transformationScript = transformationScript;
     }
 
     /**
-     *
      * @param pojo The scenario entry data
      * @return
      */
-    public Object run(SimulatorPojo pojo) {
-        return null;  
+    public Object run(SimulatorPojo pojo)
+    {
+        return null;
     }
 }

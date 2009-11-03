@@ -1,9 +1,8 @@
 package com.tacitknowledge.simulator.test;
 
 /**
- *
- *
- * @author galo
+ * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class MapPojo {
+public class MapPojo
+{
 }

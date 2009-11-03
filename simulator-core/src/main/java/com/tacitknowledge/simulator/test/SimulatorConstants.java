@@ -1,11 +1,10 @@
 package com.tacitknowledge.simulator.test;
 
 /**
- *
- *
- * @author galo
+ * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class SimulatorConstants {
+public class SimulatorConstants
+{
     /**
      * Default Spring/Camel configuration file
      */

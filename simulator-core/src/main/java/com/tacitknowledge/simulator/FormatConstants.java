@@ -1,9 +1,10 @@
 package com.tacitknowledge.simulator;
 
 /**
- * @author galo
+ * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public interface FormatConstants {
-    public static final String JSON="JSON";
-    public static final String XML="XML";
+public interface FormatConstants
+{
+    public static final String JSON = "JSON";
+    public static final String XML = "XML";
 }

@@ -1,7 +1,8 @@
 package com.tacitknowledge.simulator;
 
 /**
- * @author galo
+ * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class UnsupportedFormatException extends Exception {
+public class UnsupportedFormatException extends Exception
+{
 }

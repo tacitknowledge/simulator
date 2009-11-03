@@ -1,11 +1,13 @@
 package com.tacitknowledge.simulator;
 
 /**
- * @author galo
+ * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class ConversationFactory {
+public class ConversationFactory
+{
     /**
      * Creates a new Conversation from the given transports and adapters.
+     *
      * @param inboundTransport
      * @param outboundTransport
      * @param inboundAdapter
@@ -13,7 +15,8 @@ public class ConversationFactory {
      * @return
      */
     public Conversation createConversation(
-            Transport inboundTransport, Transport outboundTransport, Adapter inboundAdapter, Adapter outboundAdapter) {
+            Transport inboundTransport, Transport outboundTransport, Adapter inboundAdapter, Adapter outboundAdapter)
+    {
         return null;
     }
 }
