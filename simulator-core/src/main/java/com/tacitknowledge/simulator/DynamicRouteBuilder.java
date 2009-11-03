@@ -47,4 +47,12 @@ public class DynamicRouteBuilder extends RouteBuilder {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Generates and registers a new Camel Route to the current CamelContext based in the provided Conversation
+     * @param conversation The Conversarion to be registered as a CamelRoute
+     */
+    public void buildRoute(Conversation conversation) {
+        
+    }
 }

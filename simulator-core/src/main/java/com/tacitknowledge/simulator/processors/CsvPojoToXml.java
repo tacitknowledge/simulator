@@ -20,7 +20,7 @@ public class CsvPojoToXml {
     private final static String VALUE_END_TAG = "</value>";
 
     public String csvPojoToXml(CsvPojo body) {
-        System.out.println("*** Starting processing of CSV Pojo with " + body.getRows().size() + " rows");
+        System.out.println("*** Starting processing of CSV SimulatorPojo with " + body.getRows().size() + " rows");
         StringBuilder sb = new StringBuilder("<csv>" + LB);
 
         for (List<String> row : body.getRows()) {
