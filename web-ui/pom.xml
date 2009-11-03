@@ -84,7 +84,7 @@
                         <configuration>
                             <tasks>
                                 <exec executable="${jruby.home}/bin/roodi"  dir="${rubyapp.dir}">
-                                    <arg value="rails_app/**/*.rb"/>
+                                    <arg value="${rubyapp.dir}/**/*.rb"/>
                                 </exec>
                             </tasks>
                         </configuration>
@@ -124,7 +124,7 @@
 								<goal>install-gems</goal>
 							</goals>
 							<configuration>
-								<gems>warbler, rails, roodi</gems>
+								<gems>--version 0.9.14 warbler, --version 2.3.4 rails, --version 2.0.0 roodi</gems>
 							</configuration>
 					</execution>
 				</executions>
