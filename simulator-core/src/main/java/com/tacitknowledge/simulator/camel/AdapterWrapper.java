@@ -6,8 +6,7 @@ import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 
 /**
- * Wrapper for the Adapter implementations.
- * Overcomes the need for the adapter to be camel aware. 
+ * Wrapper for the Adapter implementations. Overcomes the need for the adapter to be camel aware.
  *
  * @author Nikita Belenkiy (nbelenkiy@tacitknowledge.com)
  * @author Alexandru Dereveanco (adereveanco@tacitknowledge.com)
@@ -20,11 +19,13 @@ public class AdapterWrapper implements Processor
     /**
      * Logger for the AdapterWrapper class.
      */
-    public static final Logger logger= Logger.getLogger(AdapterWrapper.class);
+    private static final Logger logger = Logger.getLogger(AdapterWrapper.class);
 
     /**
      * Constructor for the AdapterWrapper class
-     * @param adapter the adapter to be wrapped.
+     *
+     * @param adapter
+     *            the adapter to be wrapped.
      */
     public AdapterWrapper(Adapter adapter)
     {
@@ -33,7 +34,10 @@ public class AdapterWrapper implements Processor
 
     /**
      * Processes the exchange object received in the camel route.
-     * @param exchange object of data used in camel routes.
+     *
+     * @param exchange
+     *            object of data used in camel routes.
+     * @throws Exception in case of an error
      */
     public void process(Exchange exchange) throws Exception
     {

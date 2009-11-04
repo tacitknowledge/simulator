@@ -1,6 +1,5 @@
 package com.tacitknowledge.simulator.camel;
 
-
 import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.Conversation;
 import org.apache.camel.CamelContext;
@@ -26,16 +25,17 @@ public class RouteManager extends RouteBuilder
     private static Logger logger = Logger.getLogger(RouteManager.class);
 
     /**
-     * Container for the routes inside the current camel context.
-     * Used for activation and deactivation of the routes.
+     * Container for the routes inside the current camel context. Used for activation and
+     * deactivation of the routes.
      */
-    private Map<Conversation, RouteDefinition> convRoutes = new HashMap<Conversation, RouteDefinition>();
+    private Map<Conversation, RouteDefinition> convRoutes
+                                    = new HashMap<Conversation, RouteDefinition>();
 
     /**
-     * Constructor for the RouteManager.
-     * Will create a new camel context and starts it.
+     * Constructor for the RouteManager. Will create a new camel context and starts it.
      *
-     * @throws Exception in case of an error.
+     * @throws Exception
+     *             in case of an error.
      */
     public RouteManager() throws Exception
     {
@@ -44,19 +44,24 @@ public class RouteManager extends RouteBuilder
         camelContext.start();
     }
 
-
+    /**
+     * Implementaion of route builder configure
+     *
+     * @throws Exception in case of an error
+     */
     public void configure() throws Exception
     {
 
     }
 
     /**
-     * Builds simulation route using conversation object.
-     * Assigns adapter beans to the route, assigns simulation execution bean to the route.
-     * Adds route to the current camel context.
+     * Builds simulation route using conversation object. Assigns adapter beans to the route,
+     * assigns simulation execution bean to the route. Adds route to the current camel context.
      *
-     * @param conversation object to be used in the route.
-     * @throws Exception in case of an error
+     * @param conversation
+     *            object to be used in the route.
+     * @throws Exception
+     *             in case of an error
      */
     public void activate(Conversation conversation) throws Exception
     {
@@ -69,11 +74,12 @@ public class RouteManager extends RouteBuilder
             definition.bean(createAdapterWrapper(conversation.getInboundAdapter()));
             definition.bean(new ScenarioExecutionWrapper(conversation.getScenarios()));
             definition.bean(createAdapterWrapper(conversation.getOutboundAdapter()));
-            
+
             getContext().addRoutes(this);
-            
-            logger.debug("Route : " + definition.getId() + " was added to the context : " + getContext().getName());
-            
+
+            logger.debug("Route : " + definition.getId() + " was added to the context : "
+                    + getContext().getName());
+
             convRoutes.put(conversation, definition);
         }
         else
@@ -86,21 +92,25 @@ public class RouteManager extends RouteBuilder
     /**
      * Stops the camel route without removing it from the context.
      *
-     * @param conversation object to be used in the route.
-     * @throws Exception in case of an error.
+     * @param conversation
+     *            object to be used in the route.
+     * @throws Exception
+     *             in case of an error.
      */
     public void deactivate(Conversation conversation) throws Exception
     {
         RouteDefinition definition = convRoutes.get(conversation);
         getContext().stopRoute(definition);
-        
-        logger.debug("Route : " + definition.getId() + " was stopped in the context : " + getContext().getName());
+
+        logger.debug("Route : " + definition.getId() + " was stopped in the context : "
+                + getContext().getName());
     }
 
     /**
      * Creates an AdapterWrapper object based on the provided adapter.
      *
-     * @param adapter adapter to be wrapped.
+     * @param adapter
+     *            adapter to be wrapped.
      * @return AdapterWrapper object.
      */
     private AdapterWrapper createAdapterWrapper(Adapter adapter)

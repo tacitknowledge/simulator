@@ -22,12 +22,14 @@ public class ScenarioExecutionWrapper implements Processor
     /**
      * Logger for the ScenarioExecutionWrapper class.
      */
-    public static final Logger logger= Logger.getLogger(ScenarioExecutionWrapper.class); 
-    
+    private static final Logger logger
+                        = Logger.getLogger(ScenarioExecutionWrapper.class);
+
     /**
      * Constructor for the ScenarioExecutionWrapper.
      *
-     * @param scenarios list of the scenarios to run.
+     * @param scenarios
+     *            list of the scenarios to run.
      */
     public ScenarioExecutionWrapper(List<ConversationScenario> scenarios)
     {
@@ -35,13 +37,13 @@ public class ScenarioExecutionWrapper implements Processor
     }
 
     /**
-     * Processes the exchange object received from the previous step of the route.
-     * Iterates through all of the provided scenarios and return the processed result
-     * of the first matched scenario.
+     * Processes the exchange object received from the previous step of the route. Iterates through
+     * all of the provided scenarios and return the processed result of the first matched scenario.
      *
      * @param exchange
      *            exchange.getIn().getBody() contains data from inbound adapter
-     * @throws Exception in case of error.
+     * @throws Exception
+     *             in case of error.
      */
     public void process(Exchange exchange) throws Exception
     {
@@ -52,11 +54,12 @@ public class ScenarioExecutionWrapper implements Processor
         for (ConversationScenario scenario : scenarios)
         {
             logger.debug("Evaluating scenario : " + scenario.toString());
-           
+
             if (scenario.isActive() && scenario.matchesCondition(data))
             {
-                logger.debug("Scenario : " + scenario + " was matched, executing the transformation script.");
-                
+                logger.debug("Scenario : " + scenario
+                        + " was matched, executing the transformation script.");
+
                 result = scenario.run((SimulatorPojo) data);
                 // setting the result of simulation as imput parameter for the next step
                 exchange.getIn().setBody(result);
