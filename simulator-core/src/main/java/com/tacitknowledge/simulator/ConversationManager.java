@@ -1,5 +1,7 @@
 package com.tacitknowledge.simulator;
 
+import com.tacitknowledge.simulator.transports.Transport;
+
 /**
  * Defines the interface for the implementations of the ConversationManager.
  *

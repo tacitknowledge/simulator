@@ -1,5 +1,7 @@
 package com.tacitknowledge.simulator;
 
+import com.tacitknowledge.simulator.transports.Transport;
+
 /**
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */

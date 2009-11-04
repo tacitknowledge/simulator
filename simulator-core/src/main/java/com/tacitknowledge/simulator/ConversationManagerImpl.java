@@ -1,6 +1,7 @@
 package com.tacitknowledge.simulator;
 
 import com.tacitknowledge.simulator.camel.RouteManager;
+import com.tacitknowledge.simulator.transports.Transport;
 
 import java.util.HashMap;
 import java.util.Map;

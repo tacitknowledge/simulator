@@ -2,6 +2,7 @@ package com.tacitknowledge.simulator;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
+import com.tacitknowledge.simulator.transports.Transport;
 
 /**
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)

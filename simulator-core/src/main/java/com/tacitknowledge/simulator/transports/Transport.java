@@ -1,4 +1,4 @@
-package com.tacitknowledge.simulator;
+package com.tacitknowledge.simulator.transports;
 
 /**
  * Wrapper for transport configuration. Each transport implementation should hold the required
