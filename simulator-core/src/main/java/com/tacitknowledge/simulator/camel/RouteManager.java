@@ -69,8 +69,11 @@ public class RouteManager extends RouteBuilder
             definition.bean(createAdapterWrapper(conversation.getInboundAdapter()));
             definition.bean(new ScenarioExecutionWrapper(conversation.getScenarios()));
             definition.bean(createAdapterWrapper(conversation.getOutboundAdapter()));
-
+            
             getContext().addRoutes(this);
+            
+            logger.debug("Route : " + definition.getId() + " was added to the context : " + getContext().getName());
+            
             convRoutes.put(conversation, definition);
         }
         else
@@ -90,6 +93,8 @@ public class RouteManager extends RouteBuilder
     {
         RouteDefinition definition = convRoutes.get(conversation);
         getContext().stopRoute(definition);
+        
+        logger.debug("Route : " + definition.getId() + " was stopped in the context : " + getContext().getName());
     }
 
     /**
