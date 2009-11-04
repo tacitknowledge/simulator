@@ -10,34 +10,53 @@ import java.util.Map;
  */
 public class ConversationManagerImpl implements ConversationManager
 {
+    /**
+     * Singleton instance
+     */
+    private static ConversationManager _instance;
 
-    private static ConversationManager instance;
-
+    /**
+     * CamelRoutes manager
+     */
     private RouteManager drb;
+
+    /**
+     * Currently configured conversations
+     */
     private Map<Integer, Conversation> conversations = new HashMap<Integer, Conversation>();
 
-
-    public ConversationManagerImpl(RouteManager drb)
+    /**
+     * Private Singleton constructor
+     * @param drb RouteManager to use
+     */
+    private ConversationManagerImpl(RouteManager drb)
     {
         this.drb = drb;
     }
 
+    /**
+     * Get the singleton instance of the ConversationManager
+     * @return ConversationManager singleton instance
+     */
     public static synchronized ConversationManager getInstance()
     {
-        if (instance == null)
+        if (_instance == null)
         {
             try
             {
-                instance = new ConversationManagerImpl(new RouteManager());
+                _instance = new ConversationManagerImpl(new RouteManager());
             }
             catch (Exception e)
             {
                 e.printStackTrace();
             }
         }
-        return instance;
+        return _instance;
     }
 
+    /**
+     * @inheritDoc
+     */
     public Conversation createConversation(Integer id, Transport inboundTransport, Transport outboundTransport, String inboundFormat, String outboundFormat) throws UnsupportedFormatException
     {
         Adapter inAdapter = AdapterFactory.getAdapter(inboundFormat);
@@ -50,23 +69,35 @@ public class ConversationManagerImpl implements ConversationManager
 
     }
 
+    /**
+     * @inheritDoc
+     */
     public Conversation getConversationById(int id)
     {
         return conversations.get(id);
 
     }
 
+    /**
+     * @inheritDoc
+     */
     public void createConversationScenario(int conversationId, String language, String criteria, String transformation)
     {
 
     }
 
+    /**
+     * @inheritDoc
+     */
     public void activate(int conversationId) throws Exception
     {
         Conversation conversation = getConversationById(conversationId);
         drb.activate(conversation);
     }
 
+    /**
+     * @inheritDoc
+     */
     public void deactivate(int conversationId) throws Exception
     {
 
