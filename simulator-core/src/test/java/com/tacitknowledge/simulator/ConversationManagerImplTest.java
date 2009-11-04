@@ -36,23 +36,23 @@ public class ConversationManagerImplTest
     @Test
     public void testCreateConversation() throws UnsupportedFormatException
     {
-        ConversationManager manager = new ConversationManagerImpl();
+        ConversationManager manager = ConversationManagerImpl.getInstance();
 
-        Conversation conversation = manager.createConversation(in, out, FormatConstants.JSON, FormatConstants.XML);
+        Conversation conversation = manager.createConversation(null, in, out, FormatConstants.JSON, FormatConstants.XML);
         assertNotNull(conversation);
-        assertNotNull(conversation.getEntryTransport());
-        assertNotNull(conversation.getExitTransport());
+        assertNotNull(conversation.getInboundTransport());
+        assertNotNull(conversation.getOutboundTransport());
     }
 
     @Test
     public void testCreateConversationWithWrongFormat()
     {
-        ConversationManager manager = new ConversationManagerImpl();
+        ConversationManager manager = ConversationManagerImpl.getInstance();
 
         Conversation conversation = null;
         try
         {
-            conversation = manager.createConversation(in, out, "WTF?", FormatConstants.XML);
+            conversation = manager.createConversation(null, in, out, "WTF?", FormatConstants.XML);
             fail();
         }
         catch (UnsupportedFormatException e)
@@ -62,7 +62,16 @@ public class ConversationManagerImplTest
         assertNull(conversation);
 
     }
+
 //    @Test
+//    public void testConversation() throws UnsupportedFormatException
+//    {
+//        ConversationManager manager = ConversationManagerImpl.getInstance();
+//        Conversation conversation = manager.createConversation(null, in, out, FormatConstants.JSON, FormatConstants.XML);
+//    }
+
+
+    //    @Test
 //    public void testCreateConversationScenario() {
 //         fail();
 //    }

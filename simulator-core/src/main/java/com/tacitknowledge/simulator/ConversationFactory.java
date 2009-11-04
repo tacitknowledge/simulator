@@ -8,15 +8,20 @@ public class ConversationFactory
     /**
      * Creates a new Conversation from the given transports and adapters.
      *
+     * @param id
      * @param inboundTransport
      * @param outboundTransport
      * @param inboundAdapter
-     * @param outboundAdapter
-     * @return
+     * @param outboundAdapter   @return
      */
-    public Conversation createConversation(
-            Transport inboundTransport, Transport outboundTransport, Adapter inboundAdapter, Adapter outboundAdapter)
+    public static Conversation createConversation(
+            Integer id, Transport inboundTransport, Transport outboundTransport, Adapter inboundAdapter, Adapter outboundAdapter) throws UnsupportedFormatException
     {
-        return null;
+
+        if (inboundAdapter == null || outboundAdapter == null)
+        {
+            throw new UnsupportedFormatException();
+        }
+        return new Conversation(id, inboundTransport, outboundTransport, inboundAdapter, outboundAdapter);
     }
 }

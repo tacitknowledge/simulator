@@ -12,7 +12,7 @@
         <lib.output.directory>../web-ui/src/main/rubyapp/lib/</lib.output.directory>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    
+
     <modules>
         <module>web-ui</module>
         <module>simulator-core</module>
@@ -24,12 +24,22 @@
             <artifactId>camel-core</artifactId>
             <version>2.0.0</version>
         </dependency>
-        
         <dependency>
-		    <groupId>log4j</groupId>
-		    <artifactId>log4j</artifactId>
-		    <version>1.2.14</version>
-		</dependency> 
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <version>2.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymockclassextension</artifactId>
+            <version>2.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.14</version>
+        </dependency>
 
         <dependency>
             <groupId>org.apache.camel</groupId>
@@ -38,7 +48,7 @@
             <scope>test</scope>
             <type>test-jar</type>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-spring-integration</artifactId>
@@ -69,7 +79,7 @@
             <artifactId>junit</artifactId>
             <version>4.5</version>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
             <version>2.5.6</version>

@@ -10,34 +10,36 @@ import java.util.List;
  */
 public class Conversation
 {
+    private Integer id;
     /**
      *
      */
-    private Transport entryTransport;
+    private Transport inboundTransport;
     /**
      *
      */
-    private Transport exitTransport;
+    private Transport outboundTransport;
     /**
      *
      */
-    private Adapter entryAdapter;
+    private Adapter inboundAdapter;
     /**
      *
      */
-    private Adapter exitAdapter;
+    private Adapter outboundAdapter;
 
     /**
      * List of configured scenarios for this conversation
      */
     private List<ConversationScenario> scenarios;
 
-    Conversation(Transport entryTransport, Transport exitTransport, Adapter entryAdapter, Adapter exitAdapter)
+    public Conversation(Integer id, Transport inboundTransport, Transport outboundTransport, Adapter inboundAdapter, Adapter outboundAdapter)
     {
-        this.entryTransport = entryTransport;
-        this.exitTransport = exitTransport;
-        this.entryAdapter = entryAdapter;
-        this.exitAdapter = exitAdapter;
+        this.id = id;
+        this.inboundTransport = inboundTransport;
+        this.outboundTransport = outboundTransport;
+        this.inboundAdapter = inboundAdapter;
+        this.outboundAdapter = outboundAdapter;
     }
 
     public ConversationScenario addScenario(String language, String criteria, String transformation)
@@ -45,24 +47,24 @@ public class Conversation
         return null;
     }
 
-    public Transport getEntryTransport()
+    public Transport getInboundTransport()
     {
-        return entryTransport;
+        return inboundTransport;
     }
 
-    public Transport getExitTransport()
+    public Transport getOutboundTransport()
     {
-        return exitTransport;
+        return outboundTransport;
     }
 
-    public Adapter getEntryAdapter()
+    public Adapter getInboundAdapter()
     {
-        return entryAdapter;
+        return inboundAdapter;
     }
 
-    public Adapter getExitAdapter()
+    public Adapter getOutboundAdapter()
     {
-        return exitAdapter;
+        return outboundAdapter;
     }
 
     public List<ConversationScenario> getScenarios()

@@ -19,6 +19,7 @@ public class ConversationScenario
      * The script used to transform/modify/generate the scenario output
      */
     private String transformationScript;
+    private boolean active;
 
     /**
      * @param scriptLanguage
@@ -32,6 +33,16 @@ public class ConversationScenario
         this.transformationScript = transformationScript;
     }
 
+    public void setActive(boolean active)
+    {
+        this.active = active;
+    }
+
+    public boolean isActive()
+    {
+        return active;
+    }
+
     /**
      * @param pojo The scenario entry data
      * @return
@@ -39,5 +50,11 @@ public class ConversationScenario
     public Object run(SimulatorPojo pojo)
     {
         return null;
+    }
+
+
+    public boolean matchesCondition(Object data)
+    {
+        return false;
     }
 }
