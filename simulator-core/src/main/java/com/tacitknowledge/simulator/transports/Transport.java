@@ -19,7 +19,7 @@ public interface Transport
      * Returns a valid String URI representation of this transport for Camel route creation e.g.:
      * file://path/to/file/directory , jms:queue/myqueue ,
      *
-     * @return URI representation of the transport
+     * @return URI representation of the transport endpoint
      */
     String toUriString();
 }
