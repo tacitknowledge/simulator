@@ -69,11 +69,16 @@ public class RouteManager extends RouteBuilder
 
         if (definition == null)
         {
+            // --- Entry endpoint
             definition = this.from(conversation.getInboundTransport().toUriString());
 
+            // --- Adapt input format, run scenarios and finally adapt into output format
             definition.bean(createAdapterWrapper(conversation.getInboundAdapter()));
             definition.bean(new ScenarioExecutionWrapper(conversation.getScenarios()));
             definition.bean(createAdapterWrapper(conversation.getOutboundAdapter()));
+
+            // --- Exit endpoint
+            definition.to(conversation.getOutboundTransport().toUriString());
 
             getContext().addRoutes(this);
 

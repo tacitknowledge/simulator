@@ -9,6 +9,11 @@ import java.util.StringTokenizer;
  */
 public class StructuredSimulatorPojo implements SimulatorPojo
 {
+    /**
+     * The Map containing the actual input data, structured depending on the
+     * original input format.
+     * The Map's contents can be other containing objects (either Map or List) or String attributes
+     */
     private Map root;
 
     public StructuredSimulatorPojo()
@@ -17,10 +22,11 @@ public class StructuredSimulatorPojo implements SimulatorPojo
     }
 
     /**
+     * NOT FULLY IMPLEMENTED
      * @param name The full-path to the attribute to return. e.g.: order.shippinginfo.address1
-     * @return
+     * @return The required attribute. Most times than not, this would be a String
      */
-    public String getAttribute(String name)
+    public Object getAttribute(String name)
     {
         String attr = null;
 

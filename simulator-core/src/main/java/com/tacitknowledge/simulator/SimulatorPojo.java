@@ -5,5 +5,5 @@ package com.tacitknowledge.simulator;
  */
 public interface SimulatorPojo
 {
-    public String getAttribute(String name);
+    public Object getAttribute(String name);
 }
