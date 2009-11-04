@@ -37,19 +37,25 @@ public interface ConversationManager
      * Activates the conversation with provided conversation id.
      *
      * @param conversationId id of the conversation to be activated.
+     * @throws ConversationNotFoundException
+     * @throws SimulatorException
      */
-    void activate(int conversationId) throws Exception;
+    void activate(int conversationId) throws ConversationNotFoundException, SimulatorException;
 
     /**
      * Deactivates the conversation with provided conversation id.
      *
      * @param conversationId id of the conversation to be deactivated.
+     * @throws ConversationNotFoundException
+     * @throws SimulatorException
      */
-    void deactivate(int conversationId) throws Exception;
+    void deactivate(int conversationId) throws ConversationNotFoundException, SimulatorException;
 
     /**
+     * Deactivates and stops and removes conversation data from memory
+     *
      * @param conversationId
-     * @return existing&running conversation. otherwise - null
+     * @throws SimulatorException - in case of any error
      */
-    Conversation getConversationById(int conversationId);
+    void deleteConversation(int conversationId) throws SimulatorException;
 }

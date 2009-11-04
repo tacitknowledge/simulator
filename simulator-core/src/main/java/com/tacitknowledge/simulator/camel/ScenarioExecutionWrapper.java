@@ -6,6 +6,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,40 +17,44 @@ import java.util.List;
  */
 public class ScenarioExecutionWrapper implements Processor
 {
-    /** Container of the scenarios to run */
+    /**
+     * Container of the scenarios to run
+     */
     private List<ConversationScenario> scenarios;
 
     /**
      * Logger for the ScenarioExecutionWrapper class.
      */
     private static final Logger logger
-                        = Logger.getLogger(ScenarioExecutionWrapper.class);
+            = Logger.getLogger(ScenarioExecutionWrapper.class);
 
     /**
      * Constructor for the ScenarioExecutionWrapper.
      *
-     * @param scenarios
-     *            list of the scenarios to run.
+     * @param scenarios list of the scenarios to run.
      */
     public ScenarioExecutionWrapper(List<ConversationScenario> scenarios)
     {
-        this.scenarios = scenarios;
+        if (scenarios == null)
+        {
+            logger.warn("Something is probably wrong: Scenarios are null");
+        }
+        this.scenarios = scenarios == null ? new ArrayList<ConversationScenario>() : scenarios;
     }
 
     /**
      * Processes the exchange object received from the previous step of the route. Iterates through
      * all of the provided scenarios and return the processed result of the first matched scenario.
      *
-     * @param exchange
-     *            exchange.getIn().getBody() contains data from inbound adapter
-     * @throws Exception
-     *             in case of error.
+     * @param exchange exchange.getIn().getBody() contains data from inbound adapter
+     * @throws Exception in case of error.
      */
     public void process(Exchange exchange) throws Exception
     {
 
         Object data = exchange.getIn().getBody();
         Object result = null;
+        //todo add case when matching scenario is not found
         // here we are looking for first matching scenario and ignore all other scenarios
         for (ConversationScenario scenario : scenarios)
         {

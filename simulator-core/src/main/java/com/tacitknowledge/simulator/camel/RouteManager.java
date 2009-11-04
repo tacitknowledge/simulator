@@ -2,9 +2,7 @@ package com.tacitknowledge.simulator.camel;
 
 import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.Conversation;
-import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.log4j.Logger;
 
@@ -29,20 +27,13 @@ public class RouteManager extends RouteBuilder
      * deactivation of the routes.
      */
     private Map<Conversation, RouteDefinition> convRoutes
-                                    = new HashMap<Conversation, RouteDefinition>();
+            = new HashMap<Conversation, RouteDefinition>();
 
-    /**
-     * Constructor for the RouteManager. Will create a new camel context and starts it.
-     *
-     * @throws Exception
-     *             in case of an error.
-     */
-    public RouteManager() throws Exception
+
+    public RouteManager()
     {
-        CamelContext camelContext = new DefaultCamelContext();
-        setContext(camelContext);
-        camelContext.start();
     }
+
 
     /**
      * Implementaion of route builder configure
@@ -58,10 +49,8 @@ public class RouteManager extends RouteBuilder
      * Builds simulation route using conversation object. Assigns adapter beans to the route,
      * assigns simulation execution bean to the route. Adds route to the current camel context.
      *
-     * @param conversation
-     *            object to be used in the route.
-     * @throws Exception
-     *             in case of an error
+     * @param conversation object to be used in the route.
+     * @throws Exception in case of an error
      */
     public void activate(Conversation conversation) throws Exception
     {
@@ -79,13 +68,10 @@ public class RouteManager extends RouteBuilder
 
             // --- Exit endpoint
             definition.to(conversation.getOutboundTransport().toUriString());
-
-            getContext().addRoutes(this);
+            convRoutes.put(conversation, definition);
 
             logger.debug("Route : " + definition.getId() + " was added to the context : "
                     + getContext().getName());
-
-            convRoutes.put(conversation, definition);
         }
         else
         {
@@ -97,25 +83,28 @@ public class RouteManager extends RouteBuilder
     /**
      * Stops the camel route without removing it from the context.
      *
-     * @param conversation
-     *            object to be used in the route.
-     * @throws Exception
-     *             in case of an error.
+     * @param conversation object to be used in the route.
+     * @throws Exception in case of an error.
      */
     public void deactivate(Conversation conversation) throws Exception
     {
         RouteDefinition definition = convRoutes.get(conversation);
-        getContext().stopRoute(definition);
-
-        logger.debug("Route : " + definition.getId() + " was stopped in the context : "
-                + getContext().getName());
+        if (definition != null)
+        {
+            getContext().stopRoute(definition);
+            logger.debug("Route : " + definition.getId() + " was stopped in the context : "
+                    + getContext().getName());
+        }
+        else
+        {
+            logger.warn("Trying to deactivate route which is not active ");
+        }
     }
 
     /**
      * Creates an AdapterWrapper object based on the provided adapter.
      *
-     * @param adapter
-     *            adapter to be wrapped.
+     * @param adapter adapter to be wrapped.
      * @return AdapterWrapper object.
      */
     private AdapterWrapper createAdapterWrapper(Adapter adapter)

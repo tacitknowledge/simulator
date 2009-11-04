@@ -2,6 +2,7 @@ package com.tacitknowledge.simulator;
 
 import com.tacitknowledge.simulator.camel.RouteManager;
 import com.tacitknowledge.simulator.transports.Transport;
+import org.apache.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +13,11 @@ import java.util.Map;
 public class ConversationManagerImpl implements ConversationManager
 {
     /**
+     * Logger for this class.
+     */
+    private static Logger logger = Logger.getLogger(ConversationManagerImpl.class);
+
+    /**
      * Singleton instance
      */
     private static ConversationManager _instance;
@@ -19,7 +25,7 @@ public class ConversationManagerImpl implements ConversationManager
     /**
      * CamelRoutes manager
      */
-    private RouteManager drb;
+    private RouteManager routeManager;
 
     /**
      * Currently configured conversations
@@ -28,15 +34,17 @@ public class ConversationManagerImpl implements ConversationManager
 
     /**
      * Private Singleton constructor
-     * @param drb RouteManager to use
+     *
+     * @param routeManager RouteManager to use
      */
-    private ConversationManagerImpl(RouteManager drb)
+    private ConversationManagerImpl(RouteManager routeManager)
     {
-        this.drb = drb;
+        this.routeManager = routeManager;
     }
 
     /**
      * Get the singleton instance of the ConversationManager
+     *
      * @return ConversationManager singleton instance
      */
     public static synchronized ConversationManager getInstance()
@@ -49,7 +57,8 @@ public class ConversationManagerImpl implements ConversationManager
             }
             catch (Exception e)
             {
-                e.printStackTrace();
+                logger.error("Critical error during Simulator initialization");
+                throw new RuntimeException(e);
             }
         }
         return _instance;
@@ -67,16 +76,21 @@ public class ConversationManagerImpl implements ConversationManager
         assert conversations.get(id) == null;
         conversations.put(id, conversation);
         return conversation;
-
     }
 
     /**
-     * @inheritDoc
+     * @param id conversationId
+     * @return conversation from the list of created conversations
+     * @throws ConversationNotFoundException
      */
-    public Conversation getConversationById(int id)
+    private Conversation getConversationById(int id) throws ConversationNotFoundException
     {
-        return conversations.get(id);
-
+        Conversation conversation = conversations.get(id);
+        if (conversation == null)
+        {
+            throw new ConversationNotFoundException("Conversation with id " + id + " is not created.");
+        }
+        return conversation;
     }
 
     /**
@@ -90,20 +104,51 @@ public class ConversationManagerImpl implements ConversationManager
     /**
      * @inheritDoc
      */
-    public void activate(int conversationId) throws Exception
+    public void activate(int conversationId) throws ConversationNotFoundException, SimulatorException
     {
         Conversation conversation = getConversationById(conversationId);
-        drb.activate(conversation);
+        try
+        {
+            routeManager.activate(conversation);
+        }
+        catch (Exception e)
+        {
+            throw new SimulatorException("Conversation activation exception", e);
+
+        }
     }
 
     /**
      * @inheritDoc
      */
-    public void deactivate(int conversationId) throws Exception
+    public void deactivate(int conversationId) throws ConversationNotFoundException, SimulatorException
     {
 
         Conversation conversation = getConversationById(conversationId);
-        drb.deactivate(conversation);
+        try
+        {
+            routeManager.deactivate(conversation);
+        }
+        catch (Exception e)
+        {
+            throw new SimulatorException("Conversation deactivation exception", e);
+        }
 
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public void deleteConversation(int conversationId) throws SimulatorException
+    {
+        try
+        {
+            deactivate(conversationId);
+            conversations.remove(conversationId);
+        }
+        catch (ConversationNotFoundException e)
+        {
+            //ignore
+        }
     }
 }
