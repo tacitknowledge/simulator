@@ -19,9 +19,18 @@ public class JmsTransport extends BaseTransport implements Transport
     private String destinationName;
 
     /**
-     * Flag for determining if this transport is an Apache ActiveMQ implementation
+     * Flag for determining if JSM transport type, Apache ActiveMQ or generic JMS. Defaults to generic JMS
      */
     private boolean activeMQ;
+
+    /**
+     * Constructor
+     * @param destinationName
+     */
+    public JmsTransport(String destinationName)
+    {
+        this.destinationName = destinationName;
+    }
 
     /**
      * Constructor
@@ -35,6 +44,24 @@ public class JmsTransport extends BaseTransport implements Transport
         this.topicName = topicName;
         this.destinationName = destinationName;
         this.activeMQ = activeMQ;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public String toUriString()
+    {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(isActiveMQ() ? "activemq:" : "jms:");
+
+        if (topicName != null) {
+            sb.append(topicName).append(":");
+        }
+
+        sb.append(destinationName);
+
+        return sb.toString();
     }
 
     /**
@@ -89,13 +116,5 @@ public class JmsTransport extends BaseTransport implements Transport
     public void setActiveMQ(boolean activeMQ)
     {
         this.activeMQ = activeMQ;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public String toUriString()
-    {
-        return null;
     }
 }
