@@ -1,9 +1,10 @@
 package com.tacitknowledge.simulator.transports;
 
-import com.tacitknowledge.simulator.transports.Transport;
+import com.tacitknowledge.simulator.Transport;
 
 /**
  * Transport implementation for Jms endpoints.
+ *
  * @author galo
  */
 public class JmsTransport extends BaseTransport implements Transport
@@ -25,6 +26,7 @@ public class JmsTransport extends BaseTransport implements Transport
 
     /**
      * Constructor
+     *
      * @param destinationName
      */
     public JmsTransport(String destinationName)
@@ -55,7 +57,8 @@ public class JmsTransport extends BaseTransport implements Transport
 
         sb.append(isActiveMQ() ? "activemq:" : "jms:");
 
-        if (topicName != null) {
+        if (topicName != null)
+        {
             sb.append(topicName).append(":");
         }
 

@@ -1,6 +1,7 @@
-package com.tacitknowledge.simulator;
+package com.tacitknowledge.simulator.formats;
 
-import com.tacitknowledge.simulator.formats.*;
+import com.tacitknowledge.simulator.Adapter;
+import com.tacitknowledge.simulator.FormatConstants;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +11,7 @@ import java.util.Map;
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-class AdapterFactory
+public class AdapterFactory
 {
     /**
      * Container for the adapters.
@@ -28,6 +29,7 @@ class AdapterFactory
 
     /**
      * Returns implementation of the adapter for the provided format.
+     *
      * @param format The format of the data. @see com.tacitknowledge.simulator.FormatConstants
      * @return Adapter for the specified format or null if the format is not supported.
      */

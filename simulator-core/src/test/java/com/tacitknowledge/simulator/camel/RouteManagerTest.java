@@ -1,8 +1,8 @@
 package com.tacitknowledge.simulator.camel;
 
 import com.tacitknowledge.simulator.Conversation;
+import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.formats.JsonAdapter;
-import com.tacitknowledge.simulator.transports.Transport;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;

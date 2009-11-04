@@ -1,9 +1,10 @@
 package com.tacitknowledge.simulator.transports;
 
-import com.tacitknowledge.simulator.transports.Transport;
+import com.tacitknowledge.simulator.Transport;
 
 /**
  * Transport implementation for File endpoints.
+ *
  * @author galo
  */
 public class FileTransport extends BaseTransport implements Transport
@@ -50,13 +51,17 @@ public class FileTransport extends BaseTransport implements Transport
         sb.append("?initialDelay=2000");
 
         // --- fileName & fileExtension should be mutually exclusive options
-        if (fileName != null) {
+        if (fileName != null)
+        {
             sb.append("&fileName=").append(fileName);
-        } else if (fileExtension != null) {
+        }
+        else if (fileExtension != null)
+        {
             // --- File extension is used as a RegEx filter for transport routing
             sb.append("&include=^.*(i)(.").append(fileExtension).append(")");
         }
-        if (deleteFile) {
+        if (deleteFile)
+        {
             sb.append("&delete=true");
         }
 
@@ -100,8 +105,8 @@ public class FileTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @see #fileExtension
      * @return
+     * @see #fileExtension
      */
     public String getFileExtension()
     {
@@ -109,8 +114,8 @@ public class FileTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @see #fileExtension
      * @param fileExtension
+     * @see #fileExtension
      */
     public void setFileExtension(String fileExtension)
     {
@@ -118,8 +123,8 @@ public class FileTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @see #deleteFile
      * @return
+     * @see #deleteFile
      */
     public boolean getDeleteFile()
     {
@@ -127,8 +132,8 @@ public class FileTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @see #deleteFile
      * @param deleteFile
+     * @see #deleteFile
      */
     public void setDeleteFile(boolean deleteFile)
     {

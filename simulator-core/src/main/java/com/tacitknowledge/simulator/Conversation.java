@@ -1,7 +1,5 @@
 package com.tacitknowledge.simulator;
 
-import com.tacitknowledge.simulator.transports.Transport;
-
 import java.util.List;
 
 /**

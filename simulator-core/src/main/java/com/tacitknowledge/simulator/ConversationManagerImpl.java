@@ -1,7 +1,7 @@
 package com.tacitknowledge.simulator;
 
 import com.tacitknowledge.simulator.camel.RouteManager;
-import com.tacitknowledge.simulator.transports.Transport;
+import com.tacitknowledge.simulator.formats.AdapterFactory;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
