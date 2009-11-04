@@ -6,14 +6,17 @@ import com.tacitknowledge.simulator.SimulatorPojo;
 /**
  * @author galo
  */
-public class CsvAdapter implements Adapter {
-    public SimulatorPojo adaptFrom(Object o) {
-        
+public class CsvAdapter implements Adapter
+{
+    public SimulatorPojo adaptFrom(Object o)
+    {
+
 
         return null;
     }
 
-    public Object adaptTo(SimulatorPojo pojo) {
+    public Object adaptTo(SimulatorPojo pojo)
+    {
         return null;
     }
 }
