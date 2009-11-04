@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Factory implementation for the different adapters
+ * Factory implementation for the format adapters
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
@@ -28,8 +28,8 @@ class AdapterFactory
 
     /**
      * Returns implementation of the adapter for the provided format.
-     * @param format the format of the data.
-     * @return Adapter for the specified format.
+     * @param format The format of the data. @see com.tacitknowledge.simulator.FormatConstants
+     * @return Adapter for the specified format or null if the format is not supported.
      */
     public static Adapter getAdapter(String format)
     {

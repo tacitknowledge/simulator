@@ -1,7 +1,7 @@
 package com.tacitknowledge.simulator;
 
 /**
- * Adapter interface for different formats of data.
+ * Adapter interface for different data formats.
  * 
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */

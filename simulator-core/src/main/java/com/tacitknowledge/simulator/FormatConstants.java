@@ -1,6 +1,8 @@
 package com.tacitknowledge.simulator;
 
 /**
+ * Contains the Simulator's default supported format names/acronyms.
+ * Each supported format will have its corresponding adapter
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
 public interface FormatConstants
