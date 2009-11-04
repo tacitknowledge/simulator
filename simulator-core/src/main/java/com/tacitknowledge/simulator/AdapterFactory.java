@@ -1,7 +1,6 @@
 package com.tacitknowledge.simulator;
 
-import com.tacitknowledge.simulator.formats.JsonAdapter;
-import com.tacitknowledge.simulator.formats.XmlAdapter;
+import com.tacitknowledge.simulator.formats.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,6 +20,9 @@ class AdapterFactory
         {
             put(FormatConstants.JSON, new JsonAdapter());
             put(FormatConstants.XML, new XmlAdapter());
+            put(FormatConstants.CSV, new CsvAdapter());
+            put(FormatConstants.YAML, new YamlAdapter());
+            put(FormatConstants.PROPERTIES, new PropertiesAdapter());
         }
     };
 
