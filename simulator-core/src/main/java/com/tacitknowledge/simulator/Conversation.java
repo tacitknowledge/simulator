@@ -10,6 +10,9 @@ import java.util.List;
  */
 public class Conversation
 {
+    /**
+     * 
+     */
     private Integer id;
     /**
      *

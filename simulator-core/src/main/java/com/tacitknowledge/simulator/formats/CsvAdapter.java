@@ -8,6 +8,8 @@ import com.tacitknowledge.simulator.SimulatorPojo;
  */
 public class CsvAdapter implements Adapter {
     public SimulatorPojo adaptFrom(Object o) {
+        
+
         return null;
     }
 
