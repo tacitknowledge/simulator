@@ -53,7 +53,8 @@
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${lib.output.directory}</outputDirectory>
+                        	<includeScope>runtime</includeScope>
+                        	<outputDirectory>${lib.output.directory}</outputDirectory>
                             <overWriteReleases>false</overWriteReleases>
                             <overWriteSnapshots>false</overWriteSnapshots>
                             <overWriteIfNewer>true</overWriteIfNewer>
