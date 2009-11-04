@@ -1,8 +1,9 @@
 package com.tacitknowledge.simulator.transports;
 
-import com.tacitknowledge.simulator.Transport;
+import com.tacitknowledge.simulator.transports.Transport;
 
 /**
+ * Transport implementation for File endpoints.
  * @author galo
  */
 public class FileTransport extends BaseTransport implements Transport
