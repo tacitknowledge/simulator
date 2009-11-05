@@ -25,7 +25,7 @@ public class XmlAdapter implements Adapter
 {
     /**
      * Adapts the String data received from the inbound transport into XML format.
-     * 
+     *
      * @return an object constructed based on the inboud transport data.
      */
     public SimulatorPojo adaptFrom(Object o) throws FormatAdapterException
@@ -35,7 +35,8 @@ public class XmlAdapter implements Adapter
 
         SimulatorPojo pojo = new StructuredSimulatorPojo();
 
-        try {
+        try
+        {
             // --- First, parse the XML string into a document
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
@@ -46,25 +47,30 @@ public class XmlAdapter implements Adapter
 
             // --- Well-formatted Xml should have a single root, right?
             Element docElem = doc.getDocumentElement();
-            Map<String, Map> root = new HashMap<String,Map>();
+            Map<String, Map> root = new HashMap<String, Map>();
             root.put(docElem.getTagName(), getStructuredChilds(docElem));
 
             pojo.setRoot(root);
-        } catch(Exception e) {
+        }
+        catch (Exception e)
+        {
             throw new FormatAdapterException("Unexpected error trying to adapt from Xml: " + e.getMessage(), e);
         }
 
         return pojo;
     }
 
-    private Map getStructuredChilds(Element elem) {
+    private Map getStructuredChilds(Element elem)
+    {
         Map<String, Object> structuredChild = new HashMap<String, Object>();
 
         // --- Get first child
         Node nd = elem.getFirstChild();
         // --- Iterate throu all the elem childs
-        while (nd != null) {
-            if (!(nd instanceof Element)) {
+        while (nd != null)
+        {
+            if (!(nd instanceof Element))
+            {
                 // --- If nd is not an Element, we skip it and got to the next child
                 nd = nd.getNextSibling();
                 continue;
@@ -75,16 +81,20 @@ public class XmlAdapter implements Adapter
             String currNodeName = child.getTagName();
 
             // --- Check if the structuredChilds Map contains the current node name
-            if (structuredChild.containsKey(currNodeName)) {
+            if (structuredChild.containsKey(currNodeName))
+            {
                 // --- Get the original attribute,
                 // if this attribute name is already registered, it means this should be a List
                 Object tmp = structuredChild.get(currNodeName);
                 // --- Check if it's already a List
                 List currList;
-                if (tmp instanceof List) {
+                if (tmp instanceof List)
+                {
                     // --- If it is, just keep the reference
                     currList = (List) tmp;
-                } else {
+                }
+                else
+                {
                     // --- If it isn't, create a new list...
                     currList = new ArrayList();
                     // --- ...insert the previous attribute value to the list
@@ -94,16 +104,24 @@ public class XmlAdapter implements Adapter
                 }
                 // --- Add the current node as a structured child
                 currList.add(getStructuredChilds(child));
-            } else {
+            }
+            else
+            {
                 // --- If the child is a text node with value. return null
-                if (child instanceof Text && child.getNodeValue().trim() != "") {
+                if (child instanceof Text && child.getNodeValue().trim() != "")
+                {
                     return null;
-                } else {
+                }
+                else
+                {
                     // ...otherwise, go down the child structure
                     Map childValue = getStructuredChilds(child);
-                    if (childValue == null || childValue.isEmpty()) {
+                    if (childValue == null || childValue.isEmpty())
+                    {
                         structuredChild.put(currNodeName, child.getFirstChild().getNodeValue());
-                    } else {
+                    }
+                    else
+                    {
                         structuredChild.put(currNodeName, getStructuredChilds(child));
                     }
                 }
