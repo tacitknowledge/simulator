@@ -2,6 +2,19 @@ package com.tacitknowledge.simulator.formats;
 
 import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.SimulatorPojo;
+import com.tacitknowledge.simulator.StructuredSimulatorPojo;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.DocumentBuilder;
+
+import org.xml.sax.InputSource;
+import org.w3c.dom.*;
+
+import java.io.StringReader;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Implementation of the Adapter interface for the XML format
@@ -11,13 +24,94 @@ import com.tacitknowledge.simulator.SimulatorPojo;
 public class XmlAdapter implements Adapter
 {
     /**
-     * Adapts the data received from the inbound transport into XML format.
+     * Adapts the String data received from the inbound transport into XML format.
      * 
      * @return an object constructed based on the inboud transport data.
      */
-    public SimulatorPojo adaptFrom(Object o)
+    public SimulatorPojo adaptFrom(Object o) throws FormatAdapterException
     {
-        return null;
+        if (!(o instanceof String))
+            throw new FormatAdapterException("Input data is expected to be a String. Instead, input data is " + o.getClass().getName());
+
+        SimulatorPojo pojo = new StructuredSimulatorPojo();
+
+        try {
+            // --- First, parse the XML string into a document
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            InputSource is = new InputSource();
+            is.setCharacterStream(new StringReader((String) o));
+
+            Document doc = db.parse(is);
+
+            // --- Well-formatted Xml should have a single root, right?
+            Element docElem = doc.getDocumentElement();
+            Map<String, Map> root = new HashMap<String,Map>();
+            root.put(docElem.getTagName(), getStructuredChilds(docElem));
+
+            pojo.setRoot(root);
+        } catch(Exception e) {
+            throw new FormatAdapterException("Unexpected error trying to adapt from Xml: " + e.getMessage(), e);
+        }
+
+        return pojo;
+    }
+
+    private Map getStructuredChilds(Element elem) {
+        Map<String, Object> structuredChild = new HashMap<String, Object>();
+
+        // --- Get first child
+        Node nd = elem.getFirstChild();
+        // --- 
+        while (nd != null) {
+            if (!(nd instanceof Element)) {
+                nd = nd.getNextSibling();
+                continue;
+            }
+
+            Element child = (Element) nd;
+            String currNodeName = child.getTagName();
+
+            // --- Check if the structuredChilds Map contains the current node name
+            if (structuredChild.containsKey(currNodeName)) {
+                // --- Get the original attribute,
+                // if this attribute name is already registered, it means this should be a List
+                Object tmp = structuredChild.get(currNodeName);
+                // --- Check if it's already a List
+                List currList;
+                if (tmp instanceof List) {
+                    // --- If it is, just keep the reference
+                    currList = (List) tmp;
+                } else {
+                    // --- If it isn't, create a new list...
+                    currList = new ArrayList();
+                    // --- ...insert the previous attribute value to the list
+                    currList.add(tmp);
+                    // --- ...and place the list into its corresponding attribute name
+                    structuredChild.put(currNodeName, currList);
+                }
+                // --- Add the current node as a structured child
+                currList.add(getStructuredChilds(child));
+            } else {
+                // --- If the child is a text node with value. return null
+                if (child instanceof Text && child.getNodeValue().trim() != "") {
+                    return null;
+                } else {
+                    // ...otherwise, go down the child structure
+                    Map childValue = getStructuredChilds(child);
+                    if (childValue == null || childValue.isEmpty()) {
+                        structuredChild.put(currNodeName, child.getFirstChild().getNodeValue());
+                    } else {
+                        structuredChild.put(currNodeName, getStructuredChilds(child));
+                    }
+                }
+
+            }
+
+            nd = child.getNextSibling();
+        }
+
+        return structuredChild;
     }
 
     /**

@@ -9,9 +9,14 @@ import java.util.StringTokenizer;
  */
 public class StructuredSimulatorPojo implements SimulatorPojo
 {
+    public Map getRoot()
+    {
+        return root;
+    }
+
     /**
      * The Map containing the actual input data, structured depending on the
-     * original input format.
+     * original input format. Each Adapter implementation should structure data as fitting to its format.
      * The Map's contents can be other containing objects (either Map or List) or String attributes
      */
     private Map root;
@@ -52,5 +57,13 @@ public class StructuredSimulatorPojo implements SimulatorPojo
             }*/
         }
         return attr;
+    }
+
+    /**
+     * @see #root
+     * @param root The structured data in a Map
+     */
+    public void setRoot(Map root) {
+        this.root = root;
     }
 }
