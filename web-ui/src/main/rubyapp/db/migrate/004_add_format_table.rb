@@ -4,7 +4,7 @@ class AddFormatTable < ActiveRecord::Migration
       t.string :type, :null => false
     end
 
-    create_table :format_type do |t|
+    create_table :format_types do |t|
       t.string :type, :null => false
       t.string :class_name, :null => false
     end
@@ -15,7 +15,7 @@ class AddFormatTable < ActiveRecord::Migration
   def self.down
     remove_column :conversations, :inboundFormat
     remove_column :conversations, :outboundFormat
-    drop_table :format_type
+    drop_table :format_types
     drop_table :formats
   end
 end
