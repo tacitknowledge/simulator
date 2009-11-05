@@ -8,13 +8,13 @@ class AddTransportTable < ActiveRecord::Migration
       t.string :class_name, :null => false
     end
 
-    add_column :systems, :inboundTransport, :string
-    add_column :systems, :outboundTransport, :string
+    add_column :systems, :inbound_transport, :string
+    add_column :systems, :outbound_transport, :string
   end
 
   def self.down
-    remove_column :systems, :inboundTransport
-    remove_column :systems, :outboundTransport
+    remove_column :systems, :inbound_transport
+    remove_column :systems, :outbound_transport
     drop_table :transport_types
     drop_table :transports
   end
