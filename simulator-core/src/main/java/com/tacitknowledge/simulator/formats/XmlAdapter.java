@@ -62,13 +62,15 @@ public class XmlAdapter implements Adapter
 
         // --- Get first child
         Node nd = elem.getFirstChild();
-        // --- 
+        // --- Iterate throu all the elem childs
         while (nd != null) {
             if (!(nd instanceof Element)) {
+                // --- If nd is not an Element, we skip it and got to the next child
                 nd = nd.getNextSibling();
                 continue;
             }
 
+            // --- We make sure we get an Element so we can get the underlying node name
             Element child = (Element) nd;
             String currNodeName = child.getTagName();
 

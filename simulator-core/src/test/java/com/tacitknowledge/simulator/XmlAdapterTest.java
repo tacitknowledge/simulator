@@ -1,7 +1,7 @@
 package com.tacitknowledge.simulator;
 
 import junit.framework.TestCase;
-import com.tacitknowledge.simulator.formats.XmlAdapter;
+import com.tacitknowledge.simulator.formats.AdapterFactory;
 
 /**
  * @author galo
