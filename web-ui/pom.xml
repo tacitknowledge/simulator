@@ -15,7 +15,7 @@
     	<app.name>rubyapp</app.name>
         <rubyapp.dir>src/main/${app.name}</rubyapp.dir>
         <rubyapp.target.war>${rubyapp.dir}/${app.name}.war</rubyapp.target.war>
-        <tomcat.manager.url>http://localhost:8080/manager/html</tomcat.manager.url>
+        <tomcat.manager.url>http://127.0.0.1:8080/manager/html</tomcat.manager.url>
         <tomcat.manager.deploy.url>${tomcat.manager.url}/upload</tomcat.manager.deploy.url>
         <tomcat.manager.undeploy.url>${tomcat.manager.url}/undeploy?path=/${app.name}</tomcat.manager.undeploy.url>
     </properties>
