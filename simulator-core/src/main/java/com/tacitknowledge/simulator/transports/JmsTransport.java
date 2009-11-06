@@ -5,7 +5,7 @@ import com.tacitknowledge.simulator.Transport;
 /**
  * Transport implementation for Jms endpoints.
  *
- * @author galo
+ * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
 public class JmsTransport extends BaseTransport implements Transport
 {
@@ -20,14 +20,15 @@ public class JmsTransport extends BaseTransport implements Transport
     private String destinationName;
 
     /**
-     * Flag for determining if JSM transport type, Apache ActiveMQ or generic JMS. Defaults to generic JMS
+     * Flag for determining if JSM transport type, Apache ActiveMQ or generic JMS. Defaults to
+     * generic JMS
      */
     private boolean activeMQ;
 
     /**
-     * Constructor
+     * Constructor for the JmsTransport class.
      *
-     * @param destinationName
+     * @param destinationName @see #destinationName
      */
     public JmsTransport(String destinationName)
     {
@@ -35,11 +36,11 @@ public class JmsTransport extends BaseTransport implements Transport
     }
 
     /**
-     * Constructor
+     * Constructor for the JmsTransport class, has an option for ActiveMQ
      *
-     * @param topicName
-     * @param destinationName
-     * @param activeMQ
+     * @param topicName @see #topicName
+     * @param destinationName @see #destinationName
+     * @param activeMQ @see #activeMQ
      */
     public JmsTransport(String topicName, String destinationName, boolean activeMQ)
     {
@@ -50,12 +51,20 @@ public class JmsTransport extends BaseTransport implements Transport
 
     /**
      * @inheritDoc
+     * @return @see #Transport.toUriString()
      */
     public String toUriString()
     {
         StringBuilder sb = new StringBuilder();
 
-        sb.append(isActiveMQ() ? "activemq:" : "jms:");
+        if (isActiveMQ())
+        {
+            sb.append("activemq:");
+        }
+        else
+        {
+            sb.append("jms:");
+        }
 
         if (topicName != null)
         {
@@ -68,8 +77,8 @@ public class JmsTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @return
-     * @see #topicName
+     * Getter for @see #topicName
+     * @return @see #topicName
      */
     public String getTopicName()
     {
@@ -77,8 +86,8 @@ public class JmsTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @param topicName
-     * @see #topicName
+     * Setter for @see #topicName
+     * @param topicName @see #topicName
      */
     public void setTopicName(String topicName)
     {
@@ -86,8 +95,8 @@ public class JmsTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @return
-     * @see #destinationName
+     * Getter for @see #destinationName
+     * @return @see #destinationName
      */
     public String getDestinationName()
     {
@@ -95,8 +104,8 @@ public class JmsTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @param destinationName
-     * @see #destinationName
+     * Setter for @see #destinationName
+     * @param destinationName @see #destinationName
      */
     public void setDestinationName(String destinationName)
     {
@@ -104,8 +113,8 @@ public class JmsTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @return
-     * @see #activeMQ
+     * Getter for @see #activeMQ
+     * @return @see #activeMQ
      */
     public boolean isActiveMQ()
     {
@@ -113,8 +122,8 @@ public class JmsTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @param activeMQ
-     * @see #activeMQ
+     * Setter for @see #activeMQ
+     * @param activeMQ @see #activeMQ
      */
     public void setActiveMQ(boolean activeMQ)
     {

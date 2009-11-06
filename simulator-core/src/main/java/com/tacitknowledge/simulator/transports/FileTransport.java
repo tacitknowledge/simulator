@@ -5,7 +5,7 @@ import com.tacitknowledge.simulator.Transport;
 /**
  * Transport implementation for File endpoints.
  *
- * @author galo
+ * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
 public class FileTransport extends BaseTransport implements Transport
 {
@@ -30,7 +30,8 @@ public class FileTransport extends BaseTransport implements Transport
     private boolean deleteFile;
 
     /**
-     * @param directoryPath Directory path to poll from/write to
+     * @param directoryPath
+     *            Directory path to poll from/write to
      */
     public FileTransport(String directoryPath)
     {
@@ -39,6 +40,7 @@ public class FileTransport extends BaseTransport implements Transport
 
     /**
      * @inheritDoc
+     * @return @see #Transport.toUriString()
      */
     public String toUriString()
     {
@@ -47,7 +49,8 @@ public class FileTransport extends BaseTransport implements Transport
         // --- directory name
         sb.append(directoryName);
 
-        // --- Options. Take a 2 seconds delay before polling the directory after the route is registered.
+        // --- Options. Take a 2 seconds delay before polling the directory after the route is
+        // registered.
         sb.append("?initialDelay=2000");
 
         // --- fileName & fileExtension should be mutually exclusive options
@@ -69,8 +72,8 @@ public class FileTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @return
-     * @see #directoryName
+     * Getter for @see #directoryName
+     * @return @see #directoryName
      */
     public String getDirectoryName()
     {
@@ -78,8 +81,8 @@ public class FileTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @param directoryName
-     * @see #directoryName
+     * Getter for @see #directoryName
+     * @param directoryName @see #directoryName
      */
     public void setDirectoryName(String directoryName)
     {
@@ -87,8 +90,8 @@ public class FileTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @return
-     * @see #fileName
+     * Getter for @see #fileName
+     * @return @see #fileName
      */
     public String getFileName()
     {
@@ -96,8 +99,8 @@ public class FileTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @param fileName
-     * @see #fileName
+     * Setter for @see #fileName
+     * @param fileName @see #fileName
      */
     public void setFileName(String fileName)
     {
@@ -105,8 +108,8 @@ public class FileTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @return
-     * @see #fileExtension
+     * Getter for @see #fileExtension
+     * @return @see #fileExtension
      */
     public String getFileExtension()
     {
@@ -114,8 +117,8 @@ public class FileTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @param fileExtension
-     * @see #fileExtension
+     * Setter for @see #fileExtension
+     * @param fileExtension @see #fileExtension
      */
     public void setFileExtension(String fileExtension)
     {
@@ -123,8 +126,8 @@ public class FileTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @return
-     * @see #deleteFile
+     * Getter for @see #deleteFile
+     * @return @see #deleteFile
      */
     public boolean getDeleteFile()
     {
@@ -132,8 +135,8 @@ public class FileTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @param deleteFile
-     * @see #deleteFile
+     * Setter for @see #deleteFile
+     * @param deleteFile @see #deleteFile
      */
     public void setDeleteFile(boolean deleteFile)
     {

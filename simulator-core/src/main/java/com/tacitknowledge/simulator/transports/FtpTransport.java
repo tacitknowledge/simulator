@@ -5,7 +5,7 @@ import com.tacitknowledge.simulator.Transport;
 /**
  * Transport implementation for FTP/SFTP endpoints
  *
- * @author galo
+ * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
 public class FtpTransport extends BaseTransport implements Transport
 {
@@ -45,8 +45,9 @@ public class FtpTransport extends BaseTransport implements Transport
     private boolean binary;
 
     /**
-     * @param host
-     * @param directoryName
+     * Constructor for FtpTransport class
+     * @param host @see #host
+     * @param directoryName @see #directoryName
      */
     public FtpTransport(String host, String directoryName)
     {
@@ -55,9 +56,10 @@ public class FtpTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @param host
-     * @param directoryName
-     * @param sftp
+     * Constructor for FtpTransport class with sftp option.
+     * @param host @see #host
+     * @param directoryName @see #directoryName
+     * @param sftp @see #sftp
      */
     public FtpTransport(String host, String directoryName, boolean sftp)
     {
@@ -67,14 +69,16 @@ public class FtpTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @param host
-     * @param port
-     * @param directoryName
-     * @param username
-     * @param password
-     * @param sftp
+     * Constructor for FtpTransport class with sftp option and credentials
+     * @param host @see #host
+     * @param port @see #port
+     * @param directoryName @see #directoryName
+     * @param username @see #username
+     * @param password @see #password
+     * @param sftp @see #sftp
      */
-    public FtpTransport(String host, String port, String directoryName, String username, String password, boolean sftp)
+    public FtpTransport(String host, String port, String directoryName, String username,
+            String password, boolean sftp)
     {
         this.host = host;
         this.port = port;
@@ -86,6 +90,7 @@ public class FtpTransport extends BaseTransport implements Transport
 
     /**
      * @inheritDoc
+     * @return @see #Transport.toUriString()
      */
     public String toUriString()
     {
@@ -93,8 +98,8 @@ public class FtpTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @return
-     * @see #host
+     * Getter for @see #host
+     * @return @see #host
      */
     public String getHost()
     {
@@ -102,8 +107,8 @@ public class FtpTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @param host
-     * @see #host
+     * Setter for @see #host
+     * @param host @see #host
      */
     public void setHost(String host)
     {
@@ -111,8 +116,8 @@ public class FtpTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @return
-     * @see #port
+     * Getter for @see #port
+     * @return @see #port
      */
     public String getPort()
     {
@@ -120,8 +125,8 @@ public class FtpTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @param port
-     * @see #port
+     * Setter for @see #port
+     * @param port @see #port
      */
     public void setPort(String port)
     {
@@ -129,8 +134,8 @@ public class FtpTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @return
-     * @see #directoryName
+     * Getter for @see #directoryName
+     * @return @see #directoryName
      */
     public String getDirectoryName()
     {
@@ -138,8 +143,8 @@ public class FtpTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @param directoryName
-     * @see #directoryName
+     * Setter for @see #directoryName
+     * @param directoryName @see #directoryName
      */
     public void setDirectoryName(String directoryName)
     {
@@ -147,8 +152,8 @@ public class FtpTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @return
-     * @see #username
+     * Getter for @see #username
+     * @return @see #username
      */
     public String getUsername()
     {
@@ -156,8 +161,8 @@ public class FtpTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @param username
-     * @see #username
+     * Setter for @see #username
+     * @param username @see #username
      */
     public void setUsername(String username)
     {
@@ -165,8 +170,8 @@ public class FtpTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @return
-     * @see #password
+     * Getter for @see #password
+     * @return @see #password
      */
     public String getPassword()
     {
@@ -174,8 +179,8 @@ public class FtpTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @param password
-     * @see #password
+     * Setter for @see #password
+     * @param password @see #password
      */
     public void setPassword(String password)
     {
@@ -183,8 +188,8 @@ public class FtpTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @return
-     * @see #sftp
+     * Getter for @see #sftp
+     * @return @see #sftp
      */
     public boolean isSftp()
     {
@@ -192,8 +197,8 @@ public class FtpTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @param sftp
-     * @see #sftp
+     * Setter for @see #sftp
+     * @param sftp @see #sftp
      */
     public void setSftp(boolean sftp)
     {
@@ -201,8 +206,8 @@ public class FtpTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @return
-     * @see #binary
+     * Getter for @see #binary
+     * @return @see #binary
      */
     public boolean isBinary()
     {
@@ -210,8 +215,8 @@ public class FtpTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @param binary
-     * @see #binary
+     * Setter for @see #binary
+     * @param binary @see #binary
      */
     public void setBinary(boolean binary)
     {

@@ -2,7 +2,8 @@ package com.tacitknowledge.simulator.transports;
 
 /**
  * Base Transport class. Contains attributes common to all transport implementations
- * @author galo
+ *
+ * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
 public class BaseTransport
 {
@@ -12,8 +13,8 @@ public class BaseTransport
     private String type;
 
     /**
-     * @see #type
-     * @return
+     * Getter for @see #type
+     * @return @see #type
      */
     public String getType()
     {
@@ -21,8 +22,8 @@ public class BaseTransport
     }
 
     /**
-     * @see #type
-     * @param type
+     * Setter for @see #type
+     * @param type @see #type
      */
     public void setType(String type)
     {
