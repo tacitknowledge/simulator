@@ -2,12 +2,11 @@ package com.tacitknowledge.simulator;
 
 import com.tacitknowledge.simulator.formats.FormatAdapterException;
 
-import java.util.Map;
-
 /**
  * Adapter interface for different data formats.
- * 
+ *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
+ * @param <E> Generic data object
  */
 public interface Adapter<E>
 {
@@ -16,6 +15,7 @@ public interface Adapter<E>
      * Used in the simulation.
      * @param e Generic information object
      * @return a SimulatorPojo object
+     * @throws FormatAdapterException in case the incoming data object is not in correct format
      */
     SimulatorPojo adaptFrom(E e) throws FormatAdapterException;
 

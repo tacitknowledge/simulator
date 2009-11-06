@@ -14,6 +14,12 @@ import java.util.Map;
 public class AdapterFactory
 {
     /**
+     * Hiding the default constructor
+     */
+    private AdapterFactory()
+    {
+    }
+    /**
      * Container for the adapters.
      */
     private static Map<String, Adapter> adapters = new HashMap<String, Adapter>()
@@ -33,7 +39,7 @@ public class AdapterFactory
      * @param format The format of the data. @see com.tacitknowledge.simulator.FormatConstants
      * @return Adapter for the specified format or null if the format is not supported.
      */
-    public static Adapter getAdapter(String format)
+    public static Adapter< ? > getAdapter(String format)
     {
         return adapters.get(format);
     }

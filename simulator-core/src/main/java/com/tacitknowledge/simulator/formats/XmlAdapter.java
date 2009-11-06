@@ -6,10 +6,17 @@ import com.tacitknowledge.simulator.StructuredSimulatorPojo;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.log4j.Logger;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.Text;
 import org.xml.sax.InputSource;
-import org.w3c.dom.*;
+import org.xml.sax.SAXException;
 
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,17 +28,31 @@ import java.util.List;
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class XmlAdapter implements Adapter
+public class XmlAdapter implements Adapter<Object>
 {
+    /**
+     * Logger for this class.
+     */
+    private static Logger logger = Logger.getLogger(XmlAdapter.class);
+
     /**
      * Adapts the String data received from the inbound transport into XML format.
      *
-     * @return an object constructed based on the inboud transport data.
+     * @return an object constructed based on the inbound transport data.
+     * @param object the incoming data object to adapt to XML format.
+     * @throws FormatAdapterException in case the incoming message is not formatted correctly
+     * for XmlAdapter to adapt it.
      */
-    public SimulatorPojo adaptFrom(Object o) throws FormatAdapterException
+    public SimulatorPojo adaptFrom(Object object) throws FormatAdapterException
     {
-        if (!(o instanceof String))
-            throw new FormatAdapterException("Input data is expected to be a String. Instead, input data is " + o.getClass().getName());
+        if (!(object instanceof String))
+        {
+            logger.error("Incoming data object, wasn't correctly formatted for the XmlParser");
+
+            throw new FormatAdapterException(
+                    "Input data is expected to be a String. Instead, input data is "
+                            + object.getClass().getName());
+        }
 
         SimulatorPojo pojo = new StructuredSimulatorPojo();
 
@@ -41,25 +62,56 @@ public class XmlAdapter implements Adapter
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
             InputSource is = new InputSource();
-            is.setCharacterStream(new StringReader((String) o));
+
+            is.setCharacterStream(new StringReader((String) object));
 
             Document doc = db.parse(is);
 
             // --- Well-formatted Xml should have a single root, right?
             Element docElem = doc.getDocumentElement();
             Map<String, Map> root = new HashMap<String, Map>();
+
+            logger.debug("Constructing the root node of the xml document");
+
             root.put(docElem.getTagName(), getStructuredChilds(docElem));
 
             pojo.setRoot(root);
         }
-        catch (Exception e)
+
+        catch (ParserConfigurationException pce)
         {
-            throw new FormatAdapterException("Unexpected error trying to adapt from Xml: " + e.getMessage(), e);
+            String errorMessage = "Unexpected error trying to adapt from Xml: " + pce.getMessage();
+
+            logger.error(errorMessage, pce);
+
+            throw new FormatAdapterException(errorMessage, pce);
+        }
+
+        catch (SAXException se)
+        {
+            String errorMessage = "Unexpected error trying to adapt from Xml: " + se.getMessage();
+
+            logger.error(errorMessage, se);
+
+            throw new FormatAdapterException(errorMessage, se);
+        }
+        catch (IOException ioe)
+        {
+            String errorMessage = "Unexpected error trying to adapt from Xml: " + ioe.getMessage();
+
+            logger.error(errorMessage, ioe);
+
+            throw new FormatAdapterException(errorMessage, ioe);
         }
 
         return pojo;
     }
 
+    /**
+     * Constructs all of the child nodes of the XML document in a Map of Name, Value structure.
+     * @param elem XML element to parse for children.
+     * @return Map of Name, Value structure.
+     */
     private Map getStructuredChilds(Element elem)
     {
         Map<String, Object> structuredChild = new HashMap<String, Object>();
@@ -79,6 +131,8 @@ public class XmlAdapter implements Adapter
             // --- We make sure we get an Element so we can get the underlying node name
             Element child = (Element) nd;
             String currNodeName = child.getTagName();
+
+            logger.debug("Constructing the " + currNodeName + " node of the xml document");
 
             // --- Check if the structuredChilds Map contains the current node name
             if (structuredChild.containsKey(currNodeName))
@@ -108,7 +162,7 @@ public class XmlAdapter implements Adapter
             else
             {
                 // --- If the child is a text node with value. return null
-                if (child instanceof Text && child.getNodeValue().trim() != "")
+                if (child instanceof Text && !child.getNodeValue().trim().equals(""))
                 {
                     return null;
                 }
@@ -137,6 +191,7 @@ public class XmlAdapter implements Adapter
     /**
      * Adapts the data from simulation to the XML formatted object
      *
+     * @param pojo the SimulatorPojo with the data to be transformed into XML structure.
      * @return an object constructed based on the data received from execution of the simulation
      */
     public Object adaptTo(SimulatorPojo pojo)
