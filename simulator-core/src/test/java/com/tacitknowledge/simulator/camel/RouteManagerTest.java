@@ -16,7 +16,7 @@ import org.junit.Test;
  */
 public class RouteManagerTest extends CamelTestSupport
 {
-    RouteManager routeManager;
+    RouteManager routeManager = new RouteManager();
 
     @EndpointInject(uri = "mock:result")
     protected MockEndpoint resultEndpoint;
@@ -51,13 +51,12 @@ public class RouteManagerTest extends CamelTestSupport
             return "mock:result";
         }
     };
-
-
+    
+    final Conversation conversation = new Conversation(1, inTransport, outTransport, new JsonAdapter(), new JsonAdapter());
+    
     @Test
     public void testActivate() throws Exception
     {
-
-
         String expectedBody = "<matched/>";
 
         resultEndpoint.expectedBodiesReceived(expectedBody);
@@ -65,23 +64,28 @@ public class RouteManagerTest extends CamelTestSupport
         template.sendBody(expectedBody);
 
         resultEndpoint.assertIsSatisfied();
-
     }
+    
+    @Test
+    public void testDeactivate() throws Exception
+    {
+        routeManager.deactivate(conversation);
+        
+        String expectedBody = "<matched/>";
+        
+        resultEndpoint.setResultWaitTime(500);
 
+        resultEndpoint.expectedBodiesReceived(expectedBody);
+
+        template.sendBody(expectedBody);
+
+        resultEndpoint.assertIsNotSatisfied();
+    }
 
     @Override
     protected RouteBuilder createRouteBuilder() throws Exception
     {
-        final Conversation conversation = new Conversation(1, inTransport, outTransport, new JsonAdapter(), new JsonAdapter());
-
-        routeManager = new RouteManager();
         routeManager.activate(conversation);
         return routeManager;
     }
-
-//    @Test
-//    public void testDeactivate()
-//    {
-//        // Add your code here
-//    }
 }
