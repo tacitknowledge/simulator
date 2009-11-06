@@ -19,7 +19,7 @@ public class AdapterWrapper implements Processor
     /**
      * Logger for the AdapterWrapper class.
      */
-    private static final Logger logger = Logger.getLogger(AdapterWrapper.class);
+    private static Logger logger = Logger.getLogger(AdapterWrapper.class);
 
     /**
      * Constructor for the AdapterWrapper class

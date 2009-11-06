@@ -29,12 +29,6 @@ public class RouteManager extends RouteBuilder
     private Map<Conversation, RouteDefinition> convRoutes
             = new HashMap<Conversation, RouteDefinition>();
 
-
-    public RouteManager()
-    {
-    }
-
-
     /**
      * Implementaion of route builder configure
      *

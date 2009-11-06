@@ -25,7 +25,7 @@ public class ScenarioExecutionWrapper implements Processor
     /**
      * Logger for the ScenarioExecutionWrapper class.
      */
-    private static final Logger logger
+    private static Logger logger
             = Logger.getLogger(ScenarioExecutionWrapper.class);
 
     /**
@@ -39,7 +39,14 @@ public class ScenarioExecutionWrapper implements Processor
         {
             logger.warn("Something is probably wrong: Scenarios are null");
         }
-        this.scenarios = scenarios == null ? new ArrayList<ConversationScenario>() : scenarios;
+        if (this.scenarios == null)
+        {
+            this.scenarios = new ArrayList<ConversationScenario>();
+        }
+        else
+        {
+            this.scenarios = scenarios;
+        }
     }
 
     /**
