@@ -20,7 +20,7 @@ public class ConversationManagerImpl implements ConversationManager
     /**
      * Singleton instance
      */
-    private static ConversationManager _instance;
+    private static ConversationManager instance;
 
     /**
      * CamelRoutes manager
@@ -35,7 +35,8 @@ public class ConversationManagerImpl implements ConversationManager
     /**
      * Private Singleton constructor
      *
-     * @param routeManager RouteManager to use
+     * @param routeManager
+     *            RouteManager to use
      */
     private ConversationManagerImpl(RouteManager routeManager)
     {
@@ -49,11 +50,11 @@ public class ConversationManagerImpl implements ConversationManager
      */
     public static synchronized ConversationManager getInstance()
     {
-        if (_instance == null)
+        if (instance == null)
         {
             try
             {
-                _instance = new ConversationManagerImpl(new RouteManager());
+                instance = new ConversationManagerImpl(new RouteManager());
             }
             catch (Exception e)
             {
@@ -61,50 +62,71 @@ public class ConversationManagerImpl implements ConversationManager
                 throw new RuntimeException(e);
             }
         }
-        return _instance;
+        return instance;
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    public Conversation createConversation(Integer id, Transport inboundTransport, Transport outboundTransport, String inboundFormat, String outboundFormat) throws UnsupportedFormatException
+    public Conversation createConversation(Integer id, Transport inboundTransport,
+            Transport outboundTransport, String inboundFormat, String outboundFormat)
+            throws SimulatorException
     {
         Adapter inAdapter = AdapterFactory.getAdapter(inboundFormat);
         Adapter outAdapter = AdapterFactory.getAdapter(inboundFormat);
-        Conversation conversation =
-                ConversationFactory.createConversation(id, inboundTransport, outboundTransport, inAdapter, outAdapter);
+        Conversation conversation = ConversationFactory.createConversation(id, inboundTransport,
+                outboundTransport, inAdapter, outAdapter);
         assert conversations.get(id) == null;
         conversations.put(id, conversation);
         return conversation;
     }
 
     /**
-     * @param id conversationId
+     * @param id
+     *            conversationId
      * @return conversation from the list of created conversations
-     * @throws ConversationNotFoundException
+     * @throws ConversationNotFoundException in case conversation is not found
      */
     private Conversation getConversationById(int id) throws ConversationNotFoundException
     {
         Conversation conversation = conversations.get(id);
         if (conversation == null)
         {
-            throw new ConversationNotFoundException("Conversation with id " + id + " is not created.");
+            throw new ConversationNotFoundException("Conversation with id " + id
+                    + " is not created.");
         }
         return conversation;
     }
 
     /**
      * @inheritDoc
+     * @param conversationId the id of the conversation to be created
+     * @param language
+     *            The scripting language for the scenario. This would be System wide.
+     * @param criteria
+     *            The criteria script
+     * @param transformation
+     *            The transformation script
      */
-    public void createConversationScenario(int conversationId, String language, String criteria, String transformation)
+    public void createConversationScenario(int conversationId, String language, String criteria,
+            String transformation)
     {
+        Conversation conversation = conversations.get(conversationId);
 
+        if (conversation != null)
+        {
+            conversation.addScenario(language, criteria, transformation);
+        }
     }
 
     /**
      * @inheritDoc
+     * @param conversationId conversation id of the conversation to be activated.
+     * @throws ConversationNotFoundException exception.
+     * @throws SimulatorException exception.
      */
-    public void activate(int conversationId) throws ConversationNotFoundException, SimulatorException
+    public void activate(int conversationId) throws ConversationNotFoundException,
+            SimulatorException
     {
         Conversation conversation = getConversationById(conversationId);
         try
@@ -120,8 +142,12 @@ public class ConversationManagerImpl implements ConversationManager
 
     /**
      * @inheritDoc
+     * @param conversationId conversation id of the conversation to be deactivated.
+     * @throws ConversationNotFoundException exception.
+     * @throws SimulatorException exception.
      */
-    public void deactivate(int conversationId) throws ConversationNotFoundException, SimulatorException
+    public void deactivate(int conversationId) throws ConversationNotFoundException,
+            SimulatorException
     {
 
         Conversation conversation = getConversationById(conversationId);
@@ -138,6 +164,8 @@ public class ConversationManagerImpl implements ConversationManager
 
     /**
      * @inheritDoc
+     * @param conversationId conversation id of the conversation to be deleted.
+     * @throws SimulatorException exception.
      */
     public void deleteConversation(int conversationId) throws SimulatorException
     {
@@ -148,7 +176,7 @@ public class ConversationManagerImpl implements ConversationManager
         }
         catch (ConversationNotFoundException e)
         {
-            //ignore
+            logger.error("Conversation with id : " + conversationId + " was not found.", e);
         }
     }
 }

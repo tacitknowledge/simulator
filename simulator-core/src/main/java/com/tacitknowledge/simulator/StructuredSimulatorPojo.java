@@ -2,13 +2,16 @@ package com.tacitknowledge.simulator;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 /**
+ * The data transfer object used in simulations.
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
 public class StructuredSimulatorPojo implements SimulatorPojo
 {
+    /**
+     * {@inheritDoc}
+     */
     public Map getRoot()
     {
         return root;
@@ -16,11 +19,15 @@ public class StructuredSimulatorPojo implements SimulatorPojo
 
     /**
      * The Map containing the actual input data, structured depending on the
-     * original input format. Each Adapter implementation should structure data as fitting to its format.
+     * original input format. Each Adapter implementation should
+     * structure data as fitting to its format.
      * The Map's contents can be other containing objects (either Map or List) or String attributes
      */
     private Map root;
 
+    /**
+     * Constructor for the StructuredSimulatorPojo
+     */
     public StructuredSimulatorPojo()
     {
         root = new HashMap();
@@ -35,35 +42,35 @@ public class StructuredSimulatorPojo implements SimulatorPojo
     {
         String attr = null;
 
-        // --- 
-        StringTokenizer st = new StringTokenizer(name, ".");
-        while (st.hasMoreTokens())
-        {
-            String token = st.nextToken();
-            Object tmpObj = root;
-
-            if (tmpObj instanceof Map)
-            {
-
-            }
-
-            /*
-            if (tmpMap.containsKey(token)) {
-                if (root.get(name) instanceof Map && st.hasMoreTokens()) {
-                    tmpMap = (Map) root.get(token);
-                } else {
-                    attr = (String) root.get(token);
-                }
-            }*/
-        }
+//        StringTokenizer st = new StringTokenizer(name, ".");
+//        while (st.hasMoreTokens())
+//        {
+//            String token = st.nextToken();
+//            Object tmpObj = root;
+//
+//            if (tmpObj instanceof Map)
+//            {
+//
+//            }
+//
+//
+//            if (tmpMap.containsKey(token)) {
+//                if (root.get(name) instanceof Map && st.hasMoreTokens()) {
+//                    tmpMap = (Map) root.get(token);
+//                } else {
+//                    attr = (String) root.get(token);
+//                }
+//            }
+//        }
         return attr;
     }
 
     /**
-     * @see #root
+     * Setter for @see #root
      * @param root The structured data in a Map
      */
-    public void setRoot(Map root) {
+    public void setRoot(Map root)
+    {
         this.root = root;
     }
 }

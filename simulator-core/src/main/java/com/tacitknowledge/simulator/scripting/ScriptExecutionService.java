@@ -4,8 +4,8 @@ import org.apache.bsf.BSFException;
 import org.apache.bsf.BSFManager;
 import org.apache.log4j.Logger;
 
-import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Service that executes a supplied script. The service supports any BSF-compatible scripting
@@ -116,18 +116,19 @@ public class ScriptExecutionService
      * @throws ScriptException
      *             if there was a problem adding a bean to the interpreter
      */
-    private void bindObjectToEngineRuntime(BSFManager manager, Map beans) throws ScriptException
+    private void bindObjectToEngineRuntime(BSFManager manager,
+            Map<String, Object> beans) throws ScriptException
     {
         if (beans == null)
         {
             return;
         }
 
-        Iterator i = beans.keySet().iterator();
-        while (i.hasNext())
+        for (Entry<String, Object> entry : beans.entrySet())
         {
-            String varName = (String) i.next();
-            Object varValue = beans.get(varName);
+            String varName = entry.getKey();
+            Object varValue = entry.getValue();
+
             if (varValue != null)
             {
                 logger.debug("Registering bean '" + varName + "' [" + varValue.getClass().getName()

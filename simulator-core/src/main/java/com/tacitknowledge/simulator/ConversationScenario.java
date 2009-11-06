@@ -7,6 +7,11 @@ package com.tacitknowledge.simulator;
  */
 public class ConversationScenario
 {
+   /**
+    * Prime number to be used in the hashcode method.
+    */
+   private static final int HASH_CODE_PRIME = 29;
+
     /**
      * The scripting language used for this conversation's scenarios
      */
@@ -28,11 +33,13 @@ public class ConversationScenario
     private boolean active;
 
     /**
-     * @param scriptLanguage
-     * @param criteriaScript
-     * @param transformationScript
+     * Constructor for the conversation scenario class
+     * @param scriptLanguage the scripting language used in the simulation
+     * @param criteriaScript the criteria script to match
+     * @param transformationScript the transformation script for the scenario.
      */
-    public ConversationScenario(String scriptLanguage, String criteriaScript, String transformationScript)
+    public ConversationScenario(String scriptLanguage, String criteriaScript,
+            String transformationScript)
     {
         this.scriptLanguage = scriptLanguage;
         this.criteriaScript = criteriaScript;
@@ -42,7 +49,7 @@ public class ConversationScenario
     /**
      * Sets the active flag
      *
-     * @param active
+     * @param active @see #active
      */
     public void setActive(boolean active)
     {
@@ -52,7 +59,7 @@ public class ConversationScenario
     /**
      * Returns if this scenarios is active or not
      *
-     * @return
+     * @return @see #active
      */
     public boolean isActive()
     {
@@ -63,9 +70,9 @@ public class ConversationScenario
      * Starts this scenario execution with the provided entry data
      *
      * @param pojo The scenario entry data
-     * @return
+     * @return the transformed data object
      */
-    public Object run(SimulatorPojo pojo)
+    public Object executeTransformation(SimulatorPojo pojo)
     {
         return null;
     }
@@ -82,29 +89,64 @@ public class ConversationScenario
         return false;
     }
 
-    @Override
+    /**
+     * Determines if the current conversation scenario object is
+     * equal to the one supplied as parameter.
+     * @param o Conversation scenario object to be compared with current one.
+     * @return true if the objects are considered equal, false otherwise
+     */
     public boolean equals(Object o)
     {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+        {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass())
+        {
+            return false;
+        }
 
         ConversationScenario that = (ConversationScenario) o;
 
-        if (active != that.active) return false;
-        if (!criteriaScript.equals(that.criteriaScript)) return false;
-        if (!scriptLanguage.equals(that.scriptLanguage)) return false;
-        if (!transformationScript.equals(that.transformationScript)) return false;
+        if (active != that.active)
+        {
+            return false;
+        }
+        if (!criteriaScript.equals(that.criteriaScript))
+        {
+            return false;
+        }
+        if (!scriptLanguage.equals(that.scriptLanguage))
+        {
+            return false;
+        }
+        if (!transformationScript.equals(that.transformationScript))
+        {
+            return false;
+        }
 
         return true;
     }
 
-    @Override
+    /**
+     * Override for the hashcode.
+     * @return hashcode
+     */
     public int hashCode()
     {
         int result = scriptLanguage.hashCode();
-        result = 31 * result + criteriaScript.hashCode();
-        result = 31 * result + transformationScript.hashCode();
-        result = 31 * result + (active ? 1 : 0);
+        result = HASH_CODE_PRIME * result + criteriaScript.hashCode();
+        result = HASH_CODE_PRIME * result + transformationScript.hashCode();
+
+        if (active)
+        {
+            result = HASH_CODE_PRIME * result + 1;
+        }
+        else
+        {
+            result = HASH_CODE_PRIME * result + 0;
+        }
+
         return result;
     }
 }

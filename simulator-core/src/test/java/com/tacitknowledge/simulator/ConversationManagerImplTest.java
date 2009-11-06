@@ -34,7 +34,7 @@ public class ConversationManagerImplTest
     };
 
     @Test
-    public void testCreateConversation() throws UnsupportedFormatException
+    public void testCreateConversation() throws SimulatorException
     {
         ConversationManager manager = ConversationManagerImpl.getInstance();
 
@@ -55,7 +55,7 @@ public class ConversationManagerImplTest
             conversation = manager.createConversation(null, in, out, "WTF?", FormatConstants.XML);
             fail();
         }
-        catch (UnsupportedFormatException e)
+        catch (SimulatorException e)
         {
             //everything is ok.
         }

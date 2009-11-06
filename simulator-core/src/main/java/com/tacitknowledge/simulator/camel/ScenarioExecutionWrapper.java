@@ -38,9 +38,6 @@ public class ScenarioExecutionWrapper implements Processor
         if (scenarios == null)
         {
             logger.warn("Something is probably wrong: Scenarios are null");
-        }
-        if (this.scenarios == null)
-        {
             this.scenarios = new ArrayList<ConversationScenario>();
         }
         else
@@ -72,7 +69,7 @@ public class ScenarioExecutionWrapper implements Processor
                 logger.debug("Scenario : " + scenario
                         + " was matched, executing the transformation script.");
 
-                result = scenario.run((SimulatorPojo) data);
+                result = scenario.executeTransformation((SimulatorPojo) data);
                 // setting the result of simulation as imput parameter for the next step
                 exchange.getIn().setBody(result);
                 break;

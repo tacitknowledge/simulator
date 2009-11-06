@@ -1,31 +1,41 @@
 package com.tacitknowledge.simulator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The Simulator conversation as set up by the user.
- * Works as a wrapper arround Camel route definition for entry and exit endpoints.
+ * The Simulator conversation as set up by the user. Works as a wrapper around Camel route
+ * definition for entry and exit endpoints.
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
 public class Conversation
 {
     /**
+     * Prime number to be used in the hashcode method.
+     */
+    private static final int HASH_CODE_PRIME = 31;
+
+    /**
      * Conversation ID.
      */
     private Integer id;
+
     /**
      * Wrapper for inbound transport configuration
      */
     private Transport inboundTransport;
+
     /**
      * Wrapper for outbound transport configuration
      */
     private Transport outboundTransport;
+
     /**
      * Wrapper for inbound format adapter
      */
     private Adapter inboundAdapter;
+
     /**
      * Wrapper for outbound format adapter
      */
@@ -37,38 +47,59 @@ public class Conversation
     private List<ConversationScenario> scenarios;
 
     /**
-     * @param id                Conversation ID
-     * @param inboundTransport  Wrapper for inbound transport configuration
-     * @param outboundTransport Wrapper for outbound transport configuration
-     * @param inboundAdapter    Wrapper for inbound format adapter
-     * @param outboundAdapter   Wrapper for outbound format adapter
+     * @param id
+     *            Conversation ID
+     * @param inboundTransport
+     *            Wrapper for inbound transport configuration
+     * @param outboundTransport
+     *            Wrapper for outbound transport configuration
+     * @param inboundAdapter
+     *            Wrapper for inbound format adapter
+     * @param outboundAdapter
+     *            Wrapper for outbound format adapter
      */
-    public Conversation(Integer id, Transport inboundTransport, Transport outboundTransport, Adapter inboundAdapter, Adapter outboundAdapter)
+    public Conversation(Integer id, Transport inboundTransport, Transport outboundTransport,
+            Adapter inboundAdapter, Adapter outboundAdapter)
     {
         this.id = id;
         this.inboundTransport = inboundTransport;
         this.outboundTransport = outboundTransport;
         this.inboundAdapter = inboundAdapter;
         this.outboundAdapter = outboundAdapter;
+        this.scenarios = new ArrayList<ConversationScenario>();
     }
 
     /**
      * Adds a new Scenario to this Conversation
      *
-     * @param language       The scripting language to be used.
-     * @param criteria
-     * @param transformation
-     * @return
+     * @param language
+     *            The scripting language to be used.
+     * @param criteria criteria script to be executed by the simulator
+     * @param transformation transformation script to be executed by the simulator
+     * @return ConversationScenario conversation scenario added to the conversation
      */
     public ConversationScenario addScenario(String language, String criteria, String transformation)
     {
-        return null;
+        ConversationScenario conversationScenario
+                    = new ConversationScenario(language, criteria, transformation);
+
+        if (this.scenarios == null)
+        {
+            this.scenarios = new ArrayList<ConversationScenario>();
+        }
+
+        if (!scenarios.contains(conversationScenario))
+        {
+            scenarios.add(conversationScenario);
+        }
+
+        return conversationScenario;
     }
 
     /**
      * Returns this conversation inbound transport
      *
-     * @return
+     * @return inbound transport
      */
     public Transport getInboundTransport()
     {
@@ -78,7 +109,7 @@ public class Conversation
     /**
      * Returns this conversation outbound transport
      *
-     * @return
+     * @return outbound transport
      */
     public Transport getOutboundTransport()
     {
@@ -88,7 +119,7 @@ public class Conversation
     /**
      * Retuns this conversation inbound format adapter
      *
-     * @return
+     * @return inbound adapter
      */
     public Adapter getInboundAdapter()
     {
@@ -98,7 +129,7 @@ public class Conversation
     /**
      * Retuns this conversation outbound format adapter
      *
-     * @return
+     * @return outbound adapter
      */
     public Adapter getOutboundAdapter()
     {
@@ -108,39 +139,70 @@ public class Conversation
     /**
      * Returns the current list of configured scenarios for this conversation
      *
-     * @return
+     * @return a list of ConversationScenarios
      */
     public List<ConversationScenario> getScenarios()
     {
         return scenarios;
     }
 
-    @Override
+    /**
+     * Determines if the current conversation object is equal to the one supplied as parameter.
+     * @param o Conversation object to be compared with current one.
+     * @return true if the objects are considered equal, false otherwise
+     */
     public boolean equals(Object o)
     {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+        {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass())
+        {
+            return false;
+        }
 
         Conversation that = (Conversation) o;
 
-        if (!id.equals(that.id)) return false;
-        if (!inboundAdapter.equals(that.inboundAdapter)) return false;
-        if (!inboundTransport.equals(that.inboundTransport)) return false;
-        if (!outboundAdapter.equals(that.outboundAdapter)) return false;
-        if (!outboundTransport.equals(that.outboundTransport)) return false;
-        if (!scenarios.equals(that.scenarios)) return false;
+        if (!id.equals(that.id))
+        {
+            return false;
+        }
+        if (!inboundAdapter.equals(that.inboundAdapter))
+        {
+            return false;
+        }
+        if (!inboundTransport.equals(that.inboundTransport))
+        {
+            return false;
+        }
+        if (!outboundAdapter.equals(that.outboundAdapter))
+        {
+            return false;
+        }
+        if (!outboundTransport.equals(that.outboundTransport))
+        {
+            return false;
+        }
+        if (!scenarios.equals(that.scenarios))
+        {
+            return false;
+        }
 
         return true;
     }
 
-    @Override
+    /**
+     * Override for the hashcode.
+     * @return hashcode
+     */
     public int hashCode()
     {
         int result = id.hashCode();
-        result = 31 * result + inboundTransport.hashCode();
-        result = 31 * result + outboundTransport.hashCode();
-        result = 31 * result + inboundAdapter.hashCode();
-        result = 31 * result + outboundAdapter.hashCode();
+        result = HASH_CODE_PRIME * result + inboundTransport.hashCode();
+        result = HASH_CODE_PRIME * result + outboundTransport.hashCode();
+        result = HASH_CODE_PRIME * result + inboundAdapter.hashCode();
+        result = HASH_CODE_PRIME * result + outboundAdapter.hashCode();
         return result;
     }
 }
