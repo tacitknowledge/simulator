@@ -1,5 +1,7 @@
 package com.tacitknowledge.simulator;
 
+import org.apache.log4j.Logger;
+
 /**
  * A wrapper for Conversation Scenarios, containing all the information needed for its execution
  *
@@ -7,6 +9,10 @@ package com.tacitknowledge.simulator;
  */
 public class ConversationScenario
 {
+    /**
+     * Logger for this class.
+     */
+    private static Logger logger = Logger.getLogger(ConversationScenario.class);
    /**
     * Prime number to be used in the hashcode method.
     */

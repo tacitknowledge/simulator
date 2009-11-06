@@ -59,6 +59,7 @@ public class ConversationManagerImpl implements ConversationManager
             catch (Exception e)
             {
                 logger.error("Critical error during Simulator initialization");
+
                 throw new RuntimeException(e);
             }
         }
@@ -77,22 +78,29 @@ public class ConversationManagerImpl implements ConversationManager
         Conversation conversation = ConversationFactory.createConversation(id, inboundTransport,
                 outboundTransport, inAdapter, outAdapter);
         assert conversations.get(id) == null;
+
         conversations.put(id, conversation);
+
+        logger.debug("Created new conversation with id : " + id);
+
         return conversation;
     }
 
     /**
-     * @param id
+     * @param conversationId
      *            conversationId
      * @return conversation from the list of created conversations
      * @throws ConversationNotFoundException in case conversation is not found
      */
-    private Conversation getConversationById(int id) throws ConversationNotFoundException
+    private Conversation getConversationById(int conversationId)
+            throws ConversationNotFoundException
     {
-        Conversation conversation = conversations.get(id);
+        Conversation conversation = conversations.get(conversationId);
         if (conversation == null)
         {
-            throw new ConversationNotFoundException("Conversation with id " + id
+            logger.error("Conversation with id : " + conversationId + " is not found.");
+
+            throw new ConversationNotFoundException("Conversation with id " + conversationId
                     + " is not created.");
         }
         return conversation;
@@ -135,8 +143,10 @@ public class ConversationManagerImpl implements ConversationManager
         }
         catch (Exception e)
         {
-            throw new SimulatorException("Conversation activation exception", e);
+            logger.error("Conversation with id : "
+                    + conversationId + " couldn't be activated.", e);
 
+            throw new SimulatorException("Conversation activation exception", e);
         }
     }
 
@@ -157,6 +167,9 @@ public class ConversationManagerImpl implements ConversationManager
         }
         catch (Exception e)
         {
+            logger.error("Conversation with id : "
+                    + conversationId + " couldn't be deactivated.", e);
+
             throw new SimulatorException("Conversation deactivation exception", e);
         }
 

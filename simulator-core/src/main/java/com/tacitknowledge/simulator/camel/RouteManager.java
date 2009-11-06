@@ -86,6 +86,7 @@ public class RouteManager extends RouteBuilder
         if (definition != null)
         {
             getContext().stopRoute(definition);
+
             logger.debug("Route : " + definition.getId() + " was stopped in the context : "
                     + getContext().getName());
         }

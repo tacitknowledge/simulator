@@ -3,6 +3,8 @@ package com.tacitknowledge.simulator;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 /**
  * The Simulator conversation as set up by the user. Works as a wrapper around Camel route
  * definition for entry and exit endpoints.
@@ -11,6 +13,10 @@ import java.util.List;
  */
 public class Conversation
 {
+    /**
+     * Logger for this class.
+     */
+    private static Logger logger = Logger.getLogger(Conversation.class);
     /**
      * Prime number to be used in the hashcode method.
      */
@@ -91,6 +97,9 @@ public class Conversation
         if (!scenarios.contains(conversationScenario))
         {
             scenarios.add(conversationScenario);
+
+            logger.debug("Added new conversation scenario"
+                    + " to the conversation with id : " + this.id);
         }
 
         return conversationScenario;

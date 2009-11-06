@@ -1,5 +1,7 @@
 package com.tacitknowledge.simulator;
 
+import org.apache.log4j.Logger;
+
 /**
  * Factory for creating conversation objects
  *
@@ -7,6 +9,10 @@ package com.tacitknowledge.simulator;
  */
 public class ConversationFactory
 {
+    /**
+     * Logger for this class.
+     */
+    private static Logger logger = Logger.getLogger(ConversationFactory.class);
     /**
      * Creates a new Conversation from the given transports and adapters.
      *
@@ -25,8 +31,12 @@ public class ConversationFactory
 
         if (inboundAdapter == null || outboundAdapter == null)
         {
-            throw new SimulatorException("Both inbound and outbound"
-                    + " adapters are required for conversation");
+            String errorMessage = "Both inbound and outbound"
+                + " adapters are required for conversation";
+
+            logger.error(errorMessage);
+
+            throw new SimulatorException(errorMessage);
         }
         return new Conversation(id, inboundTransport, outboundTransport, inboundAdapter,
                 outboundAdapter);
