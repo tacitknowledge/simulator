@@ -26,8 +26,8 @@ public class RouteManager extends RouteBuilder
      * Container for the routes inside the current camel context. Used for activation and
      * deactivation of the routes.
      */
-    private Map<Conversation, RouteDefinition> convRoutes
-            = new HashMap<Conversation, RouteDefinition>();
+    private Map<String, RouteDefinition> convRoutes
+            = new HashMap<String, RouteDefinition>();
 
     /**
      * Implementaion of route builder configure
@@ -48,7 +48,9 @@ public class RouteManager extends RouteBuilder
      */
     public void activate(Conversation conversation) throws Exception
     {
-        RouteDefinition definition = convRoutes.get(conversation);
+        String conversationUniqueId = conversation.getUniqueId();
+
+        RouteDefinition definition = convRoutes.get(conversationUniqueId);
 
         if (definition == null)
         {
@@ -62,7 +64,8 @@ public class RouteManager extends RouteBuilder
 
             // --- Exit endpoint
             definition.to(conversation.getOutboundTransport().toUriString());
-            convRoutes.put(conversation, definition);
+            definition.setId(conversationUniqueId);
+            convRoutes.put(conversationUniqueId, definition);
 
             logger.debug("Route : " + definition.getId() + " was added to the context : "
                     + getContext().getName());
@@ -82,7 +85,7 @@ public class RouteManager extends RouteBuilder
      */
     public void deactivate(Conversation conversation) throws Exception
     {
-        RouteDefinition definition = convRoutes.get(conversation);
+        RouteDefinition definition = convRoutes.get(conversation.getUniqueId());
         if (definition != null)
         {
             getContext().stopRoute(definition);

@@ -146,6 +146,25 @@ public class Conversation
     }
 
     /**
+     * Gets the unique id of the conversation based on the parameters provided
+     * on object construction. Needed to ensure that RouteManager doesn't add
+     * two identic routes to camel.
+     * @return unique id based on the parameters of the object.
+     */
+    public String getUniqueId()
+    {
+        StringBuffer sb = new StringBuffer();
+
+        sb.append(id.toString()).append("|").
+            append(getInboundTransport().toUriString()).append("|").
+                append(getInboundAdapter().getClass().getName()).append("|").
+                    append(getOutboundAdapter().getClass().getName()).append("|").
+                        append(getOutboundTransport().toUriString());
+
+        return sb.toString();
+    }
+
+    /**
      * Returns the current list of configured scenarios for this conversation
      *
      * @return a list of ConversationScenarios
