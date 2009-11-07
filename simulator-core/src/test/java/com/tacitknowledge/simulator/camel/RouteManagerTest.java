@@ -2,7 +2,6 @@ package com.tacitknowledge.simulator.camel;
 
 import com.tacitknowledge.simulator.Conversation;
 import com.tacitknowledge.simulator.Transport;
-import com.tacitknowledge.simulator.formats.CsvAdapter;
 import com.tacitknowledge.simulator.formats.JsonAdapter;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.Produce;
@@ -20,16 +19,24 @@ import org.junit.Test;
  */
 public class RouteManagerTest extends CamelTestSupport
 {
+    /** Timeout for the camel end point to wait */
+    private static final int TIMEOUT = 500;
+
     /** Class under test */
-    RouteManager routeManager = new RouteManager();
+    private RouteManager routeManager = new RouteManager();
 
+    /** MockEnd point to receive the message */
     @EndpointInject(uri = "mock:result")
-    protected MockEndpoint resultEndpoint;
+    private MockEndpoint resultEndpoint;
 
+    /** MockEntry point to send the message */
     @Produce(uri = "direct:start")
-    protected ProducerTemplate template;
+    private ProducerTemplate template;
 
-    final private Transport inTransport = new Transport()
+    /**
+     * A transport to use in tests
+     */
+    private final Transport inTransport = new Transport()
     {
 
         public String getType()
@@ -42,13 +49,16 @@ public class RouteManagerTest extends CamelTestSupport
             return "direct:start";
         }
     };
-    
-    final private Transport outTransport = new Transport()
+
+    /**
+     * A transport to use in tests
+     */
+    private final Transport outTransport = new Transport()
     {
 
         public String getType()
         {
-            return "yyyy";
+            return "file";
         }
 
         public String toUriString()
@@ -56,13 +66,16 @@ public class RouteManagerTest extends CamelTestSupport
             return "mock:result";
         }
     };
-    
-    final private Transport outTransport1 = new Transport()
+
+    /**
+     * A transport to use in tests
+     */
+    private final Transport outTransport1 = new Transport()
     {
 
         public String getType()
         {
-            return "yyyy";
+            return "file";
         }
 
         public String toUriString()
@@ -70,57 +83,112 @@ public class RouteManagerTest extends CamelTestSupport
             return "mock:result1";
         }
     };
-    
-    final Conversation conversation1 = new Conversation(1, inTransport, outTransport, new JsonAdapter(), new JsonAdapter());
-    final Conversation conversation2 = new Conversation(1, inTransport, outTransport1, new JsonAdapter(), new JsonAdapter());
-    
+
+    /** Conversation to be used in tests */
+    private final Conversation conversation1
+        = new Conversation(1, inTransport, outTransport, new JsonAdapter(), new JsonAdapter());
+
+    /** Conversation to be used in tests */
+    private final Conversation conversation2
+        = new Conversation(1, inTransport, outTransport1, new JsonAdapter(), new JsonAdapter());
+
+    /**
+     * Test for activating a route.
+     * @throws Exception in case of an error.
+     */
     @Test
     public void testActivate() throws Exception
     {
         sendMessage();
-        
+
         resultEndpoint.assertIsSatisfied();
     }
-    
+
+    /**
+     * Test for two calls to activate the same route.
+     * Expecting only one route in camel.
+     * @throws Exception in case of an error.
+     */
     @Test
     public void testTwoCallsToActivateWithTheSameConversation() throws Exception
     {
         routeManager.activate(conversation1);
-        
+
         sendMessage();
-        
+
         resultEndpoint.assertIsSatisfied();
-        
+
         assertCollectionSize(routeManager.getContext().getRouteDefinitions(), 1);
     }
-    
+
+    /**
+     * Testing bouncing the same route
+     * @throws Exception in case of an error.
+     */
+    @Test
+    public void testActivateDeactivateActivateAgain() throws Exception
+    {
+        routeManager.deactivate(conversation1);
+
+        resultEndpoint.setResultWaitTime(TIMEOUT);
+
+        sendMessage();
+
+        resultEndpoint.assertIsNotSatisfied();
+
+        routeManager.activate(conversation1);
+
+        sendMessage();
+
+        resultEndpoint.assertIsSatisfied();
+    }
+
+    /**
+     * Testing activating two different conversations.
+     * Expecting two routes in camel.
+     * @throws Exception in case of an error.
+     */
     @Test
     public void testTwoCallsToActivateWithDifferentConversations() throws Exception
     {
         routeManager.activate(conversation2);
-        
+
         assertCollectionSize(routeManager.getRouteCollection().getRoutes(), 2);
     }
-    
+
+    /**
+     * Testing the deactivation of a route.
+     * @throws Exception in case of an error.
+     */
     @Test
     public void testDeactivate() throws Exception
     {
         routeManager.deactivate(conversation1);
-        
-        resultEndpoint.setResultWaitTime(500);
-        
+
+        resultEndpoint.setResultWaitTime(TIMEOUT);
+
         sendMessage();
 
         resultEndpoint.assertIsNotSatisfied();
     }
 
+    /**
+     * Overriding the route builder as suggested by Camel testing
+     * techniques.
+     * @throws Exception in case of an error.
+     * @return a route builder.
+     */
     @Override
     protected RouteBuilder createRouteBuilder() throws Exception
     {
         routeManager.activate(conversation1);
         return routeManager;
     }
-    
+
+    /**
+     * Utility method to send a message to Camel.
+     * @throws InterruptedException in case of an error
+     */
     private void sendMessage() throws InterruptedException
     {
         String expectedBody = "<matched/>";

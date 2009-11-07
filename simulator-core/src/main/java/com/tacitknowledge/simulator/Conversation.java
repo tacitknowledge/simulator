@@ -157,9 +157,7 @@ public class Conversation
 
         sb.append(id.toString()).append("|").
             append(getInboundTransport().toUriString()).append("|").
-                append(getInboundAdapter().getClass().getName()).append("|").
-                    append(getOutboundAdapter().getClass().getName()).append("|").
-                        append(getOutboundTransport().toUriString());
+                append(getOutboundTransport().toUriString());
 
         return sb.toString();
     }
