@@ -4,7 +4,7 @@ import junit.framework.TestCase;
 import com.tacitknowledge.simulator.formats.AdapterFactory;
 
 /**
- * @author galo
+ * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
 public class XmlAdapterTest extends TestCase
 {

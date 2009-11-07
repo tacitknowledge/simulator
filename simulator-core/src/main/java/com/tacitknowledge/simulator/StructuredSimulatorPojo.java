@@ -41,6 +41,7 @@ public class StructuredSimulatorPojo implements SimulatorPojo
     public Object getAttribute(String name)
     {
         String attr = null;
+        //TODO Implement or remove this functionality.
 
 //        StringTokenizer st = new StringTokenizer(name, ".");
 //        while (st.hasMoreTokens())

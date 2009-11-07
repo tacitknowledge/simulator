@@ -41,6 +41,7 @@ public class AdapterWrapper implements Processor
      */
     public void process(Exchange exchange) throws Exception
     {
+        //TODO Implement this functionality.
         logger.info("Running adapter : " + adapter);
     }
 }

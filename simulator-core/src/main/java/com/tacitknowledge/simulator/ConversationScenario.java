@@ -80,6 +80,7 @@ public class ConversationScenario
      */
     public Object executeTransformation(SimulatorPojo pojo)
     {
+        //TODO Implement this functionality.
         return null;
     }
 
@@ -92,6 +93,7 @@ public class ConversationScenario
      */
     public boolean matchesCondition(Object data)
     {
+        //TODO Implement this functionality.
         return false;
     }
 

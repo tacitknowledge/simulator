@@ -18,6 +18,7 @@ public class JsonAdapter implements Adapter<Object>
      */
     public SimulatorPojo adaptFrom(Object object)
     {
+        //TODO Implement this functionality.
         return null;
     }
 
@@ -29,6 +30,7 @@ public class JsonAdapter implements Adapter<Object>
      */
     public Object adaptTo(SimulatorPojo pojo)
     {
+        //TODO Implement this functionality.
         return null;
     }
 }
