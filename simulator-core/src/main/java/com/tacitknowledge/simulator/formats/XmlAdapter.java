@@ -24,9 +24,7 @@ import java.util.List;
 public class XmlAdapter implements Adapter
 {
     /**
-     * Adapts the String data received from the inbound transport into XML format.
-     *
-     * @return an object constructed based on the inboud transport data.
+     * @inheritDoc
      */
     public SimulatorPojo adaptFrom(Object o) throws FormatAdapterException
     {
@@ -60,8 +58,23 @@ public class XmlAdapter implements Adapter
         return pojo;
     }
 
+    /**
+     * @inheritDoc
+     */
+    public Object adaptTo(SimulatorPojo pojo)
+    {
+        return null;
+    }
+
+    /**
+     * Returns a structured representation of the XML element on a Map, in which container nodes are represented as
+     * Map value, duplicated-name nodes as List value and the leaf nodes as String values
+     * @param elem
+     * @return
+     */
     private Map getStructuredChilds(Element elem)
     {
+        // --- The Map to be returned
         Map<String, Object> structuredChild = new HashMap<String, Object>();
 
         // --- Get first child
@@ -71,7 +84,7 @@ public class XmlAdapter implements Adapter
         {
             if (!(nd instanceof Element))
             {
-                // --- If nd is not an Element, we skip it and got to the next child
+                // --- If nd is not an Element, we skip it and go to the next child
                 nd = nd.getNextSibling();
                 continue;
             }
@@ -80,7 +93,7 @@ public class XmlAdapter implements Adapter
             Element child = (Element) nd;
             String currNodeName = child.getTagName();
 
-            // --- Check if the structuredChilds Map contains the current node name
+            // --- Check if the structuredChild Map contains the current node name
             if (structuredChild.containsKey(currNodeName))
             {
                 // --- Get the original attribute,
@@ -118,14 +131,18 @@ public class XmlAdapter implements Adapter
             }
             else
             {
+                // --- If the currNodeName hasn't been registered, try to get its structured childs
                 Map childValue = getStructuredChilds(child);
                 if (childValue == null || childValue.isEmpty())
                 {
+                    // --- If the childValue is null or empty, means the underlying child is a Text node.
+                    // Just assign the child's text value as it is.
                     structuredChild.put(currNodeName, child.getFirstChild().getNodeValue());
                 }
                 else
                 {
-                    structuredChild.put(currNodeName, getStructuredChilds(child));
+                    // --- otherwise, assign the obtained structured Map 
+                    structuredChild.put(currNodeName, childValue);
                 }
             }
 
@@ -133,15 +150,5 @@ public class XmlAdapter implements Adapter
         }
 
         return structuredChild;
-    }
-
-    /**
-     * Adapts the data from simulation to the XML formatted object
-     *
-     * @return an object constructed based on the data received from execution of the simulation
-     */
-    public Object adaptTo(SimulatorPojo pojo)
-    {
-        return null;
     }
 }

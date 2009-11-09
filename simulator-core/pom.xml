@@ -11,11 +11,24 @@
     <groupId>com.tacitknowledge.simulator</groupId>
     <artifactId>simulator-core</artifactId>
     <packaging>jar</packaging>
-    
+
     <properties>
         <camel.version>2.0.0</camel.version>
     </properties>
-    
+
+    <repositories>
+        <repository>
+            <id>jboss</id>
+            <url>http://repository.jboss.com/maven2</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>org.apache.camel</groupId>
@@ -39,7 +52,7 @@
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-jms</artifactId>
             <version>${camel.version}</version>
-        </dependency>     
+        </dependency>
 
         <dependency>
             <groupId>log4j</groupId>
@@ -52,13 +65,13 @@
             <artifactId>xbean-spring</artifactId>
             <version>3.6</version>
         </dependency>
-        
+
         <dependency>
             <groupId>bsf</groupId>
             <artifactId>bsf</artifactId>
             <version>2.3.0</version>
         </dependency>
-        
+
         <dependency>
             <groupId>rhino</groupId>
             <artifactId>js</artifactId>
@@ -70,34 +83,40 @@
             <artifactId>spring-web</artifactId>
             <version>2.5.6</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-test</artifactId>
             <version>${camel.version}</version>
             <scope>test</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.5</version>
             <scope>test</scope>
         </dependency>
-        
+
+        <dependency>
+            <groupId>javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <version>3.11.0.GA</version>
+        </dependency>
+
          <!-- <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
             <version>2.4</version>
             <scope>test</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymockclassextension</artifactId>
             <version>2.4</version>
             <scope>test</scope>
-        </dependency>-->      
+        </dependency>-->
     </dependencies>
 
     <build>

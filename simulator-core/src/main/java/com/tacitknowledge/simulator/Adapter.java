@@ -11,16 +11,16 @@ import com.tacitknowledge.simulator.formats.FormatAdapterException;
 public interface Adapter<E>
 {
     /**
-     * Adapts the data from the inbound transport to the SimulatorPojo object graph.
+     * Adapts the data from the inbound transport format to the SimulatorPojo object graph.
      * Used in the simulation.
      * @param e Generic information object
-     * @return a SimulatorPojo object
+     * @return a SimulatorPojo object constructed based on the inboud transport data.
      * @throws FormatAdapterException in case the incoming data object is not in correct format
      */
     SimulatorPojo adaptFrom(E e) throws FormatAdapterException;
 
     /**
-     * Adapts the data from the simulation result SimulatorPojo into a generic object used
+     * Adapts the data from the simulation result SimulatorPojo into the desired format used
      * for outbound transport.
      * @param pojo SimulatorPojo object
      * @return generic data object.
