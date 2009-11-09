@@ -60,12 +60,10 @@ public class ScriptExecutionServiceTest extends TestCase
             assertNotNull(result);
 
             result = execServ.eval("employees.reportDate", "Is it today?", beans);
-            assertNotNull(result);
-            assert(result == "2009-11-05");
+            assertEquals(result,"2009-11-05");
 
             result = execServ.eval("employees.employee[1].name", "Second employee name", beans);
-            assertNotNull(result);
-            assert(result == "Sara");
+            assertEquals(result,"Sara");
 
         }
         catch (Exception e)
