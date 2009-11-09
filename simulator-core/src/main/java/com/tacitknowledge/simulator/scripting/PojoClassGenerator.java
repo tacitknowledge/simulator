@@ -159,7 +159,7 @@ public class PojoClassGenerator
                 newField = generateField(itemValue.getClass().getName(), itemName, ctClass);
             }
 
-            if (ctClass != null) {
+            if (ctClass != null && newField != null) {
                 ctClass.addField(newField);
             }
         }
@@ -186,6 +186,10 @@ public class PojoClassGenerator
     private CtField generateField(String className, String fieldName, CtClass destClass)
             throws NotFoundException, CannotCompileException
     {
+        if (destClass == null) {
+            return null;
+        }
+        
         CtField ctField = new CtField(pool.get(className), fieldName, destClass);
         ctField.setModifiers(Modifier.PUBLIC);
 
