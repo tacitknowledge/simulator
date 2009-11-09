@@ -21,6 +21,11 @@ public class XmlAdapterTest extends TestCase
                         "   <title>Clerk</title>" +
                         " </employee>" +
                         " <report-date>2009-11-05</report-date>" +
+                        " <roles>" +
+                        "   <role>Clerk</role>" +
+                        "   <role>Manager</role>" +
+                        "   <role>Accountant</role>" +
+                        " </roles>" +
                         "</employees>";
 
         Adapter adapter = AdapterFactory.getAdapter(FormatConstants.XML);
