@@ -2,12 +2,9 @@ package com.tacitknowledge.simulator;
 
 import junit.framework.TestCase;
 import com.tacitknowledge.simulator.formats.AdapterFactory;
-import com.tacitknowledge.simulator.formats.FormatAdapterException;
 import com.tacitknowledge.simulator.scripting.ScriptExecutionService;
-import com.tacitknowledge.simulator.scripting.ScriptException;
 import com.tacitknowledge.simulator.scripting.PojoClassGenerator;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import javassist.ClassPool;
@@ -65,6 +62,11 @@ public class ScriptExecutionServiceTest extends TestCase
             result = execServ.eval("employees.employee[1].name", "Second employee name", beans);
             assertEquals(result,"Sara");
 
+            // --- Detach the generated classes
+            generator.detachGeneratedClasses();
+            // --- Get rid of the reference to the generator and ClassPool
+            generator = null;
+            pool = null;
         }
         catch (Exception e)
         {
