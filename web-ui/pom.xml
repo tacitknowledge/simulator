@@ -12,7 +12,7 @@
     <artifactId>web-ui</artifactId>
     <packaging>pom</packaging>
     <properties>
-    	<app.name>rubyapp</app.name>
+        <app.name>rubyapp</app.name>
         <rubyapp.dir>src/main/${app.name}</rubyapp.dir>
         <rubyapp.target.war>${rubyapp.dir}/${app.name}.war</rubyapp.target.war>
         <tomcat.manager.url>http://127.0.0.1:8080/manager/html</tomcat.manager.url>
@@ -21,37 +21,104 @@
     </properties>
     
     <profiles>
-    	<profile>
-    		<id>simulator-deploy</id>
-    		<build>
-	        	<plugins>
-			      <plugin>
-			        <groupId>org.codehaus.mojo</groupId>
-			        <artifactId>exec-maven-plugin</artifactId>
-			        <executions>
-			          <execution>
-			            <id>deploy-to-tomcat-using-curl</id>
-			            <phase>package</phase>
-			            <configuration>
-			              <executable>/bin/sh</executable>
-			              <workingDirectory>.</workingDirectory>
-			              <arguments>
-			                <argument>-c</argument>
-			                <argument>
-			                	curl -o /dev/null ${tomcat.manager.undeploy.url} -u both:tomcat
+        <profile>
+            <id>simulator-deploy</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>deploy-to-tomcat-using-curl</id>
+                                <phase>package</phase>
+                                <configuration>
+                                    <executable>/bin/sh</executable>
+                                    <workingDirectory>.</workingDirectory>
+                                    <arguments>
+                                        <argument>-c</argument>
+                                        <argument>
+			                    curl -o /dev/null ${tomcat.manager.undeploy.url} -u both:tomcat
 			                    curl -o /dev/null -F deployWar=@${rubyapp.target.war} ${tomcat.manager.deploy.url} -u both:tomcat
-			                </argument>
-			              </arguments>
-			            </configuration>
-			            <goals>
-			              <goal>exec</goal>
-			            </goals>
-			          </execution>
-			        </executions>
-			      </plugin>
-			     </plugins>
-		    </build>
-    	</profile>
+                                        </argument>
+                                    </arguments>
+                                </configuration>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>webui-reports</id>
+            <build>
+                <plugins>
+                    
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>clean-ruby</id>
+                                <phase>clean</phase>
+                                <configuration>
+                                    <tasks>
+                                        <delete dir="${rubyapp.dir}/coverage" />
+                                        <delete file="${rubyapp.dir}/coverage.data" />
+                                        <delete dir="${rubyapp.dir}/test/coverage" />
+                                    </tasks>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>test-coverage-ruby</id>
+                                <phase>compile</phase>
+                                <configuration>
+                                    <executable>/bin/sh</executable>
+                                    <workingDirectory>${rubyapp.dir}/</workingDirectory>
+                                    <arguments>
+                                        <argument>-c</argument>
+                                        <argument>
+                                            rcov -T --rails test/*.rb -i "app/*/*.rb" -x "/opt/jruby/*, *recognize_optimized*, *yaml*, *parser*"
+                                        </argument>
+                                    </arguments>
+                                </configuration>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>checkstyle-ruby</id>
+                                <phase>compile</phase>
+                                <configuration>
+                                    <executable>/bin/sh</executable>
+                                    <workingDirectory>${rubyapp.dir}</workingDirectory>
+                                    <arguments>
+                                        <argument>-c</argument>
+                                        <argument>
+                                            roodi "${rubyapp.dir}/**/*.rb"
+                                        </argument>
+                                    </arguments>
+                                </configuration>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
     <build>
@@ -66,25 +133,6 @@
                             <tasks>
                                 <exec executable="${jruby.home}/bin/warble"  dir="${rubyapp.dir}">
                                     <arg value="war"/>
-                                </exec>
-                            </tasks>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>checkstyle-ruby</id>
-                        <phase>site</phase>
-                        <configuration>
-                            <tasks>
-                                <exec executable="${jruby.home}/bin/roodi"  dir="${rubyapp.dir}">
-                                    <arg value="${rubyapp.dir}/**/*.rb"/>
                                 </exec>
                             </tasks>
                         </configuration>
@@ -113,23 +161,22 @@
                 </executions>
             </plugin>
             <plugin>
-				<groupId>org.jruby.plugins</groupId>
-				<artifactId>jruby-rake-plugin</artifactId>
-				<version>1.3.1</version>
-				<executions>
-					<execution>
-						<id>install-gems</id>
-						<phase>process-resources</phase>
-							<goals>
-								<goal>install-gems</goal>
-							</goals>
-							<configuration>
-								<gems>warbler, rails, roodi</gems>
-							</configuration>
-					</execution>
-				</executions>
-			</plugin>
-            
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>install-required-gems</id>
+                        <phase>compile</phase>
+                        <configuration>
+                            <executable>./installGems.sh</executable>
+                            <workingDirectory>.</workingDirectory>
+                        </configuration>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
     <dependencies>
