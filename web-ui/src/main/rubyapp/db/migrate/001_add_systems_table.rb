@@ -4,6 +4,8 @@ class AddSystemsTable < ActiveRecord::Migration
       t.string :name, :null => false
       t.text :description
       t.string :script_language, :null => false, :default => 'JavaScript'
+
+      t.timestamps
     end
 
   end

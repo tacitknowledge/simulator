@@ -1,3 +1,5 @@
 class FormatType < ActiveRecord::Base
-  belongs_to :format
+  has_many :formats
+
+  validates_presence_of :name, :class_name
 end

@@ -6,6 +6,8 @@ class AddScenariosTable < ActiveRecord::Migration
       t.text :criteria_script  
       t.text :execution_script
       t.boolean :is_active, :default => false
+
+      t.timestamps
     end
   end
 

@@ -1,9 +1,12 @@
 class AddConfigurationTable < ActiveRecord::Migration
   def self.up
     create_table :configurations do |t|
-      t.string :type, :null => false
-      t.string :atribute_name, :null => false
-      t.string :atribute_value, :null => false, :limit => 10000
+      t.integer :transport_id
+      t.integer :format_id
+      t.string :attribute_name, :null => false
+      t.string :attribute_value, :null => false, :limit => 1000
+
+      t.timestamps
     end
   end
 
