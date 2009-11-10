@@ -18,8 +18,8 @@ Ext.onReady(function()
 
 
     var myData = [
-        ['1', 'Scenario1', 'One scenario', true],
-        ['2', 'Scenario 2', 'Second scenario', false]
+        ['1', 'Scenario1', 'This is a fake scenario', true],
+        ['2', 'Scenario 2', 'I repeat, this is a fake scenario', false]
     ];
 
     store.loadData(myData);
@@ -39,7 +39,7 @@ Ext.onReady(function()
         width: "800",
         
         defaults: {
-            width: "100%"
+            width: "98%"
         },
         
         defaultType: 'textfield',
@@ -78,7 +78,8 @@ Ext.onReady(function()
                         triggerAction: 'all',
                         emptyText:'Select a transport...',
                         selectOnFocus: true,
-                        width:190
+                        width:190,
+                        editable: false
                     }),
                     new Ext.form.ComboBox({
                         fieldLabel: 'Format',
@@ -92,9 +93,10 @@ Ext.onReady(function()
                         typeAhead: true,
                         mode: 'local',
                         triggerAction: 'all',
-                        emptyText:'Select a format...',
+                        emptyText: 'Select a format...',
                         selectOnFocus: true,
-                        width:190
+                        width: 190,
+                        editable: false
                     })
                 ]
             },
@@ -145,7 +147,7 @@ Ext.onReady(function()
                 columns: [
                     {header: 'Active', width: 50, sortable: true, dataIndex: 'is_active'},
                     {header: 'Title', width: 150, sortable: true,  dataIndex: 'name'},
-                    {header: 'Description', width: 350, sortable: true, dataIndex: 'description'},
+                    {header: 'Description', width: 400, sortable: true, dataIndex: 'description'},
                     {header: 'Label', width: 150, sortable: true}
                 ],
                 stripeRows: true,
