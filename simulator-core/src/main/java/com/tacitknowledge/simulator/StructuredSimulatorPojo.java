@@ -3,6 +3,7 @@ package com.tacitknowledge.simulator;
 import java.util.HashMap;
 import java.util.Map;
 
+
 /**
  * The data transfer object used in simulations.
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)

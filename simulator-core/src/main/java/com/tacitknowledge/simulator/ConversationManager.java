@@ -1,5 +1,6 @@
 package com.tacitknowledge.simulator;
 
+
 /**
  * Defines the interface for the implementations of the ConversationManager.
  *

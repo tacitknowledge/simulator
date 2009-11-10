@@ -2,6 +2,8 @@ package com.tacitknowledge.simulator.camel;
 
 import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.Conversation;
+import com.tacitknowledge.simulator.RouteManager;
+
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.log4j.Logger;
@@ -15,12 +17,12 @@ import java.util.Map;
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  * @author Nikita Belenkiy (nbelenkiy@tacitknowledge.com)
  */
-public class RouteManager extends RouteBuilder
+public class RouteManagerImpl extends RouteBuilder implements RouteManager
 {
     /**
      * Logger for this class.
      */
-    private static Logger logger = Logger.getLogger(RouteManager.class);
+    private static Logger logger = Logger.getLogger(RouteManagerImpl.class);
 
     /**
      * Container for the routes inside the current camel context. Used for activation and
@@ -30,9 +32,7 @@ public class RouteManager extends RouteBuilder
             = new HashMap<String, RouteDefinition>();
 
     /**
-     * Implementaion of route builder configure
-     *
-     * @throws Exception in case of an error
+     * {@inheritDoc}
      */
     public void configure() throws Exception
     {
@@ -40,11 +40,7 @@ public class RouteManager extends RouteBuilder
     }
 
     /**
-     * Builds simulation route using conversation object. Assigns adapter beans to the route,
-     * assigns simulation execution bean to the route. Adds route to the current camel context.
-     *
-     * @param conversation object to be used in the route.
-     * @throws Exception in case of an error
+     * {@inheritDoc}
      */
     public void activate(Conversation conversation) throws Exception
     {
@@ -78,10 +74,7 @@ public class RouteManager extends RouteBuilder
     }
 
     /**
-     * Stops the camel route without removing it from the context.
-     *
-     * @param conversation object to be used in the route.
-     * @throws Exception in case of an error.
+     * {@inheritDoc}
      */
     public void deactivate(Conversation conversation) throws Exception
     {

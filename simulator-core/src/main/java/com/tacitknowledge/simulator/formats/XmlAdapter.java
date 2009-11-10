@@ -1,15 +1,23 @@
 package com.tacitknowledge.simulator.formats;
 
 import com.tacitknowledge.simulator.Adapter;
+import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.StructuredSimulatorPojo;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.log4j.Logger;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
-import org.w3c.dom.*;
+import org.xml.sax.SAXException;
 
+
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,20 +32,28 @@ import java.util.List;
 public class XmlAdapter implements Adapter
 {
     /**
-     * @inheritDoc
+     * Logger for this class.
+     */
+    private static Logger logger = Logger.getLogger(XmlAdapter.class);
+    /**
+     * {@inheritDoc}
      */
     public SimulatorPojo adaptFrom(Object o) throws FormatAdapterException
     {
         if (!(o instanceof String))
-            throw new FormatAdapterException("Input data is expected to be a String. Instead, input data is " + o.getClass().getName());
-
+        {
+            throw new FormatAdapterException("Input data is expected to be a String. Instead, "
+                    + "input data is " + o.getClass().getName());
+        }
         SimulatorPojo pojo = new StructuredSimulatorPojo();
 
         try
         {
             // --- First, parse the XML string into a document
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
+            DocumentBuilder db;
+
+            db = dbf.newDocumentBuilder();
             InputSource is = new InputSource();
             is.setCharacterStream(new StringReader((String) o));
 
@@ -50,16 +66,30 @@ public class XmlAdapter implements Adapter
 
             pojo.setRoot(root);
         }
-        catch (Exception e)
+        catch (ParserConfigurationException e)
         {
-            throw new FormatAdapterException("Unexpected error trying to adapt from Xml: " + e.getMessage(), e);
+            String errorMessage = "Unexpected parser configuration exception";
+            logger.error(errorMessage, e);
+            throw new FormatAdapterException(errorMessage, e);
+        }
+        catch (SAXException e)
+        {
+            String errorMessage = "Unexpected SAX exception";
+            logger.error(errorMessage, e);
+            throw new FormatAdapterException(errorMessage, e);
+        }
+        catch (IOException e)
+        {
+            String errorMessage = "Unexpected IO exception";
+            logger.error(errorMessage, e);
+            throw new FormatAdapterException(errorMessage, e);
         }
 
         return pojo;
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public Object adaptTo(SimulatorPojo pojo)
     {
@@ -67,10 +97,11 @@ public class XmlAdapter implements Adapter
     }
 
     /**
-     * Returns a structured representation of the XML element on a Map, in which container nodes are represented as
+     * Returns a structured representation of the XML element on a Map,
+     * in which container nodes are represented as
      * Map value, duplicated-name nodes as List value and the leaf nodes as String values
-     * @param elem
-     * @return
+     * @param elem the element to structure the child nodes for
+     * @return a Map of child nodes of the XML document
      */
     private Map getStructuredChilds(Element elem)
     {
@@ -135,13 +166,14 @@ public class XmlAdapter implements Adapter
                 Map childValue = getStructuredChilds(child);
                 if (childValue == null || childValue.isEmpty())
                 {
-                    // --- If the childValue is null or empty, means the underlying child is a Text node.
+                    // --- If the childValue is null or empty, means the
+                    // underlying child is a Text node.
                     // Just assign the child's text value as it is.
                     structuredChild.put(currNodeName, child.getFirstChild().getNodeValue());
                 }
                 else
                 {
-                    // --- otherwise, assign the obtained structured Map 
+                    // --- otherwise, assign the obtained structured Map
                     structuredChild.put(currNodeName, childValue);
                 }
             }

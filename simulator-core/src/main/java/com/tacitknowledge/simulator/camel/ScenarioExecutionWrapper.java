@@ -2,6 +2,8 @@ package com.tacitknowledge.simulator.camel;
 
 import com.tacitknowledge.simulator.ConversationScenario;
 import com.tacitknowledge.simulator.SimulatorPojo;
+import com.tacitknowledge.simulator.impl.ConversationScenarioImpl;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
@@ -20,7 +22,7 @@ public class ScenarioExecutionWrapper implements Processor
     /**
      * Container of the scenarios to run
      */
-    private List<ConversationScenario> scenarios;
+    private List<ConversationScenarioImpl> scenarios;
 
     /**
      * Logger for the ScenarioExecutionWrapper class.
@@ -33,12 +35,12 @@ public class ScenarioExecutionWrapper implements Processor
      *
      * @param scenarios list of the scenarios to run.
      */
-    public ScenarioExecutionWrapper(List<ConversationScenario> scenarios)
+    public ScenarioExecutionWrapper(List<ConversationScenarioImpl> scenarios)
     {
         if (scenarios == null)
         {
             logger.warn("Something is probably wrong: Scenarios are null");
-            this.scenarios = new ArrayList<ConversationScenario>();
+            this.scenarios = new ArrayList<ConversationScenarioImpl>();
         }
         else
         {

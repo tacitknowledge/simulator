@@ -1,6 +1,10 @@
-package com.tacitknowledge.simulator;
+package com.tacitknowledge.simulator.impl;
 
 import org.apache.log4j.Logger;
+
+import com.tacitknowledge.simulator.Adapter;
+import com.tacitknowledge.simulator.SimulatorException;
+import com.tacitknowledge.simulator.Transport;
 
 /**
  * Factory for creating conversation objects
@@ -24,7 +28,7 @@ public class ConversationFactory
      * @return conversation object
      * @throws SimulatorException in case of an error
      */
-    public static Conversation createConversation(Integer id, Transport inboundTransport,
+    public static ConversationImpl createConversation(Integer id, Transport inboundTransport,
             Transport outboundTransport, Adapter inboundAdapter, Adapter outboundAdapter)
             throws SimulatorException
     {
@@ -38,7 +42,7 @@ public class ConversationFactory
 
             throw new SimulatorException(errorMessage);
         }
-        return new Conversation(id, inboundTransport, outboundTransport, inboundAdapter,
+        return new ConversationImpl(id, inboundTransport, outboundTransport, inboundAdapter,
                 outboundAdapter);
     }
 

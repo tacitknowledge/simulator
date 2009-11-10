@@ -1,6 +1,5 @@
 package com.tacitknowledge.simulator;
 
-import com.tacitknowledge.simulator.formats.FormatAdapterException;
 
 /**
  * Adapter interface for different data formats.

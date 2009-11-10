@@ -1,7 +1,6 @@
 package com.tacitknowledge.simulator.formats;
 
 import com.tacitknowledge.simulator.Adapter;
-import com.tacitknowledge.simulator.FormatConstants;
 
 import java.util.HashMap;
 import java.util.Map;

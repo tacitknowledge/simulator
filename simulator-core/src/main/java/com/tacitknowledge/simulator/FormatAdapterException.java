@@ -1,4 +1,4 @@
-package com.tacitknowledge.simulator.formats;
+package com.tacitknowledge.simulator;
 
 /**
  * Exception to be thrown when the incoming data format is not correctly supported by the adapter

@@ -1,7 +1,15 @@
 package com.tacitknowledge.simulator;
 
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
+
 import org.junit.Test;
+
+import com.tacitknowledge.simulator.camel.RouteManagerImpl;
+import com.tacitknowledge.simulator.formats.FormatConstants;
+import com.tacitknowledge.simulator.impl.ConversationManagerImpl;
 
 /**
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
@@ -36,7 +44,8 @@ public class ConversationManagerImplTest
     @Test
     public void testCreateConversation() throws SimulatorException
     {
-        ConversationManager manager = ConversationManagerImpl.getInstance();
+        RouteManager routeManager = new RouteManagerImpl();
+        ConversationManager manager = new ConversationManagerImpl(routeManager); 
 
         Conversation conversation = manager.createConversation(null, in, out, FormatConstants.JSON, FormatConstants.XML);
         assertNotNull(conversation);
@@ -47,7 +56,8 @@ public class ConversationManagerImplTest
     @Test
     public void testCreateConversationWithWrongFormat()
     {
-        ConversationManager manager = ConversationManagerImpl.getInstance();
+        RouteManager routeManager = new RouteManagerImpl();
+        ConversationManager manager = new ConversationManagerImpl(routeManager); 
 
         Conversation conversation = null;
         try
@@ -62,27 +72,4 @@ public class ConversationManagerImplTest
         assertNull(conversation);
 
     }
-
-//    @Test
-//    public void testConversation() throws UnsupportedFormatException
-//    {
-//        ConversationManager manager = ConversationManagerImpl.getInstance();
-//        Conversation conversation = manager.createConversation(null, in, out, FormatConstants.JSON, FormatConstants.XML);
-//    }
-
-
-    //    @Test
-//    public void testCreateConversationScenario() {
-//         fail();
-//    }
-//
-//    @Test
-//    public void testActivate() {
-//        fail();
-//    }
-//
-//    @Test
-//    public void testDeactivate() {
-//        fail();
-//    }
 }

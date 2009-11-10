@@ -1,10 +1,21 @@
 package com.tacitknowledge.simulator.scripting;
 
-import javassist.*;
-
-import java.util.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Array;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import javassist.CannotCompileException;
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.CtField;
+import javassist.Modifier;
+import javassist.NotFoundException;
 
 import com.tacitknowledge.simulator.SimulatorPojo;
 import org.apache.log4j.Logger;
@@ -17,7 +28,7 @@ public class PojoClassGenerator
     /**
      * Base (and fake) package for temporary simulator JavaBeans
      */
-    private final static String TMP_CLASS_PACKAGE = "simulator.pojo.tmp.";
+    private static final String TMP_CLASS_PACKAGE = "simulator.pojo.tmp.";
 
     /**
      * Thr Javassist ClassPool used to generate temporary classes
@@ -25,7 +36,7 @@ public class PojoClassGenerator
     private ClassPool pool;
 
     /**
-     * Generated classes 
+     * Generated classes
      */
     private List<CtClass> generatedClasses;
 
@@ -38,19 +49,24 @@ public class PojoClassGenerator
      * Constructor
      * @param pool The ClassPool to be used.
      */
-    public PojoClassGenerator(ClassPool pool) {
+    public PojoClassGenerator(ClassPool pool)
+    {
         this.pool = pool;
         this.generatedClasses = new ArrayList<CtClass>();
     }
 
     /**
-     * Generates and returns a Map containing dinamically-generated JavaBeans from the passed SimulatorPojo.
-     * The generated classes and their populated instances will be passed to the scripting engine as available data
+     * Generates and returns a Map containing dinamically-generated
+     * JavaBeans from the passed SimulatorPojo.
+     * The generated classes and their populated instances will be passed
+     * to the scripting engine as available data
      * @param pojo The SimulatorPojo generated in the corresponding inbound Adapter
      * @return A Map containing dinamically-generated JavaBeans
-     * @throws CannotCompileException If an error happens while trying to generate the classes or their fields
+     * @throws CannotCompileException If an error happens while trying to generate the
+     * classes or their fields
      * @throws NotFoundException If a referenced class cannot be found in the ClassPool
-     * @throws ScriptException If an error happens while trying to populate the generated-class beans
+     * @throws ScriptException If an error happens while trying to populate the
+     * generated-class beans
      */
     public Map generateBeansMap(SimulatorPojo pojo)
             throws CannotCompileException, NotFoundException, ScriptException
@@ -59,7 +75,7 @@ public class PojoClassGenerator
         generateClassFromMap(null, pojo.getRoot());
 
         // --- Now populate the beans contained in the SimulatorPojo
-        Map<String, Object> beansMap = new HashMap<String,Object>();
+        Map<String, Object> beansMap = new HashMap<String, Object>();
         Iterator i = pojo.getRoot().keySet().iterator();
         while (i.hasNext())
         {
@@ -75,8 +91,10 @@ public class PojoClassGenerator
     /**
      * Detaches the generated JavaBean classes to reduce memory consumption
      */
-    public void detachGeneratedClasses() {
-        for (CtClass klass : this.generatedClasses) {
+    public void detachGeneratedClasses()
+    {
+        for (CtClass klass : this.generatedClasses)
+        {
             klass.detach();
         }
     }
@@ -85,16 +103,18 @@ public class PojoClassGenerator
      * Generates a new temporary class from the passed Map.
      * Map contents will be handled in the following way:
      *  - Maps will be considered attributess of the subyacent generated class type
-     *  - Lists will be considered Array attributes of either the subyacent generated class type or String array
+     *  - Lists will be considered Array attributes of either the subyacent generated
+     *    class type or String array
      *      depending on the List contents
      *  - Strings will be considered String attributes
      * @param className The name of the class to be generated
      * @param attr A Map containing the attributes to be created for the new class
      * @return A new CtClass with its fields/attributes defined
-     * @throws CannotCompileException If an error happens while trying to generate the class or its fields
+     * @throws CannotCompileException If an error happens while trying to generate the
+     * class or its fields
      * @throws NotFoundException If a referenced class cannot be found in the ClassPool
      */
-    private CtClass generateClassFromMap(String className, Map attr)
+    private CtClass generateClassFromMap(String className, Map<String, Object> attr)
             throws CannotCompileException, NotFoundException
     {
         CtClass ctClass = null;
@@ -113,15 +133,26 @@ public class PojoClassGenerator
             }
         }
 
-        // --- Iterate throu all the Map contents
-        Iterator i = attr.keySet().iterator();
-        while (i.hasNext())
-        {
-            String itemName = (String) i.next();
-            Object itemValue = attr.get(itemName);
+        // --- Iterate through all the Map contents
 
-            // --- If another genereated-class is needed, we'll use the fully-qualified name (parent name + item name)
-            String fullName = className == null ? itemName : className + "." + itemName;
+        for (Entry<String, Object> entry : attr.entrySet())
+        {
+            String itemName = entry.getKey();
+            Object itemValue = entry.getValue();
+
+            // --- If another genereated-class is needed, we'll use the fully-qualified
+            // name (parent name + item name)
+
+            String fullName;
+
+            if (className == null)
+            {
+               fullName = itemName;
+            }
+            else
+            {
+                fullName = className + "." + itemName;
+            }
 
             // --- The new field/attribute to be added
             CtField newField = null;
@@ -155,11 +186,13 @@ public class PojoClassGenerator
             }
             else
             {
-                // --- Anything else should be binded as it is (should be safe to assume it's a String)
+                // --- Anything else should be binded as it is
+                // (should be safe to assume it's a String)
                 newField = generateField(itemValue.getClass().getName(), itemName, ctClass);
             }
 
-            if (ctClass != null && newField != null) {
+            if (ctClass != null && newField != null)
+            {
                 ctClass.addField(newField);
             }
         }
@@ -170,7 +203,7 @@ public class PojoClassGenerator
             ctClass.toClass();
             generatedClasses.add(ctClass);
         }
-        
+
         return ctClass;
     }
 
@@ -186,10 +219,11 @@ public class PojoClassGenerator
     private CtField generateField(String className, String fieldName, CtClass destClass)
             throws NotFoundException, CannotCompileException
     {
-        if (destClass == null) {
+        if (destClass == null)
+        {
             return null;
         }
-        
+
         CtField ctField = new CtField(pool.get(className), fieldName, destClass);
         ctField.setModifiers(Modifier.PUBLIC);
 
@@ -204,39 +238,77 @@ public class PojoClassGenerator
      * @return A dinamically-generated-class instance populated with the values data
      * @throws ScriptException If an error happens while trying to populate the generated-class bean
      */
-    private Object populateClassIntanceFromMap(String className, Map values)
+    private Object populateClassIntanceFromMap(String className, Map<String, Object> values)
             throws ScriptException
     {
         Object obj = null;
-        if (className != null) {
+        if (className != null)
+        {
             // --- If there's a className ...
-            try {
+            try
+            {
                 // --- Try to get an instance of the generated class
                 obj = Class.forName(className).newInstance();
 
-                // --- Iterate throu the Map values
-                Iterator i = values.keySet().iterator();
-                while (i.hasNext()) {
-                    String itemName = (String) i.next();
-                    Object itemValue = values.get(itemName);
+                // --- Iterate through all the Map values
+
+                for (Entry<String, Object> entry : values.entrySet())
+                {
+                    String itemName = entry.getKey();
+                    Object itemValue = entry.getValue();
 
                     // --- Get the actual Field from the itemName and field value from the itemValue
                     Field field = obj.getClass().getDeclaredField(itemName);
                     Object fieldValue = itemValue;
 
                     // --- If the itemValue is...
-                    if (itemValue instanceof Map) {
+                    if (itemValue instanceof Map)
+                    {
                         // --- ...a Map, populate the corresponding generated-class bean
-                        fieldValue = populateClassIntanceFromMap(className + "." + itemName, (Map) itemValue);
-                    } else if (itemValue instanceof List) {
-                        // --- ...a List, create an Array from the corresponding generated-class type and populate it
-                        fieldValue = populateArrayFromList(className + "." + itemName, (List) itemValue);
+                        fieldValue = populateClassIntanceFromMap(className + "." + itemName,
+                                            (Map) itemValue);
+                    }
+                    else if (itemValue instanceof List)
+                    {
+                        // --- ...a List, create an Array from the corresponding generated-class
+                        // type and populate it
+                        fieldValue = populateArrayFromList(className + "." + itemName,
+                                            (List) itemValue);
                     }
                     // --- Assign the field value
                     field.set(obj, fieldValue);
                 }
-            } catch(Exception e) {
-                throw new ScriptException("Unexpected exception trying to instantiate temp class " + className + ": " + e.getMessage(), e);
+            }
+            catch (ClassNotFoundException e)
+            {
+                String errorMessage = "Class : " + className + " not found.";
+                logger.error(errorMessage, e);
+                throw new ScriptException(errorMessage, e);
+            }
+            catch (InstantiationException e)
+            {
+                String errorMessage = "Object for class : " + className
+                    + " couldn't be instantiated.";
+                logger.error(errorMessage, e);
+                throw new ScriptException(errorMessage, e);
+            }
+            catch (IllegalAccessException e)
+            {
+                String errorMessage = "Object for class : " + className + " couldn't be accessed.";
+                logger.error(errorMessage, e);
+                throw new ScriptException(errorMessage, e);
+            }
+            catch (SecurityException e)
+            {
+                String errorMessage = "Unexpected security exception for class " + className;
+                logger.error(errorMessage, e);
+                throw new ScriptException(errorMessage, e);
+            }
+            catch (NoSuchFieldException e)
+            {
+                String errorMessage = "A field wasn't found for class " + className;
+                logger.error(errorMessage, e);
+                throw new ScriptException(errorMessage, e);
             }
         }
 
@@ -244,43 +316,60 @@ public class PojoClassGenerator
     }
 
     /**
-     * Creates an Array of the corresponding generated-class type and populates it with the populated beans
+     * Creates an Array of the corresponding generated-class type
+     * and populates it with the populated beans
      * @param className The class name of the Array's content type
      * @param items The list of items to populate the Array from
      * @return The populated Array of generated-class type beans
      * @throws ScriptException If an error happens while trying to populate the generated-class bean
      */
-    private Object populateArrayFromList(String className, List items) throws ScriptException {
-        try {
+    private Object populateArrayFromList(String className, List items) throws ScriptException
+    {
+        try
+        {
             Object array = null;
-            for (int i = 0; i < items.size(); i++) {
+            for (int i = 0; i < items.size(); i++)
+            {
                 Object item = items.get(i);
 
-                // --- If this is the first element, initialize the Array (will use items.size() for Array length)
-                if (array == null) {
+                // --- If this is the first element, initialize the Array
+                // (will use items.size() for Array length)
+                if (array == null)
+                {
                     // --- If the item is...
-                    if (item instanceof Map) {
-                        // --- ...a Map, get the generated-class from the className and initialize the Array
+                    if (item instanceof Map)
+                    {
+                        // --- ...a Map, get the generated-class from the className
+                        // and initialize the Array
                         array = Array.newInstance(Class.forName(className), items.size());
-                    } else {
-                        // --- ...anything else (should be safe to assume it's a String), initialize a Strings Array
+                    }
+                    else
+                    {
+                        // --- ...anything else (should be safe to assume it's a String),
+                        // initialize a Strings Array
                         array = Array.newInstance(String.class, items.size());
                     }
                 }
 
                 // --- If the item is...
-                if (item instanceof Map) {
+                if (item instanceof Map)
+                {
                     // --- ...a Map, it's a CtClass instance, so populate it and then assign
                     Array.set(array, i, populateClassIntanceFromMap(className, (Map) item));
-                } else {
+                }
+                else
+                {
                     // --- Otherwise, assign as it is (should be safe to assume it's a String)
                     Array.set(array, i, item);
                 }
             }
 
             return  array;
-        } catch(ClassNotFoundException e) {
-                throw new ScriptException("Unexpected exception trying to instantiate temp class " + className, e);
+        }
+        catch (ClassNotFoundException e)
+        {
+                throw new ScriptException("Unexpected exception trying to instantiate temp class "
+                        + className, e);
         }
     }
 }

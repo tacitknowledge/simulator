@@ -1,13 +1,23 @@
-package com.tacitknowledge.simulator;
+package com.tacitknowledge.simulator.impl;
 
-import com.tacitknowledge.simulator.camel.RouteManager;
+import com.tacitknowledge.simulator.Adapter;
+import com.tacitknowledge.simulator.Conversation;
+import com.tacitknowledge.simulator.ConversationManager;
+import com.tacitknowledge.simulator.ConversationNotFoundException;
+import com.tacitknowledge.simulator.RouteManager;
+import com.tacitknowledge.simulator.SimulatorException;
+import com.tacitknowledge.simulator.Transport;
+
 import com.tacitknowledge.simulator.formats.AdapterFactory;
+
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Conversation manager implementation.
+ *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
 public class ConversationManagerImpl implements ConversationManager
@@ -30,42 +40,27 @@ public class ConversationManagerImpl implements ConversationManager
     /**
      * Currently configured conversations
      */
-    private Map<Integer, Conversation> conversations = new HashMap<Integer, Conversation>();
+    private Map<Integer, ConversationImpl> conversations = new HashMap<Integer, ConversationImpl>();
 
     /**
-     * Private Singleton constructor
+     * Public constructor for ConversationManagerImpl.
      *
      * @param routeManager
      *            RouteManager to use
      */
-    private ConversationManagerImpl(RouteManager routeManager)
+    public ConversationManagerImpl(RouteManager routeManager)
     {
         this.routeManager = routeManager;
     }
 
     /**
-     * Get the singleton instance of the ConversationManager
-     *
-     * @return ConversationManager singleton instance
+     * Making sure that the ConversationManagerImpl objects cannot be created with default
+     * constructor.
      */
-    public static synchronized ConversationManager getInstance()
+    private ConversationManagerImpl()
     {
-        if (instance == null)
-        {
-            try
-            {
-                instance = new ConversationManagerImpl(new RouteManager());
-            }
-            catch (Exception e)
-            {
-                logger.error("Critical error during Simulator initialization");
 
-                throw new RuntimeException(e);
-            }
-        }
-        return instance;
     }
-
     /**
      * {@inheritDoc}
      */
@@ -75,7 +70,7 @@ public class ConversationManagerImpl implements ConversationManager
     {
         Adapter inAdapter = AdapterFactory.getAdapter(inboundFormat);
         Adapter outAdapter = AdapterFactory.getAdapter(inboundFormat);
-        Conversation conversation = ConversationFactory.createConversation(id, inboundTransport,
+        ConversationImpl conversation = ConversationFactory.createConversation(id, inboundTransport,
                 outboundTransport, inAdapter, outAdapter);
         assert conversations.get(id) == null;
 

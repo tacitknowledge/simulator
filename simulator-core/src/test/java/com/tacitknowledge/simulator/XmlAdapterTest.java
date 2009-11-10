@@ -2,6 +2,7 @@ package com.tacitknowledge.simulator;
 
 import junit.framework.TestCase;
 import com.tacitknowledge.simulator.formats.AdapterFactory;
+import com.tacitknowledge.simulator.formats.FormatConstants;
 
 /**
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)

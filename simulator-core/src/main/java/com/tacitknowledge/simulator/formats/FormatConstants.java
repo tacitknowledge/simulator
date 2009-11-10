@@ -1,4 +1,4 @@
-package com.tacitknowledge.simulator;
+package com.tacitknowledge.simulator.formats;
 
 /**
  * Contains the Simulator's default supported format names/acronyms.

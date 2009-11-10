@@ -3,6 +3,8 @@ package com.tacitknowledge.simulator.camel;
 import com.tacitknowledge.simulator.Conversation;
 import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.formats.JsonAdapter;
+import com.tacitknowledge.simulator.impl.ConversationImpl;
+
 import org.apache.camel.EndpointInject;
 import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
@@ -23,7 +25,7 @@ public class RouteManagerTest extends CamelTestSupport
     private static final int TIMEOUT = 500;
 
     /** Class under test */
-    private RouteManager routeManager = new RouteManager();
+    private RouteManagerImpl routeManager = new RouteManagerImpl();
 
     /** MockEnd point to receive the message */
     @EndpointInject(uri = "mock:result")
@@ -86,11 +88,11 @@ public class RouteManagerTest extends CamelTestSupport
 
     /** Conversation to be used in tests */
     private final Conversation conversation1
-        = new Conversation(1, inTransport, outTransport, new JsonAdapter(), new JsonAdapter());
+        = new ConversationImpl(1, inTransport, outTransport, new JsonAdapter(), new JsonAdapter());
 
     /** Conversation to be used in tests */
     private final Conversation conversation2
-        = new Conversation(1, inTransport, outTransport1, new JsonAdapter(), new JsonAdapter());
+        = new ConversationImpl(1, inTransport, outTransport1, new JsonAdapter(), new JsonAdapter());
 
     /**
      * Test for activating a route.
