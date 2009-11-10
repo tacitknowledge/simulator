@@ -1,20 +1,20 @@
 class AddTransportTable < ActiveRecord::Migration
   def self.up
     create_table :transports do |t|
-      t.string :type, :null => false
+      t.string :transport_type_id, :null => false
     end
     create_table :transport_types do |t|
-      t.string :type, :null => false
+      t.string :name, :null => false
       t.string :class_name, :null => false
     end
 
-    add_column :systems, :inbound_transport, :string
-    add_column :systems, :outbound_transport, :string
+    add_column :conversations, :inbound_transport_id, :integer
+    add_column :conversations, :outbound_transport_id, :integer
   end
 
   def self.down
-    remove_column :systems, :inbound_transport
-    remove_column :systems, :outbound_transport
+    remove_column :conversations, :inbound_transport_id
+    remove_column :conversations, :outbound_transport_id
     drop_table :transport_types
     drop_table :transports
   end

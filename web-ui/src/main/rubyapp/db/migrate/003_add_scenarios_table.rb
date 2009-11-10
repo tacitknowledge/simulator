@@ -1,10 +1,10 @@
 class AddScenariosTable < ActiveRecord::Migration
   def self.up
     create_table :scenarios do |t|
-      t.string :conversation_id, :null => false
+      t.integer :conversation_id, :null => false
       t.string :name, :null => false
-      t.text :criteria_script, :null => false
-      t.text :execution_script, :null => false
+      t.text :criteria_script  
+      t.text :execution_script
       t.boolean :is_active, :default => false
     end
   end

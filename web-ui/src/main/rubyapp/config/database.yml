@@ -22,7 +22,14 @@ test:
   password:
   timeout: 5000
 
-test:
+#test:
+#  adapter: mysql
+#  database: simulator_test
+#  pool: 5
+#  timeout: 5000
+
+
+production:
   adapter: jdbc
   driver: com.mysql.jdbc.Driver
   url: jdbc:mysql://localhost/simulator_prod

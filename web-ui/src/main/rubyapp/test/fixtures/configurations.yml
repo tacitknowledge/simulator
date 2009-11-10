@@ -5,8 +5,3 @@
 #
 # two:
 #   column: value
-
-one:
-    id: 1
-    name: 'Project 1'
-    description: 'Description 1'

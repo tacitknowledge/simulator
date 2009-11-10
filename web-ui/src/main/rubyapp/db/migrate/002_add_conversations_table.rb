@@ -3,8 +3,8 @@ class AddConversationsTable < ActiveRecord::Migration
     create_table :conversations do |t|
       t.integer :system_id, :null => false
       t.string :name, :null => false
-      t.text :description, :null => false
-      t.boolean :is_active, :null => false
+      t.text :description
+      t.boolean :is_active, :default => false
     end
   end
 
