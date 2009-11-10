@@ -28,11 +28,6 @@ public class ConversationManagerImpl implements ConversationManager
     private static Logger logger = Logger.getLogger(ConversationManagerImpl.class);
 
     /**
-     * Singleton instance
-     */
-    private static ConversationManager instance;
-
-    /**
      * CamelRoutes manager
      */
     private RouteManager routeManager;
