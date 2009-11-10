@@ -20,9 +20,83 @@ Ext.onReady(function()
     var scriptList = new Ext.data.ArrayStore({
         fields: ['id', 'value'],
         data : [
-            ['1','JavaScript'],
-            ['qwerqwer',"asdf"]
+            ['JavaScript','Java Script'],
+            ['somethingelse',"something else"]
         ]
+    });
+
+    var store = new Ext.data.ArrayStore({
+        fields: [
+            {
+                name: 'company'
+            },
+            {
+                name: 'price',
+                type: 'float'
+            },
+            {
+                name: 'change',
+                type: 'float'
+            },
+            {
+                name: 'pctChange',
+                type: 'float'
+            },
+            {
+                name: 'lastChange',
+                type: 'date',
+                dateFormat: 'n/j h:ia'
+            }
+        ]
+    });
+
+    var conversationsGrid = new Ext.grid.GridPanel({
+        store: store,
+        columns: [
+            {
+                id:'company',
+                header: 'Company',
+                width: 160,
+                sortable: true,
+                dataIndex: 'company'
+            },
+            {
+                header: 'Price',
+                width: 75,
+                sortable: true,
+                renderer: 'usMoney',
+                dataIndex: 'price'
+            },
+            {
+                header: 'Change',
+                width: 75,
+                sortable: true,
+//                renderer: change,
+                dataIndex: 'change'
+            },
+            {
+                header: '% Change',
+                width: 75,
+                sortable: true,
+//                renderer: pctChange,
+                dataIndex: 'pctChange'
+            },
+            {
+                header: 'Last Updated',
+                width: 85,
+                sortable: true,
+                renderer: Ext.util.Format.dateRenderer('m/d/Y'),
+                dataIndex: 'lastChange'
+            }
+        ],
+        stripeRows: true,
+        autoExpandColumn: 'company',
+        height: 350,
+        width: 600,
+        title: 'Array Grid',
+        // config options for stateful behavior
+        stateful: true,
+        stateId: 'grid'
     });
 
     var form = new Ext.FormPanel({
@@ -58,6 +132,8 @@ Ext.onReady(function()
                 mode: 'local'
 
             }
+          /*  ,
+            conversationsGrid*/
         ],
         buttons: [
             {
@@ -68,7 +144,10 @@ Ext.onReady(function()
                             url: '/system/save_system',
                             waitMsg: 'Saving....',
                             success: function(fp, o) {
-                                msg('Success', 'Saved with id "' + o.result.id + '" on the server');
+                                Ext.MessageBox.alert('Success', o.result.msg)
+                            },
+                            failure: function(fp, o) {
+                                Ext.MessageBox.alert('Error', o.result.msg)
                             }
                         });
                     }
@@ -79,8 +158,6 @@ Ext.onReady(function()
             }
         ]
     })
-            ;
 
     form.render(document.body);
 })
-        ;

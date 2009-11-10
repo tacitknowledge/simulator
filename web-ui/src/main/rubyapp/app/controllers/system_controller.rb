@@ -12,9 +12,9 @@ class SystemController < ApplicationController
       new_system.script_language=language;
       new_system.save
 
-      render :json =>{:error => new_system.id.to_s}, :status => 200
+      render :json =>{:success => true, :mgs => 'Saved with id ' + new_system.id.to_s + ''}, :status => 200
     else
-      render :json =>{:error => 'Project with name "'+name+'" already exists'}, :status=>200
+      render :json =>{:success => false, :msg => 'System with name "'+name+'" already exists'}, :status => 200
     end
   end
 end
