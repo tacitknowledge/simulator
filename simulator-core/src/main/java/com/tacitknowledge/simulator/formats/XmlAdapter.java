@@ -61,7 +61,7 @@ public class XmlAdapter implements Adapter
 
             // --- Well-formatted Xml should have a single root, right?
             Element docElem = doc.getDocumentElement();
-            Map<String, Map> root = new HashMap<String, Map>();
+            Map<String,Object> root = new HashMap<String, Object>();
             root.put(docElem.getTagName(), getStructuredChilds(docElem));
 
             pojo.setRoot(root);
@@ -131,16 +131,16 @@ public class XmlAdapter implements Adapter
                 // if this attribute name is already registered, it means this should be a List
                 Object tmp = structuredChild.get(currNodeName);
                 // --- Check if it's already a List
-                List currList;
+                List<Object> currList;
                 if (tmp instanceof List)
                 {
                     // --- If it is, just keep the reference
-                    currList = (List) tmp;
+                    currList = (List<Object>) tmp;
                 }
                 else
                 {
                     // --- If it isn't, create a new list...
-                    currList = new ArrayList();
+                    currList = new ArrayList<Object>();
                     // --- ...insert the previous attribute value to the list
                     currList.add(tmp);
                     // --- ...and place the list into its corresponding attribute name

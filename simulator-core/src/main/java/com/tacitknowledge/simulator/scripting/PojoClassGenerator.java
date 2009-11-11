@@ -26,9 +26,15 @@ import org.apache.log4j.Logger;
 public class PojoClassGenerator
 {
     /**
-     * Base (and fake) package for temporary simulator JavaBeans
+     * Base (and fake) default package for temporary simulator JavaBeans
      */
     private static final String TMP_CLASS_PACKAGE = "simulator.pojo.tmp.";
+
+    /**
+     * The full package name in which the generated-classes are contained.
+     * Defaults to #TMP_CLASS_PACKAGE
+     */
+    private String generatedClassesPackage = TMP_CLASS_PACKAGE;
 
     /**
      * Thr Javassist ClassPool used to generate temporary classes
@@ -47,6 +53,7 @@ public class PojoClassGenerator
 
     /**
      * Constructor
+     *
      * @param pool The ClassPool to be used.
      */
     public PojoClassGenerator(ClassPool pool)
@@ -56,19 +63,41 @@ public class PojoClassGenerator
     }
 
     /**
+     * Constructor
+     *
+     * @param pool        The ClassPool to be used.
+     * @param packageName The full package name in which the generated-classes are contained.
+     *                    String should end with a dot. e.g.: "simulator.tmp."
+     */
+    public PojoClassGenerator(ClassPool pool, String packageName)
+    {
+        this(pool);
+        this.generatedClassesPackage = packageName;
+    }
+
+    /**
+     * @return The full package name in which the generated-classes are contained
+     */
+    public String getGeneratedClassesPackage()
+    {
+        return this.generatedClassesPackage;
+    }
+
+    /**
      * Generates and returns a Map containing dinamically-generated
      * JavaBeans from the passed SimulatorPojo.
      * The generated classes and their populated instances will be passed
      * to the scripting engine as available data
+     *
      * @param pojo The SimulatorPojo generated in the corresponding inbound Adapter
      * @return A Map containing dinamically-generated JavaBeans
      * @throws CannotCompileException If an error happens while trying to generate the
-     * classes or their fields
-     * @throws NotFoundException If a referenced class cannot be found in the ClassPool
-     * @throws ScriptException If an error happens while trying to populate the
-     * generated-class beans
+     *                                classes or their fields
+     * @throws NotFoundException      If a referenced class cannot be found in the ClassPool
+     * @throws ScriptException        If an error happens while trying to populate the
+     *                                generated-class beans
      */
-    public Map generateBeansMap(SimulatorPojo pojo)
+    public Map<String, Object> generateBeansMap(SimulatorPojo pojo)
             throws CannotCompileException, NotFoundException, ScriptException
     {
         // --- First, generate the temporary classes for the SimulatorPojo contents
@@ -76,20 +105,34 @@ public class PojoClassGenerator
 
         // --- Now populate the beans contained in the SimulatorPojo
         Map<String, Object> beansMap = new HashMap<String, Object>();
-        Iterator i = pojo.getRoot().keySet().iterator();
-        while (i.hasNext())
+        for (Entry<String,Object> entry : pojo.getRoot().entrySet())
         {
-            String beanName = (String) i.next();
-            Map bean = (Map) pojo.getRoot().get(beanName);
+            String className = getValidClassName(entry.getKey());
+            Map<String,Object> bean = (Map<String,Object>) entry.getValue();
 
-            beansMap.put(beanName, populateClassIntanceFromMap(TMP_CLASS_PACKAGE + beanName, bean));
+            beansMap.put(entry.getKey(), populateClassIntanceFromMap(TMP_CLASS_PACKAGE + className, bean));
         }
 
         return beansMap;
     }
 
     /**
-     * Detaches the generated JavaBean classes to reduce memory consumption
+     * @return The list of generated class names. It will be empty if called before generateBeansMap
+     *         or after detachGeneratedClasses
+     */
+    public List<String> getGeneratedClassNames()
+    {
+        List<String> list = new ArrayList<String>();
+        for (CtClass klass : this.generatedClasses)
+        {
+            list.add(klass.getName());
+        }
+        return list;
+    }
+
+    /**
+     * Detaches the generated JavaBean classes to reduce memory consumption.
+     * It will also remove the classes from the generatedClasses list
      */
     public void detachGeneratedClasses()
     {
@@ -97,27 +140,30 @@ public class PojoClassGenerator
         {
             klass.detach();
         }
+        this.generatedClasses.clear();
     }
 
     /**
      * Generates a new temporary class from the passed Map.
      * Map contents will be handled in the following way:
-     *  - Maps will be considered attributess of the subyacent generated class type
-     *  - Lists will be considered Array attributes of either the subyacent generated
-     *    class type or String array
-     *      depending on the List contents
-     *  - Strings will be considered String attributes
+     * - Maps will be considered attributess of the subyacent generated class type
+     * - Lists will be considered Array attributes of either the subyacent generated
+     * class type or String array
+     * depending on the List contents
+     * - Strings will be considered String attributes
+     *
      * @param className The name of the class to be generated
-     * @param attr A Map containing the attributes to be created for the new class
+     * @param attr      A Map containing the attributes to be created for the new class
      * @return A new CtClass with its fields/attributes defined
      * @throws CannotCompileException If an error happens while trying to generate the
-     * class or its fields
-     * @throws NotFoundException If a referenced class cannot be found in the ClassPool
+     *                                class or its fields
+     * @throws NotFoundException      If a referenced class cannot be found in the ClassPool
      */
     private CtClass generateClassFromMap(String className, Map<String, Object> attr)
             throws CannotCompileException, NotFoundException
     {
         CtClass ctClass = null;
+        boolean isNewClass = false;
         if (className != null)
         {
             try
@@ -130,78 +176,83 @@ public class PojoClassGenerator
                 // --- ...if it hasn't been created, make a new one
                 logger.debug("Generating new temporary class " + TMP_CLASS_PACKAGE + className);
                 ctClass = pool.makeClass(TMP_CLASS_PACKAGE + className);
+                isNewClass = true;
             }
         }
 
-        // --- Iterate through all the Map contents
-
-        for (Entry<String, Object> entry : attr.entrySet())
+        // --- If it's a new class
+        if (className == null || isNewClass)
         {
-            String itemName = entry.getKey();
-            Object itemValue = entry.getValue();
+            // --- Iterate through all the Map contents
 
-            // --- If another genereated-class is needed, we'll use the fully-qualified
-            // name (parent name + item name)
-
-            String fullName;
-
-            if (className == null)
+            for (Entry<String, Object> entry : attr.entrySet())
             {
-               fullName = itemName;
-            }
-            else
-            {
-                fullName = className + "." + itemName;
-            }
+                String itemName = entry.getKey();
+                Object itemValue = entry.getValue();
 
-            // --- The new field/attribute to be added
-            CtField newField = null;
+                // --- If another genereated-class is needed, we'll use the fully-qualified
+                // name (parent name + item name)
 
-            // --- Check the item type
-            if (itemValue instanceof Map)
-            {
-                // --- If the Value is a Map container, go down the structure
-                CtClass mapClass = generateClassFromMap(fullName, (Map) itemValue);
+                String fullName;
 
-                // --- Generate the new field with the generated type
-                newField = generateField(mapClass.getName(), itemName, ctClass);
-            }
-            else if (itemValue instanceof List)
-            {
-                // --- If the value is a List, verify the type of its contents
-                Object val = ((List) itemValue).get(0);
-                if (val instanceof Map)
+                if (className == null)
                 {
-                    // --- If the first element in the list is a Map, generate a new class for it...
-                    CtClass arrayClass =
-                            generateClassFromMap(fullName, (Map) val);
-                    // --- ...then generate an Array-representation field of this type
-                    newField = generateField("[L" + arrayClass.getName() + ";", itemName, ctClass);
+                    fullName = getValidClassName(itemName);
                 }
                 else
                 {
-                    // --- Ff the element is a String, then the field is an Array of Strings
-                    newField = generateField(new String[0].getClass().getName(), itemName, ctClass);
+                    fullName = className + "." + getValidClassName(itemName);
+                }
+
+                // --- The new field/attribute to be added
+                CtField newField;
+
+                // --- Check the item type
+                if (itemValue instanceof Map)
+                {
+                    // --- If the Value is a Map container, go down the structure
+                    CtClass mapClass = generateClassFromMap(fullName, (Map<String,Object>) itemValue);
+
+                    // --- Generate the new field with the generated type
+                    newField = generateField(mapClass.getName(), itemName, ctClass);
+                }
+                else if (itemValue instanceof List)
+                {
+                    // --- If the value is a List, verify the type of its contents
+                    Object val = ((List) itemValue).get(0);
+                    if (val instanceof Map)
+                    {
+                        // --- If the first element in the list is a Map, generate a new class for it...
+                        CtClass arrayClass =
+                                generateClassFromMap(fullName, (Map<String,Object>) val);
+                        // --- ...then generate an Array-representation field of this type
+                        newField = generateField("[L" + arrayClass.getName() + ";", itemName, ctClass);
+                    }
+                    else
+                    {
+                        // --- Ff the element is a String, then the field is an Array of Strings
+                        newField = generateField(new String[0].getClass().getName(), itemName, ctClass);
+                    }
+                }
+                else
+                {
+                    // --- Anything else should be binded as it is
+                    // (should be safe to assume it's a String)
+                    newField = generateField(itemValue.getClass().getName(), itemName, ctClass);
+                }
+
+                if (ctClass != null && newField != null)
+                {
+                    ctClass.addField(newField);
                 }
             }
-            else
-            {
-                // --- Anything else should be binded as it is
-                // (should be safe to assume it's a String)
-                newField = generateField(itemValue.getClass().getName(), itemName, ctClass);
-            }
 
-            if (ctClass != null && newField != null)
+            // --- If ctClass was generated and NOT frozen (meaning, not previously registered), REGISTER it and add it the generatedClasses list
+            if (ctClass != null)
             {
-                ctClass.addField(newField);
+                ctClass.toClass();
+                generatedClasses.add(ctClass);
             }
-        }
-
-        // --- If ctClass was generated, REGISTER it and add it the generatedClasses list
-        if (ctClass != null)
-        {
-            ctClass.toClass();
-            generatedClasses.add(ctClass);
         }
 
         return ctClass;
@@ -209,11 +260,12 @@ public class PojoClassGenerator
 
     /**
      * Generates a new public field/attribute with the given type for a given CtClass
+     *
      * @param className The class name of the field/attribute type
      * @param fieldName The field/attribute name
      * @param destClass The CtClass this field will be added to
      * @return A new CtField to be added to ctClass
-     * @throws NotFoundException If the className name is not found in the ClassPool
+     * @throws NotFoundException      If the className name is not found in the ClassPool
      * @throws CannotCompileException If the field cannot be created for some reason
      */
     private CtField generateField(String className, String fieldName, CtClass destClass)
@@ -233,8 +285,9 @@ public class PojoClassGenerator
     /**
      * Populates a generated class with the contents of a Map.
      * The class should have been generated from the same Map to avoid conflicts or information loss
+     *
      * @param className The name of the dinamically-generated class to be populated
-     * @param values The values used to populate the bean
+     * @param values    The values used to populate the bean
      * @return A dinamically-generated-class instance populated with the values data
      * @throws ScriptException If an error happens while trying to populate the generated-class bean
      */
@@ -257,6 +310,8 @@ public class PojoClassGenerator
                     String itemName = entry.getKey();
                     Object itemValue = entry.getValue();
 
+                    String fullName = className + "." + getValidClassName(itemName);
+
                     // --- Get the actual Field from the itemName and field value from the itemValue
                     Field field = obj.getClass().getDeclaredField(itemName);
                     Object fieldValue = itemValue;
@@ -265,15 +320,15 @@ public class PojoClassGenerator
                     if (itemValue instanceof Map)
                     {
                         // --- ...a Map, populate the corresponding generated-class bean
-                        fieldValue = populateClassIntanceFromMap(className + "." + itemName,
-                                            (Map) itemValue);
+                        fieldValue = populateClassIntanceFromMap(fullName,
+                                (Map<String,Object>) itemValue);
                     }
                     else if (itemValue instanceof List)
                     {
                         // --- ...a List, create an Array from the corresponding generated-class
                         // type and populate it
-                        fieldValue = populateArrayFromList(className + "." + itemName,
-                                            (List) itemValue);
+                        fieldValue = populateArrayFromList(fullName,
+                                (List) itemValue);
                     }
                     // --- Assign the field value
                     field.set(obj, fieldValue);
@@ -288,7 +343,7 @@ public class PojoClassGenerator
             catch (InstantiationException e)
             {
                 String errorMessage = "Object for class : " + className
-                    + " couldn't be instantiated.";
+                        + " couldn't be instantiated.";
                 logger.error(errorMessage, e);
                 throw new ScriptException(errorMessage, e);
             }
@@ -318,8 +373,9 @@ public class PojoClassGenerator
     /**
      * Creates an Array of the corresponding generated-class type
      * and populates it with the populated beans
+     *
      * @param className The class name of the Array's content type
-     * @param items The list of items to populate the Array from
+     * @param items     The list of items to populate the Array from
      * @return The populated Array of generated-class type beans
      * @throws ScriptException If an error happens while trying to populate the generated-class bean
      */
@@ -355,7 +411,7 @@ public class PojoClassGenerator
                 if (item instanceof Map)
                 {
                     // --- ...a Map, it's a CtClass instance, so populate it and then assign
-                    Array.set(array, i, populateClassIntanceFromMap(className, (Map) item));
+                    Array.set(array, i, populateClassIntanceFromMap(className, (Map<String,Object>) item));
                 }
                 else
                 {
@@ -364,12 +420,25 @@ public class PojoClassGenerator
                 }
             }
 
-            return  array;
+            return array;
         }
         catch (ClassNotFoundException e)
         {
-                throw new ScriptException("Unexpected exception trying to instantiate temp class "
-                        + className, e);
+            throw new ScriptException("Unexpected exception trying to instantiate temp class "
+                    + className, e);
         }
+    }
+
+    /**
+     * Returns a valid Java class name (capitalized, no non-word characters)
+     * @param name The original class name
+     * @return The valid Java class name 
+     */
+    private String getValidClassName(String name)
+    {
+        // --- First, strip away non-word characters
+        name = name.replaceAll("\\W", "");
+        // --- Capitalize
+        return (name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase());
     }
 }
