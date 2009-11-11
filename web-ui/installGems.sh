@@ -1,21 +1,26 @@
 #!/bin/sh
-roodi -h >> /dev/null
-if [ $? == 127 ];
+jruby -S gem list roodi | grep 'roodi'
+if [ $? == 1 ];
 then
 	jruby -S gem install roodi --VERSION 2.0.1
 fi
-warble -h >> /dev/null
-if [ $? == 127 ];
+jruby -S gem list warbler | grep 'warbler'
+if [ $? == 1 ];
 then
 	jruby -S gem install warbler --VERSION 0.9.14
 fi
-rails -h >> /dev/null
-if [ $? == 127 ];
+jruby -S gem list rails | grep 'rails'
+if [ $? == 1 ];
 then
 	jruby -S gem install rails --VERSION 2.4.3
 fi
-rcov -h >> /dev/null
-if [ $? == 127 ];
+jruby -S gem list relevance-rcov | grep 'relevance-rcov'
+if [ $? == 1 ];
 then
 	jruby -S gem install relevance-rcov --source http://gems.github.com
+fi
+jruby -S gem list activerecord-jdbcmysql-adapter | grep 'activerecord-jdbcmysql-adapter'
+if [ $? == 1 ];
+then
+	jruby -S gem install activerecord-jdbcmysql-adapter --VERSION 0.9.2
 fi
