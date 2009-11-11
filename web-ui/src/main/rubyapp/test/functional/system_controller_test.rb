@@ -17,7 +17,6 @@ class SystemControllerTest < ActionController::TestCase
   end
 
   def test_list
-
     response = get :list
     assert_response 200
     systems = response.body

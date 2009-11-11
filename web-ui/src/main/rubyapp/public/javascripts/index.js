@@ -37,14 +37,39 @@ Ext.onReady(function()
             }
         ],
         stripeRows: true,
-        height: 600,
+        height: 420,
         width: '100%',
         title: 'Systems',
         // config options for stateful behavior
         stateful: true,
         stateId: 'grid'
     });
+    var indexForm = new Ext.form.FormPanel({
+         labelWidth: 120, // label settings here cascade unless overridden
+        header:false,
+        url:'system/save',
+        frame:true,
+        title: 'New Project',
+        bodyStyle:'padding:5px 5px 0',
+        height: 500,
+        width: "100%",
+        defaults: {
+            width: "99%"
+        },
 
+        items: [
+            conversationsGrid
+        ],
+        buttons: [
+            {
+                text: 'Add System',
+                handler: function() {
+
+
+                }
+            }
+        ]
+    });
     store.load();
-    conversationsGrid.render(document.body)
+    indexForm.render(document.body)
 })

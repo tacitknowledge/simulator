@@ -27,7 +27,26 @@ class SystemController < ApplicationController
       tmp['description']=system.description;
       systems_hash[:systems]<<tmp
     end
+
     render :json => systems_hash.to_json
 
   end
+
+
+  def load
+    system_id = params[:system_id]
+    system = System.find system_id
+    
+    response = {
+            :success => true,
+            :data =>{
+                    :project_name=>system.name,
+                    :project_description=>system.description,
+                    :project_script_language=>system.script_language
+            }
+    }
+    render :json =>response.to_json
+  end
+
+
 end
