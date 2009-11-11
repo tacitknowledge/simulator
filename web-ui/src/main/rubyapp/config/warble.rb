@@ -33,7 +33,7 @@ Warbler::Config.new do |config|
   # Gems to be included. You need to tell Warbler which gems your application needs
   # so that they can be packaged in the war file.
   # The Rails gems are included by default unless the vendor/rails directory is present.
-  # config.gems += ["activerecord-jdbcmysql-adapter", "jruby-openssl"]
+  config.gems += ["activerecord-jdbcmysql-adapter"]
   # config.gems << "tzinfo"
 
   # Uncomment this if you don't want to package rails gem.
@@ -67,7 +67,7 @@ Warbler::Config.new do |config|
   # config.manifest_file = "config/MANIFEST.MF"
 
   # Value of RAILS_ENV for the webapp -- default as shown below
-  # config.webxml.rails.env = ENV['RAILS_ENV'] || 'production'
+  config.webxml.rails.env = 'production'
 
   # Application booter to use, one of :rack, :rails, or :merb. (Default :rails)
   # config.webxml.booter = :rails
