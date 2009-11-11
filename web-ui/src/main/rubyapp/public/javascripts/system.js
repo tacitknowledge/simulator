@@ -21,7 +21,7 @@ Ext.onReady(function()
 
     var systemDataFor = new Ext.FormPanel({
         labelWidth: 120, // label settings here cascade unless overridden
-        url:'/system/save',
+        url:'system/save',
         frame:true,
         title: 'New Project',
         bodyStyle:'padding:5px 5px 0',
@@ -58,7 +58,7 @@ Ext.onReady(function()
                 handler: function() {
                     if (systemDataFor.getForm().isValid()) {
                         systemDataFor.getForm().submit({
-                            url: '/system/save',
+                            url: 'system/save',
                             waitMsg: 'Saving....',
                             success: function(fp, o) {
                                 Ext.MessageBox.alert('Success', o.result.msg)
