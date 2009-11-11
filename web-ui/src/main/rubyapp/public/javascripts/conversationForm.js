@@ -32,7 +32,7 @@ Ext.onReady(function()
 
     var form = new Ext.FormPanel({
         labelWidth: 120, // label settings here cascade unless overridden
-        url:'/conversation',
+        url:'conversation',
         frame: true,
         title: 'Conversation',
         bodyStyle: 'padding:5px 5px 0;',
@@ -66,12 +66,12 @@ Ext.onReady(function()
                 items :[
                     new Ext.form.ComboBox({
                         fieldLabel: 'Transport',
-                        hiddenName: 'name',
+                        hiddenName: 'inbound_transport_type',
                         store: new Ext.data.ArrayStore({
-                            fields: ['transport_type', 'name'],
-                            data : [['JMS', 'JSM'], ['File', 'File']]
+                            fields: ['inbound_transport_type', 'name'],
+                            data : [['JmsTransport', 'JMS'], ['FileTransport', 'File']]
                         }),
-                        valueField: 'transport_type',
+                        valueField: 'inbound_transport_type',
                         displayField:'name',
                         typeAhead: true,
                         mode: 'local',
@@ -83,12 +83,12 @@ Ext.onReady(function()
                     }),
                     new Ext.form.ComboBox({
                         fieldLabel: 'Format',
-                        hiddenName: 'name',
+                        hiddenName: 'inbound_format_type',
                         store: new Ext.data.ArrayStore({
-                            fields: ['format_type', 'name'],
-                            data : [['XML', 'XML'], ['CSV', 'CSV']]
+                            fields: ['inbound_format_type', 'name'],
+                            data : [['XmlAdapter', 'XML'], ['CsvAdapter', 'CSV']]
                         }),
-                        valueField: 'format_type',
+                        valueField: 'inbound_format_type',
                         displayField:'name',
                         typeAhead: true,
                         mode: 'local',
@@ -110,12 +110,12 @@ Ext.onReady(function()
                 items :[
                     new Ext.form.ComboBox({
                         fieldLabel: 'Transport',
-                        hiddenName: 'name',
+                        hiddenName: 'outbound_transport_type',
                         store: new Ext.data.ArrayStore({
-                            fields: ['transport_type', 'name'],
-                            data : [['JMS', 'JSM'], ['File', 'File']]
+                            fields: ['outbound_transport_type', 'name'],
+                            data : [['JmsTransport', 'JMS'], ['FileTransport', 'File']]
                         }),
-                        valueField: 'transport_type',
+                        valueField: 'outbound_transport_type',
                         displayField:'name',
                         typeAhead: true,
                         mode: 'local',
@@ -126,12 +126,12 @@ Ext.onReady(function()
                     }),
                     new Ext.form.ComboBox({
                         fieldLabel: 'Format',
-                        hiddenName: 'name',
+                        hiddenName: 'outbound_format_type',
                         store: new Ext.data.ArrayStore({
-                            fields: ['format_type', 'name'],
-                            data : [['XML', 'XML'], ['CSV', 'CSV']]
+                            fields: ['outbound_format_type', 'name'],
+                            data : [['XmlAdapter', 'XML'], ['CsvAdapter', 'CSV']]
                         }),
-                        valueField: 'format_type',
+                        valueField: 'outbound_format_type',
                         displayField:'name',
                         typeAhead: true,
                         mode: 'local',
@@ -139,6 +139,11 @@ Ext.onReady(function()
                         emptyText:'Select a format...',
                         selectOnFocus: true,
                         width:190
+                    }),
+                    new Ext.form.Hidden({
+                        hiddenName: 'system_id',
+                        name: 'system_id',
+                        value:"1"
                     })
                 ]
             },
@@ -165,10 +170,10 @@ Ext.onReady(function()
                 handler: function() {
                     if (form.getForm().isValid()) {
                         form.getForm().submit({
-                            url: '/system/save_system',
+                            url: 'conversation/save',
                             waitMsg: 'Saving....',
                             success: function(fp, o) {
-                                msg('Success', 'Saved with id "' + o.result.id + '" on the server');
+                                Ext.MessageBox.alert('Success', o.result.msg)
                             }
                         });
                     }
@@ -178,8 +183,7 @@ Ext.onReady(function()
                 text: 'Cancel'
             }
         ]
-    })
-            ;
+    });
 
     form.render(document.body);
 });
