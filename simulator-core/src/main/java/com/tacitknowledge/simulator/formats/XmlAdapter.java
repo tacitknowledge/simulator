@@ -4,10 +4,17 @@ import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.StructuredSimulatorPojo;
+import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -19,6 +26,7 @@ import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList;
@@ -35,6 +43,12 @@ public class XmlAdapter implements Adapter
      * Logger for this class.
      */
     private static Logger logger = Logger.getLogger(XmlAdapter.class);
+
+    /**
+     * The Document object used for XML generation in adaptTo() and helper methods 
+     */
+    private Document doc;
+
     /**
      * {@inheritDoc}
      */
@@ -61,7 +75,7 @@ public class XmlAdapter implements Adapter
 
             // --- Well-formatted Xml should have a single root, right?
             Element docElem = doc.getDocumentElement();
-            Map<String,Object> root = new HashMap<String, Object>();
+            Map<String, Object> root = new HashMap<String, Object>();
             root.put(docElem.getTagName(), getStructuredChilds(docElem));
 
             pojo.setRoot(root);
@@ -91,15 +105,68 @@ public class XmlAdapter implements Adapter
     /**
      * {@inheritDoc}
      */
-    public Object adaptTo(SimulatorPojo pojo)
+    public Object adaptTo(SimulatorPojo pojo) throws FormatAdapterException
     {
-        return null;
+        // --- The SimulatorPojo for XmlAdapter should contain only one key in its root
+        if (pojo.getRoot().isEmpty() || pojo.getRoot().size() > 1)
+        {
+            logger.error("Incorrect SimulatorPojo's root size. Expecting 1, but found" + pojo.getRoot().size());
+            throw new
+                    FormatAdapterException(
+                    "Incorrect SimulatorPojo's root size. Expecting 1, but found" + pojo.getRoot().size());
+        }
+
+        // --- Get a DOM DocumentFactoryBuilder and the corresponding builder
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        DocumentBuilder db;
+        try
+        {
+            db = dbf.newDocumentBuilder();
+        }
+        catch (ParserConfigurationException pce)
+        {
+            throw new FormatAdapterException("Error trying to get a DocumentBuilder", pce);
+        }
+
+        doc = db.newDocument();
+
+        // --- Generate the XML document - In XmlAdapter, the only element in root is guaranteed to be a Map
+        for (Map.Entry<String, Object> entry : pojo.getRoot().entrySet())
+        {
+            doc.appendChild(getStructuredElement(entry.getKey(), (Map<String, Object>) entry.getValue()));
+        }
+
+        // --- Serialize the generated XML document
+        DOMSource domSource = new DOMSource(doc);
+        StringWriter writer = new StringWriter();
+        StreamResult result = new StreamResult(writer);
+        TransformerFactory tf = TransformerFactory.newInstance();
+        tf.setAttribute("indent-number", new Integer(4));
+        try
+        {
+            Transformer transformer = tf.newTransformer();
+            transformer.transform(domSource, result);
+            return writer.toString();
+        }
+        catch (TransformerConfigurationException tce)
+        {
+            String errorMsg = "Error trying to transform XML document into String: " + tce.getMessage();
+            logger.error(errorMsg, tce);
+            throw new FormatAdapterException(errorMsg, tce);
+        }
+        catch (TransformerException te)
+        {
+            String errorMsg = "Error trying to transform XML document into String: " + te.getMessage();
+            logger.error(errorMsg, te);
+            throw new FormatAdapterException(errorMsg, te);
+        }
     }
 
     /**
      * Returns a structured representation of the XML element on a Map,
      * in which container nodes are represented as
      * Map value, duplicated-name nodes as List value and the leaf nodes as String values
+     *
      * @param elem the element to structure the child nodes for
      * @return a Map of child nodes of the XML document
      */
@@ -182,5 +249,72 @@ public class XmlAdapter implements Adapter
         }
 
         return structuredChild;
+    }
+
+    /**
+     * Returns an new XML Element with its inners childs
+     * @param elemName The node name of the element to be returned
+     * @param childs Map containing the childs to be contained within the generated Element
+     * @return The generated XML Element with its inner childs
+     */
+    private Element getStructuredElement(String elemName, Map<String, Object> childs)
+    {
+        Element element = doc.createElement(elemName);
+
+        // --- Iterate throu all the childs
+        for (Map.Entry<String, Object> entry : childs.entrySet())
+        {
+            Element child = null;
+            // --- If the Entry value is...
+            if (entry.getValue() instanceof Map)
+            {
+                // --- ...a Map, get the structured element
+                child = getStructuredElement(entry.getKey(), (Map<String, Object>) entry.getValue());
+            }
+            else if (entry.getValue() instanceof List)
+            {
+                // --- ...a List, add all List members to the current element
+                for (Object item : ((List) entry.getValue()))
+                {
+                    // --- If the item is...
+                    if (item instanceof Map)
+                    {
+                        // --- ...a Map, add the structured element and corresponding childs
+                        element.appendChild(getStructuredElement(entry.getKey(), (Map<String, Object>) item));
+                    }
+                    else
+                    {
+                        // --- ...a String (should be safe to assume), add the text element container
+                        element.appendChild(getTextElement(entry.getKey(), (String) item));
+                    }
+                }
+                // --- We don't return a child Element here, because we already added the List members,
+                // so skip to the next Entry
+                continue;
+            }
+            else
+            {
+                // ...a String (should be), add a text element
+                child = getTextElement(entry.getKey(), (String) entry.getValue());
+            }
+            // --- Append the returned child to the current Element
+            element.appendChild(child);
+        }
+        return element;
+    }
+
+    /**
+     * Returns an XML Element containing only one TextNode child.
+     * @param elemName The containing element node name
+     * @param text The text for the TextNode child
+     * @return The XML Element containing the TextNode 
+     */
+    private Element getTextElement(String elemName, String text)
+    {
+        Node textNode = doc.createTextNode(text);
+        Element container = doc.createElement(elemName);
+        container.appendChild(textNode);
+
+        return container;
     }
 }

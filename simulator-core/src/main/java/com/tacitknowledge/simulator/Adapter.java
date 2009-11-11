@@ -24,5 +24,5 @@ public interface Adapter<E>
      * @param pojo SimulatorPojo object
      * @return generic data object.
      */
-    E adaptTo(SimulatorPojo pojo);
+    E adaptTo(SimulatorPojo pojo) throws FormatAdapterException;
 }
