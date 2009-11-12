@@ -24,3 +24,10 @@ if [ $? == 1 ];
 then
 	jruby -S gem install activerecord-jdbcmysql-adapter --VERSION 0.9.2
 fi
+
+jruby -S gem list activerecord-jdbc-adapter | grep 'activerecord-jdbc-adapter'
+if [ $? == 1 ];
+then
+	jruby -S gem install activerecord-jdbc-adapter --VERSION 0.9.2
+fi
+
