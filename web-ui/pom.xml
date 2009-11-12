@@ -18,9 +18,40 @@
         <tomcat.manager.url>http://127.0.0.1:8080/manager/html</tomcat.manager.url>
         <tomcat.manager.deploy.url>${tomcat.manager.url}/upload</tomcat.manager.deploy.url>
         <tomcat.manager.undeploy.url>${tomcat.manager.url}/undeploy?path=/${app.name}</tomcat.manager.undeploy.url>
+        <rails.environment>production</rails.environment>
     </properties>
     
     <profiles>
+    	<profile>
+            <id>migrate-db</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>migrate-db-with-rake</id>
+                                <phase>compile</phase>
+                                <configuration>
+                                    <executable>/bin/sh</executable>
+                                    <workingDirectory>${rubyapp.dir}</workingDirectory>
+                                    <arguments>
+                                        <argument>-c</argument>
+                                        <argument>
+                                        rake RAILS_ENV=${rails.environment} db:migrate
+                                        </argument>
+                                    </arguments>
+                                </configuration>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
         <profile>
             <id>simulator-deploy</id>
             <build>
@@ -38,8 +69,14 @@
                                     <arguments>
                                         <argument>-c</argument>
                                         <argument>
-			                    curl -o /dev/null ${tomcat.manager.undeploy.url} -u both:tomcat
-			                    curl -o /dev/null -F deployWar=@${rubyapp.target.war} ${tomcat.manager.deploy.url} -u both:tomcat
+                                        echo "Undeploying the simulator web app..."
+					                    curl -o /dev/null ${tomcat.manager.undeploy.url} -u both:tomcat
+					                    echo "Finished."
+					                    echo "Pausing 30 seconds ..."
+					                    sleep 30
+					                    echo "Deploying the simulator web app..."
+					                    curl -o /dev/null -F deployWar=@${rubyapp.target.war} ${tomcat.manager.deploy.url} -u both:tomcat
+					                    echo "Finished."
                                         </argument>
                                     </arguments>
                                 </configuration>
