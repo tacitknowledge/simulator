@@ -1,4 +1,4 @@
-class AddJMSAndFileTransportTypes < ActiveRecord::Migration
+class AddJmsAndFileTransportTypes < ActiveRecord::Migration
   def self.up
     jms_transport_type = TransportType.new(:name => 'JMS',  :class_name => 'JmsTransport')
     jms_transport_type.save

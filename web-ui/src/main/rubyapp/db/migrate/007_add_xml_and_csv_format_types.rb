@@ -1,4 +1,4 @@
-class AddXMLAndCSVFormatTypes < ActiveRecord::Migration
+class AddXmlAndCsvFormatTypes < ActiveRecord::Migration
   def self.up
     xml_format_type = FormatType.new(:name => 'XML',  :class_name => 'XmlAdapter')
     xml_format_type.save
