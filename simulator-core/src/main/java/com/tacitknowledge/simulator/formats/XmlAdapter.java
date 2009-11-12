@@ -4,7 +4,6 @@ import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.StructuredSimulatorPojo;
-import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
@@ -40,12 +39,17 @@ import java.util.List;
 public class XmlAdapter implements Adapter
 {
     /**
+     * XML indentation value 
+     */
+    private static final int XML_INDENT = 4;
+
+    /**
      * Logger for this class.
      */
     private static Logger logger = Logger.getLogger(XmlAdapter.class);
 
     /**
-     * The Document object used for XML generation in adaptTo() and helper methods 
+     * The Document object used for XML generation in adaptTo() and helper methods
      */
     private Document doc;
 
@@ -71,7 +75,7 @@ public class XmlAdapter implements Adapter
             InputSource is = new InputSource();
             is.setCharacterStream(new StringReader((String) o));
 
-            Document doc = db.parse(is);
+            doc = db.parse(is);
 
             // --- Well-formatted Xml should have a single root, right?
             Element docElem = doc.getDocumentElement();
@@ -110,10 +114,12 @@ public class XmlAdapter implements Adapter
         // --- The SimulatorPojo for XmlAdapter should contain only one key in its root
         if (pojo.getRoot().isEmpty() || pojo.getRoot().size() > 1)
         {
-            logger.error("Incorrect SimulatorPojo's root size. Expecting 1, but found" + pojo.getRoot().size());
+            logger.error("Incorrect SimulatorPojo's root size. Expecting 1, but found"
+                    + pojo.getRoot().size());
             throw new
                     FormatAdapterException(
-                    "Incorrect SimulatorPojo's root size. Expecting 1, but found" + pojo.getRoot().size());
+                    "Incorrect SimulatorPojo's root size. Expecting 1, but found"
+                            + pojo.getRoot().size());
         }
 
         // --- Get a DOM DocumentFactoryBuilder and the corresponding builder
@@ -130,10 +136,14 @@ public class XmlAdapter implements Adapter
 
         doc = db.newDocument();
 
-        // --- Generate the XML document - In XmlAdapter, the only element in root is guaranteed to be a Map
+        // --- Generate the XML document - In XmlAdapter,
+        // the only element in root is guaranteed to be a Map
         for (Map.Entry<String, Object> entry : pojo.getRoot().entrySet())
         {
-            doc.appendChild(getStructuredElement(entry.getKey(), (Map<String, Object>) entry.getValue()));
+            doc.appendChild(
+                    getStructuredElement(
+                            entry.getKey(),
+                            (Map<String, Object>) entry.getValue()));
         }
 
         // --- Serialize the generated XML document
@@ -141,7 +151,7 @@ public class XmlAdapter implements Adapter
         StringWriter writer = new StringWriter();
         StreamResult result = new StreamResult(writer);
         TransformerFactory tf = TransformerFactory.newInstance();
-        tf.setAttribute("indent-number", new Integer(4));
+        tf.setAttribute("indent-number", XML_INDENT);
         try
         {
             Transformer transformer = tf.newTransformer();
@@ -150,13 +160,15 @@ public class XmlAdapter implements Adapter
         }
         catch (TransformerConfigurationException tce)
         {
-            String errorMsg = "Error trying to transform XML document into String: " + tce.getMessage();
+            String errorMsg = "Error trying to transform XML document into String: "
+                    + tce.getMessage();
             logger.error(errorMsg, tce);
             throw new FormatAdapterException(errorMsg, tce);
         }
         catch (TransformerException te)
         {
-            String errorMsg = "Error trying to transform XML document into String: " + te.getMessage();
+            String errorMsg = "Error trying to transform XML document into String: "
+                    + te.getMessage();
             logger.error(errorMsg, te);
             throw new FormatAdapterException(errorMsg, te);
         }
@@ -229,7 +241,8 @@ public class XmlAdapter implements Adapter
             }
             else
             {
-                // --- If the currNodeName hasn't been registered, try to get its structured childs
+                // --- If the currNodeName hasn't been registered,
+                // try to get its structured childs
                 Map childValue = getStructuredChilds(child);
                 if (childValue == null || childValue.isEmpty())
                 {
@@ -253,8 +266,9 @@ public class XmlAdapter implements Adapter
 
     /**
      * Returns an new XML Element with its inners childs
+     *
      * @param elemName The node name of the element to be returned
-     * @param childs Map containing the childs to be contained within the generated Element
+     * @param childs   Map containing the childs to be contained within the generated Element
      * @return The generated XML Element with its inner childs
      */
     private Element getStructuredElement(String elemName, Map<String, Object> childs)
@@ -269,7 +283,9 @@ public class XmlAdapter implements Adapter
             if (entry.getValue() instanceof Map)
             {
                 // --- ...a Map, get the structured element
-                child = getStructuredElement(entry.getKey(), (Map<String, Object>) entry.getValue());
+                child = getStructuredElement(
+                        entry.getKey(),
+                        (Map<String, Object>) entry.getValue());
             }
             else if (entry.getValue() instanceof List)
             {
@@ -280,16 +296,18 @@ public class XmlAdapter implements Adapter
                     if (item instanceof Map)
                     {
                         // --- ...a Map, add the structured element and corresponding childs
-                        element.appendChild(getStructuredElement(entry.getKey(), (Map<String, Object>) item));
+                        element.appendChild(
+                                getStructuredElement(entry.getKey(), (Map<String, Object>) item));
                     }
                     else
                     {
-                        // --- ...a String (should be safe to assume), add the text element container
+                        // --- ...a String (should be safe to assume),
+                        // add the text element container
                         element.appendChild(getTextElement(entry.getKey(), (String) item));
                     }
                 }
-                // --- We don't return a child Element here, because we already added the List members,
-                // so skip to the next Entry
+                // --- We don't return a child Element here,
+                // because we already added the List members, so skip to the next Entry
                 continue;
             }
             else
@@ -305,9 +323,10 @@ public class XmlAdapter implements Adapter
 
     /**
      * Returns an XML Element containing only one TextNode child.
+     *
      * @param elemName The containing element node name
-     * @param text The text for the TextNode child
-     * @return The XML Element containing the TextNode 
+     * @param text     The text for the TextNode child
+     * @return The XML Element containing the TextNode
      */
     private Element getTextElement(String elemName, String text)
     {

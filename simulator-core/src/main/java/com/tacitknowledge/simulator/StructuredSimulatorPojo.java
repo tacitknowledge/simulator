@@ -13,7 +13,7 @@ public class StructuredSimulatorPojo implements SimulatorPojo
     /**
      * {@inheritDoc}
      */
-    public Map<String,Object> getRoot()
+    public Map<String, Object> getRoot()
     {
         return root;
     }
@@ -24,21 +24,21 @@ public class StructuredSimulatorPojo implements SimulatorPojo
      * structure data as fitting to its format.
      * The Map's contents can be other containing objects (either Map or List) or String attributes
      */
-    private Map<String,Object> root;
+    private Map<String, Object> root;
 
     /**
      * Constructor for the StructuredSimulatorPojo
      */
     public StructuredSimulatorPojo()
     {
-        root = new HashMap<String,Object>();
+        root = new HashMap<String, Object>();
     }
 
     /**
      * Setter for @see #root
      * @param root The structured data in a Map
      */
-    public void setRoot(Map<String,Object> root)
+    public void setRoot(Map<String, Object> root)
     {
         this.root = root;
     }

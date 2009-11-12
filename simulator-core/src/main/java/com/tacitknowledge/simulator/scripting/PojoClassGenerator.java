@@ -5,7 +5,6 @@ import java.lang.reflect.Array;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -105,20 +104,22 @@ public class PojoClassGenerator
 
         // --- Now populate the beans contained in the SimulatorPojo
         Map<String, Object> beansMap = new HashMap<String, Object>();
-        for (Entry<String,Object> entry : pojo.getRoot().entrySet())
+        for (Entry<String, Object> entry : pojo.getRoot().entrySet())
         {
             String className = getValidClassName(entry.getKey());
-            Map<String,Object> bean = (Map<String,Object>) entry.getValue();
+            Map<String, Object> bean = (Map<String, Object>) entry.getValue();
 
-            beansMap.put(entry.getKey(), populateClassIntanceFromMap(TMP_CLASS_PACKAGE + className, bean));
+            beansMap.put(
+                    entry.getKey(),
+                    populateClassIntanceFromMap(TMP_CLASS_PACKAGE + className, bean));
         }
 
         return beansMap;
     }
 
     /**
-     * @return The list of generated class names. It will be empty if called before generateBeansMap
-     *         or after detachGeneratedClasses
+     * @return The list of generated class names.
+     * It will be empty if called before generateBeansMap or after detachGeneratedClasses
      */
     public List<String> getGeneratedClassNames()
     {
@@ -211,7 +212,8 @@ public class PojoClassGenerator
                 if (itemValue instanceof Map)
                 {
                     // --- If the Value is a Map container, go down the structure
-                    CtClass mapClass = generateClassFromMap(fullName, (Map<String,Object>) itemValue);
+                    CtClass mapClass =
+                            generateClassFromMap(fullName, (Map<String, Object>) itemValue);
 
                     // --- Generate the new field with the generated type
                     newField = generateField(mapClass.getName(), itemName, ctClass);
@@ -219,20 +221,23 @@ public class PojoClassGenerator
                 else if (itemValue instanceof List)
                 {
                     // --- If the value is a List, verify the type of its contents
+                    String fieldClassName;
                     Object val = ((List) itemValue).get(0);
                     if (val instanceof Map)
                     {
-                        // --- If the first element in the list is a Map, generate a new class for it...
+                        // --- If the first element in the list is a Map,
+                        // generate a new class for it...
                         CtClass arrayClass =
-                                generateClassFromMap(fullName, (Map<String,Object>) val);
+                                generateClassFromMap(fullName, (Map<String, Object>) val);
                         // --- ...then generate an Array-representation field of this type
-                        newField = generateField("[L" + arrayClass.getName() + ";", itemName, ctClass);
+                        fieldClassName = "[L" + arrayClass.getName() + ";";
                     }
                     else
                     {
                         // --- Ff the element is a String, then the field is an Array of Strings
-                        newField = generateField(new String[0].getClass().getName(), itemName, ctClass);
+                        fieldClassName = new String[0].getClass().getName();
                     }
+                    newField = generateField(fieldClassName, itemName, ctClass);
                 }
                 else
                 {
@@ -247,7 +252,8 @@ public class PojoClassGenerator
                 }
             }
 
-            // --- If ctClass was generated and NOT frozen (meaning, not previously registered), REGISTER it and add it the generatedClasses list
+            // --- If ctClass was generated and NOT frozen (meaning, not previously registered),
+            // REGISTER it and add it the generatedClasses list
             if (ctClass != null)
             {
                 ctClass.toClass();
@@ -284,12 +290,13 @@ public class PojoClassGenerator
 
     /**
      * Populates a generated class with the contents of a Map.
-     * The class should have been generated from the same Map to avoid conflicts or information loss
+     * The class should have been generated from the same Map
+     * to avoid conflicts or information loss
      *
      * @param className The name of the dinamically-generated class to be populated
      * @param values    The values used to populate the bean
      * @return A dinamically-generated-class instance populated with the values data
-     * @throws ScriptException If an error happens while trying to populate the generated-class bean
+     * @throws ScriptException If an error happens while trying to populate the bean
      */
     private Object populateClassIntanceFromMap(String className, Map<String, Object> values)
             throws ScriptException
@@ -312,7 +319,7 @@ public class PojoClassGenerator
 
                     String fullName = className + "." + getValidClassName(itemName);
 
-                    // --- Get the actual Field from the itemName and field value from the itemValue
+                    // --- Get the actual Field from the itemName and field value from itemValue
                     Field field = obj.getClass().getDeclaredField(itemName);
                     Object fieldValue = itemValue;
 
@@ -321,7 +328,7 @@ public class PojoClassGenerator
                     {
                         // --- ...a Map, populate the corresponding generated-class bean
                         fieldValue = populateClassIntanceFromMap(fullName,
-                                (Map<String,Object>) itemValue);
+                                (Map<String, Object>) itemValue);
                     }
                     else if (itemValue instanceof List)
                     {
@@ -349,7 +356,8 @@ public class PojoClassGenerator
             }
             catch (IllegalAccessException e)
             {
-                String errorMessage = "Object for class : " + className + " couldn't be accessed.";
+                String errorMessage =
+                        "Object for class : " + className + " couldn't be accessed.";
                 logger.error(errorMessage, e);
                 throw new ScriptException(errorMessage, e);
             }
@@ -377,7 +385,7 @@ public class PojoClassGenerator
      * @param className The class name of the Array's content type
      * @param items     The list of items to populate the Array from
      * @return The populated Array of generated-class type beans
-     * @throws ScriptException If an error happens while trying to populate the generated-class bean
+     * @throws ScriptException If an error happens while trying to populate the bean
      */
     private Object populateArrayFromList(String className, List items) throws ScriptException
     {
@@ -411,7 +419,10 @@ public class PojoClassGenerator
                 if (item instanceof Map)
                 {
                     // --- ...a Map, it's a CtClass instance, so populate it and then assign
-                    Array.set(array, i, populateClassIntanceFromMap(className, (Map<String,Object>) item));
+                    Array.set(
+                            array,
+                            i,
+                            populateClassIntanceFromMap(className, (Map<String, Object>) item));
                 }
                 else
                 {
@@ -419,7 +430,6 @@ public class PojoClassGenerator
                     Array.set(array, i, item);
                 }
             }
-
             return array;
         }
         catch (ClassNotFoundException e)
@@ -431,8 +441,9 @@ public class PojoClassGenerator
 
     /**
      * Returns a valid Java class name (capitalized, no non-word characters)
+     *
      * @param name The original class name
-     * @return The valid Java class name 
+     * @return The valid Java class name
      */
     private String getValidClassName(String name)
     {

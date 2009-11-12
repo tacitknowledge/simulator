@@ -23,6 +23,8 @@ public interface Adapter<E>
      * for outbound transport.
      * @param pojo SimulatorPojo object
      * @return generic data object.
+     * @throws FormatAdapterException If the pojo object is not properly structured
+     *      or an error occurs during convertion
      */
     E adaptTo(SimulatorPojo pojo) throws FormatAdapterException;
 }
