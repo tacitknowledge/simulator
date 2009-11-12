@@ -13,7 +13,7 @@
             //if system_id is set then load the data into the form. otherwise we are trying to create a new form
             if (this.systemId != '' && this.systemId != undefined) {
                 this.getForm().load({
-                    url: 'systems/'+this.systemId+'/consersations/'+this.conversation_id+'/scenarios/'+this.scenarioId,
+                    url: this.scenarioId + ".json",
                     method: 'GET',
                     failure: function(form, action) {
                         Ext.Msg.alert("Load failed", action.result.errorMessage);
@@ -104,6 +104,6 @@
                         text: 'Cancel'
                     }
                 ]
-             }), config)
+             }, config))
          }
-    })
+    });
