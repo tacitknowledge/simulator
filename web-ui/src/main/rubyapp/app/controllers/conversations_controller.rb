@@ -47,6 +47,11 @@ class ConversationsController < ApplicationController
     end
   end
 
+  def new
+    @conversation = Conversation.new
+    render :action => 'show'
+  end
+
 
   def transport_types
     @transport_types = TransportType.find(:all)

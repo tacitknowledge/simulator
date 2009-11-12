@@ -37,6 +37,11 @@ class ScenariosController < ApplicationController
    end
   end
 
+  def new
+    @scenario = Scenario.new
+    render :action => 'show'
+  end
+
   def destroy
     @scenario = Scenario.find(params[:id])
 
