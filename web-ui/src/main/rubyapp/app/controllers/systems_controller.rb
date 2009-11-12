@@ -2,14 +2,14 @@ class SystemsController < ApplicationController
 
   def index
     @systems = System.all
-     if(params[:format]== 'json')
-       render :json => { :data => @systems }
-     end
+    if (params[:format]== 'json')
+      render :json => { :success => true, :data => @systems }
+    end
   end
 
   def show
     @system = System.find(params[:id])
-    if(params[:format]== 'json')
+    if (params[:format]== 'json')
       render :json => { :success => true, :data => @system }
     end
 #    redirect_to "systems/1/show"
@@ -45,4 +45,8 @@ class SystemsController < ApplicationController
     end
   end
 
+  def new
+    @system = System.new
+    render :action => 'show'
+  end
 end
