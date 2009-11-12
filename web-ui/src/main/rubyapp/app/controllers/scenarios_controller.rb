@@ -28,7 +28,7 @@ class ScenariosController < ApplicationController
 
   def show
    @scenario = Scenario.find(params[:id])
-   if(params[:format]==:json)
+   if(params[:format]=='json')
      render :json => { :success => true, :data => @scenario }
    end
   end

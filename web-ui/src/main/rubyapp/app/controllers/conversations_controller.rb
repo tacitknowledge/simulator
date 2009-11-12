@@ -8,7 +8,7 @@ class ConversationsController < ApplicationController
 
   def show
    @conversation = Conversation.find(params[:id])
-   if(params[:format]==:json)
+   if(params[:format]=='json')
      render :json => { :success => true, :data => @conversation }
    end
   end
