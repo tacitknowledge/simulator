@@ -6,7 +6,12 @@ TK.ScriptLanguageStore = new Ext.data.ArrayStore({
     ]
 });
 
+
+
+
+
 TK.SystemForm = Ext.extend(Ext.FormPanel, {
+
     /**
      * current system id.
      * null means new system
@@ -16,13 +21,12 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
     initComponent: function() {
 
         TK.SystemForm.superclass.initComponent.apply(this, arguments);
+
         //if system_id is set then load the data into the form. otherwise we are trying to create a new form
         if (this.systemId != '' && this.systemId != undefined) {
             this.getForm().load({
-                url: 'load',
-                params: {
-                    system_id:this.systemId
-                },
+                url: 'systems/'+this.systemId,
+                method: 'GET',
                 failure: function(form, action) {
                     Ext.Msg.alert("Load failed", action.result.errorMessage);
                 }
@@ -35,7 +39,7 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
         TK.SystemForm.superclass.constructor.call(this, Ext.apply({
             labelWidth: 120,
             // label settings here cascade unless overridden
-            url:'save',
+            url: 'systems/'+this.systemId,
             frame:true,
             title: 'System',
             bodyStyle:'padding:5px 5px 0',
@@ -46,25 +50,21 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
             defaultType: 'textfield',
             items: [
                 {
-                    name: 'system_id',
-                    xtype: 'hidden'
-                },
-                {
-                    fieldLabel: 'Project Name',
-                    name : 'project_name',
+                    fieldLabel: 'Name',
+                    name : 'name',
                     allowBlank : false,
                     xtype : 'textfield'
                 }
                 ,
                 {
                     fieldLabel: 'Description',
-                    name : 'project_description',
+                    name : 'description',
                     xtype : 'textarea'
                 }
                 ,
                 {
                     fieldLabel: 'Script language',
-                    name : 'project_script_language',
+                    name : 'script_language',
                     xtype : 'combo',
                     store : TK.ScriptLanguageStore,
                     displayField : 'value',
@@ -74,12 +74,14 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
             buttons: [
                 {
                     text: 'Update',
-                    handler: function() {
-                        if (this.getForm().isValid()) {
-                            this.getForm().submit({
-                                url: 'system/save',
+                    scope: this,
+                    listeners: {
+                        click : function(id) {
+                            if (this.getForm().isValid()) {
+                                this.getForm().submit({
+                                url: 'systems/'+this.systemId,
                                 waitMsg: 'Saving....',
-                                method: 'PUT',
+                                method: 'POST',
 
                                 success: function(fp, o) {
                                     Ext.MessageBox.alert('Success', o.result.msg)
@@ -89,7 +91,10 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
                                 }
                             });
                         }
+
+                        }
                     }
+                    
                 }
             ]
         }, config));

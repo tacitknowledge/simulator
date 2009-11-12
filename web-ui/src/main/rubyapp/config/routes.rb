@@ -1,4 +1,12 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :users
+
+  map.resources :systems do |system|
+    system.resources :conversations do |conversation|
+      conversation.resources :scenarios
+    end
+  end
+
   # The priority is based upon order of creation: first created -> highest priority.
 
   # Sample of regular route:

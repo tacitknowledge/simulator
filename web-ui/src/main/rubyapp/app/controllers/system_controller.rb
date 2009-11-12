@@ -1,52 +1,45 @@
-class SystemController < ApplicationController
+class SystemsController < ApplicationController
 
-  def save
-    name = params[:project_name]
-    description = params[:project_description]
-    language = params[:project_script_language]
-    project = System.find_by_name name
-    if (project.nil?)
-      new_system = System.new
-      new_system.name=name;
-      new_system.description=description;
-      new_system.script_language=language;
-      new_system.save
+  def index
+    @systems = System.all
 
-      render :json =>{:success => true, :mgs => 'Saved with id ' + new_system.id.to_s}, :status => 200
+    render :json => { :data => @systems }
+  end
+
+  def show
+    @system = System.find(params[:id])
+
+    render :json => { :success => true, :data => @system }
+  end
+
+  def create
+    @system = System.new(ActiveSupport::JSON.decode(params[:data]))
+
+    if @system.save
+      render :json => { :success => true, :message => "Created new System #{@system.id}", :data => @system }
     else
-      render :json =>{:success => false, :msg => 'System with name "'+name+'" already exists'}, :status => 200
+      render :json => { :message => "Failed to create System"}
     end
   end
 
-  def list
-    systems = System.all
-    systems_hash = {:systems=>[]}
-    systems.each do |system|
-      tmp={}
-      tmp['name']=system.name
-      tmp['description']=system.description;
-      systems_hash[:systems]<<tmp
+  def update
+    @system = System.find(params[:id])
+
+    if @system.update_attributes(ActiveSupport::JSON.decode(params[:data]))
+      render :json => { :success => true, :message => "Updated System #{@system.id}", :data => @system }
+    else
+      render :json => { :message => "Failed to update System"}
     end
-
-    render :json => systems_hash.to_json
-
   end
 
+  def destroy
+    @system = System.find(params[:id])
 
-  def load
-    system_id = params[:system_id]
-    system = System.find system_id
-    
-    response = {
-            :success => true,
-            :data =>{
-                    :project_name=>system.name,
-                    :project_description=>system.description,
-                    :project_script_language=>system.script_language
-            }
-    }
-    render :json =>response.to_json
+    if @system.destroy
+      render :json => { :success => true, :message => "Destroyed System #{@system.id}" }
+    else
+      render :json => { :message => "Failed to destroy System" }
+    end
   end
-
 
 end
