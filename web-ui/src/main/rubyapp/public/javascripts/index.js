@@ -32,7 +32,7 @@ var writer = new Ext.data.JsonWriter();
 
 // Typical Store collecting the Proxy, Reader and Writer together.
 var store = new Ext.data.Store({
-    id: 'system',
+    id: 'systems',
     restful: true, // <-- This Store is RESTful
     proxy: proxy,
     reader: reader,
@@ -49,7 +49,7 @@ var userColumns = [
     {header: "ID", width: 40, sortable: true, dataIndex: 'id'},
     {header: "Name", width: 100, sortable: true, dataIndex: 'name', editor: new Ext.form.TextField({})},
     {header: "Description", width: 50, sortable: true, dataIndex: 'description', editor: new Ext.form.TextField({})},
-    {header: "Script language", width: 50, sortable: true, dataIndex: 'script_language', editor: new Ext.form.TextField({})}
+//    {header: "Script language", width: 50, sortable: true, dataIndex: 'script_language', editor: new Ext.form.TextField({})}
 ];
 
 // load the store immeditately
@@ -65,7 +65,7 @@ Ext.onReady(function() {
 
     // Create a typical GridPanel with RowEditor plugin
     var systemGrid = new Ext.grid.GridPanel({
-        renderTo: 'system-grid',
+        renderTo: 'systems-grid',
         iconCls: 'icon-grid',
         frame: true,
         title: 'Systems',
@@ -74,15 +74,7 @@ Ext.onReady(function() {
         store: store,
      //   plugins: [editor],
         columns : userColumns,
-      //  tbar: [{
-       //     text: 'Add',
-       //     iconCls: 'silk-add',
-       //     handler: onAdd
-       // }, '-', {
-       //     text: 'Delete',
-       //     iconCls: 'silk-delete',
-        //    handler: onDelete
-       // }, '-'],
+
         viewConfig: {
             forceFit: true
         },
@@ -90,12 +82,11 @@ Ext.onReady(function() {
             click : function(id) {
                 var rec = systemGrid.getSelectionModel().getSelected();
                 this.hide();
-                var win = new TK.SystemForm({
-                    systemId: rec.id
-                });
-
-                win.render(document.body)
-
+                window.location = "systems/"+rec.id"/show"
+//                var win = new TK.SystemForm({
+//                    systemId: rec.id
+//                });
+//                win.render(document.body)
             }
         }
     });

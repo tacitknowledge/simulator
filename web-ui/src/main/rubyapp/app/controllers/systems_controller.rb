@@ -2,14 +2,17 @@ class SystemsController < ApplicationController
 
   def index
     @systems = System.all
-
-    render :json => { :data => @systems }
+     if(params[:format]== 'json')
+       render :json => { :data => @systems }
+     end
   end
 
   def show
     @system = System.find(params[:id])
-
-    render :json => { :success => true, :data => @system }
+    if(params[:format]== 'json')
+      render :json => { :success => true, :data => @system }
+    end
+#    redirect_to "systems/1/show"
   end
 
   def create

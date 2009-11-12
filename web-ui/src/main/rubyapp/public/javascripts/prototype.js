@@ -2132,7 +2132,7 @@ Element.Methods = {
     source = $(source);
     var p = source.viewportOffset();
 
-    // find coordinate system to use
+    // find coordinate systems to use
     element = $(element);
     var delta = [0, 0];
     var parent = null;
