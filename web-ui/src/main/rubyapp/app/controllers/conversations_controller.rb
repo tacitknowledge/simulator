@@ -46,5 +46,17 @@ class ConversationsController < ApplicationController
       render :json => { :message => "Failed to destroy Conversation" }
     end
   end
-  
+
+
+  def transport_types
+    @transport_types = TransportType.find(:all)
+
+    render :json => { :data => @transport_types}
+  end
+
+  def format_types
+    @format_types = FormatType.find(:all)
+
+    render :json => { :data => @format_types}
+  end
 end
