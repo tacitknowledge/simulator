@@ -5,7 +5,7 @@ class ScenariosController < ApplicationController
     if(params[:format]=='json')
       render :json => { :data => @scenarios }
     else
-      redirect_to :controller => "conversation", :action => "show", :id => params[:conversation_id]
+      redirect_to :controller => "conversations", :action => "show", :id => params[:conversation_id]
       return
     end
   end

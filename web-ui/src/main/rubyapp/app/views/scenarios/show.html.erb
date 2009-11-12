@@ -1,0 +1,29 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <title>Scenario</title>
+    <link rel="stylesheet" type="text/css" href="/ext/resources/css/ext-all.css"/>
+    <script type="text/javascript" src="/javascripts/tk-base.js"></script>
+    <script type="text/javascript" src="/ext/adapter/ext/ext-base-debug.js"></script>
+    <script type="text/javascript" src="/ext/ext-all-debug.js"></script>
+    <script type="text/javascript" src="/javascripts/scenarioForm.js"></script>
+    <script type="text/javascript">
+      Ext.onReady(function()
+       {
+           Ext.QuickTips.init();
+
+           // turn on validation errors beside the field globally
+           Ext.form.Field.prototype.msgTarget = 'side';
+           var scenarioForm = new TK.ScenarioForm({
+               systemId: '<%= params[:system_id] %>',
+               conversationId: '<%= params[:conversation_id] %>',
+               scenarioId: '<%= params[:scenario_id] %>'
+           });
+           scenarioForm.render(document.body);
+       })
+    </script>
+</head>
+<body>
+</body>
+</html>
