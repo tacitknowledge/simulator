@@ -14,45 +14,41 @@ class ConversationController < ApplicationController
     if (conversation.nil?)
 
       inbound_transport = Transport.new
-      inbound_transport.transport_type = TransportType.find_by_class_name params[:inbound_transport_type]
-      inbound_transport.save
+      inbound_transport.transport_type_id = (TransportType.find_by_class_name params[:inbound_transport_type]).object_id
+#      inbound_transport.save
 
       outbound_transport = Transport.new
-      outbound_transport.transport_type =  TransportType.find_by_class_name params[:outbound_transport_type]
-      outbound_transport.save
-
+      outbound_transport.transport_type_id = (TransportType.find_by_class_name params[:outbound_transport_type]).object_id
+#      outbound_transport.save
 
 
       inbound_format = Format.new
-      inbound_format.format_type = FormatType.find_by_class_name params[:inbound_format_type]
-      inbound_format.save
+      inbound_format.format_type_id = (FormatType.find_by_class_name params[:inbound_format_type]).object_id
+#      inbound_format.save
 
       outbound_format = Format.new
-      outbound_format.format_type = FormatType.find_by_class_name params[:outbound_format_type]
-      outbound_format.save
+      outbound_format.format_type_id = (FormatType.find_by_class_name params[:outbound_format_type]).object_id
+#      outbound_format.save
 
 
-      
       new_conversation = Conversation.new
       new_conversation.name=name;
       new_conversation.description=description;
-      new_conversation.system_id=params[:system_id]
+      new_conversation.system_id=params[:system_id];
 
-      new_conversation.inbound_transport=inbound_transport;
-      new_conversation.inbound_format=inbound_format;
+      new_conversation.in_transport = inbound_transport;
+      new_conversation.in_format = inbound_format;
 
-      new_conversation.inbound_transport=outbound_transport;
-      new_conversation.inbound_format=outbound_format;
+      new_conversation.out_transport = outbound_transport;
+      new_conversation.out_format = outbound_format;
 
       new_conversation.save
-      
+
       render :json =>{:success => true, :mgs => 'Saved with id ' + new_conversation.id.to_s}, :status => 200
     else
       render :json =>{:success => false, :msg => 'Conversation with name "'+name+'" already exists'}, :status => 200
     end
   end
-
-
 
 
   def list
@@ -71,13 +67,6 @@ class ConversationController < ApplicationController
     end
     render :json => systems_hash.to_json
   end
-
-
-
-  
-
-
-
 
 
 end

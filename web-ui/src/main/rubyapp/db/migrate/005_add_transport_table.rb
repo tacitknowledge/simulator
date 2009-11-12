@@ -9,7 +9,6 @@ class AddTransportTable < ActiveRecord::Migration
 
     create_table :transports do |t|
       t.string :transport_type_id, :null => false
-      t.integer :conversation_id
 
       t.timestamps
     end

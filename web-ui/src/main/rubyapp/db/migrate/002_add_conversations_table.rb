@@ -7,10 +7,10 @@ class AddConversationsTable < ActiveRecord::Migration
       t.boolean :is_active, :default => false
 
       # mapping to belonging transports and formats
-      t.integer :inbound_transport
-      t.integer :outound_transport
-      t.integer :inbound_format
-      t.integer :outbound_format
+      t.integer :inbound_transport_id
+      t.integer :outbound_transport_id
+      t.integer :inbound_format_id
+      t.integer :outbound_format_id
 
       t.timestamps
     end

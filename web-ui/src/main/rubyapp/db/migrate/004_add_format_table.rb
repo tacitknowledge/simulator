@@ -9,7 +9,6 @@ class AddFormatTable < ActiveRecord::Migration
 
     create_table :formats do |t|
       t.integer :format_type_id, :null => false
-      t.integer :conversation_id
 
       t.timestamps
     end

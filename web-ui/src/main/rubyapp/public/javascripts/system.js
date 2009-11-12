@@ -17,7 +17,7 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
 
         TK.SystemForm.superclass.initComponent.apply(this, arguments);
         //if system_id is set then load the data into the form. otherwise we are trying to create a new form
-        if (this.system_id != '') {
+        if (this.systemId != '' && this.systemId != undefined) {
             this.getForm().load({
                 url: 'load',
                 params: {

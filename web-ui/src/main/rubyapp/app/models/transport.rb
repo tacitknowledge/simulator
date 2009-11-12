@@ -1,8 +1,8 @@
 class Transport < ActiveRecord::Base
-  belongs_to :conversation
+#  has_one :conversation
   belongs_to :transport_type
 
-  has_many :configurations
+#  has_many :configurations
 
-  validates_presence_of :transport_type_id, :conversation_id
+  validates_presence_of :transport_type_id
 end

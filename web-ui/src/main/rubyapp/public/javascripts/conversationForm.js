@@ -170,7 +170,7 @@ Ext.onReady(function()
                 handler: function() {
                     if (form.getForm().isValid()) {
                         form.getForm().submit({
-                            url: 'conversation/save',
+                            url: 'save',
                             waitMsg: 'Saving....',
                             success: function(fp, o) {
                                 Ext.MessageBox.alert('Success', o.result.msg)

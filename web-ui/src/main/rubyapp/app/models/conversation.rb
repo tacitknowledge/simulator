@@ -1,15 +1,33 @@
 class Conversation < ActiveRecord::Base
   belongs_to :system
 
-  has_one :transport, :foreign_key => :inbound_transport
-  has_one :transport, :foreign_key => :outbound_transport
-  has_one :format, :foreign_key => :inbound_format
-  has_one :format, :foreign_key => :outbound_format
+
+  belongs_to :in_transport,
+             :foreign_key => :inbound_transport_id,
+             :class_name => "Transport"
+
+  belongs_to :out_transport,
+             :foreign_key => :outbound_transport_id,
+             :class_name => "Transport"
+  
+  belongs_to :in_format,
+             :foreign_key => :outbound_format_id,
+             :class_name => "Format"
+  belongs_to :out_format,
+             :foreign_key => :inbound_format_id,
+             :class_name => "Format"
+
+
+
+#  has_one :transport,  :foreign_key => :inbound_transport_id ,:as => 'trrrr'
+#  has_one :transport, :foreign_key => :outbound_transport_id ,:as => 'drrrr'
+#  has_one :format, :foreign_key => :inbound_format_id  ,:as => 'zrrrr'
+#  has_one :format, :foreign_key =>:outbound_format_id  ,:as => 'srrrr'
 
   has_many :scenarios
 
   validates_presence_of :name, :system_id
-  # Transports and formats shoulb be set before saving as well
-  validates_presence_of :inbound_transport, :outbound_transport
-  validates_presence_of :inbound_format, :outbound_format
+  # Transports and formats should be set before saving as well
+  validates_presence_of :in_transport, :out_transport
+  validates_presence_of :in_format, :out_format
 end
