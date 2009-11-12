@@ -2,8 +2,12 @@ class ScenariosController < ApplicationController
 
   def index
     @scenarios = Scenario.find_all_by_conversation_id(params[:conversation_id])
-
-    render :json => { :data => @scenarios }
+    if(params[:format]=='json')
+      render :json => { :data => @scenarios }
+    else
+      redirect_to :controller => "conversation", :action => "show", :id => params[:conversation_id]
+      return
+    end
   end
 
   def create
