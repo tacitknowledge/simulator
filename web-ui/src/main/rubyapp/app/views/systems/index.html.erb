@@ -1,16 +1,81 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
-<head>
+  <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
     <title>Simulator</title>
     <link rel="stylesheet" type="text/css" href="<%=relative_url_root%>/ext/resources/css/ext-all.css"/>
     <script type="text/javascript" src="<%=relative_url_root%>/javascripts/tk-base.js"></script>
     <script type="text/javascript" src="<%=relative_url_root%>/ext/adapter/ext/ext-base-debug.js"></script>
     <script type="text/javascript" src="<%=relative_url_root%>/ext/ext-all-debug.js"></script>
-    <script type="text/javascript" src="<%=relative_url_root%>/javascripts/index.js"></script>
-</head>
-<body>
+    <script type="text/javascript">
+      Ext.onReady(function() {
+        Ext.QuickTips.init();
 
-</body>
+        var store = new Ext.data.JsonStore({
+          url: '<%=url_for :controller => 'systems', :action => 'index'%>.json',
+          root:'data',
+          storeId:'systems store',
+          idProperty:'name',
+          fields: ['id', 'name', 'description']
+        });
+
+        // Let's pretend we rendered our grid-columns with meta-data from our ORM framework.
+        var userColumns = [
+          {
+            header: "Name",
+            sortable: true,
+            dataIndex: 'name',
+            width: 100
+          },
+          {
+            header: "Description",
+            dataIndex: 'description',
+            width: 200
+
+          }
+        ];
+
+        // load the store immeditately
+        // Create a typical GridPanel with RowEditor plugin
+        var systemGrid = new Ext.grid.GridPanel({
+          title: 'Systems',
+          store: store,
+          columns : userColumns,
+          height: 500,
+          width: '100%',
+          buttons:[
+            {
+              text:'Add',
+              handler:function() {
+                window.location = 'new'
+              }
+            },
+            {
+              text:'Edit',
+              handler:function() {
+                var rec = systemGrid.getSelectionModel().getSelected();
+                if (rec != undefined) {
+                  window.location = rec.data.id
+                }
+              }
+            },
+            {
+              text:'Remove',
+              handler:function() {
+                var rec = systemGrid.getSelectionModel().getSelected();
+              }
+            }
+          ]
+        });
+        store.load();
+        systemGrid.render(document.body)
+
+      });
+    </script>
+
+  </head>
+  <body>
+
+  </body>
 </html>
