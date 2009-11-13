@@ -14,6 +14,30 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
      */
     systemId:'',
 
+    onSaveHandler:function(id) {
+        if (Ext.getCmp('system-form').getForm().isValid()) {
+            if (this.systemId != '' && this.systemId != undefined) {
+                //update existing form
+                url =  this.systemId
+                submitMethod = 'PUT'
+            } else {
+                url = '../systems'
+                submitMethod = 'POST'
+            }
+            Ext.getCmp('system-form').getForm().submit({
+                url: url,
+                waitMsg: 'Saving....',
+                method: submitMethod,
+                success: function(fp, o) {
+                    Ext.MessageBox.alert('Success', o.result.msg)
+                },
+                failure: function(fp, o) {
+                    Ext.MessageBox.alert('Error', o.result.msg)
+                }
+            });
+
+        }
+    },
     initComponent: function() {
 
         TK.SystemForm.superclass.initComponent.apply(this, arguments);
@@ -43,6 +67,7 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
             defaults: {
                 width: "99%"
             },
+            id:'system-form',
             defaultType: 'textfield',
             items: [
                 {
@@ -68,29 +93,10 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
                 },
                 {
                     xtype:'button',
-                    text: 'Update',
+                    text: 'Save',
                     scope: this,
                     width: '10%',
-                    listeners: {
-                        click : function(id) {
-                            if (this.getForm().isValid()) {
-                                this.getForm().submit({
-                                    url: 'systems/' + this.systemId,
-                                    waitMsg: 'Saving....',
-                                    method: 'POST',
-
-                                    success: function(fp, o) {
-                                        Ext.MessageBox.alert('Success', o.result.msg)
-                                    },
-                                    failure: function(fp, o) {
-                                        Ext.MessageBox.alert('Error', o.result.msg)
-                                    }
-                                });
-                            }
-
-                        }
-                    }
-
+                    handler :this.onSaveHandler
                 },
                 {
                     xtype: 'grid',
@@ -125,13 +131,11 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
                         {
                             text:'Add',
                             handler:function() {
-                                window.open('../conversation/', 'GET')
+                                window.open('conversation/new', 'GET')
                             }
                         }
                     ]
                 }
-
-
             ],
             buttons: [
 

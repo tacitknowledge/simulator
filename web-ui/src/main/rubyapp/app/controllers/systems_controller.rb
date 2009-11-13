@@ -21,18 +21,22 @@ class SystemsController < ApplicationController
     if @system.save
       render :json => { :success => true, :message => "Created new System #{@system.id}", :data => @system }
     else
-      render :json => { :message => "Failed to create System"}
+      render :json => {:success => false, :message => "Failed to create System"}
     end
   end
 
   def update
     @system = System.find(params[:id])
-
-    if @system.update_attributes(ActiveSupport::JSON.decode(params[:data]))
-      render :json => { :success => true, :message => "Updated System #{@system.id}", :data => @system }
-    else
-      render :json => { :message => "Failed to update System"}
-    end
+    @system.name=params[:id];
+    @system.description=params[:description];
+    @system.script_language=params[:script_language];
+    @system.save
+    render :json => { :success => true, :message => "Updated System #{@system.id}", :data => @system }
+#    if @system.update_attributes(ActiveSupport::JSON.decode(params[:data]))
+#      render :json => { :success => true, :message => "Updated System #{@system.id}", :data => @system }
+#    else
+#      render :json => { success => false, :message => "Failed to update System"}
+#    end
   end
 
   def destroy

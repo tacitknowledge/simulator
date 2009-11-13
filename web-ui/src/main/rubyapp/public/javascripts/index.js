@@ -7,7 +7,7 @@ Ext.onReady(function() {
         root:'data',
         storeId:'systems store',
         idProperty:'name',
-        fields: ['name', 'description']
+        fields: ['id', 'name', 'description']
     });
 
     // Let's pretend we rendered our grid-columns with meta-data from our ORM framework.
@@ -34,18 +34,10 @@ Ext.onReady(function() {
         columns : userColumns,
         height: 500,
         width: '100%',
-        listeners: {
-            click : function(id) {
-                //                var rec = systemGrid.getSelectionModel().getSelected();
-                //                this.hide();
-                //                window.location = "systems/" + rec.id
-            }
-        },
         buttons:[
             {
                 text:'Add',
                 handler:function() {
-//                    var rec = systemGrid.getSelectionModel().getSelected();
                     window.location = 'new'
                 }
             },
@@ -53,7 +45,9 @@ Ext.onReady(function() {
                 text:'Edit',
                 handler:function() {
                     var rec = systemGrid.getSelectionModel().getSelected();
-                    window.location = rec.id
+                    if (rec != undefined) {
+                        window.location = rec.data.id
+                    }
                 }
             },
             {
