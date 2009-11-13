@@ -14,10 +14,10 @@
     <properties>
         <app.name>rubyapp</app.name>
         <rubyapp.dir>src/main/${app.name}</rubyapp.dir>
-        <rubyapp.target.war>${rubyapp.dir}/${app.name}.war</rubyapp.target.war>
+        <rubyapp.target.war>${rubyapp.dir}/simulator.war</rubyapp.target.war>
         <tomcat.manager.url>http://127.0.0.1:8080/manager/html</tomcat.manager.url>
         <tomcat.manager.deploy.url>${tomcat.manager.url}/upload</tomcat.manager.deploy.url>
-        <tomcat.manager.undeploy.url>${tomcat.manager.url}/undeploy?path=/${app.name}</tomcat.manager.undeploy.url>
+        <tomcat.manager.undeploy.url>${tomcat.manager.url}/undeploy?path=/simulator</tomcat.manager.undeploy.url>
         <rails.environment>production</rails.environment>
     </properties>
     
