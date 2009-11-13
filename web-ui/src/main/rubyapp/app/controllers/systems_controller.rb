@@ -30,13 +30,12 @@ class SystemsController < ApplicationController
     @system.name=params[:id];
     @system.description=params[:description];
     @system.script_language=params[:script_language];
-    @system.save
-    render :json => { :success => true, :message => "Updated System #{@system.id}", :data => @system }
-#    if @system.update_attributes(ActiveSupport::JSON.decode(params[:data]))
-#      render :json => { :success => true, :message => "Updated System #{@system.id}", :data => @system }
-#    else
-#      render :json => { success => false, :message => "Failed to update System"}
-#    end
+    if @system.save
+    #if @system.update_attributes(ActiveSupport::JSON.decode(params[:data]))
+      render :json => { :success => true, :message => "Updated System #{@system.id}", :data => @system }
+    else
+      render :json => { success => false, :message => "Failed to update System"}
+    end
   end
 
   def destroy
