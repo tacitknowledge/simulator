@@ -30,7 +30,7 @@ TK.SystemsIndex = Ext.extend(Ext.grid.GridPanel, {
             {
                 text:'Edit',
                 handler:function() {
-                    var rec = systemGrid.getSelectionModel().getSelected();
+                    var rec = Ext.getCmp('systemGrid').getSelectionModel().getSelected();
                     if (rec != undefined) {
                         window.location = rec.data.id
                     }
@@ -39,7 +39,7 @@ TK.SystemsIndex = Ext.extend(Ext.grid.GridPanel, {
             {
                 text:'Remove',
                 handler:function() {
-                    var rec = systemGrid.getSelectionModel().getSelected();
+                    var rec = Ext.getCmp('systemGrid').getSelectionModel().getSelected();
                 }
             }
             ]
