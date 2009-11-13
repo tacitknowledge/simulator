@@ -32,7 +32,7 @@ TK.SystemsIndex = Ext.extend(Ext.grid.GridPanel, {
                 handler:function() {
                     var rec = Ext.getCmp('systemGrid').getSelectionModel().getSelected();
                     if (rec != undefined) {
-                        window.location = rec.data.id
+                        window.location = rec.data.id+"/"
                     }
                 }
             },
