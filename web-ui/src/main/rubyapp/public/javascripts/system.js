@@ -33,7 +33,7 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
                 success: function(fp, o) {
                     Ext.MessageBox.alert('Success', o.result.message)
                     if (doRedirect) {
-                        window.location = '../systems/' + o.result.data.id
+                        window.location = '../systems/' + o.result.data.id+'/'
                     }
                 },
                 failure: function(fp, o) {
@@ -50,14 +50,15 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
         //if system_id is set then load the data into the form. otherwise we are trying to create a new form
         if (this.systemId != '' && this.systemId != undefined) {
             this.getForm().load({
-                url: this.systemId + ".json",
+                url: '../'+this.systemId + ".json",
                 method: 'GET',
                 failure: function(form, action) {
                     Ext.Msg.alert("Load failed", action.result.errorMessage);
                 }
-            })
+            });
+            var grid = Ext.getCmp('conversations-grid');
+            grid.hidden = false;
         }
-
     },
 
     constructor:function(config) {
@@ -104,11 +105,13 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
                     handler :this.onSaveHandler
                 },
                 {
+                    id:'conversations-grid',
+                    hidden:true,
                     xtype: 'grid',
                     height: 300,
                     width: '100%',
                     store: {
-                        url: 'conversation/list?system_id=' + this.systemId,
+                        url: 'conversations.json',
                         root:'conversations',
                         storeId:'conversationStore',
                         idProperty:'name',
@@ -128,7 +131,6 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
                             dataIndex: 'description'
                         }
                     ],
-
                     title: 'Conversations',
                     stateful: true,
                     stateId: 'grid',

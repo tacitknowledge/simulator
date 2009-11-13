@@ -3,7 +3,7 @@ class ConversationsController < ApplicationController
   def index
     @conversations = Conversation.find_all_by_system_id(params[:system_id])
     if(params[:format]=='json')
-      render :json => { :data => @conversations }
+      render :json => { :success=>true, :data => @conversations }
     else
       redirect_to :controller => "systems", :action => "show", :id => params[:system_id]
       return
