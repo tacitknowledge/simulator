@@ -2,27 +2,30 @@
         "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-  <title>Conversation</title>
+    <title>New System</title>
     <link rel="stylesheet" type="text/css" href="<%=relative_url_root%>/ext/resources/css/ext-all.css"/>
     <script type="text/javascript" src="<%=relative_url_root%>/javascripts/tk-base.js"></script>
     <script type="text/javascript" src="<%=relative_url_root%>/ext/adapter/ext/ext-base-debug.js"></script>
     <script type="text/javascript" src="<%=relative_url_root%>/ext/ext-all-debug.js"></script>
-    <script type="text/javascript" src="<%=relative_url_root%>/javascripts/conversationForm.js"></script>
+    <script type="text/javascript" src="<%=relative_url_root%>/javascripts/system.js"></script>
     <script type="text/javascript">
-      Ext.onReady(function()
-       {
-           Ext.QuickTips.init();
+        Ext.onReady(function()
+        {
+            Ext.QuickTips.init();
 
-           // turn on validation errors beside the field globally
-           Ext.form.Field.prototype.msgTarget = 'side';
-           var conversationForm = new TK.ConversationForm({
-               systemId: '<%= params[:system_id] %>',
-               conversationId: '<%= params[:id] %>'
-           });
-           conversationForm.render(document.body);
-       })
+            // turn on validation errors beside the field globally
+            Ext.form.Field.prototype.msgTarget = 'side';
+            var systemDataFor = new TK.SystemForm({
+                systemId: '<%= params[:id] %>'
+            });
+            systemDataFor.render(document.body);
+        })
+
+
     </script>
 </head>
 <body>
+
+
 </body>
 </html>
