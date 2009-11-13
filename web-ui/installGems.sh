@@ -12,7 +12,7 @@ fi
 jruby -S gem list rails | grep 'rails'
 if [ $? == 1 ];
 then
-	jruby -S gem install rails --VERSION 2.4.3
+	jruby -S gem install rails --VERSION 2.3.4
 fi
 jruby -S gem list relevance-rcov | grep 'relevance-rcov'
 if [ $? == 1 ];
