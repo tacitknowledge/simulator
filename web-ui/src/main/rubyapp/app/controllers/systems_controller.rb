@@ -27,7 +27,7 @@ class SystemsController < ApplicationController
 
   def update
     @system = System.find(params[:id])
-    @system.name=params[:id];
+    @system.name=params[:name];
     @system.description=params[:description];
     @system.script_language=params[:script_language];
     if @system.save
