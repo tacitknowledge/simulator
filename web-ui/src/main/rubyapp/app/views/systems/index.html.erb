@@ -29,7 +29,8 @@
       
         store.load();
         var systemGrid = new TK.SystemsIndex({
-          store: store
+          store: store,
+          id: 'systemGrid'
         });
         
         systemGrid.render(document.body);
