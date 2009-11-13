@@ -1,17 +1,15 @@
 
     TK.ScenarioForm = Ext.extend(Ext.FormPanel, {
             /**
-         * current system id.
-         * null means new system
+         * current scenario id.
+         * null means new scenario
          */
-        conversationId:'',
-        systemId:'',
         scenarioId: '',
         initComponent: function() {
             TK.ScenarioForm.superclass.initComponent.apply(this, arguments);
 
             //if system_id is set then load the data into the form. otherwise we are trying to create a new form
-            if (this.systemId != '' && this.systemId != undefined) {
+            if (this.scenarioId != '' && this.scenarioId != undefined) {
                 this.getForm().load({
                     url: this.scenarioId + ".json",
                     method: 'GET',

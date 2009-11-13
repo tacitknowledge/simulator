@@ -18,17 +18,16 @@
 
     TK.ConversationForm = Ext.extend(Ext.FormPanel, {
             /**
-         * current system id.
-         * null means new system
+         * current conversation id.
+         * null means new conversation
          */
         conversationId:'',
-        systemId:'',
-
+        
         initComponent: function() {
             TK.ConversationForm.superclass.initComponent.apply(this, arguments);
 
             //if system_id is set then load the data into the form. otherwise we are trying to create a new form
-            if (this.systemId != '' && this.systemId != undefined) {
+            if (this.conversationId != '' && this.conversationId != undefined) {
                 this.getForm().load({
                     url: this.conversationId + '.json',
                     method: 'GET',
