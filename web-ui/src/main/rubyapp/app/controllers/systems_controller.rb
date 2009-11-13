@@ -16,7 +16,11 @@ class SystemsController < ApplicationController
   end
 
   def create
-    @system = System.new(ActiveSupport::JSON.decode(params[:data]))
+    @system = System.new()
+
+    @system.name=params[:name];
+    @system.description=params[:description];
+    @system.script_language=params[:script_language];
 
     if @system.save
       render :json => { :success => true, :message => "Created new System #{@system.id}", :data => @system }
@@ -31,7 +35,7 @@ class SystemsController < ApplicationController
     @system.description=params[:description];
     @system.script_language=params[:script_language];
     if @system.save
-    #if @system.update_attributes(ActiveSupport::JSON.decode(params[:data]))
+      #if @system.update_attributes(ActiveSupport::JSON.decode(params[:data]))
       render :json => { :success => true, :message => "Updated System #{@system.id}", :data => @system }
     else
       render :json => { success => false, :message => "Failed to update System"}

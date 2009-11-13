@@ -16,11 +16,13 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
 
     onSaveHandler:function(id) {
         if (Ext.getCmp('system-form').getForm().isValid()) {
+            var doRedirect = false;
             if (this.systemId != '' && this.systemId != undefined) {
                 //update existing form
-                url =  this.systemId
+                url = this.systemId
                 submitMethod = 'PUT'
             } else {
+                doRedirect = true
                 url = '../systems'
                 submitMethod = 'POST'
             }
@@ -29,10 +31,13 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
                 waitMsg: 'Saving....',
                 method: submitMethod,
                 success: function(fp, o) {
-                    Ext.MessageBox.alert('Success', o.result.msg)
+                    Ext.MessageBox.alert('Success', o.result.message)
+                    if (doRedirect) {
+                        window.location = '../systems/' + o.result.data.id
+                    }
                 },
                 failure: function(fp, o) {
-                    Ext.MessageBox.alert('Error', o.result.msg)
+                    Ext.MessageBox.alert('Error', o.result.message)
                 }
             });
 
@@ -131,7 +136,7 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
                         {
                             text:'Add',
                             handler:function() {
-                                window.open('conversation/new', 'GET')
+                                window.open('conversations/new', 'GET')
                             }
                         }
                     ]
