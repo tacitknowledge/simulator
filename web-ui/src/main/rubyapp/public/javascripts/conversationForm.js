@@ -1,21 +1,3 @@
-    TK.myData = [
-        ['1', 'Scenario1', 'This is a fake scenario', true],
-        ['2', 'Scenario 2', 'I repeat, this is a fake scenario', false]
-    ];
-
-    
-    TK.ScenariosStore = new Ext.data.ArrayStore({
-        fields: [
-           {name: 'system_id'},
-           {name: 'id'},
-           {name: 'name'},
-           {name: 'description'},
-           {name: 'is_active', type: 'boolean'},
-        ]
-    });
-
-    TK.ScenariosStore.loadData(TK.myData);
-
     TK.ConversationForm = Ext.extend(Ext.FormPanel, {
             /**
          * current conversation id.
@@ -34,9 +16,8 @@
                     failure: function(form, action) {
                         Ext.Msg.alert("Load failed", action.result.errorMessage);
                     }
-                })
+                });
             }
-
         },
         constructor:function(config) {
              TK.ConversationForm.superclass.constructor.call(this, Ext.apply({
@@ -156,22 +137,6 @@
                             })
                         ]
                     },
-                    new Ext.grid.GridPanel({
-                        store: TK.ScenariosStore,
-                        columns: [
-                            {header: 'Active', width: 50, sortable: true, dataIndex: 'is_active'},
-                            {header: 'Title', width: 150, sortable: true,  dataIndex: 'name'},
-                            {header: 'Description', width: 400, sortable: true, dataIndex: 'description'},
-                            {header: 'Label', width: 150, sortable: true}
-                        ],
-                        stripeRows: true,
-                        height: 250,
-                        width: 600,
-                        title: 'Scenarios',
-                        // config options for stateful behavior
-                        stateful: true,
-                        stateId: 'grid'
-                    })
                 ],
                 buttons: [
                     {
