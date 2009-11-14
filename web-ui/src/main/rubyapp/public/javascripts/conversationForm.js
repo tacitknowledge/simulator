@@ -11,7 +11,7 @@
             //if system_id is set then load the data into the form. otherwise we are trying to create a new form
             if (this.conversationId != '' && this.conversationId != undefined) {
                 this.getForm().load({
-                    url: this.conversationId + '.json',
+                    url: '../'+this.conversationId + '.json',
                     method: 'GET',
                     failure: function(form, action) {
                         Ext.Msg.alert("Load failed", action.result.errorMessage);
