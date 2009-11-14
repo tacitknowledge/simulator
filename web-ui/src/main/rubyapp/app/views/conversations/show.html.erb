@@ -1,63 +1,97 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-  "http://www.w3.org/TR/html4/loose.dtd">
+        "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-  <head>
+<head>
     <title>Conversation</title>
-    <link rel="stylesheet" type="text/css" href="<%=relative_url_root%>/ext/resources/css/ext-all.css"/>
-    <script type="text/javascript" src="<%=relative_url_root%>/javascripts/tk-base.js"></script>
-    <script type="text/javascript" src="<%=relative_url_root%>/ext/adapter/ext/ext-base-debug.js"></script>
-    <script type="text/javascript" src="<%=relative_url_root%>/ext/ext-all-debug.js"></script>
-    <script type="text/javascript" src="<%=relative_url_root%>/javascripts/conversationForm.js"></script>
+    <link rel="stylesheet" type="text/css" href="<%= relative_url_root %>/ext/resources/css/ext-all.css"/>
+    <script type="text/javascript" src="<%= relative_url_root %>/javascripts/tk-base.js"></script>
+    <script type="text/javascript" src="<%= relative_url_root %>/ext/adapter/ext/ext-base-debug.js"></script>
+    <script type="text/javascript" src="<%= relative_url_root %>/ext/ext-all-debug.js"></script>
+    <script type="text/javascript" src="<%= relative_url_root %>/javascripts/conversationForm.js"></script>
     <script type="text/javascript">
-      Ext.onReady(function()
-      {
-        Ext.QuickTips.init();
-
-        // turn on validation errors beside the field globally
-        Ext.form.Field.prototype.msgTarget = 'side';
-
-        var conversationId = '<%= params[:id] %>';
-
-        var conversationForm = new TK.ConversationForm({
-          systemId: '<%= params[:system_id] %>',
-          conversationId: conversationId
-        });
-
-        conversationForm.render(document.body);
-        
-        if (conversationId != "")
+        Ext.onReady(function()
         {
-          var store = new Ext.data.JsonStore({
-            root:'data',
-            storeId:'scenarios store',
-            idProperty:'id',
-            fields: ['id', 'name', 'criteria_script', 'execution_script'],
-            url : 'scenarios.json',
-            autoLoad: true
-          });
+            Ext.QuickTips.init();
 
-          var grid = new Ext.grid.GridPanel({
-            store: store,
-            columns: [
-              {header: 'Active', width: 50, sortable: true, dataIndex: 'is_active'},
-              {header: 'Title', width: 150, sortable: true,  dataIndex: 'name'},
-              {header: 'Criteria Script', width: 150, sortable: true, dataIndex : 'criteria_script'},
-              {header: 'Execution Script', width: 150, sortable: true, dataIndex : 'execution_script'}
-            ],
-            stripeRows: true,
-            height: 250,
-            width: 800,
-            title: 'Scenarios',
-            // config options for stateful behavior
-            stateful: true,
-            stateId: 'grid'
-          });
+            // turn on validation errors beside the field globally
+            Ext.form.Field.prototype.msgTarget = 'side';
 
-          grid.render(document.body);
+            var conversationId = '<%= params[:id] %>';
+
+            var conversationForm = new TK.ConversationForm({
+                systemId: '<%= params[:system_id] %>',
+                conversationId: conversationId
+            });
+
+            conversationForm.render(document.body);
+
+            if (conversationId != "")
+            {
+                var store = new Ext.data.JsonStore({
+                    root:'data',
+                    storeId:'scenarios store',
+                    idProperty:'id',
+                    fields: ['id', 'name', 'criteria_script', 'execution_script'],
+                    url : 'scenarios.json',
+                    autoLoad: true
+                });
+
+                var grid = new Ext.grid.GridPanel({
+                    store: store,
+                    columns: [
+                        {
+                            header: 'Active',
+                            width: 50,
+                            sortable: true,
+                            dataIndex: 'is_active'
+                        },
+                        {
+                            header: 'Title',
+                            width: 150,
+                            sortable: true,
+                            dataIndex: 'name'
+                        },
+                        {
+                            header: 'Criteria Script',
+                            width: 150,
+                            sortable: true,
+                            dataIndex : 'criteria_script'
+                        },
+                        {
+                            header: 'Execution Script',
+                            width: 150,
+                            sortable: true,
+                            dataIndex : 'execution_script'
+                        }
+                    ],
+                    stripeRows: true,
+                    height: 250,
+                    width: 800,
+                    title: 'Scenarios',
+                    // config options for stateful behavior
+                    stateful: true,
+                    stateId: 'grid',
+                    buttons:[
+                        {
+                            text:'Add'
+                        },
+                        {
+                            text:'Edit'
+                        },
+                        {
+                            text:'Delete'
+                        }
+                    ]
+
+                }
+        )
+            ;
+
+            grid.render(document.body);
         }
-      })
+        })
     </script>
-  </head>
-  <body>
-  </body>
+</head>
+<body>
+</body>
 </html>
