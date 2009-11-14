@@ -18,9 +18,10 @@ class ConversationsController < ApplicationController
   end
 
   def create
-    @system = Conversation.new(ActiveSupport::JSON.decode(params[:data]))
+ #   @system = Conversation.new(ActiveSupport::JSON.decode(params[:data]))
+    @conversation = build_conversation(params)
 
-    if @system.save
+    if @conversation.save
       render :json => { :success => true, :message => "Created new Conversation #{@conversation.id}", :data => @conversation }
     else
       render :json => { :message => "Failed to create Conversation"}
@@ -28,9 +29,12 @@ class ConversationsController < ApplicationController
   end
 
   def update
-    @conversation = Conversation.find(params[:id])
 
-    if @conversation.update_attributes(ActiveSupport::JSON.decode(params[:data]))
+    @conversation = build_conversation(params)
+
+    #if @conversation.update_attributes(ActiveSupport::JSON.decode(params[:data]))
+    
+    if @conversation.save
       render :json => { :success => true, :message => "Updated Conversation #{@conversation.id}", :data => @conversation }
     else
       render :json => { :message => "Failed to update Conversation"}
