@@ -33,7 +33,7 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
                 success: function(fp, o) {
                     Ext.MessageBox.alert('Success', o.result.message)
                     if (doRedirect) {
-                        window.location = '../systems/' + o.result.data.id+'/'
+                        window.location = '../systems/' + o.result.data.id + '/'
                     }
                 },
                 failure: function(fp, o) {
@@ -50,7 +50,7 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
         //if system_id is set then load the data into the form. otherwise we are trying to create a new form
         if (this.systemId != '' && this.systemId != undefined) {
             this.getForm().load({
-                url: '../'+this.systemId + ".json",
+                url: '../' + this.systemId + ".json",
                 method: 'GET',
                 failure: function(form, action) {
                     Ext.Msg.alert("Load failed", action.result.errorMessage);
@@ -62,6 +62,15 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
     },
 
     constructor:function(config) {
+        var store = new Ext.data.JsonStore({
+            autoDestroy: true,
+            url: 'conversations.json',
+            root:'data',
+            storeId:'conversationStore',
+            idProperty:'name',
+            fields: ['id', 'name', 'description']
+        });
+        store.load();
         TK.SystemForm.superclass.constructor.call(this, Ext.apply({
             labelWidth: 120,
             // label settings here cascade unless overridden
@@ -110,20 +119,14 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
                     xtype: 'grid',
                     height: 300,
                     width: '100%',
-                    store: {
-                        url: 'conversations.json',
-                        root:'conversations',
-                        storeId:'conversationStore',
-                        idProperty:'name',
-                        fields: ['name', 'description']
-                    },
+                    store: store,
                     columns: [
                         {
                             id:'name',
                             header: 'Name',
                             width: 160,
                             sortable: true,
-                            dataIndex: 'company'
+                            dataIndex: 'name'
                         },
                         {
                             header: 'Description',
@@ -138,9 +141,25 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
                         {
                             text:'Add',
                             handler:function() {
-                                window.open('conversations/new', 'GET')
+                                window.location = 'conversations/new'
+                            }
+                        },
+                        {
+                            text:'Edit',
+                            handler:function() {
+                                var rec = Ext.getCmp('conversations-grid').getSelectionModel().getSelected();
+                                if (rec != undefined) {
+                                    window.location = 'conversations/' + rec.data.id + '/'
+                                }
+                            }
+                        },
+                        {
+                            text:'Delete',
+                            handler:function() {
+//                                window.open('conversations/new', 'GET')
                             }
                         }
+
                     ]
                 }
             ],
