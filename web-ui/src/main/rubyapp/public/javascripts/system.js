@@ -56,7 +56,7 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
                     Ext.Msg.alert("Load failed", action.result.errorMessage);
                 }
             });
-            var grid = Ext.getCmp('conversations-grid');
+            var grid = Ext.getCmp('conversations_grid');
             grid.hidden = false;
         }
     },
@@ -118,7 +118,7 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
                     handler :this.onSaveHandler
                 },
                 {
-                    id:'conversations-grid',
+                    id:'conversations_grid',
                     hidden:true,
                     xtype: 'grid',
                     height: 300,
@@ -153,7 +153,7 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
                             text:'Edit',
                             id: 'conversation_edit',
                             handler:function() {
-                                var rec = Ext.getCmp('conversations-grid').getSelectionModel().getSelected();
+                                var rec = Ext.getCmp('conversations_grid').getSelectionModel().getSelected();
                                 if (rec != undefined) {
                                     window.location = 'conversations/' + rec.data.id + '/'
                                 }

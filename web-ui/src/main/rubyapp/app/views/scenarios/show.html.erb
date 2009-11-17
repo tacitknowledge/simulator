@@ -16,7 +16,6 @@
            // turn on validation errors beside the field globally
            Ext.form.Field.prototype.msgTarget = 'side';
            var scenarioForm = new TK.ScenarioForm({
-               systemId: '<%= params[:system_id] %>',
                conversationId: '<%= params[:conversation_id] %>',
                scenarioId: '<%= params[:id] %>'
            });

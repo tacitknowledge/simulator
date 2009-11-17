@@ -167,7 +167,7 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                         new Ext.form.Hidden({
                             hiddenName: 'system_id',
                             name: 'system_id',
-                            value:"1"
+                            value: this.systemId
                         })
                     ]
                 }

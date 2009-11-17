@@ -72,21 +72,35 @@
                     // config options for stateful behavior
                     stateful: true,
                     stateId: 'grid',
-                    buttons:[
+
+
+                     buttons:[
                         {
                             text:'Add',
-                            id: 'scenario_add'
+                            id: 'scenario_add',
+                            handler:function() {
+                                window.location = 'scenarios/new/'
+                            }
                         },
                         {
                             text:'Edit',
-                            id: 'scenarion_edit'
+                            id: 'scenarion_edit',
+                            handler:function() {
+                                var rec = Ext.getCmp('scenarios_grid').getSelectionModel().getSelected();
+                                if (rec != undefined) {
+                                    window.location = 'scenarios/' + rec.data.id + '/'
+                                }
+                            }
                         },
                         {
                             text:'Delete',
-                            id: 'scenario_delete'
+                            id: 'scenario_delete',
+                            handler:function() {
+//                                window.open('conversations/new/', 'GET')
+                            }
                         }
-                    ]
 
+                    ]
                 }
         )
             ;

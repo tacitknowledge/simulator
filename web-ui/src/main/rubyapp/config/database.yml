@@ -5,8 +5,8 @@ development:
   driver: com.mysql.jdbc.Driver
   url: jdbc:mysql://localhost/simulator_dev
   database: simulator_dev
-  username: simulator
-  password: password
+  username: root
+  password:
   pool: 5
   timeout: 5000
 
@@ -18,8 +18,8 @@ test:
   driver: com.mysql.jdbc.Driver
   url: jdbc:mysql://localhost/simulator_test
   database: simulator_test
-  username: simulator
-  password: password
+  username: root
+  password:
   timeout: 5000
 
 #test:

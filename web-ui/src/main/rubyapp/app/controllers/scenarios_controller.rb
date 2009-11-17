@@ -11,20 +11,28 @@ class ScenariosController < ApplicationController
   end
 
   def create
-    @scenario = Scenario.new(ActiveSupport::JSON.decode(params[:data]))
+    scenario = Scenario.new
+    scenario.conversation_id = params[:conversation_id]
+    scenario.name = params[:name]
+    scenario.criteria_script = params[:criteria_script]
+    scenario.execution_script = params[:execution_script]
 
-    if @scenario.save
-      render :json => { :success => true, :message => "Created new Scenario #{@scenario.id}", :data => @scenario }
+    if scenario.save
+      render :json => { :success => true, :message => "Created new Scenario #{scenario.id}", :data => scenario }
     else
       render :json => { :message => "Failed to create Scenario"}
     end
   end
 
   def update
-    @scenario = Scenario.find(params[:id])
-
-    if @scenario.update_attributes(ActiveSupport::JSON.decode(params[:data]))
-      render :json => { :success => true, :message => "Updated Scenario #{@scenario.id}", :data => @scenario }
+    scenario = Scenario.find(params[:id])
+    scenario.conversation_id = params[:conversation_id]
+    scenario.name = params[:name]
+    scenario.criteria_script = params[:criteria_script]
+    scenario.execution_script = params[:execution_script]
+     
+    if scenario.save
+      render :json => { :success => true, :message => "Updated Scenario #{scenario.id}", :data => scenario }
     else
       render :json => { :message => "Failed to update Scenario"}
     end
