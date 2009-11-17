@@ -5,7 +5,34 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
      */
     conversationId:'',
 
-
+    onSaveHandler:function(id) {
+        var doRedirect = false;
+        //todo remove duplicates from here and the system form
+        if (this.conversationId != '' && this.conversationId != undefined) {
+            url ='../'+this.conversationId
+            submitMethod = 'PUT'
+        } else {
+            doRedirect = true
+            url = '../../conversations'
+            submitMethod = 'POST'
+        }
+        if (Ext.getCmp('conversation-form').getForm().isValid()) {
+            Ext.getCmp('conversation-form').getForm().submit({
+                url: url,
+                waitMsg: 'Saving....',
+                method: submitMethod,
+                success: function(fp, o) {
+                    Ext.MessageBox.alert('Success', o.result.message)
+                    if (doRedirect) {
+                        window.location = '../' + o.result.data.id + '/'
+                    }
+                },
+                failure: function(fp, o) {
+                    Ext.MessageBox.alert('Error', o.result.message)
+                }
+            });
+        }
+    },
 
     initComponent: function() {
         TK.ConversationForm.superclass.initComponent.apply(this, arguments);
@@ -38,11 +65,10 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
             fields: ['id', 'name']
         });
         transportsStore.load()
-        TK.ConversationForm.superclass.constructor.call(this, Ext.apply({
+        var initialConfig = {
 
             id:'conversation-form',
             labelWidth: 120, // label settings here cascade unless overridden
-            url:'conversations',
             //            frame: true,
             title: 'Conversation',
             bodyStyle: 'padding:5px 5px 0;',
@@ -75,7 +101,7 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                     items :[
 
                         new Ext.form.ComboBox({
-                            id:'inbound-transport',
+                            id:'inbound_transport',
                             fieldLabel: 'Transport',
                             store: transportsStore,
                             autoDestroy: true,
@@ -89,7 +115,7 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                             editable: false
                         }),
                         new Ext.form.ComboBox({
-                            id:'inbound-format',
+                            id:'inbound_format',
                             fieldLabel: 'Format',
                             hiddenName: 'inbound_format_type_id',
                             store: formatsStore,
@@ -113,7 +139,7 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
 
                     items :[
                         new Ext.form.ComboBox({
-                            id:'outbound-transport',
+                            id:'outbound_transport',
                             fieldLabel: 'Transport',
                             hiddenName: 'outbound_transport_type_id',
                             store: transportsStore,
@@ -126,7 +152,7 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                             width:190
                         }),
                         new Ext.form.ComboBox({
-                            id:'outbound-format',
+                            id:'outbound_format',
                             fieldLabel: 'Format',
                             hiddenName: 'outbound_format_type_id',
                             store:formatsStore,
@@ -146,49 +172,18 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                     ]
                 }
             ],
-buttons: [
-    {
-        text: 'Save',
-        id:'save',
-        handler:
-                function(id) {
-                    var doRedirect = false;
-                    //todo remove duplicates from here and the system form
-                    if (this.conversationId != '' && this.conversationId != undefined) {
-                        url = this.conversationId
-                        submitMethod = 'PUT'
-                    } else {
-                        doRedirect = true
-                        url = '../../conversations'
-                        submitMethod = 'POST'
-                    }
-                    if (Ext.getCmp('conversation-form').getForm().isValid()) {
-                        Ext.getCmp('conversation-form').getForm().submit({
-                            url: url,
-                            waitMsg: 'Saving....',
-                            method: submitMethod,
-                            success: function(fp, o) {
-                                Ext.MessageBox.alert('Success', o.result.message)
-                                if (doRedirect) {
-                                    window.location = '../' + o.result.data.id + '/'
-                                }
-                            },
-                            failure: function(fp, o) {
-                                Ext.MessageBox.alert('Error', o.result.message)
-                            }
-                        });
-                    }
+            buttons: [
+                {
+                    id:'conversation_save',
+                    scope:this,
+                    text: 'Save',
+                    handler: this.onSaveHandler
                 }
+            ]
 
-
+        };
+        TK.ConversationForm.superclass.constructor.call(this, Ext.apply(initialConfig, config));
     }
-]
-
-},
-config
-))
 }
-}
-)
-;
+        );
 

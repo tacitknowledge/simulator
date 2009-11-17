@@ -20,7 +20,7 @@
 
             var conversationForm = new TK.ConversationForm({
                 systemId: '<%= params[:system_id] %>',
-                conversationId: conversationId
+                conversationId: '<%= params[:id] %>'
             });
 
             conversationForm.render(document.body);

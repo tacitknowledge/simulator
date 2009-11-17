@@ -25,7 +25,6 @@ class ConversationsController < ApplicationController
   def create
     #   @system = Conversation.new(ActiveSupport::JSON.decode(params[:data]))
 
-    conversation = Conversation.new
     name = params[:name]
     description = params[:description]
     in_tt = params[:inbound_transport_type_id]
@@ -34,6 +33,7 @@ class ConversationsController < ApplicationController
     out_ft = params[:outbound_format_type_id]
     sys_id = params[:system_id]
 
+    conversation = Conversation.new
     inbound_transport = Transport.new
     inbound_transport.transport_type = TransportType.find in_tt
 
@@ -57,22 +57,36 @@ class ConversationsController < ApplicationController
     conversation.out_format = outbound_format;
 
     if conversation.save
-      render :json => { :success => true, :message => "Created new Conversation #{conversation.id}", :data => conversation }
+      render :json => { :success => true, :message => "Updated Conversation with id #{conversation.id}", :data => conversation }
     else
-      render :json => { :message => "Failed to create Conversation"}
+      render :json => { :message => "Failed to update Conversation"}
     end
   end
 
   def update
+    name = params[:name]
+    description = params[:description]
+    in_tt = params[:inbound_transport_type_id]
+    out_tt = params[:outbound_transport_type_id]
+    in_ft = params[:inbound_format_type_id]
+    out_ft = params[:outbound_format_type_id]
+    sys_id = params[:system_id]
 
-    @conversation = ConversationHelper.build_conversation(params)
+    conversation = Conversation.find params[:id]
+    
+    conversation.name=name;
+    conversation.description=description;
+    conversation.system_id=sys_id;
 
-    #if @conversation.update_attributes(ActiveSupport::JSON.decode(params[:data]))
+    conversation.in_transport.transport_type_id = in_tt
+    conversation.out_transport.transport_type_id = out_tt
+    conversation.in_format.format_type_id = in_ft
+    conversation.out_format.format_type_id =out_ft
 
-    if @conversation.save
-      render :json => { :success => true, :message => "Updated Conversation #{@conversation.id}", :data => @conversation }
+    if conversation.save
+      render :json => { :success => true, :message => "Created new Conversation #{conversation.id}", :data => conversation }
     else
-      render :json => { :message => "Failed to update Conversation"}
+      render :json => { :message => "Failed to create Conversation"}
     end
   end
 

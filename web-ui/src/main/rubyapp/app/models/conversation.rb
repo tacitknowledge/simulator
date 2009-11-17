@@ -4,18 +4,24 @@ class Conversation < ActiveRecord::Base
 
   belongs_to :in_transport,
              :foreign_key => :inbound_transport_id,
-             :class_name => "Transport"
+             :class_name => "Transport",
+             :autosave => true
 
   belongs_to :out_transport,
              :foreign_key => :outbound_transport_id,
-             :class_name => "Transport"
+             :class_name => "Transport",
+             :autosave => true
   
   belongs_to :in_format,
              :foreign_key => :outbound_format_id,
-             :class_name => "Format"
+             :class_name => "Format",
+             :autosave => true
+
   belongs_to :out_format,
              :foreign_key => :inbound_format_id,
-             :class_name => "Format"
+             :class_name => "Format",
+             :autosave => true
+             
 
 
 
