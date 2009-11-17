@@ -146,7 +146,7 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
                             text:'Add',
                             id: 'conversation_add',
                             handler:function() {
-                                window.location = 'conversations/new'
+                                window.location = 'conversations/new/'
                             }
                         },
                         {
@@ -163,7 +163,7 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
                             text:'Delete',
                             id: 'conversation_delete',
                             handler:function() {
-//                                window.open('conversations/new', 'GET')
+//                                window.open('conversations/new/', 'GET')
                             }
                         }
 

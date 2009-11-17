@@ -12,6 +12,11 @@ class ConversationsController < ApplicationController
 
   def show
     @conversation = Conversation.find(params[:id])
+    @conversation[:inbound_transport_type_id] = @conversation.in_transport.transport_type_id
+    @conversation[:outbound_transport_type_id] = @conversation.out_transport.transport_type_id
+    @conversation[:inbound_format_type_id] = @conversation.in_format.format_type_id
+    @conversation[:outbound_format_type_id] = @conversation.out_format.format_type_id
+
     if (params[:format]=='json')
       render :json => { :success => true, :data => @conversation }
     end
@@ -23,23 +28,23 @@ class ConversationsController < ApplicationController
     conversation = Conversation.new
     name = params[:name]
     description = params[:description]
-    in_tt = params[:inbound_transport_type]
-    out_tt = :outbound_transport_type
-    in_ft = :inbound_format_type
-    out_ft = :outbound_format_type
+    in_tt = params[:inbound_transport_type_id]
+    out_tt = params[:outbound_transport_type_id]
+    in_ft = params[:inbound_format_type_id]
+    out_ft = params[:outbound_format_type_id]
     sys_id = params[:system_id]
 
     inbound_transport = Transport.new
-    inbound_transport.transport_type_id = (TransportType.find_by_class_name in_tt).object_id
+    inbound_transport.transport_type = TransportType.find in_tt
 
     outbound_transport = Transport.new
-    outbound_transport.transport_type_id = (TransportType.find_by_class_name params[ out_tt]).object_id
+    outbound_transport.transport_type = TransportType.find  out_tt
 
     inbound_format = Format.new
-    inbound_format.format_type_id = (FormatType.find_by_class_name params[ in_ft]).object_id
+    inbound_format.format_type = FormatType.find in_ft
 
     outbound_format = Format.new
-    outbound_format.format_type_id = (FormatType.find_by_class_name params[ out_ft]).object_id
+    outbound_format.format_type = FormatType.find out_ft
 
     conversation.name=name;
     conversation.description=description;
@@ -90,12 +95,12 @@ class ConversationsController < ApplicationController
   def transport_types
     @transport_types = TransportType.find(:all)
 
-    render :json => { :data => @transport_types}
+    render :json => { :success=>true, :data => @transport_types}
   end
 
   def format_types
     @format_types = FormatType.find(:all)
 
-    render :json => { :data => @format_types}
+    render :json => { :success=>true, :data => @format_types}
   end
 end

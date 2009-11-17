@@ -22,6 +22,22 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
         }
     },
     constructor:function(config) {
+        var formatsStore = new Ext.data.JsonStore({
+            root: 'data',
+            idProperty: 'id',
+            url: '../../../../conversations/format_types',
+            fields: ['id', 'name']
+        });
+
+        formatsStore.load()
+
+        var transportsStore = new Ext.data.JsonStore({
+            root: 'data',
+            idProperty: 'id',
+            url: '../../../../conversations/transport_types',
+            fields: ['id', 'name']
+        });
+        transportsStore.load()
         TK.ConversationForm.superclass.constructor.call(this, Ext.apply({
 
             id:'conversation-form',
@@ -30,141 +46,111 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
             //            frame: true,
             title: 'Conversation',
             bodyStyle: 'padding:5px 5px 0;',
-            width: "100%",
-
             defaults: {
                 width: "98%"
             },
-
             defaultType: 'textfield',
 
             items: [
-            {
-                fieldLabel: 'Name',
-                name: 'name',
-                id: 'name',
-                allowBlank:false,
-                xtype: 'textfield'
-            },
-            {
-                fieldLabel: 'Description',
-                name: 'description',
-                id: 'description',
-                xtype: 'textarea'
-            },
-            {
-                xtype: 'fieldset',
-                title: 'Inbound',
-                collapsible: false,
-                autoHeight: true,
-                width: "750",
+                {
+                    id:'name',
+                    fieldLabel: 'Name',
+                    name: 'name',
+                    allowBlank:false,
+                    xtype: 'textfield'
+                },
+                {
+                    id:'description',
+                    fieldLabel: 'Description',
+                    name: 'description',
+                    xtype: 'textarea'
+                },
+                {
+                    xtype: 'fieldset',
+                    title: 'Inbound',
+                    collapsible: false,
+                    autoHeight: true,
+                    //                    width: "750",
 
-                items :[
-                new Ext.form.ComboBox({
-                    fieldLabel: 'Transport',
-                    id: "inbound_transport",
-                    hiddenName: 'inbound_transport_type',
-                    store: new Ext.data.ArrayStore({
-                        fields: ['inbound_transport_type', 'name'],
-                        data : [
-                        ['JmsTransport', 'JMS'],
-                        ['FileTransport', 'File']
-                        ]
-                    }),
-                    valueField: 'inbound_transport_type',
-                    displayField:'name',
-                    typeAhead: true,
-                    mode: 'local',
-                    triggerAction: 'all',
-                    emptyText:'Select a transport...',
-                    selectOnFocus: true,
-                    width:190,
-                    editable: false
-                }),
-                new Ext.form.ComboBox({
-                    fieldLabel: 'Format',
-                    id: "inbound_format",
-                    hiddenName: 'inbound_format_type',
-                    store: new Ext.data.ArrayStore({
-                        fields: ['inbound_format_type', 'name'],
-                        data : [
-                        ['XmlAdapter', 'XML'],
-                        ['CsvAdapter', 'CSV']
-                        ]
-                    }),
-                    valueField: 'inbound_format_type',
-                    displayField:'name',
-                    typeAhead: true,
-                    mode: 'local',
-                    triggerAction: 'all',
-                    emptyText: 'Select a format...',
-                    selectOnFocus: true,
-                    width: 190,
-                    editable: false
-                })
-                ]
-            },
-            {
-                xtype: 'fieldset',
-                title: 'Outbound',
-                collapsible: false,
-                autoHeight: true,
-                width: "750",
+                    items :[
 
-                items :[
-                new Ext.form.ComboBox({
-                    fieldLabel: 'Transport',
-                    id: "outbound_transport",
-                    hiddenName: 'outbound_transport_type',
-                    store: new Ext.data.ArrayStore({
-                        fields: ['outbound_transport_type', 'name'],
-                        data : [
-                        ['JmsTransport', 'JMS'],
-                        ['FileTransport', 'File']
-                        ]
-                    }),
-                    valueField: 'outbound_transport_type',
-                    displayField:'name',
-                    typeAhead: true,
-                    mode: 'local',
-                    triggerAction: 'all',
-                    emptyText:'Select a transport...',
-                    selectOnFocus: true,
-                    width:190
-                }),
-                new Ext.form.ComboBox({
-                    fieldLabel: 'Format',
-                    id: "outbound_format",
-                    hiddenName: 'outbound_format_type',
-                    store: new Ext.data.ArrayStore({
-                        fields: ['outbound_format_type', 'name'],
-                        data : [
-                        ['XmlAdapter', 'XML'],
-                        ['CsvAdapter', 'CSV']
-                        ]
-                    }),
-                    valueField: 'outbound_format_type',
-                    displayField:'name',
-                    typeAhead: true,
-                    mode: 'local',
-                    triggerAction: 'all',
-                    emptyText:'Select a format...',
-                    selectOnFocus: true,
-                    width:190
-                }),
-                new Ext.form.Hidden({
-                    hiddenName: 'system_id',
-                    name: 'system_id',
-                    value:"1"
-                })
-                ]
-            }
+                        new Ext.form.ComboBox({
+                            id:'inbound-transport',
+                            fieldLabel: 'Transport',
+                            store: transportsStore,
+                            autoDestroy: true,
+                            hiddenName: 'inbound_transport_type_id',
+                            valueField: 'id',
+                            displayField:'name',
+                            typeAhead: true,
+                            triggerAction: 'all',
+                            emptyText:'Select an inbound transport...',
+                            selectOnFocus: true,
+                            editable: false
+                        }),
+                        new Ext.form.ComboBox({
+                            id:'inbound-format',
+                            fieldLabel: 'Format',
+                            hiddenName: 'inbound_format_type_id',
+                            store: formatsStore,
+                            valueField: 'id',
+                            displayField:'name',
+                            typeAhead: true,
+                            triggerAction: 'all',
+                            emptyText: 'Select an inbound format...',
+                            selectOnFocus: true,
+                            width: 190,
+                            editable: false
+                        })
+                    ]
+                },
+                {
+                    xtype: 'fieldset',
+                    title: 'Outbound',
+                    collapsible: false,
+                    autoHeight: true,
+                    //                    width: "750",
+
+                    items :[
+                        new Ext.form.ComboBox({
+                            id:'outbound-transport',
+                            fieldLabel: 'Transport',
+                            hiddenName: 'outbound_transport_type_id',
+                            store: transportsStore,
+                            valueField: 'id',
+                            displayField:'name',
+                            typeAhead: true,
+                            triggerAction: 'all',
+                            emptyText:'Select an outbound transport...',
+                            selectOnFocus: true,
+                            width:190
+                        }),
+                        new Ext.form.ComboBox({
+                            id:'outbound-format',
+                            fieldLabel: 'Format',
+                            hiddenName: 'outbound_format_type_id',
+                            store:formatsStore,
+                            valueField : 'id',
+                            displayField : 'name',
+                            typeAhead : true,
+                            triggerAction : 'all',
+                            emptyText : 'Select an outbound format...',
+                            selectOnFocus : true,
+                            width : 190
+                        }),
+                        new Ext.form.Hidden({
+                            hiddenName: 'system_id',
+                            name: 'system_id',
+                            value:"1"
+                        })
+                    ]
+                }
             ],
-            buttons: [
-            {
-                text: 'Save',
-                id: 'conversation_save',
-                handler:
+buttons: [
+    {
+        text: 'Save',
+        id:'save',
+        handler:
                 function(id) {
                     var doRedirect = false;
                     //todo remove duplicates from here and the system form
@@ -173,7 +159,7 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                         submitMethod = 'PUT'
                     } else {
                         doRedirect = true
-                        url = '../conversations'
+                        url = '../../conversations'
                         submitMethod = 'POST'
                     }
                     if (Ext.getCmp('conversation-form').getForm().isValid()) {
@@ -184,7 +170,7 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                             success: function(fp, o) {
                                 Ext.MessageBox.alert('Success', o.result.message)
                                 if (doRedirect) {
-                                    window.location = '../conversations/' + o.result.data.id + '/'
+                                    window.location = '../' + o.result.data.id + '/'
                                 }
                             },
                             failure: function(fp, o) {
@@ -195,13 +181,13 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                 }
 
 
-            }
-            ]
-
-        },
-        config
-        ))
     }
+]
+
+},
+config
+))
+}
 }
 )
 ;
