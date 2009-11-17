@@ -24,6 +24,7 @@ TK.ScenarioForm = Ext.extend(Ext.FormPanel, {
     constructor:function(config) {
         TK.ScenarioForm.superclass.constructor.call(this, Ext.apply({
             labelWidth: 150, // label settings here cascade unless overridden
+            id:'scenario-form',
             url:'/scenarios',
             frame: true,
             title: 'Scenario',
@@ -40,11 +41,13 @@ TK.ScenarioForm = Ext.extend(Ext.FormPanel, {
             {
                 fieldLabel: 'Name',
                 name: 'name',
+                id: 'name',
                 allowBlank: false
             },
             {
                 fieldLabel: 'Label',
-                name: 'label'
+                name: 'label',
+                id: 'label'
             },
             {
                 xtype: 'fieldset',
@@ -58,6 +61,7 @@ TK.ScenarioForm = Ext.extend(Ext.FormPanel, {
                 {
                     name: 'criteria_script',
                     xtype: 'textarea',
+                    id: 'criteria_script',
                     allowBlank: false,
                     height: 200,
                     width: "100%"
@@ -76,6 +80,7 @@ TK.ScenarioForm = Ext.extend(Ext.FormPanel, {
                 {
                     name: 'execution_script',
                     xtype: 'textarea',
+                    id: 'execution_script',
                     allowBlank: false,
                     height: 200,
                     width: "100%"
@@ -86,6 +91,7 @@ TK.ScenarioForm = Ext.extend(Ext.FormPanel, {
             buttons: [
             {
                 text: 'Save',
+                id: 'scenario_save',
                 handler: function() {
                     if (form.getForm().isValid()) {
                         form.getForm().submit({
@@ -99,7 +105,8 @@ TK.ScenarioForm = Ext.extend(Ext.FormPanel, {
                 }
             },
             {
-                text: 'Cancel'
+                text: 'Cancel',
+                id: 'scenario_cancel'
             }
             ]
         }, config))

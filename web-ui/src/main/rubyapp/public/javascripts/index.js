@@ -4,6 +4,7 @@ TK.SystemsIndex = Ext.extend(Ext.grid.GridPanel, {
         TK.SystemsIndex.superclass.constructor.call(this, Ext.apply({
 
             title: 'Systems',
+            id: 'systems_grid',
             columns : [
             {
                 header: "Name",
@@ -23,12 +24,14 @@ TK.SystemsIndex = Ext.extend(Ext.grid.GridPanel, {
             buttons:[
             {
                 text:'Add',
+                id: 'system_add',
                 handler:function() {
                     window.location = 'new'
                 }
             },
             {
                 text:'Edit',
+                id: 'system_edit',
                 handler:function() {
                     var rec = Ext.getCmp('systemGrid').getSelectionModel().getSelected();
                     if (rec != undefined) {
@@ -38,6 +41,7 @@ TK.SystemsIndex = Ext.extend(Ext.grid.GridPanel, {
             },
             {
                 text:'Remove',
+                id: 'system_remove',
                 handler:function() {
                     var rec = Ext.getCmp('systemGrid').getSelectionModel().getSelected();
                 }

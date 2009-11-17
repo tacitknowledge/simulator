@@ -38,6 +38,7 @@
 
                 var grid = new Ext.grid.GridPanel({
                     store: store,
+                    id: 'scenarios_grid',
                     columns: [
                         {
                             header: 'Active',
@@ -73,13 +74,16 @@
                     stateId: 'grid',
                     buttons:[
                         {
-                            text:'Add'
+                            text:'Add',
+                            id: 'scenario_add'
                         },
                         {
-                            text:'Edit'
+                            text:'Edit',
+                            id: 'scenarion_edit'
                         },
                         {
-                            text:'Delete'
+                            text:'Delete',
+                            id: 'scenario_delete'
                         }
                     ]
 

@@ -89,13 +89,15 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
                     fieldLabel: 'Name',
                     name : 'name',
                     allowBlank : false,
-                    xtype : 'textfield'
+                    xtype : 'textfield',
+                    id: 'name'
                 }
                 ,
                 {
                     fieldLabel: 'Description',
                     name : 'description',
-                    xtype : 'textarea'
+                    xtype : 'textarea',
+                    id: 'description'
                 }
                 ,
                 {
@@ -104,11 +106,13 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
                     xtype : 'combo',
                     store : TK.ScriptLanguageStore,
                     displayField : 'value',
-                    mode : 'local'
+                    mode : 'local',
+                    id: 'script_language'
                 },
                 {
                     xtype:'button',
                     text: 'Save',
+                    id: 'system_save',
                     scope: this,
                     width: '10%',
                     handler :this.onSaveHandler
@@ -140,12 +144,14 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
                     buttons:[
                         {
                             text:'Add',
+                            id: 'conversation_add',
                             handler:function() {
                                 window.location = 'conversations/new'
                             }
                         },
                         {
                             text:'Edit',
+                            id: 'conversation_edit',
                             handler:function() {
                                 var rec = Ext.getCmp('conversations-grid').getSelectionModel().getSelected();
                                 if (rec != undefined) {
@@ -155,6 +161,7 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
                         },
                         {
                             text:'Delete',
+                            id: 'conversation_delete',
                             handler:function() {
 //                                window.open('conversations/new', 'GET')
                             }
@@ -162,9 +169,6 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
 
                     ]
                 }
-            ],
-            buttons: [
-
             ]
         }, config));
     }
