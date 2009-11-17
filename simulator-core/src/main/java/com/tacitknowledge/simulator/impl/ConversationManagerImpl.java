@@ -13,6 +13,7 @@ import com.tacitknowledge.simulator.formats.AdapterFactory;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -181,5 +182,15 @@ public class ConversationManagerImpl implements ConversationManager
         {
             logger.error("Conversation with id : " + conversationId + " was not found.", e);
         }
+    }
+
+    /**
+     * @inheritDoc
+     * @param format @see ConversationManager#getAdapterParameters
+     * @return @see ConversationManager#getAdapterParameters
+     */
+    public List<List> getAdapterParameters(String format)
+    {
+        return AdapterFactory.getAdapterParameters(format);
     }
 }

@@ -1,37 +1,71 @@
 package com.tacitknowledge.simulator.formats;
 
 import com.tacitknowledge.simulator.Adapter;
+import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation of the Adapter interface for the YAML format
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class YamlAdapter implements Adapter<Object>
+public class YamlAdapter extends BaseAdapter implements Adapter<Object>
 {
     /**
-     * Adapts the String data received from the inbound transport into YAML format.
-     *
-     * @return an object constructed based on the inbound transport data.
-     * @param object the incoming data object to adapt to YAML format.
-     * for YamlAdapter to adapt it.
+     * Adapter parameters definition.
      */
-    public SimulatorPojo adaptFrom(Object object)
+    private static List<List> parametersList = new ArrayList<List>();
+
+    /**
+     * @inheritDoc
+     */
+    public YamlAdapter()
+    {
+    }
+
+    /**
+     * @inheritDoc
+     * @param parameters @see Adapter#parameters
+     */
+    public YamlAdapter(Map<String, String> parameters)
+    {
+        super(parameters);
+    }
+
+    /**
+     * @inheritDoc
+     * @param object @see Adapter#adaptFrom
+     * @return @see Adapter#adaptFrom
+     * @throws com.tacitknowledge.simulator.FormatAdapterException @see Adapter#adaptFrom
+     */
+    public SimulatorPojo adaptFrom(Object object) throws FormatAdapterException
     {
         //TODO Implement this functionality.
         return null;
     }
 
     /**
-     * Adapts the data from simulation to the YAML formatted object
-     *
-     * @param pojo the SimulatorPojo with the data to be transformed into YAML structure.
-     * @return an object constructed based on the data received from execution of the simulation
+     * @inheritDoc
+     * @param pojo @see Adapter#adaptTo
+     * @return @see Adapter#adaptTo
+     * @throws FormatAdapterException @see Adapter#adaptTo
      */
-    public Object adaptTo(SimulatorPojo pojo)
+    public Object adaptTo(SimulatorPojo pojo) throws FormatAdapterException
     {
         //TODO Implement this functionality.
         return null;
+    }
+
+    /**
+     * @inheritDoc
+     * @return @see Adapter#getParametersList
+     */
+    public List<List> getParametersList()
+    {
+        return parametersList;
     }
 }

@@ -36,10 +36,26 @@ import java.util.List;
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class XmlAdapter implements Adapter
+public class XmlAdapter extends BaseAdapter implements Adapter<Object>
 {
     /**
-     * XML indentation value 
+     * @inheritDoc
+     */
+    public XmlAdapter()
+    {
+    }
+
+    /**
+     * @inheritDoc
+     * @param parameters @see Adapter#parameters
+     */
+    public XmlAdapter(Map<String, String> parameters)
+    {
+        super(parameters);
+    }
+
+    /**
+     * XML indentation value
      */
     private static final int XML_INDENT = 4;
 
@@ -49,12 +65,20 @@ public class XmlAdapter implements Adapter
     private static Logger logger = Logger.getLogger(XmlAdapter.class);
 
     /**
+     * Adapter parameters definition.
+     */
+    private static List<List> parametersList = new ArrayList<List>();
+
+    /**
      * The Document object used for XML generation in adaptTo() and helper methods
      */
     private Document doc;
 
     /**
      * {@inheritDoc}
+     * @param o @see Adapter#adaptFrom
+     * @return @see Adapter#adaptFrom
+     * @throws FormatAdapterException @see Adapter#adaptFrom
      */
     public SimulatorPojo adaptFrom(Object o) throws FormatAdapterException
     {
@@ -108,6 +132,9 @@ public class XmlAdapter implements Adapter
 
     /**
      * {@inheritDoc}
+     * @param pojo @see Adapter#adaptTo
+     * @return @see Adapter#adaptTo
+     * @throws FormatAdapterException @see Adapter#adaptTo
      */
     public Object adaptTo(SimulatorPojo pojo) throws FormatAdapterException
     {
@@ -335,5 +362,14 @@ public class XmlAdapter implements Adapter
         container.appendChild(textNode);
 
         return container;
+    }
+
+    /**
+     * @inheritDoc
+     * @return @see Adapter#getParametersList
+     */
+    public List<List> getParametersList()
+    {
+        return parametersList;
     }
 }

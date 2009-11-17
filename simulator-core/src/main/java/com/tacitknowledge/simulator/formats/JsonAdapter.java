@@ -3,13 +3,21 @@ package com.tacitknowledge.simulator.formats;
 import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.SimulatorPojo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Implementation of the Adapter interface for the JSON format
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class JsonAdapter implements Adapter<Object>
+public class JsonAdapter extends BaseAdapter implements Adapter<Object>
 {
+    /**
+     * Adapter parameters definition.
+     */
+    private static List<List> parametersList = new ArrayList<List>();
+
     /**
      * Adapts the data received from the inbound transport into JSON format.
      *
@@ -31,6 +39,15 @@ public class JsonAdapter implements Adapter<Object>
     public Object adaptTo(SimulatorPojo pojo)
     {
         //TODO Implement this functionality.
+        return null;
+    }
+
+    /**
+     * @inheritDoc
+     * @return @see Adapter#getParametersList
+     */
+    public List<List> getParametersList()
+    {
         return null;
     }
 }

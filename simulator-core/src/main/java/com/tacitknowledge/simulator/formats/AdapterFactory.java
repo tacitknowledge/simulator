@@ -3,6 +3,7 @@ package com.tacitknowledge.simulator.formats;
 import com.tacitknowledge.simulator.Adapter;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -41,5 +42,21 @@ public class AdapterFactory
     public static Adapter< ? > getAdapter(String format)
     {
         return adapters.get(format);
+    }
+
+    /**
+     * @see com.tacitknowledge.simulator.Adapter#getParametersList()
+     * @param format The format the adapter is needed for
+     * @return The parameter descriptions list
+     */
+    public static List<List> getAdapterParameters(String format)
+    {
+        List<List> list = null;
+        if (adapters.get(format) != null)
+        {
+            list = adapters.get(format).getParametersList();
+        }
+
+        return list;
     }
 }

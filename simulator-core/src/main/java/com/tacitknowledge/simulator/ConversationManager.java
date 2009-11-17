@@ -1,5 +1,7 @@
 package com.tacitknowledge.simulator;
 
+import java.util.List;
+
 
 /**
  * Defines the interface for the implementations of the ConversationManager.
@@ -64,4 +66,12 @@ public interface ConversationManager
      * @throws SimulatorException in case there is an error deleting the conversation
      */
     void deleteConversation(int conversationId) throws SimulatorException;
+
+    /**
+     * @see Adapter#getParametersList()
+     * @see com.tacitknowledge.simulator.formats.AdapterFactory#getAdapterParameters(String)
+     * @param format The format the adapter is needed for
+     * @return The parameter descriptions list
+     */
+    List<List> getAdapterParameters(String format);
 }
