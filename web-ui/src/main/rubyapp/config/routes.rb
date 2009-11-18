@@ -3,6 +3,8 @@ ActionController::Routing::Routes.draw do |map|
   map.connect '/conversations/transport_types', :controller => 'conversations', :action => 'transport_types'
   map.connect '/conversations/format_types', :controller => 'conversations', :action => 'format_types'
 
+  map.connect '/conversations/format_parameters', :controller => 'conversations', :action => 'format_parameters'
+
   map.resources :systems do |system|
     system.resources :conversations do |conversation|
 

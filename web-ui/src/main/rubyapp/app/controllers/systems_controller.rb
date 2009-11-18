@@ -10,7 +10,15 @@ class SystemsController < ApplicationController
   end
 
   def show
-    @system = System.find(params[:id])
+    begin
+      @system = System.find(params[:id])
+    rescue
+      # If the system with :id is not found, log the error and redirect to index
+      logger.error("System with id #{params[:id]} not found")
+      redirect_to :action => 'index'
+      return
+    end
+
     if (params[:format]== 'json')
       render :json => { :success => true, :data => @system }
     end
