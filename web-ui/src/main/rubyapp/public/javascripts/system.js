@@ -19,11 +19,11 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
             var doRedirect = false;
             if (this.systemId != '' && this.systemId != undefined) {
                 //update existing form
-                url = this.systemId
+                url = '../'+this.systemId
                 submitMethod = 'PUT'
             } else {
                 doRedirect = true
-                url = '../systems'
+                url = '../'
                 submitMethod = 'POST'
             }
             Ext.getCmp('system-form').getForm().submit({
@@ -33,7 +33,7 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
                 success: function(fp, o) {
                     Ext.MessageBox.alert('Success', o.result.message)
                     if (doRedirect) {
-                        window.location = '../systems/' + o.result.data.id + '/'
+                        window.location = '../' + o.result.data.id + '/'
                     }
                 },
                 failure: function(fp, o) {
@@ -57,7 +57,7 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
                 }
             });
             var grid = Ext.getCmp('conversations_grid');
-            grid.hidden = false;
+            grid.show();
         }
     },
 

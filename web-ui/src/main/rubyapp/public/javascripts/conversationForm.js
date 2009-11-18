@@ -5,6 +5,9 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
      */
     conversationId:'',
 
+
+
+
     onSaveHandler:function(id) {
         var doRedirect = false;
         //todo remove duplicates from here and the system form
@@ -46,9 +49,19 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                     Ext.Msg.alert("Load failed", action.result.errorMessage);
                 }
             });
+            var scenariosGrid = Ext.getCmp('scenarios_grid');
+            scenariosGrid.show();
+            scenariosGrid.getStore().load();
         }
     },
     constructor:function(config) {
+        var scenariosStore = new Ext.data.JsonStore({
+                    root:'data',
+                    storeId:'scenarios_store',
+                    idProperty:'id',
+                    fields: ['id', 'name', 'criteria_script', 'execution_script'],
+                    url : 'scenarios.json'
+                });
         var formatsStore = new Ext.data.JsonStore({
             root: 'data',
             idProperty: 'id',
@@ -96,7 +109,6 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                     title: 'Inbound',
                     collapsible: false,
                     autoHeight: true,
-                    //                    width: "750",
 
                     items :[
 
@@ -135,7 +147,6 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                     title: 'Outbound',
                     collapsible: false,
                     autoHeight: true,
-                    //                    width: "750",
 
                     items :[
                         new Ext.form.ComboBox({
@@ -169,6 +180,69 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                             name: 'system_id',
                             value: this.systemId
                         })
+                    ]
+                },
+                    {
+                    store: scenariosStore,
+                    id: 'scenarios_grid',
+                    xtype:'grid',
+                    columns: [
+                        {
+                            header: 'Active',
+                            width: 50,
+                            sortable: true,
+                            dataIndex: 'is_active'
+                        },
+                        {
+                            header: 'Title',
+                            width: 150,
+                            sortable: true,
+                            dataIndex: 'name'
+                        },
+                        {
+                            header: 'Criteria Script',
+                            width: 150,
+                            sortable: true,
+                            dataIndex : 'criteria_script'
+                        },
+                        {
+                            header: 'Execution Script',
+                            width: 150,
+                            sortable: true,
+                            dataIndex : 'execution_script'
+                        }
+                    ],
+                    stripeRows: true,
+                    height: 250,
+                    title: 'Scenarios',
+                    // config options for stateful behavior
+                    stateful: true,
+                    stateId: 'grid',
+                    hidden:true,
+
+                     buttons:[
+                        {
+                            text:'Add',
+                            id: 'scenario_add',
+                            handler:function() {
+                                window.location = 'scenarios/new/'
+                            }
+                        },
+                        {
+                            text:'Edit',
+                            id: 'scenarion_edit',
+                            handler:function() {
+                                TK.editEntity('scenarios')
+                            }
+                        },
+                        {
+                            text:'Delete',
+                            id: 'scenario_delete',
+                            handler:function() {
+                                TK.deleteEntity('scenarios')
+                            }
+                        }
+
                     ]
                 }
             ],
