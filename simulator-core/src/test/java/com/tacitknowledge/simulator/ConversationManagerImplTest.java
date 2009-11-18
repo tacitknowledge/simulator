@@ -1,20 +1,18 @@
 package com.tacitknowledge.simulator;
 
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
-
+import junit.framework.TestCase;
 import org.junit.Test;
 
 import com.tacitknowledge.simulator.camel.RouteManagerImpl;
 import com.tacitknowledge.simulator.formats.FormatConstants;
 import com.tacitknowledge.simulator.impl.ConversationManagerImpl;
 
+import java.util.List;
+
 /**
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class ConversationManagerImplTest
+public class ConversationManagerImplTest extends TestCase
 {
     private Transport in = new Transport()
     {
@@ -42,10 +40,20 @@ public class ConversationManagerImplTest
     };
 
     @Test
+    public void testGetXmlFormatParameters()
+    {
+        RouteManager routeManager = new RouteManagerImpl();
+        ConversationManager manager = new ConversationManagerImpl(routeManager);
+
+        List<List> params = manager.getAdapterParameters(FormatConstants.CSV);
+        assertEquals(4, params.size());
+    }
+
+    @Test
     public void testCreateConversation() throws SimulatorException
     {
         RouteManager routeManager = new RouteManagerImpl();
-        ConversationManager manager = new ConversationManagerImpl(routeManager); 
+        ConversationManager manager = new ConversationManagerImpl(routeManager);
 
         Conversation conversation = manager.createConversation(null, in, out, FormatConstants.JSON, FormatConstants.XML);
         assertNotNull(conversation);
@@ -57,7 +65,7 @@ public class ConversationManagerImplTest
     public void testCreateConversationWithWrongFormat()
     {
         RouteManager routeManager = new RouteManagerImpl();
-        ConversationManager manager = new ConversationManagerImpl(routeManager); 
+        ConversationManager manager = new ConversationManagerImpl(routeManager);
 
         Conversation conversation = null;
         try

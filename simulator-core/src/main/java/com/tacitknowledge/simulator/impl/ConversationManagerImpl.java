@@ -8,6 +8,7 @@ import com.tacitknowledge.simulator.RouteManager;
 import com.tacitknowledge.simulator.SimulatorException;
 import com.tacitknowledge.simulator.Transport;
 
+import com.tacitknowledge.simulator.camel.RouteManagerImpl;
 import com.tacitknowledge.simulator.formats.AdapterFactory;
 
 import org.apache.log4j.Logger;
@@ -50,12 +51,12 @@ public class ConversationManagerImpl implements ConversationManager
     }
 
     /**
-     * Making sure that the ConversationManagerImpl objects cannot be created with default
-     * constructor.
+     * Constructor.
+     * With this constructor, the manager will create its own RouteManager
      */
-    private ConversationManagerImpl()
+    public ConversationManagerImpl()
     {
-
+        this.routeManager = new RouteManagerImpl();
     }
     /**
      * {@inheritDoc}
