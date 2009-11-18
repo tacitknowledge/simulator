@@ -1,3 +1,5 @@
+require 'java'
+
 class SystemsController < ApplicationController
 
   def index
@@ -55,5 +57,9 @@ class SystemsController < ApplicationController
   def new
     @system = System.new
     render :action => 'show'
+  end
+
+  def script_languages
+    
   end
 end

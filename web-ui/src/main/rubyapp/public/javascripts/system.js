@@ -153,17 +153,14 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
                             text:'Edit',
                             id: 'conversation_edit',
                             handler:function() {
-                                var rec = Ext.getCmp('conversations_grid').getSelectionModel().getSelected();
-                                if (rec != undefined) {
-                                    window.location = 'conversations/' + rec.data.id + '/'
-                                }
+                              TK.editEntity('conversations')
                             }
                         },
                         {
                             text:'Delete',
                             id: 'conversation_delete',
-                            handler:function() {
-//                                window.open('conversations/new/', 'GET')
+                            handler:function(){
+                                TK.deleteEntity('conversations');
                             }
                         }
 

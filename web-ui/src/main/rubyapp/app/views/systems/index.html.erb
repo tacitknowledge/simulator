@@ -8,6 +8,7 @@
     <script type="text/javascript" src="<%=relative_url_root%>/javascripts/tk-base.js"></script>
     <script type="text/javascript" src="<%=relative_url_root%>/ext/adapter/ext/ext-base-debug.js"></script>
     <script type="text/javascript" src="<%=relative_url_root%>/ext/ext-all-debug.js"></script>
+    <script type="text/javascript" src="<%=relative_url_root%>/javascripts/ajaxActions.js"></script>
     <script type="text/javascript" src="<%=relative_url_root%>/javascripts/index.js"></script>
 
     <script type="text/javascript">
@@ -29,8 +30,7 @@
       
         store.load();
         var systemGrid = new TK.SystemsIndex({
-          store: store,
-          id: 'systemGrid'
+          store: store
         });
         
         systemGrid.render(document.body);

@@ -7,6 +7,7 @@
     <script type="text/javascript" src="<%= relative_url_root %>/javascripts/tk-base.js"></script>
     <script type="text/javascript" src="<%= relative_url_root %>/ext/adapter/ext/ext-base-debug.js"></script>
     <script type="text/javascript" src="<%= relative_url_root %>/ext/ext-all-debug.js"></script>
+    <script type="text/javascript" src="<%= relative_url_root %>/javascripts/ajaxActions.js"></script>
     <script type="text/javascript" src="<%= relative_url_root %>/javascripts/conversationForm.js"></script>
     <script type="text/javascript">
         Ext.onReady(function()
@@ -67,7 +68,6 @@
                     ],
                     stripeRows: true,
                     height: 250,
-//                    width: 800,
                     title: 'Scenarios',
                     // config options for stateful behavior
                     stateful: true,
@@ -86,17 +86,14 @@
                             text:'Edit',
                             id: 'scenarion_edit',
                             handler:function() {
-                                var rec = Ext.getCmp('scenarios_grid').getSelectionModel().getSelected();
-                                if (rec != undefined) {
-                                    window.location = 'scenarios/' + rec.data.id + '/'
-                                }
+                                TK.editEntity('scenarios')
                             }
                         },
                         {
                             text:'Delete',
                             id: 'scenario_delete',
                             handler:function() {
-//                                window.open('conversations/new/', 'GET')
+                                TK.deleteEntity('scenarios')
                             }
                         }
 

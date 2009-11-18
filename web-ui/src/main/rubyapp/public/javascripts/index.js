@@ -26,24 +26,22 @@ TK.SystemsIndex = Ext.extend(Ext.grid.GridPanel, {
                 text:'Add',
                 id: 'system_add',
                 handler:function() {
-                    window.location = 'new'
+                    window.location = 'new/'
+
                 }
             },
             {
                 text:'Edit',
                 id: 'system_edit',
                 handler:function() {
-                    var rec = Ext.getCmp('systemGrid').getSelectionModel().getSelected();
-                    if (rec != undefined) {
-                        window.location = rec.data.id + "/"
-                    }
+                  TK.editEntity('systems','../systems')
                 }
             },
             {
                 text:'Remove',
                 id: 'system_remove',
                 handler:function() {
-                    var rec = Ext.getCmp('systemGrid').getSelectionModel().getSelected();
+                    TK.deleteEntity('systems','../systems')
                 }
             }
             ]
