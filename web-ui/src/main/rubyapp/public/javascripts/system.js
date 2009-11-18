@@ -133,6 +133,7 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
                     id:'conversations_grid',
                     hidden:true,
                     xtype: 'editorgrid',
+                    selModel: new Ext.grid.RowSelectionModel(),
                     height: 300,
                     width: '100%',
                     store: store,

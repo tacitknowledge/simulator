@@ -198,6 +198,7 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                     store: scenariosStore,
                     id: 'scenarios_grid',
                     xtype:'editorgrid',
+                    selModel: new Ext.grid.RowSelectionModel(),
                     columns: [
                         checkColumn
                         ,
