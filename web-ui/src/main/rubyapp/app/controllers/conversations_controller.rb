@@ -118,6 +118,10 @@ class ConversationsController < ApplicationController
     render :json => { :success=>true, :data => @format_types}
   end
 
+  def format_parameters
+    render :json => {:data => SimulatorConnector.instance.get_format_parameters(params[:format])}
+  end
+
   def enable
     conversation = Conversation.find(params[:id])
     conversation.enabled=!conversation.enabled
