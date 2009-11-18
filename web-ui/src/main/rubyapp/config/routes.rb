@@ -5,7 +5,13 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :systems do |system|
     system.resources :conversations do |conversation|
-      conversation.resources :scenarios
+
+      map.connect "systems/:system_id/conversations/:id/enable", :controller => 'conversations', :action => 'enable'
+
+      conversation.resources :scenarios do |scenario|
+
+        map.connect "systems/:system_id/conversations/:conversation_id/scenarios/:id/enable", :controller => 'scenarios', :action => 'enable'
+      end
     end
   end
 

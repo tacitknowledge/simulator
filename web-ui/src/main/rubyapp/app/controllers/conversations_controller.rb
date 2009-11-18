@@ -38,7 +38,7 @@ class ConversationsController < ApplicationController
     inbound_transport.transport_type = TransportType.find in_tt
 
     outbound_transport = Transport.new
-    outbound_transport.transport_type = TransportType.find  out_tt
+    outbound_transport.transport_type = TransportType.find out_tt
 
     inbound_format = Format.new
     inbound_format.format_type = FormatType.find in_ft
@@ -73,7 +73,7 @@ class ConversationsController < ApplicationController
     sys_id = params[:system_id]
 
     conversation = Conversation.find params[:id]
-    
+
     conversation.name=name;
     conversation.description=description;
     conversation.system_id=sys_id;
@@ -116,5 +116,12 @@ class ConversationsController < ApplicationController
     @format_types = FormatType.find(:all)
 
     render :json => { :success=>true, :data => @format_types}
+  end
+
+  def enable
+    conversation = Conversation.find(params[:id])
+    conversation.enabled=!conversation.enabled
+    conversation.save
+    render :json => { :success=>true, :data => conversation}
   end
 end

@@ -16,7 +16,7 @@ class ScenariosController < ApplicationController
     scenario.name = params[:name]
     scenario.criteria_script = params[:criteria_script]
     scenario.execution_script = params[:execution_script]
-
+    scenario.enabled=true
     if scenario.save
       render :json => { :success => true, :message => "Created new Scenario #{scenario.id}", :data => scenario }
     else
@@ -30,7 +30,8 @@ class ScenariosController < ApplicationController
     scenario.name = params[:name]
     scenario.criteria_script = params[:criteria_script]
     scenario.execution_script = params[:execution_script]
-     
+    scenario.enabled=params[:enabled];
+
     if scenario.save
       render :json => { :success => true, :message => "Updated Scenario #{scenario.id}", :data => scenario }
     else
@@ -58,6 +59,13 @@ class ScenariosController < ApplicationController
     else
       render :json => { :message => "Failed to destroy Scenario" }
     end
+  end
+  
+  def enable
+    scenario = Scenario.find(params[:id])
+    scenario.enabled=!scenario.enabled
+    scenario.save
+    render :json => { :success=>true, :data => scenario}
   end
   
 end

@@ -12,7 +12,7 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
         var doRedirect = false;
         //todo remove duplicates from here and the system form
         if (this.conversationId != '' && this.conversationId != undefined) {
-            url ='../'+this.conversationId
+            url = '../' + this.conversationId
             submitMethod = 'PUT'
         } else {
             doRedirect = true
@@ -56,12 +56,12 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
     },
     constructor:function(config) {
         var scenariosStore = new Ext.data.JsonStore({
-                    root:'data',
-                    storeId:'scenarios_store',
-                    idProperty:'id',
-                    fields: ['id', 'name', 'criteria_script', 'execution_script'],
-                    url : 'scenarios.json'
-                });
+            root:'data',
+            storeId:'scenarios_store',
+            idProperty:'id',
+            fields: ['enabled','id', 'name', 'criteria_script', 'execution_script'],
+            url : 'scenarios.json'
+        });
         var formatsStore = new Ext.data.JsonStore({
             root: 'data',
             idProperty: 'id',
@@ -78,6 +78,18 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
             fields: ['id', 'name']
         });
         transportsStore.load()
+        var checkColumn = new Ext.grid.CheckColumn({
+                            header: 'Enabled?',
+                            dataIndex: 'enabled',
+                            sortable: true,
+                            width: 55
+
+                        })
+
+        checkColumn.onChange= function(record) {
+            TK.enableEntity('scenarios',record.data.id)
+        }
+
         var initialConfig = {
 
             id:'conversation-form',
@@ -182,17 +194,13 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                         })
                     ]
                 },
-                    {
+                {
                     store: scenariosStore,
                     id: 'scenarios_grid',
-                    xtype:'grid',
+                    xtype:'editorgrid',
                     columns: [
-                        {
-                            header: 'Active',
-                            width: 50,
-                            sortable: true,
-                            dataIndex: 'is_active'
-                        },
+                        checkColumn
+                        ,
                         {
                             header: 'Title',
                             width: 150,
@@ -216,11 +224,12 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                     height: 250,
                     title: 'Scenarios',
                     // config options for stateful behavior
+                    plugins: [checkColumn],
                     stateful: true,
                     stateId: 'grid',
                     hidden:true,
 
-                     buttons:[
+                    buttons:[
                         {
                             text:'Add',
                             id: 'scenario_add',
