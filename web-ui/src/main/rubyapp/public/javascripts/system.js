@@ -15,18 +15,19 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
     systemId:'',
 
     onSaveHandler:function(id) {
-        if (Ext.getCmp('system-form').getForm().isValid()) {
+        var form = Ext.getCmp('system-form').getForm();
+        if (form.isValid()) {
             var doRedirect = false;
             if (this.systemId != '' && this.systemId != undefined) {
                 //update existing form
-                url = '../'+this.systemId
+                url = '../' + this.systemId
                 submitMethod = 'PUT'
             } else {
                 doRedirect = true
                 url = '../'
                 submitMethod = 'POST'
             }
-            Ext.getCmp('system-form').getForm().submit({
+            form.submit({
                 url: url,
                 waitMsg: 'Saving....',
                 method: submitMethod,
@@ -67,10 +68,21 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
             url: 'conversations.json',
             root:'data',
             storeId:'conversationStore',
-            idProperty:'name',
-            fields: ['id', 'name', 'description']
+            idProperty:'id',
+            fields: ['enabled', 'id', 'name', 'description']
         });
         store.load();
+        var checkColumn = new Ext.grid.CheckColumn({
+            header: 'Enabled?',
+            dataIndex: 'enabled',
+            sortable: true,
+            width: 55
+
+        })
+        checkColumn.onChange = function(record) {
+            TK.enableEntity('conversations', record.data.id)
+        }
+
         TK.SystemForm.superclass.constructor.call(this, Ext.apply({
             labelWidth: 120,
             // label settings here cascade unless overridden
@@ -120,11 +132,12 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
                 {
                     id:'conversations_grid',
                     hidden:true,
-                    xtype: 'grid',
+                    xtype: 'editorgrid',
                     height: 300,
                     width: '100%',
                     store: store,
                     columns: [
+                        checkColumn,
                         {
                             id:'name',
                             header: 'Name',
@@ -141,6 +154,7 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
                     title: 'Conversations',
                     stateful: true,
                     stateId: 'grid',
+                    plugins: [checkColumn],
                     buttons:[
                         {
                             text:'Add',
@@ -153,13 +167,13 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
                             text:'Edit',
                             id: 'conversation_edit',
                             handler:function() {
-                              TK.editEntity('conversations')
+                                TK.editEntity('conversations')
                             }
                         },
                         {
                             text:'Delete',
                             id: 'conversation_delete',
-                            handler:function(){
+                            handler:function() {
                                 TK.deleteEntity('conversations');
                             }
                         }
