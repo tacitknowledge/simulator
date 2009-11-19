@@ -31,7 +31,8 @@ public class FileTransportTest extends TestCase
         {
             transport.toUriString();
             fail("Transport should not work without required parameters");
-        } catch (TransportException e)
+        }
+        catch (TransportException e)
         {
             // --- That's ok
         }
@@ -53,7 +54,7 @@ public class FileTransportTest extends TestCase
 
             assertTrue("Returned uri isn't as expected: " + uri, uri.indexOf("file://inbox?delete=true") > -1);
         }
-        catch(TransportException e)
+        catch (TransportException e)
         {
             fail("Shouldn't be getting an exception here: " + e.getMessage());
         }
@@ -72,7 +73,8 @@ public class FileTransportTest extends TestCase
             String uri = transport.toUriString();
 
             assertTrue("Returned uri isn't as expected: " + uri, uri.indexOf("file://inbox/csv?include=^.*(i)(.csv)") > -1);
-        } catch(TransportException e)
+        }
+        catch (TransportException e)
         {
             fail("Shouldn't be getting an exception here: " + e.getMessage());
         }
