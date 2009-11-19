@@ -1,3 +1,18 @@
-.navigation{
-    
+.navigation {
+    font-family:tahoma,arial,verdana,sans-serif;
+    font-size:11px;
+    font-size-adjust:none;
+    font-style:normal;
+    font-variant:normal;
+    font-weight:bold;
+    line-height:normal;
+    padding: 5px 0px 5px 0px;
+}
+.navigation a {
+    padding-left:5px;
+    color:#15428B;
+}
+
+.navigation span {
+    color:#000000;    
 }
