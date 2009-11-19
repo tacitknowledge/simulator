@@ -6,6 +6,10 @@ import java.util.Map;
 
 /**
  * Adapter interface for different data formats.
+ * Each adapter implementation should hold the required parameters for each adapter format.
+ * Parameter name constants must start with PARAM_ for convention.
+ * GUI implementations should set proper parameter values according to parameter types.
+ * Boolean parameters are always optional. Each implementation should set its default value.
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  * @param <E> Generic data object

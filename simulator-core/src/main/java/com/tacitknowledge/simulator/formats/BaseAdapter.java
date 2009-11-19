@@ -1,6 +1,7 @@
 package com.tacitknowledge.simulator.formats;
 
 import com.tacitknowledge.simulator.Adapter;
+import com.tacitknowledge.simulator.FormatAdapterException;
 
 import java.util.Map;
 
@@ -48,6 +49,13 @@ public abstract class BaseAdapter implements Adapter<Object>
     {
         this.parameters = parameters;
     }
+
+    /**
+     * Sets and/or overrides instance variables from provided parameters and validates that
+     * the required parameters are present.
+     * @throws FormatAdapterException If any required parameter is missing or incorrect
+     */
+    abstract void validateParameters() throws FormatAdapterException;
 
     /**
      * @param name The parameter name. Parameter names should be defined by each implementation.

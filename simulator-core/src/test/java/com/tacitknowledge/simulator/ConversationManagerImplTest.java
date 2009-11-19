@@ -8,6 +8,7 @@ import com.tacitknowledge.simulator.formats.FormatConstants;
 import com.tacitknowledge.simulator.impl.ConversationManagerImpl;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
@@ -25,6 +26,16 @@ public class ConversationManagerImplTest extends TestCase
         {
             return null;
         }
+
+        public List<List> getParametersList()
+        {
+            return null;
+        }
+
+        public void setParameters(Map<String, String> parameters)
+        {
+
+        }
     };
     private Transport out = new Transport()
     {
@@ -36,6 +47,16 @@ public class ConversationManagerImplTest extends TestCase
         public String toUriString()
         {
             return null;
+        }
+
+        public List<List> getParametersList()
+        {
+            return null;
+        }
+
+        public void setParameters(Map<String, String> parameters)
+        {
+
         }
     };
 

@@ -3,12 +3,13 @@ package com.tacitknowledge.simulator.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
 import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.Conversation;
 import com.tacitknowledge.simulator.ConversationScenario;
 import com.tacitknowledge.simulator.Transport;
+import com.tacitknowledge.simulator.SimulatorException;
+import com.tacitknowledge.simulator.TransportException;
+import org.apache.log4j.Logger;
 
 /**
  * The Simulator conversation as set up by the user. Works as a wrapper around Camel route
@@ -139,13 +140,22 @@ public class ConversationImpl implements Conversation
     /**
      * {@inheritDoc}
      */
-    public String getUniqueId()
+    public String getUniqueId() throws SimulatorException
     {
         StringBuffer sb = new StringBuffer();
 
-        sb.append(id.toString()).append("|").
-            append(getInboundTransport().toUriString()).append("|").
-                append(getOutboundTransport().toUriString());
+        try
+        {
+            sb.append(id.toString()).append("|").
+                append(getInboundTransport().toUriString()).append("|").
+                    append(getOutboundTransport().toUriString());
+        }
+        catch (TransportException te)
+        {
+            logger.error("Unexpected error trying to get unique Id: " + te.getMessage());
+            throw new SimulatorException(
+                    "Unexpected error trying to get unique Id: " + te.getMessage(), te);
+        }
 
         return sb.toString();
     }

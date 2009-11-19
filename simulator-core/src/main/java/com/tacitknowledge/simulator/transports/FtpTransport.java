@@ -1,38 +1,162 @@
 package com.tacitknowledge.simulator.transports;
 
 import com.tacitknowledge.simulator.Transport;
+import com.tacitknowledge.simulator.TransportException;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
- * Transport implementation for FTP/SFTP endpoints
+ * Transport implementation for FTP/SFTP endpoints.
+ * FTP transport share File transport options, so it will inherit from FileTransport
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class FtpTransport extends BaseTransport implements Transport
+public class FtpTransport extends FileTransport implements Transport
 {
     /**
-     * FTP/SFTP host name
+     * FTP/SFTP host name parameter. REQUIRED.
      */
-    private String host;
+    public static final String PARAM_HOST = "host";
 
     /**
-     * FTP/SFTP port. Optional. Defaults to 21 for FTP and 22 for SFTP
+     * FTP/SFTP port parameter. OPTIONAL.
+     * Defaults to 21 for FTP and 22 for SFTP.
      */
-    private String port;
+    public static final String PARAM_PORT = "port";
 
     /**
-     * Name of the FTP/SFTP directory to poll from
+     * Username parameter. Username to login as. OPTIONAL.
+     * If not provided, anonymous login will be attempted.
      */
-    private String directoryName;
+    public static final String PARAM_USERNAME = "username";
 
     /**
-     * Username to login as. Optional. If not provided, anonymous login will be attempted
+     * Password parameter. Used to login to the remote file system. OPTIONAL.
      */
-    private String username;
+    public static final String PARAM_PASSWORD = "password";
 
     /**
-     * Password used to login to the remote file system. Optional
+     * SFTP parameter. Determines if this transport is SFTP (true) or FTP (false). OPTIONAL.
+     * Defaults to false (FTP)
      */
-    private String password;
+    public static final String PARAM_SFTP = "sftp";
+
+    /**
+     * Binary parameter. Determines transfer mode, BINARY (true) or ASCII (false). OPTIONAL.
+     * Defaults to false (ASCII)
+     */
+    public static final String PARAM_BINARY = "binary";
+
+    /**
+     * Transport parameters definition.
+     */
+    private static List<List> parametersList = new ArrayList<List>()
+    {
+        {
+
+            add(new ArrayList<String>()
+            {
+                {
+                    add(PARAM_SFTP);
+                    add("Is this an SFTP transport?");
+                    add("boolean");
+                    add("optional");
+                }
+            });
+
+            add(new ArrayList<String>()
+            {
+                {
+                    add(PARAM_HOST);
+                    add("Host Name");
+                    add("string");
+                    add("required");
+                }
+            });
+
+            add(new ArrayList<String>()
+            {
+                {
+                    add(PARAM_PORT);
+                    add("Port (defaults to 21 for FTP and 22 for SFTP)");
+                    add("string");
+                    add("optional");
+                }
+            });
+
+            add(new ArrayList<String>()
+            {
+                {
+                    add(PARAM_DIRECTORY_NAME);
+                    add("Directory Name");
+                    add("string");
+                    add("optional");
+                }
+            });
+
+            add(new ArrayList<String>()
+            {
+                {
+                    add(PARAM_USERNAME);
+                    add("User Name");
+                    add("string");
+                    add("optional");
+                }
+            });
+
+            add(new ArrayList<String>()
+            {
+                {
+                    add(PARAM_PASSWORD);
+                    add("Password");
+                    add("string");
+                    add("optional");
+                }
+            });
+
+            add(new ArrayList<String>()
+            {
+                {
+                    add(PARAM_FILE_NAME);
+                    add("File Name (file name to wait for triggering the simulation)");
+                    add("string");
+                    add("optional");
+                }
+            });
+
+            add(new ArrayList<String>()
+            {
+                {
+                    add(PARAM_FILE_EXTENSION);
+                    add("File Extension (file extension the transport will only poll from)");
+                    add("string");
+                    add("optional");
+                }
+            });
+
+            add(new ArrayList<String>()
+            {
+                {
+                    add(PARAM_DELETE_FILE);
+                    add("Delete file after simulation?");
+                    add("boolean");
+                    add("optional");
+                }
+            });
+
+            add(new ArrayList<String>()
+            {
+                {
+                    add(PARAM_BINARY);
+                    add("Is file transfer binary?");
+                    add("string");
+                    add("optional");
+                }
+            });
+        }
+    };
 
     /**
      * Flag to determine if this transport is FTP or SFTP. Defaults to FTP
@@ -45,181 +169,125 @@ public class FtpTransport extends BaseTransport implements Transport
     private boolean binary;
 
     /**
-     * Constructor for FtpTransport class
-     * @param host @see #host
-     * @param directoryName @see #directoryName
+     * @inheritDoc
      */
-    public FtpTransport(String host, String directoryName)
+    public FtpTransport()
     {
-        this.host = host;
-        this.directoryName = directoryName;
+        super(TransportConstants.FTP);
     }
 
     /**
-     * Constructor for FtpTransport class with sftp option.
-     * @param host @see #host
-     * @param directoryName @see #directoryName
-     * @param sftp @see #sftp
+     * @param parameters @see #parameters
+     * @inheritDoc
      */
-    public FtpTransport(String host, String directoryName, boolean sftp)
+    public FtpTransport(Map<String, String> parameters)
     {
-        this.host = host;
-        this.directoryName = directoryName;
-        this.sftp = sftp;
+        super(TransportConstants.FTP, parameters);
     }
 
     /**
-     * Constructor for FtpTransport class with sftp option and credentials
-     * @param host @see #host
-     * @param port @see #port
-     * @param directoryName @see #directoryName
-     * @param username @see #username
-     * @param password @see #password
-     * @param sftp @see #sftp
+     * @return @see #Transport.toUriString()
+     * @throws TransportException If a required parameter is missing or not properly formatted.
+     * @inheritDoc
      */
-    public FtpTransport(String host, String port, String directoryName, String username,
-            String password, boolean sftp)
+    @Override
+    public String toUriString() throws TransportException
     {
-        this.host = host;
-        this.port = port;
-        this.directoryName = directoryName;
-        this.username = username;
-        this.password = password;
-        this.sftp = sftp;
+        validateParameters();
+
+        StringBuilder sb = new StringBuilder();
+
+        // --- Check the protocol
+        if (this.sftp)
+        {
+            sb.append("sftp");
+        }
+        else
+        {
+            sb.append("ftp");
+        }
+        sb.append("://");
+
+        // --- If we have username...
+        if (getParamValue(PARAM_USERNAME) != null)
+        {
+            sb.append(getParamValue(PARAM_USERNAME)).append("@");
+        }
+
+        // ---
+        sb.append(getParamValue(PARAM_HOST));
+
+        // --- If we have port
+        if (getParamValue(PARAM_PORT) != null)
+        {
+            sb.append(":").append(getParamValue(PARAM_PORT));
+        }
+
+        // --- If we have directory name
+        if (getParamValue(PARAM_DIRECTORY_NAME) != null)
+        {
+            sb.append("/").append(getParamValue(PARAM_DIRECTORY_NAME));
+        }
+
+        // --- Append the options...
+        sb.append("?");
+        // --- If we have password
+        if (getParamValue(PARAM_PASSWORD) != null)
+        {
+            sb.append("password=").append(getParamValue(PARAM_PASSWORD)).append(AMP);
+        }
+
+        // --- fileName & fileExtension should be mutually exclusive options.
+        // fileName takes priority.
+        if (getParamValue(PARAM_FILE_NAME) != null)
+        {
+            sb.append("fileName=").append(getParamValue(PARAM_FILE_NAME)).append(AMP);
+        }
+        else if (getParamValue(PARAM_FILE_EXTENSION) != null)
+        {
+            // --- File extension is used as a RegEx filter for transport routing
+            sb.append("include=^.*(i)(.").append(getParamValue(PARAM_FILE_EXTENSION)).append(")");
+            sb.append(AMP);
+        }
+        // ---
+        if (isDeleteFile())
+        {
+            sb.append("delete=true").append(AMP);
+        }
+
+        // --- If file transfer is binary
+        if (this.binary)
+        {
+            sb.append("binary=true");
+        }
+
+        return sb.toString();
     }
 
     /**
      * @inheritDoc
-     * @return @see #Transport.toUriString()
+     * @throws TransportException If any required parameter is missing or incorrect
      */
-    public String toUriString()
+    @Override
+    void validateParameters() throws TransportException
     {
-        return null;
-    }
+        // --- If passed, assign the boolean parameters to instance variables
+        if (getParamValue(PARAM_SFTP) != null)
+        {
+            this.sftp = Boolean.parseBoolean(getParamValue(PARAM_SFTP));
+        }
+        if (getParamValue(PARAM_BINARY) != null)
+        {
+            this.binary = Boolean.parseBoolean(getParamValue(PARAM_BINARY));
+        }
+        if (getParamValue(PARAM_DELETE_FILE) != null)
+        {
+            setDeleteFile(Boolean.parseBoolean(getParamValue(PARAM_DELETE_FILE)));
+        }
 
-    /**
-     * Getter for @see #host
-     * @return @see #host
-     */
-    public String getHost()
-    {
-        return host;
-    }
-
-    /**
-     * Setter for @see #host
-     * @param host @see #host
-     */
-    public void setHost(String host)
-    {
-        this.host = host;
-    }
-
-    /**
-     * Getter for @see #port
-     * @return @see #port
-     */
-    public String getPort()
-    {
-        return port;
-    }
-
-    /**
-     * Setter for @see #port
-     * @param port @see #port
-     */
-    public void setPort(String port)
-    {
-        this.port = port;
-    }
-
-    /**
-     * Getter for @see #directoryName
-     * @return @see #directoryName
-     */
-    public String getDirectoryName()
-    {
-        return directoryName;
-    }
-
-    /**
-     * Setter for @see #directoryName
-     * @param directoryName @see #directoryName
-     */
-    public void setDirectoryName(String directoryName)
-    {
-        this.directoryName = directoryName;
-    }
-
-    /**
-     * Getter for @see #username
-     * @return @see #username
-     */
-    public String getUsername()
-    {
-        return username;
-    }
-
-    /**
-     * Setter for @see #username
-     * @param username @see #username
-     */
-    public void setUsername(String username)
-    {
-        this.username = username;
-    }
-
-    /**
-     * Getter for @see #password
-     * @return @see #password
-     */
-    public String getPassword()
-    {
-        return password;
-    }
-
-    /**
-     * Setter for @see #password
-     * @param password @see #password
-     */
-    public void setPassword(String password)
-    {
-        this.password = password;
-    }
-
-    /**
-     * Getter for @see #sftp
-     * @return @see #sftp
-     */
-    public boolean isSftp()
-    {
-        return sftp;
-    }
-
-    /**
-     * Setter for @see #sftp
-     * @param sftp @see #sftp
-     */
-    public void setSftp(boolean sftp)
-    {
-        this.sftp = sftp;
-    }
-
-    /**
-     * Getter for @see #binary
-     * @return @see #binary
-     */
-    public boolean isBinary()
-    {
-        return binary;
-    }
-
-    /**
-     * Setter for @see #binary
-     * @param binary @see #binary
-     */
-    public void setBinary(boolean binary)
-    {
-        this.binary = binary;
+        if (getParamValue(PARAM_HOST) == null)
+        {
+            throw new TransportException("Host name parameter is required");
+        }
     }
 }

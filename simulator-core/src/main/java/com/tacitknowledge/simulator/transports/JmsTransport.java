@@ -1,6 +1,11 @@
 package com.tacitknowledge.simulator.transports;
 
 import com.tacitknowledge.simulator.Transport;
+import com.tacitknowledge.simulator.TransportException;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Transport implementation for Jms endpoints.
@@ -10,123 +15,147 @@ import com.tacitknowledge.simulator.Transport;
 public class JmsTransport extends BaseTransport implements Transport
 {
     /**
-     * JMS topic name (optional)
+     * Active MQ parameter. Determines if JMS is Apache ActiveMQ (true) or generic JMS (false).
+     * OPTIONAL. Defaults to false (generic JMS)
      */
-    private String topicName;
+    public static final String PARAM_ACTIVE_MQ = "activeMQ";
 
     /**
-     * JMS Destination name
+     * JMS Destination name parameter. REQUIRED.
      */
-    private String destinationName;
+    public static final String PARAM_DESTINATION_NAME = "destinationName";
 
     /**
-     * Flag for determining if JSM transport type, Apache ActiveMQ or generic JMS. Defaults to
-     * generic JMS
+     * JMS topic name parameter. OPTIONAL.
      */
-    private boolean activeMQ;
+    public static final String PARAM_IS_TOPIC = "isTopic";
 
     /**
-     * Constructor for the JmsTransport class.
-     *
-     * @param destinationName @see #destinationName
+     * Transport parameters definition.
      */
-    public JmsTransport(String destinationName)
+    private static List<List> parametersList = new ArrayList<List>()
     {
-        this.destinationName = destinationName;
-    }
+        {
+            add(new ArrayList<String>()
+            {
+                {
+                    add(PARAM_ACTIVE_MQ);
+                    add("Is this JMS an Apache ActiveMQ implementation? (defaults to no)");
+                    add("boolean");
+                    add("optional");
+                }
+            });
+
+            add(new ArrayList<String>()
+            {
+                {
+                    add(PARAM_DESTINATION_NAME);
+                    add("Destination Name");
+                    add("string");
+                    add("required");
+                }
+            });
+
+            add(new ArrayList<String>()
+            {
+                {
+                    add(PARAM_IS_TOPIC);
+                    add("Is the destination a topic (defaults to Queue)");
+                    add("boolean");
+                    add("optional");
+                }
+            });
+        }
+    };
 
     /**
-     * Constructor for the JmsTransport class, has an option for ActiveMQ
-     *
-     * @param topicName @see #topicName
-     * @param destinationName @see #destinationName
-     * @param activeMQ @see #activeMQ
+     * @see #PARAM_ACTIVE_MQ
      */
-    public JmsTransport(String topicName, String destinationName, boolean activeMQ)
-    {
-        this.topicName = topicName;
-        this.destinationName = destinationName;
-        this.activeMQ = activeMQ;
-    }
+    private boolean activeMQ = false;
+
+    /**
+     * @see #PARAM_IS_TOPIC
+     */
+    private boolean isTopic = false;
 
     /**
      * @inheritDoc
-     * @return @see #Transport.toUriString()
      */
-    public String toUriString()
+    public JmsTransport()
     {
+        super(TransportConstants.JMS);
+    }
+
+    /**
+     * @param parameters @see #parameters
+     * @inheritDoc
+     */
+    public JmsTransport(Map<String, String> parameters)
+    {
+        super(TransportConstants.JMS, parameters);
+    }
+
+    /**
+     * @return @see #Transport.toUriString()
+     * @throws TransportException If a required parameter is missing or not properly formatted.
+     * @inheritDoc
+     */
+    public String toUriString() throws TransportException
+    {
+        validateParameters();
+
         StringBuilder sb = new StringBuilder();
 
-        if (isActiveMQ())
+        // --- Check JMS type
+        if (this.activeMQ)
         {
-            sb.append("activemq:");
+            sb.append("activemq");
         }
         else
         {
-            sb.append("jms:");
+            sb.append("jms");
         }
+        sb.append(":");
 
-        if (topicName != null)
+        // --- if destination is a topic, add the topic prefix, otherwise keep going
+        if (this.isTopic)
         {
-            sb.append(topicName).append(":");
+            sb.append("topic:");
         }
 
-        sb.append(destinationName);
+        sb.append(getParamValue(PARAM_DESTINATION_NAME));
 
         return sb.toString();
     }
 
     /**
-     * Getter for @see #topicName
-     * @return @see #topicName
+     * @return List of Parameters for File Transport.
+     * @inheritDoc
      */
-    public String getTopicName()
+    public List<List> getParametersList()
     {
-        return topicName;
+        return parametersList;
     }
 
     /**
-     * Setter for @see #topicName
-     * @param topicName @see #topicName
+     * @throws TransportException If any required parameter is missing or incorrect
+     * @inheritDoc
      */
-    public void setTopicName(String topicName)
+    @Override
+    void validateParameters() throws TransportException
     {
-        this.topicName = topicName;
-    }
+        if (getParamValue(PARAM_ACTIVE_MQ) != null)
+        {
+            this.activeMQ = Boolean.parseBoolean(getParamValue(PARAM_ACTIVE_MQ));
+        }
+        if (getParamValue(PARAM_IS_TOPIC) != null)
+        {
+            this.isTopic = Boolean.parseBoolean(getParamValue(PARAM_IS_TOPIC));
+        }
 
-    /**
-     * Getter for @see #destinationName
-     * @return @see #destinationName
-     */
-    public String getDestinationName()
-    {
-        return destinationName;
-    }
-
-    /**
-     * Setter for @see #destinationName
-     * @param destinationName @see #destinationName
-     */
-    public void setDestinationName(String destinationName)
-    {
-        this.destinationName = destinationName;
-    }
-
-    /**
-     * Getter for @see #activeMQ
-     * @return @see #activeMQ
-     */
-    public boolean isActiveMQ()
-    {
-        return activeMQ;
-    }
-
-    /**
-     * Setter for @see #activeMQ
-     * @param activeMQ @see #activeMQ
-     */
-    public void setActiveMQ(boolean activeMQ)
-    {
-        this.activeMQ = activeMQ;
+        if (getParamValue(PARAM_DESTINATION_NAME) == null)
+        {
+            throw new TransportException("Destination name parameter is required");
+        }
     }
 }

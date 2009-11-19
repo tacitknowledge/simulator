@@ -13,6 +13,9 @@ import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.junit4.CamelTestSupport;
 import org.junit.Test;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Test class for RouteManager
  *
@@ -50,6 +53,16 @@ public class RouteManagerTest extends CamelTestSupport
         {
             return "direct:start";
         }
+
+        public List<List> getParametersList()
+        {
+            return null;
+        }
+
+        public void setParameters(Map<String, String> parameters)
+        {
+
+        }
     };
 
     /**
@@ -67,6 +80,16 @@ public class RouteManagerTest extends CamelTestSupport
         {
             return "mock:result";
         }
+
+        public List<List> getParametersList()
+        {
+            return null;
+        }
+
+        public void setParameters(Map<String, String> parameters)
+        {
+
+        }
     };
 
     /**
@@ -83,6 +106,16 @@ public class RouteManagerTest extends CamelTestSupport
         public String toUriString()
         {
             return "mock:result1";
+        }
+
+        public List<List> getParametersList()
+        {
+            return null;
+        }
+
+        public void setParameters(Map<String, String> parameters)
+        {
+
         }
     };
 

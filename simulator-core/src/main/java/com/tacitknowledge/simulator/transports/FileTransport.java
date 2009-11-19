@@ -1,6 +1,12 @@
 package com.tacitknowledge.simulator.transports;
 
 import com.tacitknowledge.simulator.Transport;
+import com.tacitknowledge.simulator.TransportException;
+import org.apache.log4j.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Transport implementation for File endpoints.
@@ -10,135 +16,203 @@ import com.tacitknowledge.simulator.Transport;
 public class FileTransport extends BaseTransport implements Transport
 {
     /**
-     * The underlying directory path to poll from/write to.
+     * Directory name parameter. The underlying directory path to poll from/write to. REQUIRED
      */
-    private String directoryName;
+    public static final String PARAM_DIRECTORY_NAME = "directoryName";
 
     /**
-     * Name of the file to listen for/write to. Optional
+     * File name parameter. Name of the file to listen for/write to. OPTIONAL.
+     * Mutually exclusive to File Extension. File Name takes priority if both are passed.
      */
-    private String fileName;
+    public static final String PARAM_FILE_NAME = "fileName";
 
     /**
-     * File extension of files the transport will only poll from. Optional
+     * File extension parameter. Extension of files the transport will only poll from. OPTIONAL.
+     * Mutually exclusive to File Name. File Name takes priority if both are passed.
      */
-    private String fileExtension;
+    public static final String PARAM_FILE_EXTENSION = "fileExtension";
 
     /**
-     * Flag to determine if file should be deleted after processing. For inbound transports only.
+     * Delete file parameter. Determines if file should be deleted after processing. OPTIONAL.
+     * Defaults to false. For inbound transports only.
      */
-    private boolean deleteFile;
+    public static final String PARAM_DELETE_FILE = "deleteFile";
 
     /**
-     * @param directoryPath
-     *            Directory path to poll from/write to
+     * Logger for this class.
      */
-    public FileTransport(String directoryPath)
+    private static Logger logger = Logger.getLogger(FileTransport.class);
+
+    /**
+     * Transport parameters definition.
+     */
+    private static List<List> parametersList = new ArrayList<List>()
     {
-        this.directoryName = directoryPath;
-    }
+        {
+            add(new ArrayList<String>()
+            {
+                {
+                    add(PARAM_DIRECTORY_NAME);
+                    add("Directory Name");
+                    add("string");
+                    add("required");
+                }
+            });
+
+            add(new ArrayList<String>()
+            {
+                {
+                    add(PARAM_FILE_NAME);
+                    add("File Name (file name to wait for triggering the simulation)");
+                    add("string");
+                    add("optional");
+                }
+            });
+
+            add(new ArrayList<String>()
+            {
+                {
+                    add(PARAM_FILE_EXTENSION);
+                    add("File Extension the transport will only poll from (without dot)");
+                    add("string");
+                    add("optional");
+                }
+            });
+
+            add(new ArrayList<String>()
+            {
+                {
+                    add(PARAM_DELETE_FILE);
+                    add("Delete file after simulation?");
+                    add("boolean");
+                    add("optional");
+                }
+            });
+        }
+    };
+
+    /**
+     * If true, the processed file will be deleted.
+     * Defaults to false.
+     */
+    private boolean deleteFile = false;
 
     /**
      * @inheritDoc
-     * @return @see #Transport.toUriString()
      */
-    public String toUriString()
+    public FileTransport()
     {
+        super(TransportConstants.FILE);
+    }
+
+    /**
+     * Used only for inheriting Transports (e.g.: FTP transport)
+     *
+     * @param type @see #type
+     */
+    protected FileTransport(String type)
+    {
+        super(type);
+    }
+
+    /**
+     * Used only for inheriting Transports
+     *
+     * @param type       @see #type
+     * @param parameters @see #parameters
+     */
+    protected FileTransport(String type, Map<String, String> parameters)
+    {
+        super(type, parameters);
+    }
+
+    /**
+     * Constructor
+     *
+     * @param parameters @see #parameters
+     */
+    public FileTransport(Map<String, String> parameters)
+    {
+        super(TransportConstants.FILE, parameters);
+    }
+
+    /**
+     * @return @see #Transport.toUriString()
+     * @throws TransportException If a required parameter is missing or not properly formatted.
+     * @inheritDoc
+     */
+    public String toUriString() throws TransportException
+    {
+        validateParameters();
+
         StringBuilder sb = new StringBuilder("file://");
 
         // --- directory name
-        sb.append(directoryName);
-
+        sb.append(getParamValue(PARAM_DIRECTORY_NAME));
+        sb.append("?");
         // --- Options. Take a 2 seconds delay before polling the directory after the route is
         // registered.
-        sb.append("?initialDelay=2000");
+        //sb.append("?initialDelay=2000").append(AMP);
 
         // --- fileName & fileExtension should be mutually exclusive options
-        if (fileName != null)
+        if (getParamValue(PARAM_FILE_NAME) != null)
         {
-            sb.append("&fileName=").append(fileName);
+            sb.append("fileName=").append(getParamValue(PARAM_FILE_NAME)).append(AMP);
         }
-        else if (fileExtension != null)
+        else if (getParamValue(PARAM_FILE_EXTENSION) != null)
         {
             // --- File extension is used as a RegEx filter for transport routing
-            sb.append("&include=^.*(i)(.").append(fileExtension).append(")");
+            sb.append("include=^.*(i)(.").append(getParamValue(PARAM_FILE_EXTENSION)).append(")");
+            sb.append(AMP);
         }
-        if (deleteFile)
+        if (this.deleteFile)
         {
-            sb.append("&delete=true");
+            sb.append("delete=true");
         }
 
         return sb.toString();
     }
 
     /**
-     * Getter for @see #directoryName
-     * @return @see #directoryName
+     * @return List of Parameters for File Transport.
+     * @inheritDoc
      */
-    public String getDirectoryName()
+    public List<List> getParametersList()
     {
-        return directoryName;
+        return parametersList;
     }
 
     /**
-     * Getter for @see #directoryName
-     * @param directoryName @see #directoryName
+     * @throws TransportException If any required parameter is missing or incorrect
+     * @inheritDoc
      */
-    public void setDirectoryName(String directoryName)
+    @Override
+    void validateParameters() throws TransportException
     {
-        this.directoryName = directoryName;
+        if (getParamValue(PARAM_DELETE_FILE) != null)
+        {
+            this.deleteFile = Boolean.parseBoolean(getParamValue(PARAM_DELETE_FILE));
+        }
+
+        // ---
+        if (getParamValue(PARAM_DIRECTORY_NAME) == null)
+        {
+            throw new TransportException("Directory Name parameter is required");
+        }
     }
 
     /**
-     * Getter for @see #fileName
-     * @return @see #fileName
-     */
-    public String getFileName()
-    {
-        return fileName;
-    }
-
-    /**
-     * Setter for @see #fileName
-     * @param fileName @see #fileName
-     */
-    public void setFileName(String fileName)
-    {
-        this.fileName = fileName;
-    }
-
-    /**
-     * Getter for @see #fileExtension
-     * @return @see #fileExtension
-     */
-    public String getFileExtension()
-    {
-        return fileExtension;
-    }
-
-    /**
-     * Setter for @see #fileExtension
-     * @param fileExtension @see #fileExtension
-     */
-    public void setFileExtension(String fileExtension)
-    {
-        this.fileExtension = fileExtension;
-    }
-
-    /**
-     * Getter for @see #deleteFile
      * @return @see #deleteFile
      */
-    public boolean getDeleteFile()
+    protected boolean isDeleteFile()
     {
         return deleteFile;
     }
 
     /**
-     * Setter for @see #deleteFile
-     * @param deleteFile @see #deleteFile
+     * @param deleteFile @see #deleteFile 
      */
-    public void setDeleteFile(boolean deleteFile)
+    protected void setDeleteFile(boolean deleteFile)
     {
         this.deleteFile = deleteFile;
     }

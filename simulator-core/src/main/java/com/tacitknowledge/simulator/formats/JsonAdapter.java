@@ -1,6 +1,7 @@
 package com.tacitknowledge.simulator.formats;
 
 import com.tacitknowledge.simulator.Adapter;
+import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 
 import java.util.ArrayList;
@@ -49,5 +50,15 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
     public List<List> getParametersList()
     {
         return null;
+    }
+
+    /**
+     * @inheritDoc
+     * @throws FormatAdapterException If a required parameter is missing or not properly formatted
+     */
+    @Override
+    void validateParameters() throws FormatAdapterException
+    {
+
     }
 }

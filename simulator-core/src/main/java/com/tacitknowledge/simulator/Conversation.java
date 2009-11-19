@@ -58,8 +58,9 @@ public interface Conversation
      * on object construction. Needed to ensure that RouteManager doesn't add
      * two identic routes to camel.
      * @return unique id based on the parameters of the object.
+     * @throws SimulatorException If anything goes wrong.
      */
-    String getUniqueId();
+    String getUniqueId() throws SimulatorException;
 
     /**
      * Returns the current list of configured scenarios for this conversation

@@ -372,4 +372,14 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
     {
         return parametersList;
     }
+
+    /**
+     * @inheritDoc
+     * @throws FormatAdapterException if any required parameter is missing
+     */
+    @Override
+    void validateParameters() throws FormatAdapterException
+    {
+
+    }
 }

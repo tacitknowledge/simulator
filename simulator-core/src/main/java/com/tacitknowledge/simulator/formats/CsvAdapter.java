@@ -236,16 +236,15 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
     }
 
     /**
-     * Sets and/or overrides instance variables from provided parameters
-     *
+     * @inheritDoc
      * @throws FormatAdapterException if any required parameter is missing
      */
-    private void validateParameters() throws FormatAdapterException
+    void validateParameters() throws FormatAdapterException
     {
         // --- Check that if firstRowHeader is false, that rowContent has been provided
         this.firstRowHeader =
                 getParamValue(PARAM_FIRST_ROW_HEADER) == null
-                        || Boolean.getBoolean(getParamValue(PARAM_FIRST_ROW_HEADER));
+                        || Boolean.parseBoolean(getParamValue(PARAM_FIRST_ROW_HEADER));
         // --- Override the default column separator if it has been set
         if (getParamValue(PARAM_COLUMN_SEPARATOR) != null)
         {
