@@ -20,10 +20,15 @@
                conversationId: '<%= params[:conversation_id] %>',
                scenarioId: '<%= params[:id] %>'
            });
-           scenarioForm.render(document.body);
+           scenarioForm.render(document.getElementById('formz'));
        })
     </script>
 </head>
 <body>
+<%= render :partial => '/navigation' %>
+  <div id="formz"></div>
+
+
+</body>
 </body>
 </html>

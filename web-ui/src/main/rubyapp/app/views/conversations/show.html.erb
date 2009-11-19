@@ -23,10 +23,12 @@
                 conversationId: '<%= params[:id] %>'
             });
 
-            conversationForm.render(document.body);
+            conversationForm.render(document.getElementById('formz'));
         })
     </script>
 </head>
 <body>
+<%= render :partial => '/navigation' %>
+<div id="formz"></div>
 </body>
 </html>
