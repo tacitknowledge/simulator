@@ -1,16 +1,16 @@
 ActionController::Routing::Routes.draw do |map|
 
-  map.connect '/conversations/transport_types', :controller => 'conversations', :action => 'transport_types'
-  map.connect '/conversations/format_types', :controller => 'conversations', :action => 'format_types'
-
-  map.connect '/conversations/transport_parameters', :controller => 'conversations', :action => 'transport_parameters'
-  map.connect '/conversations/format_parameters', :controller => 'conversations', :action => 'format_parameters'
-
   map.resources :systems do |system|
     system.resources :conversations do |conversation|
 
       map.connect "systems/:system_id/conversations/:id/enable", :controller => 'conversations', :action => 'enable'
       map.connect "systems/:system_id/conversations/:id/activate", :controller => 'conversations', :action => 'activate'
+
+      map.connect 'systems/:system_id/conversations/transport_types', :controller => 'conversations', :action => 'transport_types'
+      map.connect 'systems/:system_id/conversations/format_types', :controller => 'conversations', :action => 'format_types'
+
+      map.connect 'systems/:system_id/conversations/transport_parameters', :controller => 'conversations', :action => 'transport_parameters'
+      map.connect 'systems/:system_id/conversations/format_parameters', :controller => 'conversations', :action => 'format_parameters'
 
       conversation.resources :scenarios do |scenario|
 
