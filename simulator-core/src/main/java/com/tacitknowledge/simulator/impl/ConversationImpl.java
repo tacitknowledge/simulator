@@ -1,15 +1,10 @@
 package com.tacitknowledge.simulator.impl;
 
+import com.tacitknowledge.simulator.*;
+import org.apache.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.tacitknowledge.simulator.Adapter;
-import com.tacitknowledge.simulator.Conversation;
-import com.tacitknowledge.simulator.ConversationScenario;
-import com.tacitknowledge.simulator.Transport;
-import com.tacitknowledge.simulator.SimulatorException;
-import com.tacitknowledge.simulator.TransportException;
-import org.apache.log4j.Logger;
 
 /**
  * The Simulator conversation as set up by the user. Works as a wrapper around Camel route
@@ -158,6 +153,10 @@ public class ConversationImpl implements Conversation
         }
 
         return sb.toString();
+    }
+
+    public int getId(){
+        return id;
     }
 
     /**

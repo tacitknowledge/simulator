@@ -1,8 +1,8 @@
 package com.tacitknowledge.simulator;
 
-import java.util.List;
-
 import com.tacitknowledge.simulator.impl.ConversationScenarioImpl;
+
+import java.util.List;
 
 /**
  * Defines the contract for the Conversation.
@@ -61,6 +61,15 @@ public interface Conversation
      * @throws SimulatorException If anything goes wrong.
      */
     String getUniqueId() throws SimulatorException;
+
+    /**
+     *
+     *
+     * @return unique id
+     * @throws SimulatorException If anything goes wrong.
+     */
+    int getId();
+
 
     /**
      * Returns the current list of configured scenarios for this conversation

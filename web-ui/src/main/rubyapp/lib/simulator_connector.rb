@@ -30,7 +30,6 @@ class SimulatorConnector
 
 
   def create_conversation (conversation)
-    #
     in_transport = @conv_mgr.getClassByName( conversation.in_transport.transport_type.class_name )
     out_transport = @conv_mgr.getClassByName( conversation.out_transport.transport_type.class_name )
     in_adapter = @conv_mgr.getClassByName(conversation.in_format.format_type.class_name )

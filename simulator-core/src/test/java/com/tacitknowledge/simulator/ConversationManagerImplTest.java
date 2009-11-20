@@ -101,4 +101,36 @@ public class ConversationManagerImplTest extends TestCase
         assertNull(conversation);
 
     }
+    
+    @Test
+    public void testIsActiveConversationNotFound() throws SimulatorException {
+        ConversationManager manager = new ConversationManagerImpl();
+        try
+        {
+            assertFalse(manager.isActive(1234));
+        } catch (ConversationNotFoundException e) {
+            fail();
+        }
+    }
+
+
+     @Test
+    public void testIsActive() throws SimulatorException {
+        RouteManager routeManager = new RouteManagerImpl();
+        ConversationManager manager = new ConversationManagerImpl(routeManager);
+
+        Conversation conversation = null;
+        try
+        {
+            conversation = manager.createConversation(1, in, out, AdapterFactory.getAdapter(FormatConstants.JSON), AdapterFactory.getAdapter(FormatConstants.JSON));
+            assertFalse(manager.isActive(conversation.getId()));
+            manager.activate(conversation.getId());
+            assertTrue(manager.isActive(conversation.getId()));
+        }
+        catch (ConversationNotFoundException e) {
+            fail();
+        }
+
+    }
+
 }
