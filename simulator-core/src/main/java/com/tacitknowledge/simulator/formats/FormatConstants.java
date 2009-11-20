@@ -2,6 +2,7 @@ package com.tacitknowledge.simulator.formats;
 
 /**
  * Contains the Simulator's default supported format names/acronyms.
+ * Use all-capitals.
  * Each supported format will have its corresponding adapter
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */

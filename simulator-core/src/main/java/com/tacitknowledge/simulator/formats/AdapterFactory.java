@@ -52,9 +52,10 @@ public class AdapterFactory
     public static List<List> getAdapterParameters(String format)
     {
         List<List> list = null;
-        if (adapters.get(format) != null)
+        // --- Formats should have been set with all-capitals
+        if (adapters.get(format.toUpperCase()) != null)
         {
-            list = adapters.get(format).getParametersList();
+            list = adapters.get(format.toUpperCase()).getParametersList();
         }
 
         return list;

@@ -46,9 +46,10 @@ public class TransportFactory
     public static List<List> getTransportParameters(String type)
     {
         List<List> list = null;
-        if (transports.get(type) != null)
+        // --- Transports should have been set with all-capitals
+        if (transports.get(type.toUpperCase()) != null)
         {
-            list = transports.get(type).getParametersList();
+            list = transports.get(type.toUpperCase()).getParametersList();
         }
         return list;
     }
