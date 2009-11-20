@@ -39,6 +39,50 @@ import java.util.List;
 public class XmlAdapter extends BaseAdapter implements Adapter<Object>
 {
     /**
+     * Validate parameter. If the XML text should DTD validated. OPTIONAL.
+     * Defaults to false (no DTD validation)
+     */
+    public static final String PARAM_VALIDATE = "validate";
+
+    /**
+     * XML indentation value
+     */
+    private static final int XML_INDENT = 4;
+
+    /**
+     * Logger for this class.
+     */
+    private static Logger logger = Logger.getLogger(XmlAdapter.class);
+
+    /**
+     * Adapter parameters definition.
+     */
+    private static List<List> parametersList = new ArrayList<List>()
+    {
+        {
+            add(new ArrayList<String>()
+            {
+                {
+                    add(PARAM_VALIDATE);
+                    add("Validate?");
+                    add("boolean");
+                    add("optional");
+                }
+            });
+        }
+    };
+
+    /**
+     * The Document object used for XML generation in adaptTo() and helper methods
+     */
+    private Document doc;
+
+    /**
+     * @see #PARAM_VALIDATE
+     */
+    private boolean validate = false;
+
+    /**
      * @inheritDoc
      */
     public XmlAdapter()
@@ -55,26 +99,6 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
     }
 
     /**
-     * XML indentation value
-     */
-    private static final int XML_INDENT = 4;
-
-    /**
-     * Logger for this class.
-     */
-    private static Logger logger = Logger.getLogger(XmlAdapter.class);
-
-    /**
-     * Adapter parameters definition.
-     */
-    private static List<List> parametersList = new ArrayList<List>();
-
-    /**
-     * The Document object used for XML generation in adaptTo() and helper methods
-     */
-    private Document doc;
-
-    /**
      * {@inheritDoc}
      * @param o @see Adapter#adaptFrom
      * @return @see Adapter#adaptFrom
@@ -82,20 +106,23 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
      */
     public SimulatorPojo adaptFrom(Object o) throws FormatAdapterException
     {
+        validateParameters();
+
         if (!(o instanceof String))
         {
             throw new FormatAdapterException("Input data is expected to be a String. Instead, "
                     + "input data is " + o.getClass().getName());
         }
+
         SimulatorPojo pojo = new StructuredSimulatorPojo();
 
         try
         {
             // --- First, parse the XML string into a document
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db;
+            dbf.setValidating(this.validate);
 
-            db = dbf.newDocumentBuilder();
+            DocumentBuilder db = dbf.newDocumentBuilder();
             InputSource is = new InputSource();
             is.setCharacterStream(new StringReader((String) o));
 
@@ -138,6 +165,8 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
      */
     public Object adaptTo(SimulatorPojo pojo) throws FormatAdapterException
     {
+        validateParameters();
+
         // --- The SimulatorPojo for XmlAdapter should contain only one key in its root
         if (pojo.getRoot().isEmpty() || pojo.getRoot().size() > 1)
         {
@@ -375,11 +404,14 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
 
     /**
      * @inheritDoc
-     * @throws FormatAdapterException if any required parameter is missing
+     * @throws FormatAdapterException
      */
     @Override
     void validateParameters() throws FormatAdapterException
     {
-
+        if (getParamValue(PARAM_VALIDATE) != null)
+        {
+            this.validate = Boolean.parseBoolean(getParamValue(PARAM_VALIDATE));
+        }
     }
 }
