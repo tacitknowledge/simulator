@@ -3,6 +3,7 @@ package com.tacitknowledge.simulator.formats;
 import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.FormatAdapterException;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -21,7 +22,7 @@ public abstract class BaseAdapter implements Adapter<Object>
      * The Adapter parameters. Each Adapter implementation should define its corresponding
      * parameters.
      */
-    private Map<String, String> parameters;
+    private Map<String, String> parameters = new HashMap<String, String>();
 
     /**
      * Constructor
