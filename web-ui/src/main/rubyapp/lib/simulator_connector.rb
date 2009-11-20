@@ -21,8 +21,8 @@ class SimulatorConnector
     @conv_mgr.getAdapterParameters(format)
   end
 
-  def get_transport_parameters(transport)
-    # Way to get transport parameters still needs to be implemented
+  def get_transport_parameters(type)
+    @conv_mgr.getTransportParameters(type)
   end
 
   def create_conversation
