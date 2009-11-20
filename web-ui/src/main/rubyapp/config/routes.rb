@@ -10,6 +10,7 @@ ActionController::Routing::Routes.draw do |map|
     system.resources :conversations do |conversation|
 
       map.connect "systems/:system_id/conversations/:id/enable", :controller => 'conversations', :action => 'enable'
+      map.connect "systems/:system_id/conversations/:id/activate", :controller => 'conversations', :action => 'activate'
 
       conversation.resources :scenarios do |scenario|
 

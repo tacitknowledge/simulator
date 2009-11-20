@@ -81,4 +81,14 @@ public interface ConversationManager
      * @return The parameters descriptions list
      */
     List<List> getTransportParameters(String type);
+    
+    Object getClassByName(String name);
+
+      /**
+       * 
+       * @param conversationId
+       * @return
+       */
+      boolean isActive(int conversationId) throws ConversationNotFoundException, SimulatorException;
+    
 }

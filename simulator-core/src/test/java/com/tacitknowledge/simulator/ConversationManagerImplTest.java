@@ -1,11 +1,11 @@
 package com.tacitknowledge.simulator;
 
-import junit.framework.TestCase;
-import org.junit.Test;
-
 import com.tacitknowledge.simulator.camel.RouteManagerImpl;
+import com.tacitknowledge.simulator.formats.AdapterFactory;
 import com.tacitknowledge.simulator.formats.FormatConstants;
 import com.tacitknowledge.simulator.impl.ConversationManagerImpl;
+import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.util.List;
 import java.util.Map;
@@ -76,7 +76,7 @@ public class ConversationManagerImplTest extends TestCase
         RouteManager routeManager = new RouteManagerImpl();
         ConversationManager manager = new ConversationManagerImpl(routeManager);
 
-        Conversation conversation = manager.createConversation(null, in, out, FormatConstants.JSON, FormatConstants.XML);
+        Conversation conversation = manager.createConversation(null, in, out,  AdapterFactory.getAdapter(FormatConstants.JSON), AdapterFactory.getAdapter(FormatConstants.JSON));
         assertNotNull(conversation);
         assertNotNull(conversation.getInboundTransport());
         assertNotNull(conversation.getOutboundTransport());
@@ -91,7 +91,7 @@ public class ConversationManagerImplTest extends TestCase
         Conversation conversation = null;
         try
         {
-            conversation = manager.createConversation(null, in, out, "WTF?", FormatConstants.XML);
+            conversation = manager.createConversation(null, in, out, AdapterFactory.getAdapter("WTF?"), AdapterFactory.getAdapter("WTF?"));
             fail();
         }
         catch (SimulatorException e)

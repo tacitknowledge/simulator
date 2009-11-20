@@ -3,6 +3,10 @@ class ConversationsController < ApplicationController
   def index
     @conversations = Conversation.find_all_by_system_id(params[:system_id])
     if (params[:format]=='json')
+      connector = SimulatorConnector.instance
+      @conversations.each do|conversation|
+        conversation[:active]= connector.is_active(conversation)
+      end
       render :json => { :success=>true, :data => @conversations }
     else
       redirect_to :controller => "systems", :action => "show", :id => params[:system_id]
@@ -125,7 +129,17 @@ class ConversationsController < ApplicationController
   def enable
     conversation = Conversation.find(params[:id])
     conversation.enabled=!conversation.enabled
+#    if new value is disabled then deactivate
     conversation.save
+    render :json => { :success=>true, :data => conversation}
+  end
+
+   def activate
+    conversation = Conversation.find(params[:id])
+    if(conversation.enabled)
+      conversation = SimulatorConnector.instance.create_conversation(conversation)
+      conversation[:cccc] =conversation.to_s()
+    end
     render :json => { :success=>true, :data => conversation}
   end
 end

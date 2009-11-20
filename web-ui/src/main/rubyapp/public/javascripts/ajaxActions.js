@@ -45,3 +45,24 @@ TK.enableEntity = function(entity, entityId) {
 
 }
 
+/**
+ *
+ * toggles activated/diactivated status
+ * @param entity  entity name.. like scenarios or conversations
+ * @param entityId entityId
+ *
+ */
+TK.activateEntity = function(entity, entityId) {
+
+    Ext.Ajax.request({
+        url: entity + '/' + entityId + '/enable'  ,
+        method: 'POST',
+        success: function() {
+         //do nothing
+        },
+        failure: function() {
+            //todo handler
+        }
+    })
+
+}

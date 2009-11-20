@@ -1,16 +1,8 @@
 package com.tacitknowledge.simulator.impl;
 
-import com.tacitknowledge.simulator.Adapter;
-import com.tacitknowledge.simulator.Conversation;
-import com.tacitknowledge.simulator.ConversationManager;
-import com.tacitknowledge.simulator.ConversationNotFoundException;
-import com.tacitknowledge.simulator.RouteManager;
-import com.tacitknowledge.simulator.SimulatorException;
-import com.tacitknowledge.simulator.Transport;
-
+import com.tacitknowledge.simulator.*;
 import com.tacitknowledge.simulator.camel.RouteManagerImpl;
 import com.tacitknowledge.simulator.formats.AdapterFactory;
-
 import com.tacitknowledge.simulator.transports.TransportFactory;
 import org.apache.log4j.Logger;
 
@@ -204,5 +196,32 @@ public class ConversationManagerImpl implements ConversationManager
     public List<List> getTransportParameters(String type)
     {
         return TransportFactory.getTransportParameters(type);
+    }
+    
+    /**
+     * @param name class name
+     * @return instance of the class
+     * @inheritDoc
+     */
+    public Object getClassByName(String name) {
+        try {
+            return Class.forName(name).newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean isActive(int conversationId) throws SimulatorException {
+        try {
+            Conversation conversation = getConversationById(conversationId);
+            return routeManager.isActive(conversation);
+        } catch (ConversationNotFoundException e) {
+            return false;
+        }
     }
 }

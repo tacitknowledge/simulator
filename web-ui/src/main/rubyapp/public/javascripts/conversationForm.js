@@ -78,7 +78,7 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
             fields: ['id', 'name']
         });
         transportsStore.load()
-        var checkColumn = new Ext.grid.CheckColumn({
+        var enabledColumn = new Ext.grid.CheckColumn({
                             header: 'Enabled?',
                             dataIndex: 'enabled',
                             sortable: true,
@@ -86,7 +86,7 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
 
                         })
 
-        checkColumn.onChange= function(record) {
+        enabledColumn.onChange= function(record) {
             TK.enableEntity('scenarios',record.data.id)
         }
 
@@ -200,7 +200,7 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                     xtype:'editorgrid',
                     selModel: new Ext.grid.RowSelectionModel(),
                     columns: [
-                        checkColumn
+                        enabledColumn
                         ,
                         {
                             header: 'Title',
@@ -225,7 +225,7 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                     height: 250,
                     title: 'Scenarios',
                     // config options for stateful behavior
-                    plugins: [checkColumn],
+                    plugins: [enabledColumn],
                     stateful: true,
                     stateId: 'grid',
                     hidden:true,

@@ -3,7 +3,7 @@ package com.tacitknowledge.simulator.camel;
 import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.Conversation;
 import com.tacitknowledge.simulator.RouteManager;
-
+import com.tacitknowledge.simulator.SimulatorException;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.log4j.Logger;
@@ -90,6 +90,13 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager
         {
             logger.warn("Trying to deactivate route which is not active ");
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isActive(Conversation conversation) throws SimulatorException {
+        return convRoutes.get(conversation.getUniqueId()) != null;
     }
 
     /**
