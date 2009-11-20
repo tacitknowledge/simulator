@@ -23,7 +23,7 @@ public class FtpTransportTest extends TestCase
     {
         Transport transport = new FtpTransport();
 
-        assertEquals("ftp", transport.getType());
+        assertEquals("FTP", transport.getType());
 
         // --- Try to get the URI
         try

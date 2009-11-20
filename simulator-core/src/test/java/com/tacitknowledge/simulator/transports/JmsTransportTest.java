@@ -31,7 +31,7 @@ public class JmsTransportTest extends TestCase
     {
         Transport transport = new JmsTransport();
 
-        assertEquals("jms", transport.getType());
+        assertEquals("JMS", transport.getType());
 
         // --- Try to get the URI
         try

@@ -24,7 +24,7 @@ public class FileTransportTest extends TestCase
         // --- Create a FileTransport with default constructor
         Transport transport = new FileTransport();
 
-        assertEquals("file", transport.getType());
+        assertEquals("FILE", transport.getType());
 
         // --- Try to get the URI
         try
