@@ -11,6 +11,7 @@ import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.camel.RouteManagerImpl;
 import com.tacitknowledge.simulator.formats.AdapterFactory;
 
+import com.tacitknowledge.simulator.transports.TransportFactory;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
@@ -193,5 +194,15 @@ public class ConversationManagerImpl implements ConversationManager
     public List<List> getAdapterParameters(String format)
     {
         return AdapterFactory.getAdapterParameters(format);
+    }
+
+    /**
+     * @inheritDoc
+     * @param type The transport type
+     * @return @see ConversationManager#getTransportParameters
+     */
+    public List<List> getTransportParameters(String type)
+    {
+        return TransportFactory.getTransportParameters(type);
     }
 }

@@ -74,4 +74,11 @@ public interface ConversationManager
      * @return The parameter descriptions list
      */
     List<List> getAdapterParameters(String format);
+
+    /**
+     * @see Transport#getParametersList()
+     * @param type The transport type
+     * @return The parameters descriptions list
+     */
+    List<List> getTransportParameters(String type);
 }
