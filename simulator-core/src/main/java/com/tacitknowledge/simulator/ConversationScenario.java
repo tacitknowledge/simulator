@@ -1,5 +1,7 @@
 package com.tacitknowledge.simulator;
 
+import com.tacitknowledge.simulator.scripting.ScriptException;
+
 /**
  * Defines the contract for the ConversationScenario.
  *
@@ -27,16 +29,17 @@ public interface ConversationScenario
      * Starts this scenario execution with the provided entry data
      *
      * @param pojo The scenario entry data
-     * @return the transformed data object
+     * @return the transformed SimulatorPojo object
+     * @throws ScriptException in case there is an exception running the script
      */
-    SimulatorPojo executeTransformation(SimulatorPojo pojo);
+    SimulatorPojo executeTransformation(SimulatorPojo pojo) throws ScriptException;
 
     /**
      * Veryfies if the entry data matches the criteria
      *
-     * @param data The data to compare
+     * @param pojo SimulatorPojo with data to compare
      * @return True is the data matches the contained criteria, false otherwise
+     * @throws ScriptException in case a script execution exception occured
      */
-    boolean matchesCondition(Object data);
-
+    boolean matchesCondition(SimulatorPojo pojo) throws ScriptException;   
 }

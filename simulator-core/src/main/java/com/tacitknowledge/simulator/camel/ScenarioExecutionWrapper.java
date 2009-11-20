@@ -86,12 +86,11 @@ public class ScenarioExecutionWrapper implements Processor
     public void process(Exchange exchange) throws Exception
     {
         Object data = exchange.getIn().getBody();
-        Object result = null;
         SimulatorPojo resultPojo = null;
 
         if (inAdapter != null)
         {
-            data = inAdapter.adaptFrom(data);
+            resultPojo = inAdapter.adaptFrom(data);
         }
         else
         {
@@ -104,28 +103,28 @@ public class ScenarioExecutionWrapper implements Processor
         {
             logger.debug("Evaluating scenario : " + scenario.toString());
 
-            if (scenario.isActive() && scenario.matchesCondition(data))
+            if (scenario.isActive() && scenario.matchesCondition(resultPojo))
             {
                 logger.debug("Scenario : " + scenario
                         + " was matched, executing the transformation script.");
 
-                resultPojo = scenario.executeTransformation((SimulatorPojo) data);
+                resultPojo = scenario.executeTransformation(resultPojo);
                 break;
             }
         }
 
         if (outAdapter != null)
         {
-            result = outAdapter.adaptTo(resultPojo);
+            data = outAdapter.adaptTo(resultPojo);
         }
         else
         {
             logger.error("Outbound adapter is null");
         }
 
-        if (result != null)
+        if (data != null)
         {
-            exchange.getIn().setBody(result);
+            exchange.getIn().setBody(data);
         }
         else
         {

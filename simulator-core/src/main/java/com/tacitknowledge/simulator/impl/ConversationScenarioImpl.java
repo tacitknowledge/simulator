@@ -1,9 +1,18 @@
 package com.tacitknowledge.simulator.impl;
 
+import java.util.Map;
+
+import javassist.CannotCompileException;
+import javassist.ClassPool;
+import javassist.NotFoundException;
+
 import org.apache.log4j.Logger;
 
 import com.tacitknowledge.simulator.ConversationScenario;
 import com.tacitknowledge.simulator.SimulatorPojo;
+import com.tacitknowledge.simulator.scripting.PojoClassGenerator;
+import com.tacitknowledge.simulator.scripting.ScriptException;
+import com.tacitknowledge.simulator.scripting.ScriptExecutionService;
 
 /**
  * A wrapper for Conversation Scenarios, containing all the information needed for its execution
@@ -16,10 +25,11 @@ public class ConversationScenarioImpl implements ConversationScenario
      * Logger for this class.
      */
     private static Logger logger = Logger.getLogger(ConversationScenarioImpl.class);
-   /**
-    * Prime number to be used in the hashcode method.
-    */
-   private static final int HASH_CODE_PRIME = 29;
+
+    /**
+     * Prime number to be used in the hashcode method.
+     */
+    private static final int HASH_CODE_PRIME = 29;
 
     /**
      * The scripting language used for this conversation's scenarios
@@ -36,6 +46,15 @@ public class ConversationScenarioImpl implements ConversationScenario
      */
     private String transformationScript;
 
+    /** Script Execution service which will run the actual simulation on the data received **/
+    private ScriptExecutionService execServ;
+
+    /** Generates the classes for the incoming data **/
+    private PojoClassGenerator generator;
+
+    /** Beans needed for the script executions service to run the simulation against **/
+    private Map scriptExecutionBeans;
+
     /**
      * Whether this scenario is active or not
      */
@@ -43,9 +62,13 @@ public class ConversationScenarioImpl implements ConversationScenario
 
     /**
      * Constructor for the conversation scenario class
-     * @param scriptLanguage the scripting language used in the simulation
-     * @param criteriaScript the criteria script to match
-     * @param transformationScript the transformation script for the scenario.
+     *
+     * @param scriptLanguage
+     *            the scripting language used in the simulation
+     * @param criteriaScript
+     *            the criteria script to match
+     * @param transformationScript
+     *            the transformation script for the scenario.
      */
     public ConversationScenarioImpl(String scriptLanguage, String criteriaScript,
             String transformationScript)
@@ -53,6 +76,11 @@ public class ConversationScenarioImpl implements ConversationScenario
         this.scriptLanguage = scriptLanguage;
         this.criteriaScript = criteriaScript;
         this.transformationScript = transformationScript;
+
+        this.execServ = new ScriptExecutionService();
+        this.execServ.setLanguage(scriptLanguage);
+
+        this.generator = new PojoClassGenerator(ClassPool.getDefault());
     }
 
     /**
@@ -73,26 +101,50 @@ public class ConversationScenarioImpl implements ConversationScenario
 
     /**
      * {@inheritDoc}
+     *
+     * @throws ScriptException
      */
-    public SimulatorPojo executeTransformation(SimulatorPojo pojo)
+    public SimulatorPojo executeTransformation(SimulatorPojo pojo) throws ScriptException
     {
-        //TODO Implement this functionality.
-        return null;
-    }
+        generateClasses(pojo);
 
+        execServ.exec(transformationScript, "Transformation Script", scriptExecutionBeans);
+
+        //TODO Call the not yet implemented method to transform the
+        //scriptExecutionBeans into SimulatorPojo
+        
+        return pojo;
+    }
+    
     /**
      * {@inheritDoc}
+     *
+     * @throws ScriptException
+     * @throws NotFoundException
+     * @throws CannotCompileException
      */
-    public boolean matchesCondition(Object data)
+    public boolean matchesCondition(SimulatorPojo pojo) throws ScriptException
     {
-        //TODO Implement this functionality.
-        return false;
+        generateClasses(pojo);
+
+        Object result = execServ.eval(criteriaScript, "Criteria Script", scriptExecutionBeans);
+        
+        if (result != null && result instanceof Boolean)
+        {
+            return ((Boolean) result).booleanValue();
+        }
+        else
+        {
+            return false;
+        }
     }
 
     /**
-     * Determines if the current conversation scenario object is
-     * equal to the one supplied as parameter.
-     * @param o Conversation scenario object to be compared with current one.
+     * Determines if the current conversation scenario object is equal to the one supplied as
+     * parameter.
+     *
+     * @param o
+     *            Conversation scenario object to be compared with current one.
      * @return true if the objects are considered equal, false otherwise
      */
     public boolean equals(Object o)
@@ -130,6 +182,7 @@ public class ConversationScenarioImpl implements ConversationScenario
 
     /**
      * Override for the hashcode.
+     *
      * @return hashcode
      */
     public int hashCode()
@@ -148,5 +201,34 @@ public class ConversationScenarioImpl implements ConversationScenario
         }
 
         return result;
+    }
+
+    /**
+     * Generates the classes from the incoming data and registers them in the class pool.
+     * @param pojo incoming data pojo
+     * @throws ScriptException in case an exception has occured.
+     */
+    private void generateClasses(SimulatorPojo pojo) throws ScriptException
+    {
+        if (scriptExecutionBeans == null)
+        {
+            try
+            {
+                scriptExecutionBeans = generator.generateBeansMap(pojo);
+            }
+            catch (CannotCompileException e)
+            {
+                String errorMessage = "A compilation error has occured when "
+                    + "generating classes for SimulatorPojo";
+                logger.error(errorMessage, e);
+                throw new ScriptException("error_message", e);
+            }
+            catch (NotFoundException e)
+            {
+                String errorMessage = "A class was not found in the ClassPool";
+                logger.error(errorMessage, e);
+                throw new ScriptException("error_message", e);
+            }
+        }
     }
 }
