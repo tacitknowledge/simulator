@@ -74,7 +74,7 @@ public class ConversationScenarioImpl implements ConversationScenario
     /**
      * {@inheritDoc}
      */
-    public Object executeTransformation(SimulatorPojo pojo)
+    public SimulatorPojo executeTransformation(SimulatorPojo pojo)
     {
         //TODO Implement this functionality.
         return null;

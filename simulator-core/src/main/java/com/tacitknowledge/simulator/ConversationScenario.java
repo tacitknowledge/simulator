@@ -29,7 +29,7 @@ public interface ConversationScenario
      * @param pojo The scenario entry data
      * @return the transformed data object
      */
-    Object executeTransformation(SimulatorPojo pojo);
+    SimulatorPojo executeTransformation(SimulatorPojo pojo);
 
     /**
      * Veryfies if the entry data matches the criteria

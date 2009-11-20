@@ -1,5 +1,6 @@
 package com.tacitknowledge.simulator.camel;
 
+import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.ConversationScenario;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.impl.ConversationScenarioImpl;
@@ -19,6 +20,13 @@ import java.util.List;
  */
 public class ScenarioExecutionWrapper implements Processor
 {
+    /** inAdapter adapter which will take the information from the exchange
+    and adapt it to SimulatorPojo for scenario execution. **/
+    private Adapter inAdapter;
+    /** outAdapter adapter which will take the information from the SimulatorPojo
+    and adapt it to the desired format. **/
+    private Adapter outAdapter;
+
     /**
      * Container of the scenarios to run
      */
@@ -34,9 +42,29 @@ public class ScenarioExecutionWrapper implements Processor
      * Constructor for the ScenarioExecutionWrapper.
      *
      * @param scenarios list of the scenarios to run.
+     * @param inAdapter @see #inAdapter
+     * @param outAdapter @see #outAdapter
      */
-    public ScenarioExecutionWrapper(List<ConversationScenarioImpl> scenarios)
+    public ScenarioExecutionWrapper(List<ConversationScenarioImpl> scenarios,
+            Adapter inAdapter, Adapter outAdapter)
     {
+        if (inAdapter == null)
+        {
+            logger.warn("Something is probably wrong: Inbound Adapter is null");
+        }
+        else
+        {
+            this.inAdapter = inAdapter;
+        }
+        if (outAdapter == null)
+        {
+            logger.warn("Something is probably wrong: Outbound Adapter is null");
+        }
+        else
+        {
+            this.outAdapter = outAdapter;
+        }
+
         if (scenarios == null)
         {
             logger.warn("Something is probably wrong: Scenarios are null");
@@ -59,6 +87,17 @@ public class ScenarioExecutionWrapper implements Processor
     {
         Object data = exchange.getIn().getBody();
         Object result = null;
+        SimulatorPojo resultPojo = null;
+
+        if (inAdapter != null)
+        {
+            data = inAdapter.adaptFrom(data);
+        }
+        else
+        {
+            logger.error("Inbound adapter is null");
+        }
+
         //TODO add case when matching scenario is not found
         // here we are looking for first matching scenario and ignore all other scenarios
         for (ConversationScenario scenario : scenarios)
@@ -70,11 +109,28 @@ public class ScenarioExecutionWrapper implements Processor
                 logger.debug("Scenario : " + scenario
                         + " was matched, executing the transformation script.");
 
-                result = scenario.executeTransformation((SimulatorPojo) data);
-                // setting the result of simulation as imput parameter for the next step
-                exchange.getIn().setBody(result);
+                resultPojo = scenario.executeTransformation((SimulatorPojo) data);
                 break;
             }
+        }
+
+        if (outAdapter != null)
+        {
+            result = outAdapter.adaptTo(resultPojo);
+        }
+        else
+        {
+            logger.error("Outbound adapter is null");
+        }
+
+        if (result != null)
+        {
+            exchange.getIn().setBody(result);
+        }
+        else
+        {
+            logger.error("Result of processing the incomming message "
+                    + "by the ScenarioExecutionWrapper is null");
         }
     }
 }

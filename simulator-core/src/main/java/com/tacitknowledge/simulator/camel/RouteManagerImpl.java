@@ -1,6 +1,5 @@
 package com.tacitknowledge.simulator.camel;
 
-import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.Conversation;
 import com.tacitknowledge.simulator.RouteManager;
 import com.tacitknowledge.simulator.SimulatorException;
@@ -28,8 +27,7 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager
      * Container for the routes inside the current camel context. Used for activation and
      * deactivation of the routes.
      */
-    private Map<String, RouteDefinition> convRoutes
-            = new HashMap<String, RouteDefinition>();
+    private Map<String, RouteDefinition> convRoutes = new HashMap<String, RouteDefinition>();
 
     /**
      * {@inheritDoc}
@@ -54,9 +52,8 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager
             definition = this.from(conversation.getInboundTransport().toUriString());
 
             // --- Adapt input format, run scenarios and finally adapt into output format
-            definition.bean(createAdapterWrapper(conversation.getInboundAdapter()));
-            definition.bean(new ScenarioExecutionWrapper(conversation.getScenarios()));
-            definition.bean(createAdapterWrapper(conversation.getOutboundAdapter()));
+            definition.bean(new ScenarioExecutionWrapper(conversation.getScenarios(), conversation
+                    .getInboundAdapter(), conversation.getOutboundAdapter()));
 
             // --- Exit endpoint
             definition.to(conversation.getOutboundTransport().toUriString());
@@ -91,22 +88,10 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager
             logger.warn("Trying to deactivate route which is not active ");
         }
     }
-
     /**
      * {@inheritDoc}
      */
     public boolean isActive(Conversation conversation) throws SimulatorException {
         return convRoutes.get(conversation.getUniqueId()) != null;
-    }
-
-    /**
-     * Creates an AdapterWrapper object based on the provided adapter.
-     *
-     * @param adapter adapter to be wrapped.
-     * @return AdapterWrapper object.
-     */
-    private AdapterWrapper createAdapterWrapper(Adapter adapter)
-    {
-        return new AdapterWrapper(adapter);
     }
 }
