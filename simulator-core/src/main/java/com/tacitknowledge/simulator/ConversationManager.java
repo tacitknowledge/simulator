@@ -16,13 +16,13 @@ public interface ConversationManager
      * @param id the id of the conversation
      * @param inboundTransport the inbound transport of the conversation
      * @param outboundTransport the outbound transport of the conversation
-     * @param inboundFormat the inbound format of the conversation
-     * @param outboundFormat the outbound format of the conversation
+     * @param inAdapter the outbound adapter of the conversation
+     * @param outAdapter
      * @return the created conversation object
      * @throws SimulatorException in case of an error
      */
     Conversation createConversation(Integer id, Transport inboundTransport,
-            Transport outboundTransport, String inboundFormat, String outboundFormat)
+                                    Transport outboundTransport, Adapter inAdapter, Adapter outAdapter)
             throws SimulatorException;
 
     /**

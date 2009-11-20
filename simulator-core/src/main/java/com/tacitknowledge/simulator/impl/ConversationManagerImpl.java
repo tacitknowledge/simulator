@@ -55,18 +55,16 @@ public class ConversationManagerImpl implements ConversationManager
      * {@inheritDoc}
      */
     public Conversation createConversation(Integer id, Transport inboundTransport,
-            Transport outboundTransport, String inboundFormat, String outboundFormat)
+                                           Transport outboundTransport, Adapter inAdapter, Adapter outAdapter)
             throws SimulatorException
     {
-        Adapter inAdapter = AdapterFactory.getAdapter(inboundFormat);
-        Adapter outAdapter = AdapterFactory.getAdapter(inboundFormat);
         ConversationImpl conversation = ConversationFactory.createConversation(id, inboundTransport,
                 outboundTransport, inAdapter, outAdapter);
         assert conversations.get(id) == null;
 
         conversations.put(id, conversation);
 
-        logger.debug("Created new conversation with id : " + id);
+        logger.info("Created new conversation with id : " + id);
 
         return conversation;
     }
