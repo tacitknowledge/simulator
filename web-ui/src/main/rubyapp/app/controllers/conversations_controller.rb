@@ -122,6 +122,10 @@ class ConversationsController < ApplicationController
     render :json => { :success=>true, :data => @format_types}
   end
 
+  def transport_parameters
+    render :json => {:data => SimulatorConnector.instance.get_transport_parameters(params[:type])}
+  end
+
   def format_parameters
     render :json => {:data => SimulatorConnector.instance.get_format_parameters(params[:format])}
   end
