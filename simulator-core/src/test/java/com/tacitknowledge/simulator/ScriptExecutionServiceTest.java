@@ -15,24 +15,6 @@ import javassist.ClassPool;
  */
 public class ScriptExecutionServiceTest extends TestCase
 {
-    private final static String data =
-            "<employees>" +
-                    " <employee>" +
-                    "   <name>John</name>" +
-                    "   <title>Manager</title>" +
-                    " </employee>" +
-                    " <employee>" +
-                    "   <name>Sara</name>" +
-                    "   <title>Clerk</title>" +
-                    " </employee>" +
-                    " <reportDate>2009-11-05</reportDate>" +
-                    " <roles>" +
-                    "   <role>Clerk</role>" +
-                    "   <role>Manager</role>" +
-                    "   <role>Accountant</role>" +
-                    " </roles>" +
-                    "</employees>";
-
     public void testEval()
     {
         // --- Default Javassist' JVM class pool
@@ -44,7 +26,7 @@ public class ScriptExecutionServiceTest extends TestCase
         try
         {
             // --- Get the data in a strcutured form as a SimulatorPojo
-            SimulatorPojo pojo = adapter.adaptFrom(data);
+            SimulatorPojo pojo = adapter.adaptFrom(TestHelper.XML_DATA);
 
             // --- Get a map of (temporary and dinamically generated) beans out of the SimulatorPojo
             PojoClassGenerator generator = new PojoClassGenerator(pool);
