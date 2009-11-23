@@ -2,6 +2,7 @@ package com.tacitknowledge.simulator.impl;
 
 import java.util.Map;
 
+import com.tacitknowledge.simulator.SimulatorException;
 import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.NotFoundException;
@@ -228,6 +229,12 @@ public class ConversationScenarioImpl implements ConversationScenario
                 String errorMessage = "A class was not found in the ClassPool";
                 logger.error(errorMessage, e);
                 throw new ScriptException("error_message", e);
+            }
+            catch(SimulatorException se)
+            {
+                String errorMsg = "SimulatorPojo was not properly generated: " + se.getMessage();
+                logger.error(errorMsg, se);
+                throw new ScriptException("error_message", se);
             }
         }
     }
