@@ -13,49 +13,44 @@ public interface ConversationManager
     /**
      * Constructor. Creates a new Conversation from the provided transports and formats
      *
-     * @param id the id of the conversation
-     * @param inboundTransport the inbound transport of the conversation
-     * @param outboundTransport the outbound transport of the conversation
-     * @param inAdapter the outbound adapter of the conversation
-     * @param outAdapter
+     * @param id                the id of the conversation
+     * @param inboundTransport  the inbound transport of the conversation
+     * @param outboundTransport the inbound transport of the conversation
+     * @param inAdapter         the outbound adapter of the conversation
+     * @param outAdapter        the outbound transport of the conversation
      * @return the created conversation object
      * @throws SimulatorException in case of an error
      */
     Conversation createConversation(Integer id, Transport inboundTransport,
-                                    Transport outboundTransport, Adapter inAdapter, Adapter outAdapter)
-            throws SimulatorException;
+        Transport outboundTransport, Adapter inAdapter,
+        Adapter outAdapter)throws SimulatorException;
 
     /**
      * Creates a new scenario for an existing conversation
      *
      * @param conversationId the id of the conversation to be created
-     * @param language
-     *            The scripting language for the scenario. This would be System wide.
-     * @param criteria
-     *            The criteria script
-     * @param transformation
-     *            The transformation script
+     * @param language       The scripting language for the scenario. This would be System wide.
+     * @param criteria       The criteria script
+     * @param transformation The transformation script
      */
     void createConversationScenario(int conversationId, String language, String criteria,
-            String transformation);
+                                    String transformation);
 
     /**
      * Activates the conversation with provided conversation id.
      *
-     * @param conversationId
-     *            id of the conversation to be activated.
+     * @param conversationId id of the conversation to be activated.
      * @throws ConversationNotFoundException in case the conversation is not found
-     * @throws SimulatorException in case there is an error activating the conversation
+     * @throws SimulatorException            in case there is an error activating the conversation
      */
     void activate(int conversationId) throws ConversationNotFoundException, SimulatorException;
 
     /**
      * Deactivates the conversation with provided conversation id.
      *
-     * @param conversationId
-     *            id of the conversation to be deactivated.
+     * @param conversationId id of the conversation to be deactivated.
      * @throws ConversationNotFoundException in case the conversation is not found
-     * @throws SimulatorException in case there is an error deactivating the conversation
+     * @throws SimulatorException            in case there is an error deactivating the conversation
      */
     void deactivate(int conversationId) throws ConversationNotFoundException, SimulatorException;
 
@@ -68,27 +63,35 @@ public interface ConversationManager
     void deleteConversation(int conversationId) throws SimulatorException;
 
     /**
-     * @see Adapter#getParametersList()
-     * @see com.tacitknowledge.simulator.formats.AdapterFactory#getAdapterParameters(String)
      * @param format The format the adapter is needed for
      * @return The parameter descriptions list
+     * @see Adapter#getParametersList()
+     * @see com.tacitknowledge.simulator.formats.AdapterFactory#getAdapterParameters(String)
      */
     List<List> getAdapterParameters(String format);
 
     /**
-     * @see Transport#getParametersList()
      * @param type The transport type
      * @return The parameters descriptions list
+     * @see Transport#getParametersList()
      */
     List<List> getTransportParameters(String type);
-    
+
+    /**
+     * This method creates an instance of the Class given in the name
+     *
+     * @param name to get an instance for
+     * @return an instance of this ClassName
+     */
     Object getClassByName(String name);
 
-      /**
-       * 
-       * @param conversationId
-       * @return
-       */
-      boolean isActive(int conversationId) throws ConversationNotFoundException, SimulatorException;
-    
+    /**
+     * Method to determine if a conversation is active or not
+     *
+     * @param conversationId of the conversation we want to know if it's active or not
+     * @return true is it's active, false if inactive
+     * @throws SimulatorException is there is a problem finding the conversation
+     */
+    boolean isActive(int conversationId) throws SimulatorException;
+
 }
