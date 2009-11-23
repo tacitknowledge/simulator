@@ -28,6 +28,9 @@ public class ConversationImpl implements Conversation
      */
     private Integer id;
 
+    /** Unique id is used to identify conversations inside camel  */
+    private String uniqueId;
+
     /**
      * Wrapper for inbound transport configuration
      */
@@ -137,7 +140,20 @@ public class ConversationImpl implements Conversation
      */
     public String getUniqueId() throws SimulatorException
     {
-        StringBuffer sb = new StringBuffer();
+        if (uniqueId == null)
+        {
+           createUniqueId();
+        }
+        return uniqueId;
+    }
+
+    /**
+     * This method will set the uniqueId for this instance
+     * @throws SimulatorException
+     */
+    private void createUniqueId() throws SimulatorException
+    {
+      StringBuffer sb = new StringBuffer();
 
         try
         {
@@ -152,7 +168,7 @@ public class ConversationImpl implements Conversation
                     "Unexpected error trying to get unique Id: " + te.getMessage(), te);
         }
 
-        return sb.toString();
+        uniqueId = sb.toString();
     }
 
     public int getId(){
