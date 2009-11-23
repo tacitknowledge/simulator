@@ -33,13 +33,14 @@ public class ConversationFactory
             throws SimulatorException
     {
 
-        if (inboundAdapter == null || outboundAdapter == null)
+        if (inboundAdapter == null || outboundAdapter == null
+                || inboundTransport == null
+                || outboundTransport == null)
         {
-            String errorMessage = "Both inbound and outbound"
-                + " adapters are required for conversation";
+            String errorMessage = "Inbound and outbound"
+                + " adapters and transports are required for creating new conversation.";
 
             logger.error(errorMessage);
-
             throw new SimulatorException(errorMessage);
         }
         return new ConversationImpl(id, inboundTransport, outboundTransport, inboundAdapter,
