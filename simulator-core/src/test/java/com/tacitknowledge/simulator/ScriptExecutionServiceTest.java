@@ -3,6 +3,7 @@ package com.tacitknowledge.simulator;
 import com.tacitknowledge.simulator.formats.AdapterFactory;
 import com.tacitknowledge.simulator.formats.FormatConstants;
 import com.tacitknowledge.simulator.scripting.PojoClassGenerator;
+import com.tacitknowledge.simulator.scripting.ScriptException;
 import com.tacitknowledge.simulator.scripting.ScriptExecutionService;
 import javassist.ClassPool;
 import junit.framework.TestCase;
@@ -19,7 +20,8 @@ public class ScriptExecutionServiceTest extends TestCase
 {
     /**
      * This method will test the evaluation for JavaScript
-     * @throws Exception
+     *
+     * @throws Exception if there is a problem evaluating the script
      */
     public void testEvalJavaScript() throws Exception
     {
@@ -53,6 +55,20 @@ public class ScriptExecutionServiceTest extends TestCase
         // --- Get rid of the reference to the generator and ClassPool
         generator = null;
         pool = null;
+    }
+
+    /**
+     * This test will validate that we are able to execute ruby code
+     *
+     * @throws ScriptException if there is a problem with the language evaluation
+     */
+    public void testEvalRuby() throws ScriptException
+    {
+        String myScript = "puts 'Hello Ruby'\n return 'hello'";
+        ScriptExecutionService execServ = new ScriptExecutionService();
+        execServ.setLanguage("ruby");
+        Object result = execServ.eval(myScript, "myScript.rb", null);
+        assertEquals("hello", result.toString());
     }
 
 }
