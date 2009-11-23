@@ -11,4 +11,16 @@
     <groupId>com.tacitknowledge.simulator</groupId>
     <artifactId>test-system</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <target>1.5</target>
+                    <source>1.5</source>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
