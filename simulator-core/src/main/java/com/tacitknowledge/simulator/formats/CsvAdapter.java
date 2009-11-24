@@ -6,11 +6,7 @@ import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.StructuredSimulatorPojo;
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -135,7 +131,7 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
      * @return @see Adapter#adaptFrom
      * @throws FormatAdapterException @see Adapter#adaptFrom
      */
-    public SimulatorPojo adaptFrom(Object o) throws FormatAdapterException
+    public SimulatorPojo adaptFrom(String o) throws FormatAdapterException
     {
         if (!(o instanceof String))
         {
@@ -195,7 +191,7 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
      * @return @see Adapter#adaptTo
      * @throws FormatAdapterException @see Adapter#adaptTo
      */
-    public Object adaptTo(SimulatorPojo pojo) throws FormatAdapterException
+    public String adaptTo(SimulatorPojo pojo) throws FormatAdapterException
     {
         StringBuilder sb = new StringBuilder();
 

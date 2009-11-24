@@ -30,29 +30,42 @@ class SimulatorConnector
 
 
   def create_conversation (conversation)
-#    in_transport = @conv_mgr.getClassByName( conversation.in_transport.transport_type.class_name )
-#    out_transport = @conv_mgr.getClassByName( conversation.out_transport.transport_type.class_name )
-#    in_adapter = @conv_mgr.getClassByName(conversation.in_format.format_type.class_name )
-#    out_adapter = @conv_mgr.getClassByName(conversation.out_format.format_type.class_name)
+    in_transport = @conv_mgr.getClassByName( conversation.in_transport.transport_type.class_name )
 
-    in_transport = @conv_mgr.getClassByName('com.tacitknowledge.simulator.transports.FileTransport')
     parameters = java.util.HashMap.new;
-    parameters.put('directoryName', '12345')
-    parameters.put('fileName', 'zzzz.properties')
+
+    conversation.in_transport.configurations.each do |configuration|
+      parameters.put(configuration.attribute_name, configuration.attribute_value)
+    end
     in_transport.setParameters(parameters)
-    in_transport.setDeleteFile(true)
 
-    out_transport = @conv_mgr.getClassByName('com.tacitknowledge.simulator.transports.FileTransport')
+
+    out_transport = @conv_mgr.getClassByName( conversation.out_transport.transport_type.class_name )
     parameters = java.util.HashMap.new;
-    parameters.put('directoryName', '123456')
-    parameters.put('fileName', 'zzzz.properties')
-    
+    conversation.out_transport.configurations.each do |configuration|
+      parameters.put(configuration.attribute_name, configuration.attribute_value)
+    end
     out_transport.setParameters(parameters)
-    out_transport.setDeleteFile(true)
 
 
-    in_adapter = @conv_mgr.getClassByName('com.tacitknowledge.simulator.formats.PropertiesAdapter')
-    out_adapter = @conv_mgr.getClassByName('com.tacitknowledge.simulator.formats.PropertiesAdapter')
+
+
+    in_adapter = @conv_mgr.getClassByName(conversation.in_format.format_type.class_name )
+    parameters = java.util.HashMap.new;
+    conversation.in_format.configurations.each do |configuration|
+      parameters.put(configuration.attribute_name, configuration.attribute_value)
+    end
+    in_adapter.setParameters(parameters)
+
+
+
+
+    out_adapter = @conv_mgr.getClassByName(conversation.out_format.format_type.class_name)
+    parameters = java.util.HashMap.new;
+    conversation.out_format.configurations.each do |configuration|
+      parameters.put(configuration.attribute_name, configuration.attribute_value)
+    end
+    out_adapter.setParameters(parameters)
 
 
     @conv_mgr.createConversation(conversation.id, in_transport, out_transport, in_adapter, out_adapter)

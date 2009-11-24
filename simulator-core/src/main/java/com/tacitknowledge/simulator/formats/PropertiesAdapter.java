@@ -42,7 +42,7 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
      * @return @see Adapter#adaptFrom
      * @throws com.tacitknowledge.simulator.FormatAdapterException @see Adapter#adaptFrom
      */
-    public SimulatorPojo adaptFrom(Object object) throws FormatAdapterException
+    public SimulatorPojo adaptFrom(String object) throws FormatAdapterException
     {
         //TODO Implement this functionality.
         return null;
@@ -54,7 +54,7 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
      * @return @see Adapter#adaptTo
      * @throws com.tacitknowledge.simulator.FormatAdapterException @see Adapter#adaptTo
      */
-    public Object adaptTo(SimulatorPojo pojo) throws FormatAdapterException
+    public String adaptTo(SimulatorPojo pojo) throws FormatAdapterException
     {
         //TODO Implement this functionality.
         return null;

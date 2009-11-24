@@ -17,7 +17,7 @@ import java.util.Map;
 public class PlainTextAdapter extends BaseAdapter {
 
     /**
-     *    doesn't have any paramters
+     *    doesn't have any parameters
      * @return null
      */
     public List<List> getParametersList() {
@@ -30,7 +30,7 @@ public class PlainTextAdapter extends BaseAdapter {
      * @return
      * @throws FormatAdapterException
      */
-    public SimulatorPojo adaptFrom(Object o) throws FormatAdapterException {
+    public SimulatorPojo adaptFrom(String o) throws FormatAdapterException {
         SimulatorPojo pojo = new StructuredSimulatorPojo();
         Map<String, Object> root = new HashMap<String, Object>();
         root.put("text",o==null?"":o.toString());
@@ -44,8 +44,8 @@ public class PlainTextAdapter extends BaseAdapter {
      * @return text as String
      * @throws FormatAdapterException
      */
-    public Object adaptTo(SimulatorPojo pojo) throws FormatAdapterException {
-        return pojo.getRoot().get("text");
+    public String adaptTo(SimulatorPojo pojo) throws FormatAdapterException {
+        return pojo.getRoot().get("text").toString();
     }
 
     /**

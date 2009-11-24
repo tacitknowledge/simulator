@@ -5,7 +5,10 @@ import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import junit.framework.TestCase;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -16,26 +19,13 @@ public class CsvAdapterTest extends TestCase
     private final static String DATA =
             "primero, segundo, tercero, cuarto, quinto, sexto\n" +
                     "yo,tu,el,nosotros,ustedes,ellos\n" +
-                    "hoy,ma–ana,ayer,pasado ma–ana,antier,proximo mes";
+                    "hoy,maï¿½ana,ayer,pasado maï¿½ana,antier,proximo mes";
 
     private Adapter adapter;
 
     public void setUp()
     {
         adapter = AdapterFactory.getAdapter(FormatConstants.CSV);
-    }
-
-    public void testAdaptFailureFromNonString()
-    {
-        try
-        {
-            adapter.adaptFrom(new HashMap());
-            fail("Expecting exception if sending non-String to adaptFrom method");
-        }
-        catch (FormatAdapterException e)
-        {
-            // --- This is OK!
-        }
     }
 
     public void testSuccessfulAdaptFromWithHeaders()

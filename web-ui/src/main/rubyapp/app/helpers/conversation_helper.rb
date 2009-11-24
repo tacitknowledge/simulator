@@ -19,19 +19,19 @@ module ConversationHelper
     
     inbound_transport = Transport.new
     inbound_transport.transport_type = TransportType.find in_tt
-    inbound_transport.transport_configurations = get_configurations('transport', 'in', params)
+    inbound_transport.configurations = get_configurations('transport', 'in', params)
 
     outbound_transport = Transport.new
     outbound_transport.transport_type = TransportType.find out_tt
-    outbound_transport.transport_configurations = get_configurations('transport', 'out', params)
+    outbound_transport.configurations = get_configurations('transport', 'out', params)
 
     inbound_format = Format.new
     inbound_format.format_type = FormatType.find in_ft
-    inbound_format.format_configurations = get_configurations('format', 'in', params)
+    inbound_format.configurations = get_configurations('format', 'in', params)
 
     outbound_format = Format.new
     outbound_format.format_type = FormatType.find out_ft
-    outbound_format.format_configurations = get_configurations('format', 'out', params)
+    outbound_format.configurations = get_configurations('format', 'out', params)
 
     conversation.name = name;
     conversation.description = description;

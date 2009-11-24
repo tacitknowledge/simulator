@@ -4,9 +4,6 @@ import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.ConversationScenario;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.impl.ConversationScenarioImpl;
-
-import org.apache.camel.Exchange;
-import org.apache.camel.Processor;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
@@ -18,7 +15,7 @@ import java.util.List;
  * @author Nikita Belenkiy (nbelenkiy@tacitknowledge.com)
  * @author Alexandru Dereveanco (adereveanco@tacitknowledge.com)
  */
-public class ScenarioExecutionWrapper implements Processor
+public class ScenarioExecutionWrapper
 {
     /** inAdapter adapter which will take the information from the exchange
     and adapt it to SimulatorPojo for scenario execution. **/
@@ -77,20 +74,20 @@ public class ScenarioExecutionWrapper implements Processor
     }
 
     /**
-     * Processes the exchange object received from the previous step of the route. Iterates through
+     * Processes the body object received from the previous step of the route. Iterates through
      * all of the provided scenarios and return the processed result of the first matched scenario.
      *
-     * @param exchange exchange.getIn().getBody() contains data from inbound adapter
+     * @param body body.getIn().getBody() contains data from inbound adapter
      * @throws Exception in case of error.
      */
-    public void process(Exchange exchange) throws Exception
+    public String process(String body) throws Exception
     {
-        Object data = exchange.getIn().getBody();
+//        Object data = body;
         SimulatorPojo resultPojo = null;
 
         if (inAdapter != null)
         {
-            resultPojo = inAdapter.adaptFrom(data);
+            resultPojo = inAdapter.adaptFrom(body);
         }
         else
         {
@@ -115,21 +112,23 @@ public class ScenarioExecutionWrapper implements Processor
 
         if (outAdapter != null)
         {
-            data = outAdapter.adaptTo(resultPojo);
+            body = outAdapter.adaptTo(resultPojo);
         }
         else
         {
             logger.error("Outbound adapter is null");
         }
 
-        if (data != null)
-        {
-            exchange.getIn().setBody(data);
-        }
-        else
-        {
-            logger.error("Result of processing the incomming message "
-                    + "by the ScenarioExecutionWrapper is null");
-        }
+//        if (body != null)
+//        {
+//            body.getIn().setBody(data);
+//        }
+//        else
+//        {
+//            logger.error("Result of processing the incomming message "
+//                    + "by the ScenarioExecutionWrapper is null");
+//        }
+
+        return body;
     }
 }

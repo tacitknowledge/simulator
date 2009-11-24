@@ -25,7 +25,7 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
      * @param object object the incoming data object to adapt to JSON format.
      * @return an object constructed based on the inboud transport data.
      */
-    public SimulatorPojo adaptFrom(Object object)
+    public SimulatorPojo adaptFrom(String object)
     {
         //TODO Implement this functionality.
         return null;
@@ -37,7 +37,7 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
      * @param pojo simulator pojo with data to be adapted to JSON format
      * @return an object constructed based on the data received from execution of the simulation
      */
-    public Object adaptTo(SimulatorPojo pojo)
+    public String adaptTo(SimulatorPojo pojo)
     {
         //TODO Implement this functionality.
         return null;
