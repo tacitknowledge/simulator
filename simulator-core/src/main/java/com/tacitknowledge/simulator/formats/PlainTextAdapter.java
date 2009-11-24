@@ -16,11 +16,20 @@ import java.util.Map;
  */
 public class PlainTextAdapter extends BaseAdapter {
 
-
+    /**
+     *    doesn't have any paramters
+     * @return null
+     */
     public List<List> getParametersList() {
         return null;
     }
 
+    /**
+     *  Structured pojo root is 'text'
+     * @param o text String
+     * @return
+     * @throws FormatAdapterException
+     */
     public SimulatorPojo adaptFrom(Object o) throws FormatAdapterException {
         SimulatorPojo pojo = new StructuredSimulatorPojo();
         Map<String, Object> root = new HashMap<String, Object>();
@@ -29,10 +38,20 @@ public class PlainTextAdapter extends BaseAdapter {
         return pojo;
     }
 
+    /**
+     *
+     * @param pojo SimulatorPojo object
+     * @return text as String
+     * @throws FormatAdapterException
+     */
     public Object adaptTo(SimulatorPojo pojo) throws FormatAdapterException {
         return pojo.getRoot().get("text");
     }
 
+    /**
+     *  empty method.
+     * @throws FormatAdapterException
+     */
     @Override
     void validateParameters() throws FormatAdapterException {
 
