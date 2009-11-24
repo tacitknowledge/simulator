@@ -2,7 +2,7 @@ package com.tacitknowledge.simulator.camel;
 
 import com.tacitknowledge.simulator.Conversation;
 import com.tacitknowledge.simulator.Transport;
-import com.tacitknowledge.simulator.formats.XmlAdapter;
+import com.tacitknowledge.simulator.formats.PlainTextAdapter;
 import com.tacitknowledge.simulator.impl.ConversationImpl;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.Produce;
@@ -120,11 +120,11 @@ public class RouteManagerTest extends CamelTestSupport
 
     /** Conversation to be used in tests */
     private final Conversation conversation1
-        = new ConversationImpl(1, inTransport, outTransport, new XmlAdapter(), new XmlAdapter());
+        = new ConversationImpl(1, inTransport, outTransport, new PlainTextAdapter(), new PlainTextAdapter());
 
     /** Conversation to be used in tests */
     private final Conversation conversation2
-        = new ConversationImpl(2, inTransport, outTransport1, new XmlAdapter(), new XmlAdapter());
+        = new ConversationImpl(2, inTransport, outTransport1, new PlainTextAdapter(), new PlainTextAdapter());
 
     /**
      * Test for activating a route.

@@ -19,12 +19,12 @@ public class ConversationManagerImplTest extends TestCase
     {
         public String getType()
         {
-            return null;
+            return "sdf";
         }
 
         public String toUriString()
         {
-            return null;
+            return "direct:start";
         }
 
         public List<List> getParametersList()
@@ -41,12 +41,12 @@ public class ConversationManagerImplTest extends TestCase
     {
         public String getType()
         {
-            return null;
+            return "dfdfdfdfdf";
         }
 
         public String toUriString()
         {
-            return null;
+            return "mock:result";
         }
 
         public List<List> getParametersList()
@@ -115,7 +115,7 @@ public class ConversationManagerImplTest extends TestCase
         ConversationManager manager = new ConversationManagerImpl(routeManager);
 
         Conversation conversation = null;
-        conversation = manager.createConversation(1, in, out, AdapterFactory.getAdapter(FormatConstants.JSON), AdapterFactory.getAdapter(FormatConstants.JSON));
+        conversation = manager.createConversation(1, in, out, AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT), AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT));
         assertFalse(manager.isActive(conversation.getId()));
         manager.activate(conversation.getId());
         assertTrue(manager.isActive(conversation.getId()));

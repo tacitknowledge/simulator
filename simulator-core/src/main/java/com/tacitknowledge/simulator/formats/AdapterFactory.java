@@ -30,6 +30,7 @@ public class AdapterFactory
             put(FormatConstants.CSV, new CsvAdapter());
             put(FormatConstants.YAML, new YamlAdapter());
             put(FormatConstants.PROPERTIES, new PropertiesAdapter());
+            put(FormatConstants.PLAIN_TEXT, new PlainTextAdapter());
         }
     };
 
