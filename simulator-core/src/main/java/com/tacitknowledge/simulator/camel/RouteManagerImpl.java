@@ -9,7 +9,9 @@ import org.apache.camel.model.RouteDefinition;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Manages Camel routes based on the provided conversation objects.
@@ -28,6 +30,11 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager {
      * deactivation of the routes.
      */
     private Map<Integer, RouteDefinition> convRoutes = new HashMap<Integer, RouteDefinition>();
+    /**
+     *  container for active routes ids. 
+     */
+    Set<Integer> activeRoutes = new HashSet<Integer>();
+
     boolean contextStarted = false;
 
     public RouteManagerImpl() {
@@ -70,8 +77,12 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager {
                     + getContext().getName());
 
             getContext().startRoute(definition);
+            activeRoutes.add(conversationId);
+
         } else {
-            getContext().startRoute(definition);
+            if (!activeRoutes.contains(conversationId)) {
+                getContext().startRoute(definition);
+            }
         }
     }
 
@@ -79,9 +90,11 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager {
      * {@inheritDoc}
      */
     public void deactivate(Conversation conversation) throws Exception {
-        RouteDefinition definition = convRoutes.get(conversation.getId());
+        int i = conversation.getId();
+        RouteDefinition definition = convRoutes.get(i);
         if (definition != null) {
             getContext().stopRoute(definition);
+            activeRoutes.remove(i);
             logger.debug("Route : " + definition.getId() + " was stopped in the context : "
                     + getContext().getName());
         } else {

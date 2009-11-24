@@ -2,7 +2,7 @@ package com.tacitknowledge.simulator.camel;
 
 import com.tacitknowledge.simulator.Conversation;
 import com.tacitknowledge.simulator.Transport;
-import com.tacitknowledge.simulator.formats.JsonAdapter;
+import com.tacitknowledge.simulator.formats.XmlAdapter;
 import com.tacitknowledge.simulator.impl.ConversationImpl;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.Produce;
@@ -27,7 +27,7 @@ public class RouteManagerTest extends CamelTestSupport
     private static final int TIMEOUT = 500;
 
     /** Class under test */
-    private RouteManagerImpl routeManager = new RouteManagerImpl();
+    private RouteManagerImpl routeManager ;
 
     /** MockEnd point to receive the message */
     @EndpointInject(uri = "mock:result")
@@ -120,11 +120,11 @@ public class RouteManagerTest extends CamelTestSupport
 
     /** Conversation to be used in tests */
     private final Conversation conversation1
-        = new ConversationImpl(1, inTransport, outTransport, new JsonAdapter(), new JsonAdapter());
+        = new ConversationImpl(1, inTransport, outTransport, new XmlAdapter(), new XmlAdapter());
 
     /** Conversation to be used in tests */
     private final Conversation conversation2
-        = new ConversationImpl(2, inTransport, outTransport1, new JsonAdapter(), new JsonAdapter());
+        = new ConversationImpl(2, inTransport, outTransport1, new XmlAdapter(), new XmlAdapter());
 
     /**
      * Test for activating a route.
@@ -133,6 +133,8 @@ public class RouteManagerTest extends CamelTestSupport
     @Test
     public void testActivate() throws Exception
     {
+        routeManager.activate(conversation1);
+
         sendMessage();
 
         resultEndpoint.assertIsSatisfied();
@@ -148,11 +150,13 @@ public class RouteManagerTest extends CamelTestSupport
     {
         routeManager.activate(conversation1);
 
+        routeManager.activate(conversation1);
+
         sendMessage();
 
         resultEndpoint.assertIsSatisfied();
 
-        assertCollectionSize(routeManager.getContext().getRouteDefinitions(), 1);
+        assertCollectionSize(routeManager.getContext().getRoutes(), 1);
     }
 
     /**
@@ -162,6 +166,8 @@ public class RouteManagerTest extends CamelTestSupport
     @Test
     public void testActivateDeactivateActivateAgain() throws Exception
     {
+        routeManager.activate(conversation1);
+
         routeManager.deactivate(conversation1);
 
         resultEndpoint.setResultWaitTime(TIMEOUT);
@@ -187,6 +193,8 @@ public class RouteManagerTest extends CamelTestSupport
     @Test
     public void testTwoCallsToActivateWithDifferentConversations() throws Exception
     {
+        routeManager.activate(conversation1);
+       
         routeManager.activate(conversation2);
 
         assertCollectionSize(routeManager.getRouteCollection().getRoutes(), 2);
@@ -199,6 +207,8 @@ public class RouteManagerTest extends CamelTestSupport
     @Test
     public void testDeactivate() throws Exception
     {
+        routeManager.activate(conversation1);
+
         routeManager.deactivate(conversation1);
 
         resultEndpoint.setResultWaitTime(TIMEOUT);
@@ -217,7 +227,7 @@ public class RouteManagerTest extends CamelTestSupport
     @Override
     protected RouteBuilder createRouteBuilder() throws Exception
     {
-        routeManager.activate(conversation1);
+        routeManager = new RouteManagerImpl();
         return routeManager;
     }
 
@@ -227,7 +237,7 @@ public class RouteManagerTest extends CamelTestSupport
      */
     private void sendMessage() throws InterruptedException
     {
-        String expectedBody = "<matched/>";
+        String expectedBody = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><matched/>";
 
         resultEndpoint.expectedBodiesReceived(expectedBody);
 
