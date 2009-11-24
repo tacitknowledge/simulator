@@ -134,15 +134,24 @@ class ConversationsController < ApplicationController
     conversation = Conversation.find(params[:id])
     conversation.enabled=!conversation.enabled
 #    if new value is disabled then deactivate
+    if (!conversation.enabled)
+      SimulatorConnector.instance.deactivate()
+    end
     conversation.save
     render :json => { :success=>true, :data => conversation}
   end
-
-   def activate
+  
+  #if active => deactivates
+  #is inactive => deactivates
+  def activate
     conversation = Conversation.find(params[:id])
-    if(conversation.enabled)
-      conversation = SimulatorConnector.instance.create_conversation(conversation)
-      conversation[:cccc] =conversation.to_s()
+    if (conversation.enabled)
+      is_active = SimulatorConnector.instance.is_active(conversation)
+      if(is_active)
+        SimulatorConnector.instance.deactivate(conversation)
+      else
+        SimulatorConnector.instance.activate(conversation)
+      end
     end
     render :json => { :success=>true, :data => conversation}
   end

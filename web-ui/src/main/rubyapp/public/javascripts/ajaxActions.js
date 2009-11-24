@@ -34,7 +34,7 @@ TK.enableEntity = function(entity, entityId) {
 
     Ext.Ajax.request({
         url: entity + '/' + entityId + '/enable'  ,
-        method: 'POST',
+        method: 'GET',
         success: function() {
          //do nothing
         },
@@ -55,8 +55,8 @@ TK.enableEntity = function(entity, entityId) {
 TK.activateEntity = function(entity, entityId) {
 
     Ext.Ajax.request({
-        url: entity + '/' + entityId + '/enable'  ,
-        method: 'POST',
+        url: entity + '/' + entityId + '/activate'  ,
+        method: 'GET',
         success: function() {
          //do nothing
         },

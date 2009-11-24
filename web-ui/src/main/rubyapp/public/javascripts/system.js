@@ -69,18 +69,29 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
             root:'data',
             storeId:'conversationStore',
             idProperty:'id',
-            fields: ['enabled', 'id', 'name', 'description']
+            fields: ['active', 'enabled', 'id', 'name', 'description']
         });
         store.load();
-        var checkColumn = new Ext.grid.CheckColumn({
+        var enabledColumn = new Ext.grid.CheckColumn({
             header: 'Enabled?',
             dataIndex: 'enabled',
             sortable: true,
             width: 55
 
         })
-        checkColumn.onChange = function(record) {
+        enabledColumn.onChange = function(record) {
             TK.enableEntity('conversations', record.data.id)
+        }
+
+        var activeColumn = new Ext.grid.CheckColumn({
+            header: 'Active?',
+            dataIndex: 'active',
+            sortable: true,
+            width: 55
+        })
+
+        activeColumn.onChange = function(record) {
+            TK.activateEntity('conversations', record.data.id)
         }
 
         TK.SystemForm.superclass.constructor.call(this, Ext.apply({
@@ -138,7 +149,8 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
                     width: '100%',
                     store: store,
                     columns: [
-                        checkColumn,
+                        activeColumn,
+                        enabledColumn,
                         {
                             id:'name',
                             header: 'Name',
@@ -155,7 +167,7 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
                     title: 'Conversations',
                     stateful: true,
                     stateId: 'grid',
-                    plugins: [checkColumn],
+                    plugins: [activeColumn, enabledColumn ],
                     buttons:[
                         {
                             text:'Add',

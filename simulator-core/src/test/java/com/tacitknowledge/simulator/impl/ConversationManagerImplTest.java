@@ -1,9 +1,9 @@
-package com.tacitknowledge.simulator;
+package com.tacitknowledge.simulator.impl;
 
+import com.tacitknowledge.simulator.*;
 import com.tacitknowledge.simulator.camel.RouteManagerImpl;
 import com.tacitknowledge.simulator.formats.AdapterFactory;
 import com.tacitknowledge.simulator.formats.FormatConstants;
-import com.tacitknowledge.simulator.impl.ConversationManagerImpl;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -76,7 +76,7 @@ public class ConversationManagerImplTest extends TestCase
         RouteManager routeManager = new RouteManagerImpl();
         ConversationManager manager = new ConversationManagerImpl(routeManager);
 
-        Conversation conversation = manager.createConversation(null, in, out, AdapterFactory.getAdapter(FormatConstants.JSON), AdapterFactory.getAdapter(FormatConstants.JSON));
+        Conversation conversation = manager.createConversation(null, in, out,  AdapterFactory.getAdapter(FormatConstants.JSON), AdapterFactory.getAdapter(FormatConstants.JSON));
         assertNotNull(conversation);
         assertNotNull(conversation.getInboundTransport());
         assertNotNull(conversation.getOutboundTransport());
@@ -103,32 +103,22 @@ public class ConversationManagerImplTest extends TestCase
     }
 
     @Test
-    public void testIsActiveConversationNotFound() throws SimulatorException
-    {
+    public void testIsActiveConversationNotFound() throws SimulatorException {
         ConversationManager manager = new ConversationManagerImpl();
         assertFalse(manager.isActive(1234));
     }
 
 
     @Test
-    public void testIsActive() throws SimulatorException
-    {
+    public void testIsActive() throws SimulatorException, ConversationNotFoundException {
         RouteManager routeManager = new RouteManagerImpl();
         ConversationManager manager = new ConversationManagerImpl(routeManager);
 
         Conversation conversation = null;
-        try
-        {
-            conversation = manager.createConversation(1, in, out, AdapterFactory.getAdapter(FormatConstants.JSON), AdapterFactory.getAdapter(FormatConstants.JSON));
-            assertFalse(manager.isActive(conversation.getId()));
-            manager.activate(conversation.getId());
-            assertTrue(manager.isActive(conversation.getId()));
-        }
-        catch (ConversationNotFoundException e)
-        {
-            fail();
-        }
-
+        conversation = manager.createConversation(1, in, out, AdapterFactory.getAdapter(FormatConstants.JSON), AdapterFactory.getAdapter(FormatConstants.JSON));
+        assertFalse(manager.isActive(conversation.getId()));
+        manager.activate(conversation.getId());
+        assertTrue(manager.isActive(conversation.getId()));
     }
 
 }

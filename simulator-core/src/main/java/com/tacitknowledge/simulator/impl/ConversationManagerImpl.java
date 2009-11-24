@@ -1,15 +1,9 @@
 package com.tacitknowledge.simulator.impl;
 
+import com.tacitknowledge.simulator.*;
 import com.tacitknowledge.simulator.camel.RouteManagerImpl;
 import com.tacitknowledge.simulator.formats.AdapterFactory;
 import com.tacitknowledge.simulator.transports.TransportFactory;
-import com.tacitknowledge.simulator.ConversationManager;
-import com.tacitknowledge.simulator.RouteManager;
-import com.tacitknowledge.simulator.Adapter;
-import com.tacitknowledge.simulator.Transport;
-import com.tacitknowledge.simulator.Conversation;
-import com.tacitknowledge.simulator.SimulatorException;
-import com.tacitknowledge.simulator.ConversationNotFoundException;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
@@ -38,12 +32,20 @@ public class ConversationManagerImpl implements ConversationManager
      */
     private Map<Integer, ConversationImpl> conversations = new HashMap<Integer, ConversationImpl>();
 
+
+    private static final ConversationManager instance = new ConversationManagerImpl();
+
+
+    public static ConversationManager getInstance() {
+        return instance;
+    }
+
     /**
      * Public constructor for ConversationManagerImpl.
      *
      * @param routeManager RouteManager to use
      */
-    public ConversationManagerImpl(RouteManager routeManager)
+    ConversationManagerImpl(RouteManager routeManager)
     {
         this.routeManager = routeManager;
     }
@@ -52,7 +54,7 @@ public class ConversationManagerImpl implements ConversationManager
      * Constructor.
      * With this constructor, the manager will create its own RouteManager
      */
-    public ConversationManagerImpl()
+    ConversationManagerImpl()
     {
         this.routeManager = new RouteManagerImpl();
     }
@@ -125,6 +127,7 @@ public class ConversationManagerImpl implements ConversationManager
         try
         {
             routeManager.activate(conversation);
+            logger.debug("Activated conversation " + conversation);
         }
         catch (Exception e)
         {
@@ -149,6 +152,9 @@ public class ConversationManagerImpl implements ConversationManager
         try
         {
             routeManager.deactivate(conversation);
+            conversations.remove(conversationId);
+            logger.debug("Deactivated conversation " + conversation);
+
         }
         catch (Exception e)
         {
