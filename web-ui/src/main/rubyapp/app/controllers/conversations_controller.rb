@@ -1,4 +1,5 @@
 class ConversationsController < ApplicationController
+  include ConversationHelper
 
   def index
     @conversations = Conversation.find_all_by_system_id(params[:system_id])
@@ -29,68 +30,31 @@ class ConversationsController < ApplicationController
   def create
     #   @system = Conversation.new(ActiveSupport::JSON.decode(params[:data]))
 
-    name = params[:name]
-    description = params[:description]
-    in_tt = params[:inbound_transport_type_id]
-    out_tt = params[:outbound_transport_type_id]
-    in_ft = params[:inbound_format_type_id]
-    out_ft = params[:outbound_format_type_id]
-    sys_id = params[:system_id]
-
-    conversation = Conversation.new
-    inbound_transport = Transport.new
-    inbound_transport.transport_type = TransportType.find in_tt
-
-    outbound_transport = Transport.new
-    outbound_transport.transport_type = TransportType.find out_tt
-
-    inbound_format = Format.new
-    inbound_format.format_type = FormatType.find in_ft
-
-    outbound_format = Format.new
-    outbound_format.format_type = FormatType.find out_ft
-
-    conversation.name=name;
-    conversation.description=description;
-    conversation.system_id=sys_id;
-
-    conversation.in_transport = inbound_transport;
-    conversation.in_format = inbound_format;
-
-    conversation.out_transport = outbound_transport;
-    conversation.out_format = outbound_format;
+    conversation = populate_conversation(params)
 
     if conversation.save
-      render :json => { :success => true, :message => "Updated Conversation with id #{conversation.id}", :data => conversation }
+      render :json => { :success => true, :message => "Created Conversation with id #{conversation.id}", :data => conversation }
     else
-      render :json => { :message => "Failed to update Conversation"}
+      logger.debug("Unable to save Conversation. List of Errors follow up:")
+      #logger.debug("     #{conversation.errors.full_messages  }")
+      if (conversation.out_transport.errors)
+        logger.debug("     #{conversation.out_transport.errors.full_messages}")
+      end
+      if (conversation.out_format.errors)
+        logger.debug("     #{conversation.out_format.errors.full_messages}")
+      end
+
+      render :json => { :message => "Failed to create Conversation"}
     end
   end
 
   def update
-    name = params[:name]
-    description = params[:description]
-    in_tt = params[:inbound_transport_type_id]
-    out_tt = params[:outbound_transport_type_id]
-    in_ft = params[:inbound_format_type_id]
-    out_ft = params[:outbound_format_type_id]
-    sys_id = params[:system_id]
-
-    conversation = Conversation.find params[:id]
-
-    conversation.name=name;
-    conversation.description=description;
-    conversation.system_id=sys_id;
-
-    conversation.in_transport.transport_type_id = in_tt
-    conversation.out_transport.transport_type_id = out_tt
-    conversation.in_format.format_type_id = in_ft
-    conversation.out_format.format_type_id =out_ft
+    conversation = update_conversation(params)
 
     if conversation.save
-      render :json => { :success => true, :message => "Created new Conversation #{conversation.id}", :data => conversation }
+      render :json => { :success => true, :message => "Updated Conversation #{conversation.id}", :data => conversation }
     else
-      render :json => { :message => "Failed to create Conversation"}
+      render :json => { :message => "Failed to update Conversation"}
     end
   end
 

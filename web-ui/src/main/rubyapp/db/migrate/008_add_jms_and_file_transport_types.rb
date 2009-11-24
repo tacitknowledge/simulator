@@ -1,9 +1,7 @@
 class AddJmsAndFileTransportTypes < ActiveRecord::Migration
   def self.up
-    jms_transport_type = TransportType.new(:name => 'JMS',  :class_name => 'JmsTransport')
-    jms_transport_type.save
-    file_transport_type = TransportType.new(:name => 'File',  :class_name => 'FileTransport')
-    file_transport_type.save
+    jms_transport_type = TransportType.create(:name => 'JMS',  :class_name => 'JmsTransport')
+    file_transport_type = TransportType.create(:name => 'File',  :class_name => 'FileTransport')
   end
 
   def self.down

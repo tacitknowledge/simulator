@@ -45,7 +45,8 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
             field = new Ext.form.Checkbox({
                 id: field_name,
                 name: field_name,
-                fieldLabel: field_label
+                fieldLabel: field_label,
+                inputValue: 'true'
             });
         } else {
             // --- Text field is default
