@@ -69,7 +69,7 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager {
             logger.debug("Route : " + definition.getId() + " was added to the context : "
                     + getContext().getName());
 
-//            getContext().startRoute(definition);
+            getContext().startRoute(definition);
         } else {
             getContext().startRoute(definition);
         }
