@@ -1,19 +1,17 @@
 package com.tacitknowledge.simulator.impl;
 
-import java.util.Map;
-
-import com.tacitknowledge.simulator.SimulatorException;
-import javassist.CannotCompileException;
-import javassist.ClassPool;
-import javassist.NotFoundException;
-
-import org.apache.log4j.Logger;
-
 import com.tacitknowledge.simulator.ConversationScenario;
+import com.tacitknowledge.simulator.SimulatorException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.scripting.PojoClassGenerator;
 import com.tacitknowledge.simulator.scripting.ScriptException;
 import com.tacitknowledge.simulator.scripting.ScriptExecutionService;
+import javassist.CannotCompileException;
+import javassist.ClassPool;
+import javassist.NotFoundException;
+import org.apache.log4j.Logger;
+
+import java.util.Map;
 
 /**
  * A wrapper for Conversation Scenarios, containing all the information needed for its execution
@@ -109,14 +107,18 @@ public class ConversationScenarioImpl implements ConversationScenario
     {
         generateClasses(pojo);
 
-        execServ.exec(transformationScript, "Transformation Script", scriptExecutionBeans);
+       Object result =  execServ.eval(transformationScript, "Transformation Script", scriptExecutionBeans);
 
         //TODO Call the not yet implemented method to transform the
         //scriptExecutionBeans into SimulatorPojo
-        
-        return pojo;
+        SimulatorPojo resultPojo = transformToSimulatorPojo(result);
+        return resultPojo;
     }
-    
+
+    private SimulatorPojo transformToSimulatorPojo(Object result) {
+        return null; 
+    }
+
     /**
      * {@inheritDoc}
      *
@@ -238,4 +240,5 @@ public class ConversationScenarioImpl implements ConversationScenario
             }
         }
     }
+    
 }

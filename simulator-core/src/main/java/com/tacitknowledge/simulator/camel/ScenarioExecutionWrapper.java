@@ -3,7 +3,6 @@ package com.tacitknowledge.simulator.camel;
 import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.ConversationScenario;
 import com.tacitknowledge.simulator.SimulatorPojo;
-import com.tacitknowledge.simulator.impl.ConversationScenarioImpl;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
@@ -27,7 +26,7 @@ public class ScenarioExecutionWrapper
     /**
      * Container of the scenarios to run
      */
-    private List<ConversationScenarioImpl> scenarios;
+    private List<ConversationScenario> scenarios;
 
     /**
      * Logger for the ScenarioExecutionWrapper class.
@@ -42,7 +41,7 @@ public class ScenarioExecutionWrapper
      * @param inAdapter @see #inAdapter
      * @param outAdapter @see #outAdapter
      */
-    public ScenarioExecutionWrapper(List<ConversationScenarioImpl> scenarios,
+    public ScenarioExecutionWrapper(List<ConversationScenario> scenarios,
             Adapter inAdapter, Adapter outAdapter)
     {
         if (inAdapter == null)
@@ -65,7 +64,7 @@ public class ScenarioExecutionWrapper
         if (scenarios == null)
         {
             logger.warn("Something is probably wrong: Scenarios are null");
-            this.scenarios = new ArrayList<ConversationScenarioImpl>();
+            this.scenarios = new ArrayList<ConversationScenario>();
         }
         else
         {

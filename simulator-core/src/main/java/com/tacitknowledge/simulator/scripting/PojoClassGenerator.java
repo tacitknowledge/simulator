@@ -1,21 +1,14 @@
 package com.tacitknowledge.simulator.scripting;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Array;
+import com.tacitknowledge.simulator.SimulatorException;
+import com.tacitknowledge.simulator.SimulatorPojo;
+import javassist.*;
+import org.apache.log4j.Logger;
 
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.Map.Entry;
-
-import com.tacitknowledge.simulator.SimulatorException;
-import javassist.CannotCompileException;
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtField;
-import javassist.Modifier;
-import javassist.NotFoundException;
-
-import com.tacitknowledge.simulator.SimulatorPojo;
-import org.apache.log4j.Logger;
 
 /**
  * @author galo
@@ -98,7 +91,7 @@ public class PojoClassGenerator
     public Map<String, Object> generateBeansMap(SimulatorPojo pojo)
             throws CannotCompileException, NotFoundException, ScriptException, SimulatorException
     {
-        //Ê--- The SimulatorPojo's root must contain only one entry
+        //ï¿½--- The SimulatorPojo's root must contain only one entry
         // --- Beans Map should only contain ONE entry
         if (pojo.getRoot().isEmpty() || pojo.getRoot().size() > 1)
         {
@@ -494,6 +487,6 @@ public class PojoClassGenerator
 
     private String getPackTimeClassName(String name)
     {
-        return generatedClassesPackage + new Date().getTime() + "." + name;
+        return generatedClassesPackage +"q"+ new Date().getTime() + "." + name;
     }
 }

@@ -1,7 +1,5 @@
 package com.tacitknowledge.simulator;
 
-import com.tacitknowledge.simulator.impl.ConversationScenarioImpl;
-
 import java.util.List;
 
 /**
@@ -76,6 +74,6 @@ public interface Conversation
      *
      * @return a list of ConversationScenarios
      */
-    List<ConversationScenarioImpl> getScenarios();
+    List<ConversationScenario> getScenarios();
 
 }

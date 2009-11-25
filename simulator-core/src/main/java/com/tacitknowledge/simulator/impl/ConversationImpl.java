@@ -54,7 +54,7 @@ public class ConversationImpl implements Conversation
     /**
      * List of configured scenarios for this conversation
      */
-    private List<ConversationScenarioImpl> scenarios;
+    private List<ConversationScenario> scenarios;
 
     /**
      * @param id
@@ -76,7 +76,7 @@ public class ConversationImpl implements Conversation
         this.outboundTransport = outboundTransport;
         this.inboundAdapter = inboundAdapter;
         this.outboundAdapter = outboundAdapter;
-        this.scenarios = new ArrayList<ConversationScenarioImpl>();
+        this.scenarios = new ArrayList<ConversationScenario>();
     }
 
     /**
@@ -89,7 +89,7 @@ public class ConversationImpl implements Conversation
 
         if (this.scenarios == null)
         {
-            this.scenarios = new ArrayList<ConversationScenarioImpl>();
+            this.scenarios = new ArrayList<ConversationScenario>();
         }
 
         if (!scenarios.contains(conversationScenario))
@@ -178,7 +178,7 @@ public class ConversationImpl implements Conversation
     /**
      * {@inheritDoc}
      */
-    public List<ConversationScenarioImpl> getScenarios()
+    public List<ConversationScenario> getScenarios()
     {
         return scenarios;
     }
