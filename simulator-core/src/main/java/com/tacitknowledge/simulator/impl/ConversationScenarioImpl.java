@@ -6,6 +6,7 @@ import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.scripting.PojoClassGenerator;
 import com.tacitknowledge.simulator.scripting.ScriptException;
 import com.tacitknowledge.simulator.scripting.ScriptExecutionService;
+import com.tacitknowledge.simulator.scripting.SimulatorPojoPopulator;
 import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.NotFoundException;
@@ -103,21 +104,17 @@ public class ConversationScenarioImpl implements ConversationScenario
      *
      * @throws ScriptException
      */
-    public SimulatorPojo executeTransformation(SimulatorPojo pojo) throws ScriptException
-    {
+    public SimulatorPojo executeTransformation(SimulatorPojo pojo) throws ScriptException, SimulatorException {
         generateClasses(pojo);
 
        Object result =  execServ.eval(transformationScript, "Transformation Script", scriptExecutionBeans);
 
         //TODO Call the not yet implemented method to transform the
         //scriptExecutionBeans into SimulatorPojo
-        SimulatorPojo resultPojo = transformToSimulatorPojo(result);
+        SimulatorPojo resultPojo = SimulatorPojoPopulator.getInstance().populateSimulatorPojoFromBean(result);
         return resultPojo;
     }
 
-    private SimulatorPojo transformToSimulatorPojo(Object result) {
-        return null; 
-    }
 
     /**
      * {@inheritDoc}

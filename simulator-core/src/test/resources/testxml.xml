@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<employees>
+    <roles>
+        <role>Clerk</role>
+        <role>Manager</role>
+        <role>Accountant</role>
+    </roles>
+    <reportDate>2009-11-05</reportDate>
+    <employee>
+        <title>Manager</title>
+        <name>John12345</name>
+    </employee>
+    <employee>
+        <title>Clerk</title>
+        <name>Sara</name>
+    </employee>
+</employees>

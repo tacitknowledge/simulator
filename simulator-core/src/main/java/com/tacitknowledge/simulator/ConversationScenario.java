@@ -32,7 +32,7 @@ public interface ConversationScenario
      * @return the transformed SimulatorPojo object
      * @throws ScriptException in case there is an exception running the script
      */
-    SimulatorPojo executeTransformation(SimulatorPojo pojo) throws ScriptException;
+    SimulatorPojo executeTransformation(SimulatorPojo pojo) throws ScriptException, SimulatorException;
 
     /**
      * Veryfies if the entry data matches the criteria
