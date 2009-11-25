@@ -34,9 +34,10 @@ public class SimulatorPojoPopulatorTest extends TestCase
 
         try
         {
-            // --- Now, get back a SimulatorPojo from the beans map
+            // --- Now, get back a SimulatorPojo from the beans map' root entry
             SimulatorPojo pojo =
-                    SimulatorPojoPopulator.getInstance().populateSimulatorPojoFromBean(beansMap);
+                    SimulatorPojoPopulator.getInstance().
+                            populateSimulatorPojoFromBean(beansMap.get("order"));
 
             assertTrue(
                     "SimulatorPojo's root from SimulatorPojoPopulator " +
@@ -45,6 +46,7 @@ public class SimulatorPojoPopulatorTest extends TestCase
         }
         catch (SimulatorException e)
         {
+            e.printStackTrace();
             fail("Shouldn't get an exception here");
         }
     }
@@ -77,9 +79,10 @@ public class SimulatorPojoPopulatorTest extends TestCase
 
         try
         {
-            // --- Now, get back a SimulatorPojo from the beans map
+            // --- Now, get back a SimulatorPojo from the beans map' root entry
             SimulatorPojo pojo =
-                    SimulatorPojoPopulator.getInstance().populateSimulatorPojoFromBean(beansMap);
+                    SimulatorPojoPopulator.getInstance().
+                            populateSimulatorPojoFromBean(beansMap.get("employees"));
 
             assertTrue(
                     "SimulatorPojo's root from SimulatorPojoPopulator " +
@@ -88,6 +91,7 @@ public class SimulatorPojoPopulatorTest extends TestCase
         }
         catch (SimulatorException e)
         {
+            e.printStackTrace();
             fail("Shouldn't get an exception here");
         }
     }

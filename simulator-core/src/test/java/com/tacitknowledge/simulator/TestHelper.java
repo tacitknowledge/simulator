@@ -31,6 +31,22 @@ public abstract class TestHelper
                     " </roles>" +
                     "</employees>";
 
+    public final static String JSON_DATA =
+            "{" + 
+                "'firstName': 'John'," +
+                "'lastName': 'Smith'," +
+                "'address': {" +
+                    "'streetAddress': '21 2nd Street'," +
+                    "'city': 'New York'," +
+                    "'state': 'NY'," +
+                    "'postalCode': 10021" +
+                "}," +
+                "'phoneNumbers': [" +
+                    "['home', '212 732-1234']," +
+                    "['mobile', '646 123-4567']" +
+                "]" +
+            "}";
+
     /**
      * Default item fields
      */
