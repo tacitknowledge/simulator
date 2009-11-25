@@ -47,6 +47,13 @@ public abstract class TestHelper
                 "]" +
             "}";
 
+    public final static String JSON_DATA_ARRAY =
+            "[" +
+                "[1,2,3,4,5]," +
+                "['a', 'b', 'c', 'd', 'e']," +
+                "['alpha', 'beta', 'gamma', 'delta', 'eta']" +
+            "]";
+
     /**
      * Default item fields
      */

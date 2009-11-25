@@ -68,7 +68,7 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
             {
                 {
                     add(PARAM_ROW_CONTENT);
-                    add("Row Contents (What each row represents. e.g.: employee, order, product");
+                    add("Row Contents (What each row represents. e.g.: employee, order, product)");
                     add("string");
                     add("optional");
                 }
