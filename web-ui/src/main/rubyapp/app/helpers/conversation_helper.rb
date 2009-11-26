@@ -61,18 +61,31 @@ module ConversationHelper
     conversation.description = description;
     conversation.system_id = sys_id;
 
-    conversation.in_transport.transport_type_id = in_tt
+    #conversation.in_transport.transport_type_id = in_tt
+    trans_in = conversation.in_transport
+    trans_in.transport_type_id = in_tt
+    trans_in.configurations = get_configurations('transport', 'in', params)
     
-    conversation.out_transport.transport_type_id = out_tt
+    #conversation.out_transport.transport_type_id = out_tt
+    trans_out = conversation.out_transport
+    trans_out.transport_type_id = out_tt
+    trans_out.configurations = get_configurations('transport', 'out', params)
 
-    conversation.in_format.format_type_id = in_ft
+    #conversation.in_format.format_type_id = in_ft
+    format_in = conversation.in_format
+    format_in.format_type_id = in_ft
+    format_in.configurations = get_configurations('format', 'in', params)
 
-    conversation.out_format.format_type_id =out_ft
+    #conversation.out_format.format_type_id =out_ft
+    format_out = conversation.out_format
+    format_out.format_type_id = out_ft
+    format_out.configurations = get_configurations('format', 'out', params)
 
     conversation
   end
 
   def get_configurations(config_type, in_out, params)
+    
     configurations = []
 
     prefix = "#{config_type}_#{in_out}_"
