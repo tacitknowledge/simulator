@@ -40,7 +40,7 @@ public class JmsTransport extends BaseTransport implements Transport
             {
                 {
                     add(PARAM_ACTIVE_MQ);
-                    add("Is this JMS an Apache ActiveMQ implementation? (defaults to no)");
+                    add("Is this JMS an Apache ActiveMQ? (defaults to NO)");
                     add("boolean");
                     add("optional");
                 }

@@ -46,7 +46,7 @@ public class FileTransport extends BaseTransport implements Transport
     /**
      * Transport parameters definition.
      */
-    private static List<List> parametersList = new ArrayList<List>()
+    private List<List> parametersList = new ArrayList<List>()
     {
         {
             add(new ArrayList<String>()
@@ -63,7 +63,7 @@ public class FileTransport extends BaseTransport implements Transport
             {
                 {
                     add(PARAM_FILE_NAME);
-                    add("File Name (file name to wait for triggering the simulation)");
+                    add("File Name (file name the transport will only poll from)");
                     add("string");
                     add("optional");
                 }
@@ -83,7 +83,7 @@ public class FileTransport extends BaseTransport implements Transport
             {
                 {
                     add(PARAM_DELETE_FILE);
-                    add("Delete file after simulation?");
+                    add("Delete file after simulation? (defaults to NO)");
                     add("boolean");
                     add("optional");
                 }
@@ -179,7 +179,7 @@ public class FileTransport extends BaseTransport implements Transport
      */
     public List<List> getParametersList()
     {
-        return parametersList;
+        return this.parametersList;
     }
 
     /**

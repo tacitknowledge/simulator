@@ -52,19 +52,9 @@ public class FtpTransport extends FileTransport implements Transport
     /**
      * Transport parameters definition.
      */
-    private static List<List> parametersList = new ArrayList<List>()
+    private List<List> parametersList = new ArrayList<List>()
     {
         {
-
-            add(new ArrayList<String>()
-            {
-                {
-                    add(PARAM_SFTP);
-                    add("Is this an SFTP transport?");
-                    add("boolean");
-                    add("optional");
-                }
-            });
 
             add(new ArrayList<String>()
             {
@@ -73,6 +63,16 @@ public class FtpTransport extends FileTransport implements Transport
                     add("Host Name");
                     add("string");
                     add("required");
+                }
+            });
+
+            add(new ArrayList<String>()
+            {
+                {
+                    add(PARAM_SFTP);
+                    add("Is this an SFTP transport? (defaults to FTP)");
+                    add("boolean");
+                    add("optional");
                 }
             });
 
@@ -120,7 +120,7 @@ public class FtpTransport extends FileTransport implements Transport
             {
                 {
                     add(PARAM_FILE_NAME);
-                    add("File Name (file name to wait for triggering the simulation)");
+                    add("File Name (file name the transport will only poll from)");
                     add("string");
                     add("optional");
                 }
@@ -130,7 +130,7 @@ public class FtpTransport extends FileTransport implements Transport
             {
                 {
                     add(PARAM_FILE_EXTENSION);
-                    add("File Extension (file extension the transport will only poll from)");
+                    add("File Extension the transport will only poll from (without dot)");
                     add("string");
                     add("optional");
                 }
@@ -140,7 +140,7 @@ public class FtpTransport extends FileTransport implements Transport
             {
                 {
                     add(PARAM_DELETE_FILE);
-                    add("Delete file after simulation?");
+                    add("Delete file after simulation? (defaults to NO)");
                     add("boolean");
                     add("optional");
                 }
@@ -150,7 +150,7 @@ public class FtpTransport extends FileTransport implements Transport
             {
                 {
                     add(PARAM_BINARY);
-                    add("Is file transfer binary?");
+                    add("Is file transfer binary? (defaults to NO)");
                     add("string");
                     add("optional");
                 }
@@ -262,6 +262,16 @@ public class FtpTransport extends FileTransport implements Transport
         }
 
         return sb.toString();
+    }
+
+    /**
+     * @return List of Parameters for Ftp Transport.
+     * @inheritDoc
+     */
+    @Override
+    public List<List> getParametersList()
+    {
+        return this.parametersList;
     }
 
     /**
