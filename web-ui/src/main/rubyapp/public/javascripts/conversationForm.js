@@ -62,15 +62,15 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
         return field;
     },
 
-    addParametersToFieldSet: function(fieldsetName, jsonData, fieldPrefix) {
+    addParametersToFieldSet: function(fieldsetName, paramsArray, fieldPrefix) {
         var fieldset = Ext.getCmp(fieldsetName);
 
         // --- Remove all current parameters fields
         fieldset.removeAll(true);
 
-        if (jsonData.length > 0) {
-            for (var i = 0; i < jsonData.length; i++) {
-                new_param = jsonData[i];
+        if (paramsArray.length > 0) {
+            for (var i = 0; i < paramsArray.length; i++) {
+                new_param = paramsArray[i];
 
                 // ---
                 fieldset.add(Ext.getCmp('conversation-form').getFieldFromParamData(fieldPrefix, new_param));
@@ -86,7 +86,7 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
             params : params,
             method: 'GET',
             success: function ( result, request ) {
-                jsonResponse = Ext.util.JSON.decode(result.responseText);
+                var jsonResponse = Ext.util.JSON.decode(result.responseText);
 
                 Ext.getCmp('conversation-form').addParametersToFieldSet(fieldSetName, jsonResponse.data, fieldPrefix);
             },
@@ -96,11 +96,37 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
         });
     },
 
+    populateConfigurationValues: function(prefix, configValues) {
+        for (var i = 0; i < configValues.length; i++) {
+            var config = configValues[i];
+            var fieldName = prefix + config.attribute_name;
+
+            Ext.getCmp(fieldName).setValue(config.attribute_value);
+        }
+    },
+
+    handleConfigurationsLoad: function (responseText) {
+        var jsonResponse = Ext.util.JSON.decode(responseText);
+
+        if (jsonResponse.configurations != undefined && jsonResponse.configurations != null) {
+            var configurations = jsonResponse.configurations;
+
+            for (var configuration in configurations) {
+                var prefix = configuration + '_';
+                var fieldSetName = prefix + "fieldset";
+                var paramsArray = configurations[configuration].parameters;
+
+                Ext.getCmp('conversation-form').addParametersToFieldSet(fieldSetName, paramsArray, prefix);
+                Ext.getCmp('conversation-form').populateConfigurationValues(prefix, configurations[configuration].config_values);
+            }
+        }
+    },
+
     onSelectTransportHandler: function(in_out, type) {
         var url = '../../conversations/transport_parameters';
         var params = { 'type' : type };
-        var fieldSetName = in_out + '_transport_fieldset';
-        var fieldPrefix = 'transport_' + in_out + "_";
+        var fieldPrefix = 'transport_' + in_out + '_';
+        var fieldSetName = fieldPrefix + 'fieldset';
 
         Ext.getCmp('conversation-form').handleSelectForParameters(url, params, fieldSetName, fieldPrefix);
     },
@@ -108,8 +134,8 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
     onSelectFormatHandler: function(in_out, format) {
         var url = '../../conversations/format_parameters';
         var params = { 'format' : format };
-        var fieldSetName = in_out + '_format_fieldset';
-        var fieldPrefix = 'format_' + in_out + "_";
+        var fieldPrefix = 'format_' + in_out + '_';
+        var fieldSetName = fieldPrefix + 'fieldset';
 
         Ext.getCmp('conversation-form').handleSelectForParameters(url, params, fieldSetName, fieldPrefix);
     },
@@ -122,6 +148,10 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
             this.getForm().load({
                 url: '../' + this.conversationId + '.json',
                 method: 'GET',
+                success: function(form, action) {
+                    //Ext.Msg.alert("Attention", action.response.responseText);
+                    Ext.getCmp('conversation-form').handleConfigurationsLoad(action.response.responseText); 
+                },
                 failure: function(form, action) {
                     Ext.Msg.alert("Load failed", action.result.errorMessage);
                 }
@@ -225,7 +255,7 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                         }),
 
                         {
-                            id: 'in_transport_fieldset',
+                            id: 'transport_in_fieldset',
                             xtype: 'fieldset',
                             labelWidth: 200,
                             collapsible: false,
@@ -255,7 +285,7 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                         }),
 
                         {
-                            id: 'in_format_fieldset',
+                            id: 'format_in_fieldset',
                             xtype: 'fieldset',
                             labelWidth: 200,
                             collapsible: false,
@@ -293,7 +323,7 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                         }),
 
                         {
-                            id: 'out_transport_fieldset',
+                            id: 'transport_out_fieldset',
                             xtype: 'fieldset',
                             labelWidth: 200,
                             collapsible: false,
@@ -323,7 +353,7 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                         }),
 
                         {
-                            id: 'out_format_fieldset',
+                            id: 'format_out_fieldset',
                             xtype: 'fieldset',
                             labelWidth: 200,
                             collapsible: false,

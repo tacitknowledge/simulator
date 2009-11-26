@@ -15,13 +15,13 @@ class Conversation < ActiveRecord::Base
              :dependent => :destroy
   
   belongs_to :in_format,
-             :foreign_key => :outbound_format_id,
+             :foreign_key => :inbound_format_id,
              :class_name => "Format",
              :autosave => true,
              :dependent => :destroy
 
   belongs_to :out_format,
-             :foreign_key => :inbound_format_id,
+             :foreign_key => :outbound_format_id,
              :class_name => "Format",
              :autosave => true,
              :dependent => :destroy

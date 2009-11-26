@@ -5,7 +5,7 @@ class ConversationsController < ApplicationController
     @conversations = Conversation.find_all_by_system_id(params[:system_id])
     if (params[:format]=='json')
       connector = SimulatorConnector.instance
-      @conversations.each do|conversation|
+      @conversations.each do|conversation|                                                                    
         conversation[:active]= connector.is_active(conversation)
       end
       render :json => { :success=>true, :data => @conversations }
@@ -22,8 +22,52 @@ class ConversationsController < ApplicationController
     @conversation[:inbound_format_type_id] = @conversation.in_format.format_type_id
     @conversation[:outbound_format_type_id] = @conversation.out_format.format_type_id
 
+    in_tt_name = TransportType.find(@conversation.in_transport.transport_type_id).name
+    out_tt_name = TransportType.find(@conversation.out_transport.transport_type_id).name
+
+    in_frmt_name = FormatType.find(@conversation.in_format.format_type_id).name
+    out_frmt_name = FormatType.find(@conversation.out_format.format_type_id).name
+
     if (params[:format]=='json')
-      render :json => { :success => true, :data => @conversation }
+      # Include the configurations in the JSON response
+      configurations = {}
+
+      # Transports
+      transport_in = {}
+      transport_in[:parameters] = SimulatorConnector.instance.get_transport_parameters(in_tt_name)
+      transport_in[:config_values] =
+              TransportConfiguration.find_all_by_transport_id(@conversation.inbound_transport_id)
+      configurations[:transport_in] = transport_in
+
+      transport_out = {}
+      transport_out[:parameters] = SimulatorConnector.instance.get_transport_parameters(out_tt_name)
+      transport_out[:config_values] =
+              TransportConfiguration.find_all_by_transport_id(@conversation.outbound_transport_id)
+      configurations[:transport_out] = transport_out
+
+      # Formats
+      format_in = {}
+      format_in[:parameters] = SimulatorConnector.instance.get_format_parameters(in_frmt_name)
+      format_in[:config_values] =
+              FormatConfiguration.find_all_by_format_id(@conversation.inbound_format_id)
+      configurations[:format_in] = format_in
+
+      # Formats
+      format_out = {}
+      format_out[:parameters] = SimulatorConnector.instance.get_format_parameters(out_frmt_name)
+      format_out[:config_values] =
+              FormatConfiguration.find_all_by_format_id(@conversation.outbound_format_id)
+      configurations[:format_out] = format_out
+
+
+      msg = {}
+      msg[:success] = true
+      msg[:data] = @conversation
+      msg[:configurations] = configurations
+
+      logger.debug(msg.to_json)
+      
+      render :json => msg.to_json
     end
   end
 
@@ -36,13 +80,7 @@ class ConversationsController < ApplicationController
       render :json => { :success => true, :message => "Created Conversation with id #{conversation.id}", :data => conversation }
     else
       logger.debug("Unable to save Conversation. List of Errors follow up:")
-      #logger.debug("     #{conversation.errors.full_messages  }")
-      if (conversation.out_transport.errors)
-        logger.debug("     #{conversation.out_transport.errors.full_messages}")
-      end
-      if (conversation.out_format.errors)
-        logger.debug("     #{conversation.out_format.errors.full_messages}")
-      end
+      logger.debug("     #{conversation.errors.full_messages  }")
 
       render :json => { :message => "Failed to create Conversation"}
     end
