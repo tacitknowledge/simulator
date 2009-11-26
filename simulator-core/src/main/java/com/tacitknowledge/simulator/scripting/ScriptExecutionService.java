@@ -160,4 +160,14 @@ public class ScriptExecutionService
     {
         this.language = language;
     }
+
+
+    public static String[][] getAvailableLanguages(){
+        //todo automate this
+        String[][] languages = {
+                {"javascript", "Java Script"},
+                {"ruby", "JRuby"}
+        };
+        return languages;
+    }
 }

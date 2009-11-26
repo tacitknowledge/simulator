@@ -1,9 +1,13 @@
-TK.ScriptLanguageStore = new Ext.data.ArrayStore({
-    fields: ['id', 'value'],
-    data : [
-        ['JavaScript','Java Script'],
-        ['somethingelse',"something else"]
-    ]
+TK.ScriptLanguageStore = new Ext.data.JsonStore({
+    fields: [
+        'id'
+//        ,
+//        'language'
+    ],
+    url:"../script_languages",
+    root:'data',
+    autoLoad:true,
+    storeId:'language_store'
 });
 
 TK.SystemForm = Ext.extend(Ext.FormPanel, {
@@ -128,9 +132,17 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
                     name : 'script_language',
                     xtype : 'combo',
                     store : TK.ScriptLanguageStore,
-                    displayField : 'value',
-                    mode : 'local',
-                    id: 'script_language'
+                    emptyText: 'Select a language...',
+                    typeAhead: true,
+//                    valueField:'id',
+//                    displayField : 'language',
+                    displayField : 'id',
+                    id: 'script_language',
+                    triggerAction: 'all',
+                    selectOnFocus: true,
+                    editable: false,
+                    autoDestroy: true
+                    
                 },
                 {
                     xtype:'button',

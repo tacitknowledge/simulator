@@ -94,4 +94,9 @@ public interface ConversationManager
      */
     boolean isActive(int conversationId) throws SimulatorException;
 
+    /**
+     * returns available scripting languages
+     * @return
+     */
+    String[][] getAvailableLanguages();
 }

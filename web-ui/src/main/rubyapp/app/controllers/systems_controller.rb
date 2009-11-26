@@ -68,6 +68,7 @@ class SystemsController < ApplicationController
   end
 
   def script_languages
-    
+    languages = SimulatorConnector.instance.available_languages()
+    render :json =>{:success=>true, :data=>languages}
   end
 end

@@ -3,6 +3,7 @@ package com.tacitknowledge.simulator.impl;
 import com.tacitknowledge.simulator.*;
 import com.tacitknowledge.simulator.camel.RouteManagerImpl;
 import com.tacitknowledge.simulator.formats.AdapterFactory;
+import com.tacitknowledge.simulator.scripting.ScriptExecutionService;
 import com.tacitknowledge.simulator.transports.TransportFactory;
 import org.apache.log4j.Logger;
 
@@ -244,5 +245,9 @@ public class ConversationManagerImpl implements ConversationManager
         {
             return false;
         }
+    }
+
+    public String[][] getAvailableLanguages() {
+        return ScriptExecutionService.getAvailableLanguages();
     }
 }

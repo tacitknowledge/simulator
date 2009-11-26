@@ -58,7 +58,7 @@ public class ConversationScenarioImpl implements ConversationScenario
     /**
      * Whether this scenario is active or not
      */
-    private boolean active;
+    private boolean active=true;
 
     /**
      * Constructor for the conversation scenario class

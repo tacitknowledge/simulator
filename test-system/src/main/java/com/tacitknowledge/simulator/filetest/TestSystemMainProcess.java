@@ -1,10 +1,6 @@
 package com.tacitknowledge.simulator.filetest;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 /**
  * This class represents a system that will wait for a file to be copied to a destination folder
@@ -17,19 +13,19 @@ public class TestSystemMainProcess
     /**
      * Name of the source file to be read
      */
-    public static final String SOURCE_FILE = "test.properties";
+    public static final String SOURCE_FILE = "xxx.xml";
 
     /**
      * Source directory where the file to be read lives
      */
-    public static final String SOURCE_DIR = "source";
+    public static final String SOURCE_DIR = "/Users/nikitabelenkiy/Simulator2/trunk/simulator/web-ui/src/main/rubyapp/testdir/";
 
     /** Target file for the results */
-    public static final String TARGET_FILE = "target.properties";
+    public static final String TARGET_FILE = "zzz.xml";
 
 
     /** target directory to copy the files to */
-    public static final String TARGET_DIR = "target";
+    public static final String TARGET_DIR = "/Users/nikitabelenkiy/Simulator2/trunk/simulator/web-ui/src/main/rubyapp/123456";
 
     /** Size of the buffer to read */
     public static final int BUFFER = 1024;
@@ -49,9 +45,11 @@ public class TestSystemMainProcess
 
         InputStream inputStream
                 = TestSystemMainProcess.class.getClassLoader().getResourceAsStream(SOURCE_FILE);
+        String s = SOURCE_DIR + File.separator + SOURCE_FILE;
+        File file = new File(s);
         FileOutputStream fos
-                = new FileOutputStream(SOURCE_DIR + File.separator + SOURCE_FILE);
-
+                = new FileOutputStream(s);
+        System.out.println("creating file "+file.getAbsolutePath());
 
         byte[] buffer = new byte[BUFFER];
         int bytesRead = 0;
@@ -64,6 +62,8 @@ public class TestSystemMainProcess
         inputStream.close();
 
         File targetFile = new File(TARGET_DIR + File.separator + TARGET_FILE);
+        System.out.println("Created");
+        System.out.println("Waiting for result file "+targetFile.getAbsolutePath());
 
         // Wait until the simulator copies the file to the destination forlder
         while (!targetFile.exists())
@@ -80,6 +80,7 @@ public class TestSystemMainProcess
             strContent.append((char) ch);
         }
         fis.close();
+        System.out.println("Got the result file");
 
         // TODO add more assertions here
         //assert (strContent.toString().contains("simulator was here"));

@@ -245,7 +245,7 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                             triggerAction: 'all',
                             emptyText: 'Select an inbound format...',
                             selectOnFocus: true,
-                            width: 190,
+//                            width: 190,
                             editable: false,
                             listeners: {
                                 select: function(combo, newValue, oldValue) {

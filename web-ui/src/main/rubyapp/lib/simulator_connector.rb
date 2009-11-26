@@ -78,8 +78,11 @@ class SimulatorConnector
   def activate(conversation)
     #
     if (!is_active(conversation))
-      convers=create_conversation(conversation)
-      @conv_mgr.activate(convers.getId())
+      jconvers=create_conversation(conversation)
+      conversation.scenarios.each do |scenario|
+        jconvers.addScenario('javascript',scenario.criteria_script,scenario.execution_script)
+      end
+      @conv_mgr.activate(jconvers.getId())
     end
   end
 
@@ -96,5 +99,18 @@ class SimulatorConnector
 
   def delete_conversation(conversation)
     #
+  end
+
+  def available_languages
+    jlanguages = @conv_mgr.getAvailableLanguages()
+    languages =[]
+    for i in (0..(jlanguages.length-1))
+         languages<<{
+                 :id=>jlanguages[i][0]
+#         ,
+#                 :language=>jlanguages[i][1]
+                 }
+    end
+    return languages
   end
 end

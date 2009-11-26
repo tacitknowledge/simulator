@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.connect "systems/script_languages", :controller => 'systems', :action => 'script_languages'
+
 
   map.resources :systems do |system|
     system.resources :conversations do |conversation|
