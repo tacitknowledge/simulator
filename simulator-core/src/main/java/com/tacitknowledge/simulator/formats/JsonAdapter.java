@@ -200,7 +200,7 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
      */
     public List<List> getParametersList()
     {
-        return null;
+        return parametersList;
     }
 
     private Map<String, Object> getMapFromJsonObj(JSONObject json) throws FormatAdapterException
