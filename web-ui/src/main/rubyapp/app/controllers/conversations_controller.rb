@@ -2,8 +2,9 @@ class ConversationsController < ApplicationController
   include ConversationHelper
 
   def index
-    @conversations = Conversation.find_all_by_system_id(params[:system_id])
     if (params[:format]=='json')
+      @conversations = Conversation.find_all_by_system_id(params[:system_id])
+
       connector = SimulatorConnector.instance
       @conversations.each do|conversation|                                                                    
         conversation[:active]= connector.is_active(conversation)
@@ -16,19 +17,20 @@ class ConversationsController < ApplicationController
   end
 
   def show
-    @conversation = Conversation.find(params[:id])
-    @conversation[:inbound_transport_type_id] = @conversation.in_transport.transport_type_id
-    @conversation[:outbound_transport_type_id] = @conversation.out_transport.transport_type_id
-    @conversation[:inbound_format_type_id] = @conversation.in_format.format_type_id
-    @conversation[:outbound_format_type_id] = @conversation.out_format.format_type_id
-
-    in_tt_name = TransportType.find(@conversation.in_transport.transport_type_id).name
-    out_tt_name = TransportType.find(@conversation.out_transport.transport_type_id).name
-
-    in_frmt_name = FormatType.find(@conversation.in_format.format_type_id).name
-    out_frmt_name = FormatType.find(@conversation.out_format.format_type_id).name
-
+    # No need to start loading data from DB if it's not a JSON request
     if (params[:format]=='json')
+      @conversation = Conversation.find(params[:id])
+      @conversation[:inbound_transport_type_id] = @conversation.in_transport.transport_type_id
+      @conversation[:outbound_transport_type_id] = @conversation.out_transport.transport_type_id
+      @conversation[:inbound_format_type_id] = @conversation.in_format.format_type_id
+      @conversation[:outbound_format_type_id] = @conversation.out_format.format_type_id
+
+      in_tt_name = TransportType.find(@conversation.in_transport.transport_type_id).name
+      out_tt_name = TransportType.find(@conversation.out_transport.transport_type_id).name
+
+      in_frmt_name = FormatType.find(@conversation.in_format.format_type_id).name
+      out_frmt_name = FormatType.find(@conversation.out_format.format_type_id).name
+
       # Include the configurations in the JSON response
       configurations = {}
 
@@ -72,8 +74,6 @@ class ConversationsController < ApplicationController
   end
 
   def create
-    #   @system = Conversation.new(ActiveSupport::JSON.decode(params[:data]))
-
     conversation = populate_conversation(params)
 
     if conversation.save

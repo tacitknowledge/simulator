@@ -87,7 +87,7 @@ public class JmsTransport extends BaseTransport implements Transport
             {
                 {
                     add(PARAM_BROKER_URL);
-                    add("Broker URL (e.g. tcp://localhost:61616");
+                    add("Broker URL (e.g. tcp://localhost:61616)");
                     add("string");
                     add("required");
                 }

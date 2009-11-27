@@ -71,7 +71,7 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
                 {
                     add(PARAM_JSON_ARRAY_CONTENT);
                     add("JSON Array content (What each array element represents. " +
-                            "e.g.: employee, order) Required if JSON Content is array");
+                            "e.g.: employee, order. Required if )");
                     add("string");
                     add("optional");
                 }
@@ -221,7 +221,7 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
             try
             {
                 Object value = json.get(key);
-                Object mapValue;
+                Object mapValue = null;
 
                 // --- If the value is...
                 if (value instanceof JSONObject)
@@ -271,7 +271,7 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
             try
             {
                 Object item = array.get(i);
-                Object listValue;
+                Object listValue = null;
 
                 // --- If the item is...
                 if (item instanceof JSONObject)
