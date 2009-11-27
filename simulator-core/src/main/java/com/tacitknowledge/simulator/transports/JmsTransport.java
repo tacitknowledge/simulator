@@ -31,11 +31,27 @@ public class JmsTransport extends BaseTransport implements Transport
     public static final String PARAM_IS_TOPIC = "isTopic";
 
     /**
+     * Broker URL parameter. REQUIRED.
+     */
+    public static final String PARAM_BROKER_URL = "brokerUrl";
+
+    /**
+     * JSM broker user name parameter. Optional.
+     */
+    public static final String PARAM_USER_NAME = "userName";
+
+    /**
+     * JSM broker password parameter. Optional
+     */
+    public static final String PARAM_PASSWORD = "password";
+
+    /**
      * Transport parameters definition.
      */
     private static List<List> parametersList = new ArrayList<List>()
     {
         {
+            /* For the time being, defaults to ActiveMQ
             add(new ArrayList<String>()
             {
                 {
@@ -45,6 +61,7 @@ public class JmsTransport extends BaseTransport implements Transport
                     add("optional");
                 }
             });
+            */
 
             add(new ArrayList<String>()
             {
@@ -65,13 +82,43 @@ public class JmsTransport extends BaseTransport implements Transport
                     add("optional");
                 }
             });
+
+            add(new ArrayList<String>()
+            {
+                {
+                    add(PARAM_BROKER_URL);
+                    add("Broker URL (e.g. tcp://localhost:61616");
+                    add("string");
+                    add("required");
+                }
+            });
+
+            add(new ArrayList<String>()
+            {
+                {
+                    add(PARAM_USER_NAME);
+                    add("ActiveMQ Broker user name");
+                    add("string");
+                    add("optional");
+                }
+            });
+
+            add(new ArrayList<String>()
+            {
+                {
+                    add(PARAM_PASSWORD);
+                    add("ActiveMQ Broker password");
+                    add("string");
+                    add("optional");
+                }
+            });
         }
     };
 
     /**
      * @see #PARAM_ACTIVE_MQ
      */
-    private boolean activeMQ = false;
+    private boolean activeMQ = true;
 
     /**
      * @see #PARAM_IS_TOPIC
@@ -125,6 +172,17 @@ public class JmsTransport extends BaseTransport implements Transport
 
         sb.append(getParamValue(PARAM_DESTINATION_NAME));
 
+        sb.append("?brokerURL=").append(getParamValue(PARAM_BROKER_URL));
+
+        if (getParamValue(PARAM_USER_NAME) != null)
+        {
+            sb.append(AMP).append("username=").append(getParamValue(PARAM_USER_NAME));
+        }
+        if (getParamValue(PARAM_PASSWORD) != null)
+        {
+            sb.append(AMP).append("password=").append(getParamValue(PARAM_PASSWORD));
+        }
+
         return sb.toString();
     }
 
@@ -156,6 +214,10 @@ public class JmsTransport extends BaseTransport implements Transport
         if (getParamValue(PARAM_DESTINATION_NAME) == null)
         {
             throw new TransportException("Destination name parameter is required");
+        }
+        if (getParamValue(PARAM_BROKER_URL) == null)
+        {
+            throw new TransportException("Broker URL is required.");
         }
     }
 }

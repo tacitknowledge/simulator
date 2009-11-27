@@ -46,8 +46,9 @@ public class JmsTransportTest extends TestCase
 
     public void testGetSimplestUri()
     {
-        // --- Try to get this URI: jms:foo.bar
+        // --- Try to get this URI: activemq:foo.bar?brokerURL=tcp://localhost:61616
         params.put(JmsTransport.PARAM_DESTINATION_NAME, "foo.bar");
+        params.put(JmsTransport.PARAM_BROKER_URL, "tcp://localhost:61616");
         Transport transport = new JmsTransport(params);
 
         try
@@ -55,7 +56,7 @@ public class JmsTransportTest extends TestCase
             String uri = transport.toUriString();
 
             assertTrue("Returned uri isn't as expected: " + uri,
-                    uri.indexOf("jms:foo.bar") > -1);
+                    uri.indexOf("activemq:foo.bar?brokerURL=tcp://localhost:61616") > -1);
         } catch (TransportException e)
         {
             fail("Shouldn't be getting an exception here: " + e.getMessage());
@@ -64,10 +65,11 @@ public class JmsTransportTest extends TestCase
 
     public void testGetUriForActiveMQTopic()
     {
-        // --- Try to get this URI: activemq:topic:foo.bar
+        // --- Try to get this URI: activemq:topic:foo.bar?brokerURL=tcp://localhost:61616
         params.put(JmsTransport.PARAM_ACTIVE_MQ, "true");
         params.put(JmsTransport.PARAM_DESTINATION_NAME, "foo.bar");
         params.put(JmsTransport.PARAM_IS_TOPIC, "true");
+        params.put(JmsTransport.PARAM_BROKER_URL, "tcp://localhost:61616");
         Transport transport = new JmsTransport(params);
 
         try
@@ -75,7 +77,7 @@ public class JmsTransportTest extends TestCase
             String uri = transport.toUriString();
 
             assertTrue("Returned uri isn't as expected: " + uri,
-                    uri.indexOf("activemq:topic:foo.bar") > -1);
+                    uri.indexOf("activemq:topic:foo.bar?brokerURL=tcp://localhost:61616") > -1);
         } catch (TransportException e)
         {
             fail("Shouldn't be getting an exception here: " + e.getMessage());
