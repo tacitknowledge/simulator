@@ -1,9 +1,12 @@
 package com.tacitknowledge.simulator.camel;
 
 import com.tacitknowledge.simulator.ConversationScenario;
+import com.tacitknowledge.simulator.TestHelper;
 import com.tacitknowledge.simulator.formats.JsonAdapter;
 import com.tacitknowledge.simulator.formats.XmlAdapter;
 import com.tacitknowledge.simulator.impl.ConversationScenarioImpl;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -19,22 +22,6 @@ import java.util.Map;
  * @author Nikita Belenkiy (nbelenkiy@tacitknowledge.com)
  */
 public class ScenarioExecutionWrapperTest {
-    private static final String TEST_DATA = "<employees>\n" +
-            "    <employee>\n" +
-            "        <name>John</name>\n" +
-            "        <title>Manager</title>\n" +
-            "    </employee>\n" +
-            "    <employee>\n" +
-            "        <name>Sara</name>\n" +
-            "        <title>Clerk</title>\n" +
-            "    </employee>\n" +
-            "    <reportDate>2009-11-05</reportDate>\n" +
-            "    <roles>\n" +
-            "        <role>Clerk</role>\n" +
-            "        <role>Manager</role>\n" +
-            "        <role>Accountant</role>\n" +
-            "    </roles>\n" +
-            "</employees>";
 
     @Test
     public void testWithoutScenarios() throws Exception {
@@ -59,14 +46,14 @@ public class ScenarioExecutionWrapperTest {
         scenarios.add(scenario);
         ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(scenarios, new XmlAdapter(), new XmlAdapter());
 
-        String s = wrapper.process(TEST_DATA);
+        String s = wrapper.process(TestHelper.XML_DATA);
         Assert.assertTrue(s.contains("John12345"));
 
         //modify the script and see what happens
         scenario.setScripts(criteria, "employees.employee[0].name='John1234544444444';" +
                 "employees", "javascript");
 
-        s = wrapper.process(TEST_DATA);
+        s = wrapper.process(TestHelper.XML_DATA);
 
         Assert.assertTrue(s.contains("John1234544444444"));
     }
@@ -91,7 +78,7 @@ public class ScenarioExecutionWrapperTest {
 
         ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(scenarios, new XmlAdapter(), new XmlAdapter());
 
-        String s = wrapper.process(TEST_DATA);
+        String s = wrapper.process(TestHelper.XML_DATA);
         Assert.assertFalse(s.contains("Johnffff"));
         Assert.assertFalse(s.contains("John12345"));
         Assert.assertTrue(s.contains("Johnaaaa"));
@@ -128,18 +115,23 @@ public class ScenarioExecutionWrapperTest {
 
         ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(scenarios, new XmlAdapter(), outAdapter);
 
-        String s = wrapper.process(TEST_DATA);
+        String s = wrapper.process(TestHelper.XML_DATA);
         Assert.assertFalse(s.contains("Johnffff"));
         Assert.assertFalse(s.contains("John12345"));
         Assert.assertTrue(s.contains("Johnaaaa"));
 
-
-
+        // --- Test that the returned String is a valid JSON format
+        try
+        {
+            JSONObject json = new JSONObject(s);
+        }
+        catch (JSONException je)
+        {
+            je.printStackTrace();
+            Assert.fail("Returned string is not a valid JSON format: " + je.getMessage());
+        }
     }
-
-
-
-
+    
     private ConversationScenario createScenario(String criteria, String execution) {
         ConversationScenario scenario = new ConversationScenarioImpl("javascript", criteria, execution);
         scenario.setActive(true);
