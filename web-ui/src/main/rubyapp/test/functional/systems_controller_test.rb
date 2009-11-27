@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class SystemControllerTest < ActionController::TestCase
+class SystemsControllerTest < ActionController::TestCase
   def test_save_system_create_new
     system = System.find_by_name 'nnaammee1'
     assert_nil system

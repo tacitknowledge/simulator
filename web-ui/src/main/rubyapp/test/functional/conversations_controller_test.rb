@@ -1,5 +1,5 @@
 require 'test_helper'
 
-class ConversationControllerTest < ActionController::TestCase
+class ConversationsControllerTest < ActionController::TestCase
 
 end
