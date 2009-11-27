@@ -9,12 +9,12 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
         var doRedirect = false;
         //todo remove duplicates from here and the system form
         if (this.conversationId != '' && this.conversationId != undefined) {
-            url = '../' + this.conversationId
-            submitMethod = 'PUT'
+            url = '../' + this.conversationId;
+            submitMethod = 'PUT';
         } else {
-            doRedirect = true
-            url = '../../conversations'
-            submitMethod = 'POST'
+            doRedirect = true;
+            url = '../../conversations';
+            submitMethod = 'POST';
         }
         if (Ext.getCmp('conversation-form').getForm().isValid()) {
             Ext.getCmp('conversation-form').getForm().submit({
@@ -22,13 +22,13 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                 waitMsg: 'Saving....',
                 method: submitMethod,
                 success: function(fp, o) {
-                    Ext.MessageBox.alert('Success', o.result.message)
+                    Ext.MessageBox.alert('Success', o.result.message);
                     if (doRedirect) {
-                        window.location = '../' + o.result.data.id + '/'
+                        window.location = '../' + o.result.data.id + '/';
                     }
                 },
                 failure: function(fp, o) {
-                    Ext.MessageBox.alert('Error', o.result.message)
+                    Ext.MessageBox.alert('Error', o.result.message);
                 }
             });
         }
@@ -38,7 +38,7 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
         var field_name = field_prefix + param_data[0];
         var field_label = param_data[1];
         var field_type = param_data[2];
-        var is_required = param_data[3] == 'required' ? true : false;
+        var is_required = param_data[3] == 'required';
 
         var field;
         if (field_type == 'boolean') {
@@ -177,7 +177,7 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
             fields: ['id', 'name']
         });
 
-        formatsStore.load()
+        formatsStore.load();
 
         var transportsStore = new Ext.data.JsonStore({
             root: 'data',
@@ -185,18 +185,18 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
             url: '../../../../conversations/transport_types',
             fields: ['id', 'name']
         });
-        transportsStore.load()
+        transportsStore.load();
         var enabledColumn = new Ext.grid.CheckColumn({
                             header: 'Enabled?',
                             dataIndex: 'enabled',
                             sortable: true,
                             width: 55
 
-                        })
+                        });
 
         enabledColumn.onChange= function(record) {
             TK.enableEntity('scenarios',record.data.id)
-        }
+        };
 
         var initialConfig = {
 
@@ -257,7 +257,7 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                         {
                             id: 'transport_in_fieldset',
                             xtype: 'fieldset',
-                            labelWidth: 200,
+                            labelWidth: 300,
                             collapsible: false,
                             autoHeight: true,
                             hidden: true
@@ -287,11 +287,11 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                         {
                             id: 'format_in_fieldset',
                             xtype: 'fieldset',
-                            labelWidth: 200,
+                            labelWidth: 300,
                             collapsible: false,
                             autoHeight: true,
                             hidden: true
-                        },
+                        }
                     ]
                 },
                 {
@@ -325,7 +325,7 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                         {
                             id: 'transport_out_fieldset',
                             xtype: 'fieldset',
-                            labelWidth: 200,
+                            labelWidth: 300,
                             collapsible: false,
                             autoHeight: true,
                             hidden: true
@@ -355,7 +355,7 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                         {
                             id: 'format_out_fieldset',
                             xtype: 'fieldset',
-                            labelWidth: 200,
+                            labelWidth: 300,
                             collapsible: false,
                             autoHeight: true,
                             hidden: true

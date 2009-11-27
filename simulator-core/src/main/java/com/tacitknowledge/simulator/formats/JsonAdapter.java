@@ -43,14 +43,14 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
     /**
      * Adapter parameters definition.
      */
-    private static List<List> parametersList = new ArrayList<List>()
+    private List<List> parametersList = new ArrayList<List>()
     {
         {
             add(new ArrayList<String>()
             {
                 {
                     add(PARAM_JSON_CONTENT);
-                    add("JSON Contents (e.g.: employee(s), order(s), product(s), etc.)");
+                    add("JSON Contents (e.g. employee(s), order(s), etc.)");
                     add("string");
                     add("required");
                 }
@@ -60,7 +60,7 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
             {
                 {
                     add(PARAM_IS_ARRAY);
-                    add("Is JSON content an array? e.g. {[ ... ]}");
+                    add("Is JSON content an array? e.g. [ ... ]");
                     add("boolean");
                     add("optional");
                 }
@@ -71,7 +71,7 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
                 {
                     add(PARAM_JSON_ARRAY_CONTENT);
                     add("JSON Array content (What each array element represents. " +
-                            "e.g.: employee, order, product\"");
+                            "e.g.: employee, order) Required if JSON Content is array");
                     add("string");
                     add("optional");
                 }
@@ -221,7 +221,7 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
             try
             {
                 Object value = json.get(key);
-                Object mapValue = null;
+                Object mapValue;
 
                 // --- If the value is...
                 if (value instanceof JSONObject)
@@ -271,7 +271,7 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
             try
             {
                 Object item = array.get(i);
-                Object listValue = null;
+                Object listValue;
 
                 // --- If the item is...
                 if (item instanceof JSONObject)

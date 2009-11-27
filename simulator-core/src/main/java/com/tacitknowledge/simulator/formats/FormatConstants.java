@@ -30,7 +30,7 @@ public class FormatConstants
     /**
      * Constant for YAML format
      */
-    public static final String PLAIN_TEXT = "Plain Text";
+    public static final String PLAIN_TEXT = "PLAIN TEXT";
 
     /**
      * Constant for PROPERTIES format

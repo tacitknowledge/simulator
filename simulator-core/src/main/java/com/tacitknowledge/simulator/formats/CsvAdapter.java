@@ -41,24 +41,14 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
     /**
      * Adapter parameters definition.
      */
-    private static List<List> parametersList = new ArrayList<List>()
+    private List<List> parametersList = new ArrayList<List>()
     {
         {
             add(new ArrayList<String>()
             {
                 {
-                    add(PARAM_COLUMN_SEPARATOR);
-                    add("Column Separator");
-                    add("string");
-                    add("optional");
-                }
-            });
-
-            add(new ArrayList<String>()
-            {
-                {
                     add(PARAM_CSV_CONTENT);
-                    add("CSV Contents (e.g.: employees, orders, products, etc.)");
+                    add("CSV Contents (e.g. employees, orders, etc.)");
                     add("string");
                     add("required");
                 }
@@ -68,7 +58,7 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
             {
                 {
                     add(PARAM_ROW_CONTENT);
-                    add("Row Contents (What each row represents. e.g.: employee, order, product)");
+                    add("Row Contents (What each row represents. e.g. employee, order, etc.)");
                     add("string");
                     add("optional");
                 }
@@ -78,9 +68,19 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
             {
                 {
                     add(PARAM_FIRST_ROW_HEADER);
-                    add("Is first row headers? (If not, Row Contents is required)");
+                    add("Is first row headers row? (If not, Row Contents is required)");
                     add("boolean");
-                    add("required");
+                    add("optional   ");
+                }
+            });
+
+            add(new ArrayList<String>()
+            {
+                {
+                    add(PARAM_COLUMN_SEPARATOR);
+                    add("Column Separator (defaults to comma ',')");
+                    add("string");
+                    add("optional");
                 }
             });
         }
@@ -133,14 +133,6 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
      */
     public SimulatorPojo adaptFrom(String o) throws FormatAdapterException
     {
-        if (!(o instanceof String))
-        {
-            String errorMsg = "Input data is expected to be a String. Instead, "
-                    + "input data is " + o.getClass().getName();
-            logger.error(errorMsg);
-            throw new FormatAdapterException(errorMsg);
-        }
-
         // --- Before going further, set the instance variables from the received parameters
         //  and validate them
         validateParameters();
@@ -152,7 +144,7 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
 
         // --- First, split the incoming data into lines
         Pattern p = Pattern.compile("$", Pattern.MULTILINE);
-        String[] rows = p.split((String) o);
+        String[] rows = p.split(o);
 
         // --- For all rows, new line characters will be remove before calling getRowAs methods
 
@@ -171,10 +163,10 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
         {
             // --- ...otherwise, populate the List with each row represented as a Map containing
             // a List of values in key rowContent
-            for (int i = 0; i < rows.length; i++)
+            for (String rowString : rows)
             {
                 Map<String, List> row = new HashMap<String, List>();
-                row.put(getParamValue(PARAM_ROW_CONTENT), getRowAsList(rows[i]));
+                row.put(getParamValue(PARAM_ROW_CONTENT), getRowAsList(rowString));
                 rowObjects.add(row);
             }
         }
@@ -291,10 +283,10 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
         List<String> rowList = new ArrayList<String>();
 
         String[] values = row.split(this.columnSeparator);
-        for (int i = 0; i < values.length; i++)
+        for (String value : values)
         {
             // --- Make sure we remove leading and trailing spaces from the actual value
-            rowList.add(values[i].trim());
+            rowList.add(value.trim());
         }
 
         return rowList;

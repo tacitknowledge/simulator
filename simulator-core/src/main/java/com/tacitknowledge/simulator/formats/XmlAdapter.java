@@ -54,7 +54,7 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
     /**
      * Adapter parameters definition.
      */
-    private static List<List> parametersList = new ArrayList<List>()
+    private List<List> parametersList = new ArrayList<List>()
     {
         {
             add(new ArrayList<String>()
@@ -114,7 +114,7 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
 
             DocumentBuilder db = dbf.newDocumentBuilder();
             InputSource is = new InputSource();
-            is.setCharacterStream(new StringReader((String) o));
+            is.setCharacterStream(new StringReader(o));
 
             doc = db.parse(is);
 
@@ -256,16 +256,16 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
                 // if this attribute name is already registered, it means this should be a List
                 Object tmp = structuredChild.get(currNodeName);
                 // --- Check if it's already a List
-                List<Object> currList;
+                List currList;
                 if (tmp instanceof List)
                 {
                     // --- If it is, just keep the reference
-                    currList = (List<Object>) tmp;
+                    currList = (List) tmp;
                 }
                 else
                 {
                     // --- If it isn't, create a new list...
-                    currList = new ArrayList<Object>();
+                    currList = new ArrayList();
                     // --- ...insert the previous attribute value to the list
                     currList.add(tmp);
                     // --- ...and place the list into its corresponding attribute name
@@ -324,7 +324,7 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
         // --- Iterate throu all the childs
         for (Map.Entry<String, Object> entry : childs.entrySet())
         {
-            Element child = null;
+            Element child;
             // --- If the Entry value is...
             if (entry.getValue() instanceof Map)
             {
