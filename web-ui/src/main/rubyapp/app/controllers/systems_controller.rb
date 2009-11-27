@@ -3,23 +3,23 @@ require 'java'
 class SystemsController < ApplicationController
 
   def index
-    @systems = System.all
     if (params[:format]== 'json')
+      @systems = System.all
       render :json => { :success => true, :data => @systems }
     end
   end
 
   def show
-    begin
-      @system = System.find(params[:id])
-    rescue
-      # If the system with :id is not found, log the error and redirect to index
-      logger.error("System with id #{params[:id]} not found")
-      redirect_to :action => 'index'
-      return
-    end
-
     if (params[:format]== 'json')
+      begin
+        @system = System.find(params[:id])
+      rescue
+        # If the system with :id is not found, log the error and redirect to index
+        logger.error("System with id #{params[:id]} not found")
+        redirect_to :action => 'index'
+        return
+      end
+
       render :json => { :success => true, :data => @system }
     end
 #    redirect_to "systems/1/show"
