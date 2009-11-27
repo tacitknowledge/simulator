@@ -19,8 +19,7 @@ import java.util.Map;
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class ConversationScenarioImpl implements ConversationScenario
-{
+public class ConversationScenarioImpl implements ConversationScenario {
     /**
      * Logger for this class.
      */
@@ -46,33 +45,35 @@ public class ConversationScenarioImpl implements ConversationScenario
      */
     private String transformationScript;
 
-    /** Script Execution service which will run the actual simulation on the data received **/
+    /**
+     * Script Execution service which will run the actual simulation on the data received *
+     */
     private ScriptExecutionService execServ;
 
-    /** Generates the classes for the incoming data **/
+    /**
+     * Generates the classes for the incoming data *
+     */
     private PojoClassGenerator generator;
 
-    /** Beans needed for the script executions service to run the simulation against **/
+    /**
+     * Beans needed for the script executions service to run the simulation against *
+     */
     private Map scriptExecutionBeans;
 
     /**
      * Whether this scenario is active or not
      */
-    private boolean active=true;
+    private boolean active = true;
 
     /**
      * Constructor for the conversation scenario class
      *
-     * @param scriptLanguage
-     *            the scripting language used in the simulation
-     * @param criteriaScript
-     *            the criteria script to match
-     * @param transformationScript
-     *            the transformation script for the scenario.
+     * @param scriptLanguage       the scripting language used in the simulation
+     * @param criteriaScript       the criteria script to match
+     * @param transformationScript the transformation script for the scenario.
      */
     public ConversationScenarioImpl(String scriptLanguage, String criteriaScript,
-            String transformationScript)
-    {
+                                    String transformationScript) {
         this.scriptLanguage = scriptLanguage;
         this.criteriaScript = criteriaScript;
         this.transformationScript = transformationScript;
@@ -83,19 +84,27 @@ public class ConversationScenarioImpl implements ConversationScenario
         this.generator = new PojoClassGenerator(ClassPool.getDefault());
     }
 
+
     /**
      * {@inheritDoc}
      */
-    public void setActive(boolean active)
-    {
+    public synchronized void setScripts(String criteriaScript, String transformationScript, String language) {
+        this.criteriaScript = criteriaScript;
+        this.transformationScript = transformationScript;
+        this.scriptLanguage = language;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void setActive(boolean active) {
         this.active = active;
     }
 
     /**
      * {@inheritDoc}
      */
-    public boolean isActive()
-    {
+    public boolean isActive() {
         return active;
     }
 
@@ -107,7 +116,7 @@ public class ConversationScenarioImpl implements ConversationScenario
     public SimulatorPojo executeTransformation(SimulatorPojo pojo) throws ScriptException, SimulatorException {
         generateClasses(pojo);
 
-       Object result =  execServ.eval(transformationScript, "Transformation Script", scriptExecutionBeans);
+        Object result = execServ.eval(transformationScript, "Transformation Script", scriptExecutionBeans);
 
         //TODO Call the not yet implemented method to transform the
         //scriptExecutionBeans into SimulatorPojo
@@ -123,18 +132,14 @@ public class ConversationScenarioImpl implements ConversationScenario
      * @throws NotFoundException
      * @throws CannotCompileException
      */
-    public boolean matchesCondition(SimulatorPojo pojo) throws ScriptException
-    {
+    public boolean matchesCondition(SimulatorPojo pojo) throws ScriptException {
         generateClasses(pojo);
 
         Object result = execServ.eval(criteriaScript, "Criteria Script", scriptExecutionBeans);
-        
-        if (result != null && result instanceof Boolean)
-        {
+
+        if (result != null && result instanceof Boolean) {
             return ((Boolean) result).booleanValue();
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
@@ -143,37 +148,29 @@ public class ConversationScenarioImpl implements ConversationScenario
      * Determines if the current conversation scenario object is equal to the one supplied as
      * parameter.
      *
-     * @param o
-     *            Conversation scenario object to be compared with current one.
+     * @param o Conversation scenario object to be compared with current one.
      * @return true if the objects are considered equal, false otherwise
      */
-    public boolean equals(Object o)
-    {
-        if (this == o)
-        {
+    public boolean equals(Object o) {
+        if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass())
-        {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
 
         ConversationScenarioImpl that = (ConversationScenarioImpl) o;
 
-        if (active != that.active)
-        {
+        if (active != that.active) {
             return false;
         }
-        if (!criteriaScript.equals(that.criteriaScript))
-        {
+        if (!criteriaScript.equals(that.criteriaScript)) {
             return false;
         }
-        if (!scriptLanguage.equals(that.scriptLanguage))
-        {
+        if (!scriptLanguage.equals(that.scriptLanguage)) {
             return false;
         }
-        if (!transformationScript.equals(that.transformationScript))
-        {
+        if (!transformationScript.equals(that.transformationScript)) {
             return false;
         }
 
@@ -181,22 +178,39 @@ public class ConversationScenarioImpl implements ConversationScenario
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public String getScriptLanguage() {
+        return scriptLanguage;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getCriteriaScript() {
+        return criteriaScript;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getTransformationScript() {
+        return transformationScript;
+    }
+
+    /**
      * Override for the hashcode.
      *
      * @return hashcode
      */
-    public int hashCode()
-    {
+    public int hashCode() {
         int result = scriptLanguage.hashCode();
         result = HASH_CODE_PRIME * result + criteriaScript.hashCode();
         result = HASH_CODE_PRIME * result + transformationScript.hashCode();
 
-        if (active)
-        {
+        if (active) {
             result = HASH_CODE_PRIME * result + 1;
-        }
-        else
-        {
+        } else {
             result = HASH_CODE_PRIME * result + 0;
         }
 
@@ -205,37 +219,30 @@ public class ConversationScenarioImpl implements ConversationScenario
 
     /**
      * Generates the classes from the incoming data and registers them in the class pool.
+     *
      * @param pojo incoming data pojo
      * @throws ScriptException in case an exception has occured.
      */
-    private void generateClasses(SimulatorPojo pojo) throws ScriptException
-    {
-        if (scriptExecutionBeans == null)
-        {
-            try
-            {
-                scriptExecutionBeans = generator.generateBeansMap(pojo);
-            }
-            catch (CannotCompileException e)
-            {
-                String errorMessage = "A compilation error has occured when "
+    private void generateClasses(SimulatorPojo pojo) throws ScriptException {
+        try {
+            scriptExecutionBeans = generator.generateBeansMap(pojo);
+        }
+        catch (CannotCompileException e) {
+            String errorMessage = "A compilation error has occured when "
                     + "generating classes for SimulatorPojo";
-                logger.error(errorMessage, e);
-                throw new ScriptException("error_message", e);
-            }
-            catch (NotFoundException e)
-            {
-                String errorMessage = "A class was not found in the ClassPool";
-                logger.error(errorMessage, e);
-                throw new ScriptException("error_message", e);
-            }
-            catch(SimulatorException se)
-            {
-                String errorMsg = "SimulatorPojo was not properly generated: " + se.getMessage();
-                logger.error(errorMsg, se);
-                throw new ScriptException("error_message", se);
-            }
+            logger.error(errorMessage, e);
+            throw new ScriptException("error_message", e);
+        }
+        catch (NotFoundException e) {
+            String errorMessage = "A class was not found in the ClassPool";
+            logger.error(errorMessage, e);
+            throw new ScriptException("error_message", e);
+        }
+        catch (SimulatorException se) {
+            String errorMsg = "SimulatorPojo was not properly generated: " + se.getMessage();
+            logger.error(errorMsg, se);
+            throw new ScriptException("error_message", se);
         }
     }
-    
+
 }

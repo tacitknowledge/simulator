@@ -32,6 +32,8 @@ class ScenariosController < ApplicationController
     scenario.execution_script = params[:execution_script]
     scenario.enabled=params[:enabled];
 
+    SimulatorConnector.instance.create_or_update_conversation_scenario (scenario)
+
     if scenario.save
       render :json => { :success => true, :message => "Updated Scenario #{scenario.id}", :data => scenario }
     else

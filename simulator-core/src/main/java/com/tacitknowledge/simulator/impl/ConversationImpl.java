@@ -3,8 +3,9 @@ package com.tacitknowledge.simulator.impl;
 import com.tacitknowledge.simulator.*;
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The Simulator conversation as set up by the user. Works as a wrapper around Camel route
@@ -54,7 +55,7 @@ public class ConversationImpl implements Conversation
     /**
      * List of configured scenarios for this conversation
      */
-    private List<ConversationScenario> scenarios;
+    private Map<Integer, ConversationScenario> scenarios = new HashMap<Integer, ConversationScenario>();
 
     /**
      * @param id
@@ -76,31 +77,29 @@ public class ConversationImpl implements Conversation
         this.outboundTransport = outboundTransport;
         this.inboundAdapter = inboundAdapter;
         this.outboundAdapter = outboundAdapter;
-        this.scenarios = new ArrayList<ConversationScenario>();
     }
 
     /**
      * {@inheritDoc}
      */
-    public ConversationScenario addScenario(String language, String criteria, String transformation)
+    public ConversationScenario addOrUpdateScenario(int scenarioId, String language, String criteria, String transformation)
     {
-        ConversationScenarioImpl conversationScenario
-                    = new ConversationScenarioImpl(language, criteria, transformation);
 
-        if (this.scenarios == null)
+        ConversationScenario scenario = scenarios.get(scenarioId);
+        if (scenario==null)
         {
-            this.scenarios = new ArrayList<ConversationScenario>();
-        }
 
-        if (!scenarios.contains(conversationScenario))
-        {
-            scenarios.add(conversationScenario);
-
+            scenario = new ConversationScenarioImpl(language, criteria, transformation);
+            scenarios.put(scenarioId, scenario);
             logger.debug("Added new conversation scenario"
+                    + " to the conversation with id : " + this.id);
+        }else{
+            scenario.setScripts(criteria, transformation, language);
+            logger.debug("Updated conversation scenario with id "+scenarioId
                     + " to the conversation with id : " + this.id);
         }
 
-        return conversationScenario;
+        return scenario;
     }
 
     /**
@@ -178,9 +177,9 @@ public class ConversationImpl implements Conversation
     /**
      * {@inheritDoc}
      */
-    public List<ConversationScenario> getScenarios()
+    public Collection<ConversationScenario> getScenarios()
     {
-        return scenarios;
+        return scenarios.values();
     }
 
     /**

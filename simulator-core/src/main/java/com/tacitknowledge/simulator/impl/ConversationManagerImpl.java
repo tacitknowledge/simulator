@@ -99,20 +99,22 @@ public class ConversationManagerImpl implements ConversationManager
 
     /**
      * @param conversationId the id of the conversation to be created
+     * @param scenarioId
      * @param language       The scripting language for the scenario. This would be System wide.
      * @param criteria       The criteria script
-     * @param transformation The transformation script
-     * @inheritDoc
+     * @param transformation The transformation script    @inheritDoc
      */
-    public void createConversationScenario(int conversationId, String language, String criteria,
+    public ConversationScenario createOrUpdateConversationScenario(int conversationId, int scenarioId, String language, String criteria,
                                            String transformation)
     {
         Conversation conversation = conversations.get(conversationId);
+        ConversationScenario conversationScenario=null;
 
         if (conversation != null)
         {
-            conversation.addScenario(language, criteria, transformation);
+            conversationScenario = conversation.addOrUpdateScenario(scenarioId, language, criteria, transformation);
         }
+        return conversationScenario;
     }
 
     /**

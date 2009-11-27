@@ -6,7 +6,7 @@ import com.tacitknowledge.simulator.SimulatorPojo;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * Wrapper for the scenario execution.
@@ -26,7 +26,7 @@ public class ScenarioExecutionWrapper
     /**
      * Container of the scenarios to run
      */
-    private List<ConversationScenario> scenarios;
+    private Collection<ConversationScenario> scenarios;
 
     /**
      * Logger for the ScenarioExecutionWrapper class.
@@ -41,7 +41,7 @@ public class ScenarioExecutionWrapper
      * @param inAdapter @see #inAdapter
      * @param outAdapter @see #outAdapter
      */
-    public ScenarioExecutionWrapper(List<ConversationScenario> scenarios,
+    public ScenarioExecutionWrapper(Collection<ConversationScenario> scenarios,
             Adapter inAdapter, Adapter outAdapter)
     {
         if (inAdapter == null)
@@ -97,15 +97,16 @@ public class ScenarioExecutionWrapper
         // here we are looking for first matching scenario and ignore all other scenarios
         for (ConversationScenario scenario : scenarios)
         {
-            logger.debug("Evaluating scenario : " + scenario.toString());
+            synchronized (scenario) {
+                logger.debug("Evaluating scenario : " + scenario.toString());
 
-            if (scenario.isActive() && scenario.matchesCondition(resultPojo))
-            {
-                logger.debug("Scenario : " + scenario
-                        + " was matched, executing the transformation script.");
+                if (scenario.isActive() && scenario.matchesCondition(resultPojo)) {
+                    logger.debug("Scenario : " + scenario
+                            + " was matched, executing the transformation script.");
 
-                resultPojo = scenario.executeTransformation(resultPojo);
-                break;
+                    resultPojo = scenario.executeTransformation(resultPojo);
+                    break;
+                }
             }
         }
 

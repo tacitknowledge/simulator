@@ -48,16 +48,12 @@ class SimulatorConnector
     out_transport.setParameters(parameters)
 
 
-
-
     in_adapter = @conv_mgr.getClassByName(conversation.in_format.format_type.class_name )
     parameters = java.util.HashMap.new;
     conversation.in_format.configurations.each do |configuration|
       parameters.put(configuration.attribute_name, configuration.attribute_value)
     end
     in_adapter.setParameters(parameters)
-
-
 
 
     out_adapter = @conv_mgr.getClassByName(conversation.out_format.format_type.class_name)
@@ -71,16 +67,20 @@ class SimulatorConnector
     @conv_mgr.createConversation(conversation.id, in_transport, out_transport, in_adapter, out_adapter)
   end
 
-  def create_conversation_scenario
-    #
+  def create_or_update_conversation_scenario(scenario)
+    system = System.find( scenario.conversation.system_id)
+    script_language = system.script_language
+    @conv_mgr.createOrUpdateConversationScenario(scenario.conversation_id, scenario.id,  script_language, scenario.criteria_script, scenario.execution_script)
   end
 
   def activate(conversation)
     #
     if (!is_active(conversation))
+      system = System.find(conversation.system_id)
+      script_language = system.script_language
       jconvers=create_conversation(conversation)
       conversation.scenarios.each do |scenario|
-        jconvers.addScenario('javascript',scenario.criteria_script,scenario.execution_script)
+        jconvers.addOrUpdateScenario( scenario.id, script_language, scenario.criteria_script, scenario.execution_script)
       end
       @conv_mgr.activate(jconvers.getId())
     end
@@ -105,11 +105,11 @@ class SimulatorConnector
     jlanguages = @conv_mgr.getAvailableLanguages()
     languages =[]
     for i in (0..(jlanguages.length-1))
-         languages<<{
-                 :id=>jlanguages[i][0]
-#         ,
-#                 :language=>jlanguages[i][1]
-                 }
+      languages<<{
+              :id=>jlanguages[i][0]
+              #         ,
+              #                 :language=>jlanguages[i][1]
+      }
     end
     return languages
   end

@@ -29,11 +29,12 @@ public interface ConversationManager
      * Creates a new scenario for an existing conversation
      *
      * @param conversationId the id of the conversation to be created
+     * @param scenarioId
      * @param language       The scripting language for the scenario. This would be System wide.
      * @param criteria       The criteria script
      * @param transformation The transformation script
      */
-    void createConversationScenario(int conversationId, String language, String criteria,
+    ConversationScenario createOrUpdateConversationScenario(int conversationId, int scenarioId, String language, String criteria,
                                     String transformation);
 
     /**

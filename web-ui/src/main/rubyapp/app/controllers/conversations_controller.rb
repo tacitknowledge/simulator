@@ -137,7 +137,7 @@ class ConversationsController < ApplicationController
     conversation.enabled=!conversation.enabled
 #    if new value is disabled then deactivate
     if (!conversation.enabled)
-      SimulatorConnector.instance.deactivate()
+      SimulatorConnector.instance.deactivate(conversation)
     end
     conversation.save
     render :json => { :success=>true, :data => conversation}

@@ -121,4 +121,40 @@ public class ConversationManagerImplTest extends TestCase
         assertTrue(manager.isActive(conversation.getId()));
     }
 
+    
+    @Test
+    public void testCreateOrUpdateScenarioConversationDoesntExits() throws SimulatorException, ConversationNotFoundException {
+        RouteManager routeManager = new RouteManagerImpl();
+        ConversationManager manager = new ConversationManagerImpl(routeManager);
+
+        Conversation conversation = manager.createConversation(1, in, out, AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT), AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT));
+        ConversationScenario scenario = manager.createOrUpdateConversationScenario(2, 2, "javascript", "true", "2+2");
+        assertNull(scenario);
+    }
+
+
+    @Test
+    public void testCreateScenario() throws SimulatorException, ConversationNotFoundException {
+        RouteManager routeManager = new RouteManagerImpl();
+        ConversationManager manager = new ConversationManagerImpl(routeManager);
+
+        Conversation conversation = manager.createConversation(1, in, out, AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT), AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT));
+        ConversationScenario scenario = manager.createOrUpdateConversationScenario(1, 2, "javascript", "true", "2+2");
+        assertNotNull(scenario);
+        assertEquals("javascript",scenario.getScriptLanguage());
+        assertEquals("true",scenario.getCriteriaScript());
+        assertEquals("2+2",scenario.getTransformationScript());
+
+
+        
+
+        ConversationScenario scenario1 = manager.createOrUpdateConversationScenario(1, 2, "ruby", "ttttrue", "2+2+2");
+        assertSame(scenario,scenario1);
+
+        assertEquals("ruby",scenario.getScriptLanguage());
+        assertEquals("ttttrue",scenario.getCriteriaScript());
+        assertEquals("2+2+2",scenario.getTransformationScript());
+
+    }
+
 }
