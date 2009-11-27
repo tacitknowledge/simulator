@@ -30,7 +30,7 @@ class ScenariosController < ApplicationController
     scenario.name = params[:name]
     scenario.criteria_script = params[:criteria_script]
     scenario.execution_script = params[:execution_script]
-    scenario.enabled=params[:enabled];
+    scenario.enabled=params[:enabled].nil? ? scenario.enabled : params[:enabled];
 
     SimulatorConnector.instance.create_or_update_conversation_scenario (scenario)
 

@@ -8,7 +8,7 @@ import java.io.*;
  *
  * @author Oscar Gonzalez (oscar@tacitknowledge.com)
  */
-public class TestSystemMainProcess
+public class TestFileSystemMain
 {
     /**
      * Name of the source file to be read
@@ -44,7 +44,7 @@ public class TestSystemMainProcess
     {
 
         InputStream inputStream
-                = TestSystemMainProcess.class.getClassLoader().getResourceAsStream(SOURCE_FILE);
+                = TestFileSystemMain.class.getClassLoader().getResourceAsStream(SOURCE_FILE);
         String s = SOURCE_DIR + File.separator + SOURCE_FILE;
         File file = new File(s);
         FileOutputStream fos

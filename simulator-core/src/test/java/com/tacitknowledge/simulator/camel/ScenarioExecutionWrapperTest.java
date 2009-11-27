@@ -1,13 +1,16 @@
 package com.tacitknowledge.simulator.camel;
 
 import com.tacitknowledge.simulator.ConversationScenario;
+import com.tacitknowledge.simulator.formats.JsonAdapter;
 import com.tacitknowledge.simulator.formats.XmlAdapter;
 import com.tacitknowledge.simulator.impl.ConversationScenarioImpl;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Date: 24.11.2009
@@ -96,6 +99,45 @@ public class ScenarioExecutionWrapperTest {
 
 
     }
+
+
+
+
+    @Test
+    public void testDifferentAdapters() throws Exception {
+
+        List<ConversationScenario> scenarios = new ArrayList<ConversationScenario>();
+
+//        String criteria1 = "employees.employee[0].name=='John12345';"; //false
+//        String execution1 = "employees.employee[0].name='Johnffff';employees";
+
+        String criteria2 = "employees.employee[0].name=='John';";      //true
+        String execution2 = "employees.employee[0].name='Johnaaaa';employees";  //this script should be executed
+
+//        String criteria3 = "employees.employee[0].name=='Johnffff';";      //false
+//        String execution3 = "employees.employee[0].name='John12345';employees";
+
+//        scenarios.add(createScenario(criteria1, execution1));
+        scenarios.add(createScenario(criteria2, execution2));
+//        scenarios.add(createScenario(criteria3, execution3));
+
+        JsonAdapter outAdapter = new JsonAdapter();
+        Map<String, String> param = new HashMap<String, String>();
+        param.put(JsonAdapter.PARAM_JSON_CONTENT, "employees");
+        outAdapter.setParameters(param);
+
+        ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(scenarios, new XmlAdapter(), outAdapter);
+
+        String s = wrapper.process(TEST_DATA);
+        Assert.assertFalse(s.contains("Johnffff"));
+        Assert.assertFalse(s.contains("John12345"));
+        Assert.assertTrue(s.contains("Johnaaaa"));
+
+
+
+    }
+
+
 
 
     private ConversationScenario createScenario(String criteria, String execution) {
