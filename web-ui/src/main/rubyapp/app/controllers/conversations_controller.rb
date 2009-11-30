@@ -82,7 +82,7 @@ class ConversationsController < ApplicationController
       logger.debug("Unable to save Conversation. List of Errors follow up:")
       logger.debug("     #{conversation.errors.full_messages  }")
 
-      render :json => { :message => "Failed to create Conversation"}
+      render :json => {:success => false, :message => "Failed to create Conversation"}
     end
   end
 
