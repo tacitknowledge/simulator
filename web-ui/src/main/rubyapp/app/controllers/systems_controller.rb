@@ -5,7 +5,7 @@ class SystemsController < ApplicationController
   def index
     if (params[:format]== 'json')
       @systems = System.all
-      render :json => { :success => true, :data => @systems }
+      render :json => {:success => true, :data => @systems }
     end
   end
 
@@ -20,7 +20,7 @@ class SystemsController < ApplicationController
         return
       end
 
-      render :json => { :success => true, :data => @system }
+      render :json => {:success => true, :data => @system }
     end
 #    redirect_to "systems/1/show"
   end
@@ -33,7 +33,7 @@ class SystemsController < ApplicationController
     @system.script_language=params[:script_language];
 
     if @system.save
-      render :json => { :success => true, :message => "Created new System #{@system.id}", :data => @system }
+      render :json => {:success => true, :message => "Created new System #{@system.id}", :data => @system }
     else
       render :json => {:success => false, :message => "Failed to create System"}
     end
@@ -46,9 +46,9 @@ class SystemsController < ApplicationController
     @system.script_language=params[:script_language];
     if @system.save
       #if @system.update_attributes(ActiveSupport::JSON.decode(params[:data]))
-      render :json => { :success => true, :message => "Updated System #{@system.id}", :data => @system }
+      render :json => {:success => true, :message => "Updated System #{@system.id}", :data => @system }
     else
-      render :json => { success => false, :message => "Failed to update System"}
+      render :json => { :success => false, :message => "Failed to update System"}
     end
   end
 
@@ -56,9 +56,9 @@ class SystemsController < ApplicationController
     @system = System.find(params[:id])
 
     if @system.destroy
-      render :json => { :success => true, :message => "Destroyed System #{@system.id}" }
+      render :json => {:success => true, :message => "Destroyed System #{@system.id}" }
     else
-      render :json => { :message => "Failed to destroy System" }
+      render :json => {:message => "Failed to destroy System" }
     end
   end
 
