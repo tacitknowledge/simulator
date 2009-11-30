@@ -31,3 +31,8 @@ then
 	jruby -S gem install activerecord-jdbc-adapter --VERSION 0.9.2
 fi
 
+jruby -S gem list json_pure | grep 'json_pure'
+if [ $? == 1 ];
+then
+	jruby -S gem install json_pure
+fi
