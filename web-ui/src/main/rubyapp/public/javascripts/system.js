@@ -36,7 +36,7 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
                 waitMsg: 'Saving....',
                 method: submitMethod,
                 success: function(fp, o) {
-                    Ext.MessageBox.alert('Success', o.result.message)
+                    //Ext.MessageBox.alert('Success', o.result.message)
                     if (doRedirect) {
                         window.location = '../' + o.result.data.id + '/'
                     }
