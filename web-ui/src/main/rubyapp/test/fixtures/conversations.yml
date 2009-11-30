@@ -8,6 +8,7 @@
 
 one:
   id: 1
+  system_id: 1
   name: 'My test conversation'
   description: 'Something'
   enabled: 0
