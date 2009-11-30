@@ -5,3 +5,11 @@
 #
 # two:
 #   column: value
+
+one:
+  id: 1
+  transport_type_id: 1
+
+two:
+  id: 2
+  transport_type_id: 2

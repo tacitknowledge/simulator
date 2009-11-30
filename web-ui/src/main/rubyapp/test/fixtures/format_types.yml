@@ -5,3 +5,12 @@
 #
 # two:
 #   column: value
+xml:
+  id: 1
+  name: 'XML'
+  class_name: 'XmlAdapter'
+
+csv:
+  id: 2
+  name: 'CSV'
+  class_name: 'CsvAdapter'

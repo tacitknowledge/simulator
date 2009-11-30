@@ -1,0 +1,12 @@
+
+conv1_if_c1:
+  id: 1
+  format_id: 1
+  attribute_name: 'validate'
+  attribute_value: 'true'
+
+conv1_of_c1:
+  id: 2
+  format_id: 2
+  attribute_name: 'csvContent'
+  attribute_value: 'employees'

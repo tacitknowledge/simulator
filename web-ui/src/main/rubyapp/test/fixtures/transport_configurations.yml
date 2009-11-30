@@ -1,0 +1,11 @@
+conv1_it_c1:
+  id: 1
+  transport_id: 1
+  attribute_name: 'directoryName'
+  attribute_value: 'inbox'
+
+conv1_ot_c1:
+  id: 2
+  transport_id: 2
+  attribute_name: 'host'
+  attribute_value: 'localhost'

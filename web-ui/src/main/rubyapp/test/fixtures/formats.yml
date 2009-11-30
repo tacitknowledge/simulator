@@ -5,3 +5,11 @@
 #
 # two:
 #   column: value
+
+one:
+  id: 1
+  format_type_id: 1
+
+two:
+  id: 2
+  format_type_id: 2

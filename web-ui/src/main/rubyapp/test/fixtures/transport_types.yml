@@ -5,3 +5,13 @@
 #
 # two:
 #   column: value
+
+file:
+  id: 1
+  name: 'FILE'
+  class_name: 'FileTransport'
+
+ftp:
+  id: 2
+  name: 'FTP'
+  class_name: 'FtpTransport'
