@@ -39,7 +39,7 @@ public class ScenarioExecutionWrapperTest {
         String execution = "employees.employee[0].name='John12345';" +
                 "employees";
 
-        ConversationScenario scenario = createScenario(criteria, execution);
+        ConversationScenario scenario = createScenario(0, criteria, execution);
 
 
         List<ConversationScenario> scenarios = new ArrayList<ConversationScenario>();
@@ -72,9 +72,9 @@ public class ScenarioExecutionWrapperTest {
         String criteria3 = "employees.employee[0].name=='Johnffff';";      //false
         String execution3 = "employees.employee[0].name='John12345';employees";
 
-        scenarios.add(createScenario(criteria1, execution1));
-        scenarios.add(createScenario(criteria2, execution2));
-        scenarios.add(createScenario(criteria3, execution3));
+        scenarios.add(createScenario(0, criteria1, execution1));
+        scenarios.add(createScenario(0, criteria2, execution2));
+        scenarios.add(createScenario(0, criteria3, execution3));
 
         ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(scenarios, new XmlAdapter(), new XmlAdapter());
 
@@ -105,7 +105,7 @@ public class ScenarioExecutionWrapperTest {
 //        String execution3 = "employees.employee[0].name='John12345';employees";
 
 //        scenarios.add(createScenario(criteria1, execution1));
-        scenarios.add(createScenario(criteria2, execution2));
+        scenarios.add(createScenario(0, criteria2, execution2));
 //        scenarios.add(createScenario(criteria3, execution3));
 
         JsonAdapter outAdapter = new JsonAdapter();
@@ -132,8 +132,8 @@ public class ScenarioExecutionWrapperTest {
         }
     }
     
-    private ConversationScenario createScenario(String criteria, String execution) {
-        ConversationScenario scenario = new ConversationScenarioImpl("javascript", criteria, execution);
+    private ConversationScenario createScenario(int scenarioId, String criteria, String execution) {
+        ConversationScenario scenario = new ConversationScenarioImpl(scenarioId, "javascript", criteria, execution);
         scenario.setActive(true);
         return scenario;
     }

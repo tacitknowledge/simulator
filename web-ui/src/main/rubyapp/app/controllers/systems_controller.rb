@@ -54,7 +54,7 @@ class SystemsController < ApplicationController
 
   def destroy
     @system = System.find(params[:id])
-
+    # todo destroy all running conversations in simulator!!!!!
     if @system.destroy
       render :json => {:success => true, :message => "Destroyed System #{@system.id}" }
     else

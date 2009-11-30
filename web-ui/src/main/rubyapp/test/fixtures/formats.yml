@@ -13,3 +13,11 @@ one:
 two:
   id: 2
   format_type_id: 2
+
+three:
+  id: 3
+  format_type_id: 3
+
+four:
+  id: 4
+  format_type_id: 4

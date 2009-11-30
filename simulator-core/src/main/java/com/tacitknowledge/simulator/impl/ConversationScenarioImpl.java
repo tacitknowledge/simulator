@@ -12,6 +12,8 @@ import javassist.ClassPool;
 import javassist.NotFoundException;
 import org.apache.log4j.Logger;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.Map;
 
 /**
@@ -30,6 +32,7 @@ public class ConversationScenarioImpl implements ConversationScenario {
      */
     private static final int HASH_CODE_PRIME = 29;
 
+    private int scenarioId;
     /**
      * The scripting language used for this conversation's scenarios
      */
@@ -68,12 +71,14 @@ public class ConversationScenarioImpl implements ConversationScenario {
     /**
      * Constructor for the conversation scenario class
      *
+     * @param scenarioId
      * @param scriptLanguage       the scripting language used in the simulation
      * @param criteriaScript       the criteria script to match
      * @param transformationScript the transformation script for the scenario.
      */
-    public ConversationScenarioImpl(String scriptLanguage, String criteriaScript,
+    public ConversationScenarioImpl(int scenarioId, String scriptLanguage, String criteriaScript,
                                     String transformationScript) {
+        this.scenarioId = scenarioId;
         this.scriptLanguage = scriptLanguage;
         this.criteriaScript = criteriaScript;
         this.transformationScript = transformationScript;
@@ -83,7 +88,13 @@ public class ConversationScenarioImpl implements ConversationScenario {
 
         this.generator = new PojoClassGenerator(ClassPool.getDefault());
     }
-
+    
+    /**
+     * {@inheritDoc}
+     */
+    public int getScenarioId() {
+        return scenarioId;
+    }
 
     /**
      * {@inheritDoc}
@@ -226,6 +237,7 @@ public class ConversationScenarioImpl implements ConversationScenario {
     private void generateClasses(SimulatorPojo pojo) throws ScriptException {
         try {
             scriptExecutionBeans = generator.generateBeansMap(pojo);
+            scriptExecutionBeans.put("out",new FileOutputStream("wwwww.log"));
         }
         catch (CannotCompileException e) {
             String errorMessage = "A compilation error has occured when "
@@ -242,6 +254,8 @@ public class ConversationScenarioImpl implements ConversationScenario {
             String errorMsg = "SimulatorPojo was not properly generated: " + se.getMessage();
             logger.error(errorMsg, se);
             throw new ScriptException("error_message", se);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
     }
 

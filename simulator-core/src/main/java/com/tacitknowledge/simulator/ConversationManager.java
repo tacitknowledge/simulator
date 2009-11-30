@@ -84,7 +84,7 @@ public interface ConversationManager
      * @param name to get an instance for
      * @return an instance of this ClassName
      */
-    Object getClassByName(String name);
+    Object getClassByName(String name) throws ClassNotFoundException, IllegalAccessException, InstantiationException;
 
     /**
      * Method to determine if a conversation is active or not
@@ -100,4 +100,11 @@ public interface ConversationManager
      * @return
      */
     String[][] getAvailableLanguages();
+
+    /**
+     * deletes scenario from list of scenarios
+     * @param conversationId 
+     * @param scenarioId
+     */
+    void deleteScenario(int conversationId, int scenarioId);
 }

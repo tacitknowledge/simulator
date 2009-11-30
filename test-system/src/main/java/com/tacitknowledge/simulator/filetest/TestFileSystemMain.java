@@ -18,7 +18,7 @@ public class TestFileSystemMain
     /**
      * Source directory where the file to be read lives
      */
-    public static final String SOURCE_DIR = "/Users/nikitabelenkiy/Simulator2/trunk/simulator/web-ui/src/main/rubyapp/testdir/";
+    public static final String SOURCE_DIR = "/Users/nikitabelenkiy/Simulator2/trunk/simulator/web-ui/src/main/rubyapp/12345/";
 
     /** Target file for the results */
     public static final String TARGET_FILE = "zzz.xml";

@@ -3,9 +3,9 @@ require 'java'
 Dir["lib/*.jar"].each {|jar|
   require jar
 }
-require "log4j-1.2.14.jar"
-require "camel-core-2.0.0.jar"
-require "simulator-core-1.0-SNAPSHOT.jar"
+#require "log4j-1.2.14.jar"
+#require "camel-core-2.0.0.jar"
+#require "simulator-core-1.0-SNAPSHOT.jar"
 include_class 'com.tacitknowledge.simulator.impl.ConversationManagerImpl'
 
 
@@ -99,6 +99,12 @@ class SimulatorConnector
 
   def delete_conversation(conversation)
     #
+    @conv_mgr.deleteConversation(conversation.id);
+  end
+
+  def delete_scenario(scenario)
+    #
+    @conv_mgr.deleteScenario(scenario.conversation_id, scenario.id);
   end
 
   def available_languages
@@ -107,8 +113,6 @@ class SimulatorConnector
     for i in (0..(jlanguages.length-1))
       languages<<{
               :id=>jlanguages[i][0]
-              #         ,
-              #                 :language=>jlanguages[i][1]
       }
     end
     return languages

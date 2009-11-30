@@ -89,7 +89,7 @@ public class ConversationImpl implements Conversation
         if (scenario==null)
         {
 
-            scenario = new ConversationScenarioImpl(language, criteria, transformation);
+            scenario = new ConversationScenarioImpl(scenarioId, language, criteria, transformation);
             scenarios.put(scenarioId, scenario);
             logger.debug("Added new conversation scenario"
                     + " to the conversation with id : " + this.id);

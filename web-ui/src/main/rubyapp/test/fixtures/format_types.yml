@@ -8,9 +8,14 @@
 xml:
   id: 1
   name: 'XML'
-  class_name: 'XmlAdapter'
+  class_name: 'com.tacitknowledge.simulator.formats.XmlAdapter'
 
 csv:
   id: 2
   name: 'CSV'
-  class_name: 'CsvAdapter'
+  class_name: 'com.tacitknowledge.simulator.formats.CsvAdapter'
+
+plain_text:
+  id: 3
+  name: 'PlainText'
+  class_name: 'com.tacitknowledge.simulator.formats.PlainTextAdapter'

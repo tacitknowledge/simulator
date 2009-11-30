@@ -70,4 +70,10 @@ public interface ConversationScenario
      * @return
      */
     String getTransformationScript();
+
+    /**
+     * unique scenario id in the system.
+     * @return
+     */
+    int getScenarioId();
 }

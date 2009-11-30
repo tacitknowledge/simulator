@@ -13,3 +13,11 @@ one:
 two:
   id: 2
   transport_type_id: 2
+
+one:
+  id: 3
+  transport_type_id: 3
+
+two:
+  id: 4
+  transport_type_id: 4

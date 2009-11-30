@@ -4,61 +4,20 @@ import com.tacitknowledge.simulator.*;
 import com.tacitknowledge.simulator.camel.RouteManagerImpl;
 import com.tacitknowledge.simulator.formats.AdapterFactory;
 import com.tacitknowledge.simulator.formats.FormatConstants;
+import com.tacitknowledge.simulator.transports.MockInTransport;
+import com.tacitknowledge.simulator.transports.MockOutTransport;
 import junit.framework.TestCase;
 import org.junit.Test;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
 public class ConversationManagerImplTest extends TestCase
 {
-    private Transport in = new Transport()
-    {
-        public String getType()
-        {
-            return "sdf";
-        }
-
-        public String toUriString()
-        {
-            return "direct:start";
-        }
-
-        public List<List> getParametersList()
-        {
-            return null;
-        }
-
-        public void setParameters(Map<String, String> parameters)
-        {
-
-        }
-    };
-    private Transport out = new Transport()
-    {
-        public String getType()
-        {
-            return "dfdfdfdfdf";
-        }
-
-        public String toUriString()
-        {
-            return "mock:result";
-        }
-
-        public List<List> getParametersList()
-        {
-            return null;
-        }
-
-        public void setParameters(Map<String, String> parameters)
-        {
-
-        }
-    };
+    private Transport in = new MockInTransport();
+    private Transport out = new MockOutTransport();
 
     @Test
     public void testGetXmlFormatParameters()
@@ -155,6 +114,27 @@ public class ConversationManagerImplTest extends TestCase
         assertEquals("ttttrue",scenario.getCriteriaScript());
         assertEquals("2+2+2",scenario.getTransformationScript());
 
+    }
+
+     @Test
+    public void testDeleteConversation() throws SimulatorException, ConversationNotFoundException {
+        RouteManager routeManager = new RouteManagerImpl();
+        ConversationManager manager = new ConversationManagerImpl(routeManager);
+
+        Conversation conversation = manager.createConversation(1, in, out, AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT), AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT));
+        ConversationScenario scenario = manager.createOrUpdateConversationScenario(1, 2, "javascript", "true", "2+2");
+        assertNotNull(scenario);
+
+         manager.activate(1);
+         manager.deleteConversation(1);
+         assertTrue(!manager.isActive(1));
+    }
+
+    @Test
+    public void testDelete() throws SimulatorException, ConversationNotFoundException {
+        RouteManager routeManager = new RouteManagerImpl();
+        ConversationManager manager = new ConversationManagerImpl(routeManager);
+        manager.deleteConversation(1234);
     }
 
 }

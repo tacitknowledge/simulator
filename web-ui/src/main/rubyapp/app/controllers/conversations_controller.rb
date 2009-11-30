@@ -98,7 +98,7 @@ class ConversationsController < ApplicationController
 
   def destroy
     @conversation = Conversation.find(params[:id])
-
+    SimulatorConnector.instance.delete_conversation(@conversation)
     if @conversation.destroy
       render :json => { :success => true, :message => "Destroyed Conversation #{@conversation.id}" }
     else

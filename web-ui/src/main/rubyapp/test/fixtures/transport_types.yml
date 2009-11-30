@@ -15,3 +15,13 @@ ftp:
   id: 2
   name: 'FTP'
   class_name: 'FtpTransport'
+
+mockin:
+  id: 3
+  name: 'MockIn'
+  class_name: 'com.tacitknowledge.simulator.transports.MockInTransport'
+
+mockout:
+  id: 4
+  name: 'MockOut'  
+  class_name: 'com.tacitknowledge.simulator.transports.MockOutTransport'

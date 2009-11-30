@@ -7,9 +7,7 @@ import com.tacitknowledge.simulator.scripting.ScriptExecutionService;
 import com.tacitknowledge.simulator.transports.TransportFactory;
 import org.apache.log4j.Logger;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Conversation manager implementation.
@@ -187,6 +185,21 @@ public class ConversationManagerImpl implements ConversationManager
         }
     }
 
+    public void deleteScenario(int conversationId, int scenarioId) {
+        ConversationImpl conversation = conversations.get(conversationId);
+        if (conversation != null) {
+            Collection<ConversationScenario> scenarios = conversation.getScenarios();
+            for (Iterator<ConversationScenario> iterator = scenarios.iterator(); iterator.hasNext();) {
+                ConversationScenario scenario = iterator.next();
+                if (scenario.getScenarioId() == scenarioId) {
+                    iterator.remove();
+                    break;
+                }
+            }
+
+        }
+    }
+
     /**
      * @param format @see ConversationManager#getAdapterParameters
      * @return @see ConversationManager#getAdapterParameters
@@ -212,25 +225,8 @@ public class ConversationManagerImpl implements ConversationManager
      * @return instance of the class
      * @inheritDoc
      */
-    public Object getClassByName(String name)
-    {
-        try
-        {
-            return Class.forName(name).newInstance();
-        }
-        catch (InstantiationException e)
-        {
-            e.printStackTrace();
-        }
-        catch (IllegalAccessException e)
-        {
-            e.printStackTrace();
-        }
-        catch (ClassNotFoundException e)
-        {
-            e.printStackTrace();
-        }
-        return null;
+    public Object getClassByName(String name) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+        return Class.forName(name).newInstance();
     }
 
     /**
@@ -252,4 +248,6 @@ public class ConversationManagerImpl implements ConversationManager
     public String[][] getAvailableLanguages() {
         return ScriptExecutionService.getAvailableLanguages();
     }
+
+
 }
