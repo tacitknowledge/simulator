@@ -86,10 +86,10 @@ class SimulatorConnector
         conversation.scenarios.each do |scenario|
           jconvers.addOrUpdateScenario( scenario.id, script_language, scenario.criteria_script, scenario.execution_script)
         end
-        @conv_mgr.activate(conversation.getId())
+        @conv_mgr.activate(conversation.id)
         return jconvers
       end
-      @conv_mgr.activate(conversation.getId())
+      @conv_mgr.activate(conversation.id)
     end
   end
 
