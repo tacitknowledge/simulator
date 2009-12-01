@@ -36,9 +36,10 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
                 waitMsg: 'Saving....',
                 method: submitMethod,
                 success: function(fp, o) {
-                    //Ext.MessageBox.alert('Success', o.result.message)
                     if (doRedirect) {
                         window.location = '../' + o.result.data.id + '/'
+                    } else {
+                        TK.showFlashMessage(o.result.message);
                     }
                 },
                 failure: function(fp, o) {
@@ -132,17 +133,17 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
                     name : 'script_language',
                     xtype : 'combo',
                     store : TK.ScriptLanguageStore,
-                    emptyText: 'Select a language...',
+                    //emptyText: 'Select a language...',
                     typeAhead: true,
-//                    valueField:'id',
-//                    displayField : 'language',
+//                  valueField:'id',
+//                  displayField : 'language',
                     displayField : 'id',
                     id: 'script_language',
                     triggerAction: 'all',
                     selectOnFocus: true,
                     editable: false,
-                    autoDestroy: true
-                    
+                    autoDestroy: true,
+                    allowBlank: false
                 },
                 {
                     xtype:'button',

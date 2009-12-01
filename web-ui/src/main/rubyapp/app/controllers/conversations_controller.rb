@@ -77,7 +77,8 @@ class ConversationsController < ApplicationController
     conversation = populate_conversation(params)
 
     if conversation.save
-      render :json => { :success => true, :message => "Created Conversation with id #{conversation.id}", :data => conversation }
+      flash[:notice] = "Successfully created new Conversation '#{conversation.name}' with id #{conversation.id}"
+      render :json => { :success => true, :data => conversation }
     else
       logger.debug("Unable to save Conversation. List of Errors follow up:")
       logger.debug("     #{conversation.errors.full_messages  }")
@@ -90,7 +91,8 @@ class ConversationsController < ApplicationController
     conversation = update_conversation(params)
 
     if conversation.save
-      render :json => { :success => true, :message => "Updated Conversation #{conversation.id}", :data => conversation }
+      msg = "Successfully updated conversation '#{conversation.name}' with id #{conversation.id}"
+      render :json => { :success => true, :message => msg, :data => conversation }
     else
       render :json => { :message => "Failed to update Conversation"}
     end
@@ -98,9 +100,11 @@ class ConversationsController < ApplicationController
 
   def destroy
     @conversation = Conversation.find(params[:id])
+    conv_name = @conversation.name
     SimulatorConnector.instance.delete_conversation(@conversation)
     if @conversation.destroy
-      render :json => { :success => true, :message => "Destroyed Conversation #{@conversation.id}" }
+      msg = "Successfully deleted Conversation '#{conv_name}' with id #{params[:id]}"
+      render :json => { :success => true, :message => msg}
     else
       render :json => { :message => "Failed to destroy Conversation" }
     end

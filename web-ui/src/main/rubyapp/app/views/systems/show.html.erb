@@ -2,7 +2,7 @@
         "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-    <title>New System</title>
+    <title><%= @system ? 'New' : 'Edit' %> System</title>
     <link rel="stylesheet" type="text/css" href="<%=relative_url_root%>/ext/resources/css/ext-all.css"/>
     <link rel="stylesheet" type="text/css" href="<%=relative_url_root%>/stylesheets/simulator.css"/>
     <script type="text/javascript" src="<%=relative_url_root%>/javascripts/tk-base.js"></script>

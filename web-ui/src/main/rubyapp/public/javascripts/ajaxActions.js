@@ -7,8 +7,12 @@ TK.deleteEntity = function(entityName, relativeUrl) {
         Ext.Ajax.request({
             url: relativeUrl + '/' + rec.data.id ,
             method: 'DELETE',
-            success: function() {
+            success: function(response) {
                 grid.store.reload()
+
+                // --- Show the flash message
+                var obj = Ext.decode(response.responseText);
+                TK.showFlashMessage(obj.message);
             },
             failure: function() {
                 //todo handler

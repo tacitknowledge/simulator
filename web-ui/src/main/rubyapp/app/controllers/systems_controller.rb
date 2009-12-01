@@ -33,7 +33,8 @@ class SystemsController < ApplicationController
     @system.script_language=params[:script_language];
 
     if @system.save
-      render :json => {:success => true, :message => "Created new System #{@system.id}", :data => @system }
+      flash[:notice] = "Successfully created new System '#{@system.name}' with id #{@system.id}"
+      render :json => {:success => true, :data => @system }
     else
       render :json => {:success => false, :message => "Failed to create System"}
     end
@@ -46,7 +47,8 @@ class SystemsController < ApplicationController
     @system.script_language=params[:script_language];
     if @system.save
       #if @system.update_attributes(ActiveSupport::JSON.decode(params[:data]))
-      render :json => {:success => true, :message => "Updated System #{@system.id}", :data => @system }
+      notice = "Successfully updated system '#{@system.name}' with id #{@system.id}"
+      render :json => {:success => true, :message => notice, :data => @system }
     else
       render :json => { :success => false, :message => "Failed to update System"}
     end
@@ -54,11 +56,14 @@ class SystemsController < ApplicationController
 
   def destroy
     @system = System.find(params[:id])
+    system_name = @system.name
+
     @system.conversations.each do |conversation|
       SimulatorConnector.instance.delete_conversation(conversation)
     end
     if @system.destroy
-      render :json => {:success => true, :message => "Destroyed System #{@system.id}" }
+      notice = "Successfully removed system '#{system_name}' with id #{params[:id]}"
+      render :json => {:success => true, :message => notice }
     else
       render :json => {:message => "Failed to destroy System" }
     end

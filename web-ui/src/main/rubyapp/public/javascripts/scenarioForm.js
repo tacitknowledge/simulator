@@ -24,10 +24,12 @@ TK.ScenarioForm = Ext.extend(Ext.FormPanel, {
                    waitMsg: 'Saving....',
                    method: submitMethod,
                    success: function(fp, o) {
-                       //Ext.MessageBox.alert('Success', o.result.message)
-                       if (doRedirect) {
+                        //Ext.MessageBox.alert('Success', o.result.message)
+                        if (doRedirect) {
                            window.location = '../' + o.result.data.id + '/'
-                       }
+                        } else {
+                            TK.showFlashMessage(o.result.message);
+                        }
                    },
                    failure: function(fp, o) {
                        Ext.MessageBox.alert('Error', o.result.message)

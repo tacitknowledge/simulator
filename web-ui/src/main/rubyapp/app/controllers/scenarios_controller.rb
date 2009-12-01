@@ -18,7 +18,8 @@ class ScenariosController < ApplicationController
     scenario.execution_script = params[:execution_script]
     scenario.enabled=true
     if scenario.save
-      render :json => { :success => true, :message => "Created new Scenario #{scenario.id}", :data => scenario }
+      flash[:notice] = "Successfully created new Scenario '#{scenario.name}' with id #{scenario.id}"
+      render :json => { :success => true, :data => scenario }
     else
       render :json => { :message => "Failed to create Scenario"}
     end
@@ -35,7 +36,8 @@ class ScenariosController < ApplicationController
     SimulatorConnector.instance.create_or_update_conversation_scenario(scenario)
 
     if scenario.save
-      render :json => { :success => true, :message => "Updated Scenario #{scenario.id}", :data => scenario }
+      msg = "Successfully updated Scenario '#{scenario.name}' with id #{scenario.id}"
+      render :json => { :success => true, :message => msg, :data => scenario }
     else
       render :json => { :message => "Failed to update Scenario"}
     end
@@ -55,9 +57,12 @@ class ScenariosController < ApplicationController
 
   def destroy
     @scenario = Scenario.find(params[:id])
+    scenario_name = @scenario.name
+
     SimulatorConnector.instance.delete_scenario(@scenario)
     if @scenario.destroy
-      render :json => { :success => true, :message => "Destroyed Scenario #{@scenario.id}" }
+      msg = "Successfully deleted Scenario '#{scenario_name}' with id #{params[:id]}"
+      render :json => { :success => true, :message => msg }
     else
       render :json => { :message => "Failed to destroy Scenario" }
     end

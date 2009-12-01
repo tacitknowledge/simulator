@@ -25,6 +25,8 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                     //Ext.MessageBox.alert('Success', o.result.message);
                     if (doRedirect) {
                         window.location = '../' + o.result.data.id + '/';
+                    } else {
+                        TK.showFlashMessage(o.result.message);
                     }
                 },
                 failure: function(fp, o) {
@@ -68,9 +70,9 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
         // --- Remove all current parameters fields
         fieldset.removeAll(true);
 
-        if (paramsArray.length > 0) {
+        if (paramsArray != null && paramsArray.length > 0) {
             for (var i = 0; i < paramsArray.length; i++) {
-                new_param = paramsArray[i];
+                var new_param = paramsArray[i];
 
                 // ---
                 fieldset.add(Ext.getCmp('conversation-form').getFieldFromParamData(fieldPrefix, new_param));
