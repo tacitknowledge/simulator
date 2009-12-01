@@ -33,6 +33,7 @@ public interface ConversationManager
      * @param language       The scripting language for the scenario. This would be System wide.
      * @param criteria       The criteria script
      * @param transformation The transformation script
+     * @return
      */
     ConversationScenario createOrUpdateConversationScenario(int conversationId, int scenarioId, String language, String criteria,
                                     String transformation);
@@ -53,7 +54,7 @@ public interface ConversationManager
      * @throws ConversationNotFoundException in case the conversation is not found
      * @throws SimulatorException            in case there is an error deactivating the conversation
      */
-    void deactivate(int conversationId) throws ConversationNotFoundException, SimulatorException;
+    void deactivate(int conversationId) throws SimulatorException;
 
     /**
      * Deactivates and stops and removes conversation data from memory
@@ -107,4 +108,11 @@ public interface ConversationManager
      * @param scenarioId
      */
     void deleteScenario(int conversationId, int scenarioId);
+
+    /**
+     *
+     * @param conversationId
+     * @return
+     */
+    boolean conversationExists(int conversationId);
 }

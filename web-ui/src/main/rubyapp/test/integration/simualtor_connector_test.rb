@@ -15,4 +15,27 @@ class SimualtorConnectorTest < ActionController::IntegrationTest
     jconversation = SimulatorConnector.instance.create_conversation(conversation)
     assert_not_nil(jconversation)
   end
+
+  def test_activate
+    conversation = Conversation.find(2)
+    jconversation = SimulatorConnector.instance.activate(conversation)
+    assert_not_nil(jconversation)
+
+    active = SimulatorConnector.instance.is_active(conversation)
+    assert(active)
+    
+    jconversation = SimulatorConnector.instance.deactivate(conversation)
+    active = SimulatorConnector.instance.is_active(conversation)
+    assert(!active)
+
+    jconversation = SimulatorConnector.instance.activate(conversation)
+
+    active = SimulatorConnector.instance.is_active(conversation)
+    assert(active)
+  end
+
+#  def test_deactivate
+#
+#  end
+#
 end

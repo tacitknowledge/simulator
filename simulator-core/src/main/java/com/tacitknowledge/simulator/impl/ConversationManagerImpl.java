@@ -145,23 +145,21 @@ public class ConversationManagerImpl implements ConversationManager
      * @throws SimulatorException            exception.
      * @inheritDoc
      */
-    public void deactivate(int conversationId) throws ConversationNotFoundException,
-            SimulatorException
+    public void deactivate(int conversationId) throws SimulatorException
     {
 
-        Conversation conversation = getConversationById(conversationId);
         try
         {
+            Conversation conversation = getConversationById(conversationId);
             routeManager.deactivate(conversation);
             conversations.remove(conversationId);
             logger.debug("Deactivated conversation " + conversation);
 
-        }
-        catch (Exception e)
-        {
+        } catch (ConversationNotFoundException cne){
+           //do nothing
+        } catch (Exception e) {
             logger.error("Conversation with id : "
                     + conversationId + " couldn't be deactivated.", e);
-
             throw new SimulatorException("Conversation deactivation exception", e);
         }
 
@@ -172,17 +170,9 @@ public class ConversationManagerImpl implements ConversationManager
      * @throws SimulatorException exception.
      * @inheritDoc
      */
-    public void deleteConversation(int conversationId) throws SimulatorException
-    {
-        try
-        {
-            deactivate(conversationId);
-            conversations.remove(conversationId);
-        }
-        catch (ConversationNotFoundException e)
-        {
-            logger.error("Conversation with id : " + conversationId + " was not found.", e);
-        }
+    public void deleteConversation(int conversationId) throws SimulatorException {
+        deactivate(conversationId);
+        conversations.remove(conversationId);
     }
 
     public void deleteScenario(int conversationId, int scenarioId) {
@@ -198,6 +188,14 @@ public class ConversationManagerImpl implements ConversationManager
             }
 
         }
+    }
+
+    /**
+     * 
+     * {@inheritDoc}
+     */
+    public boolean conversationExists(int conversationId) {
+        return conversations.containsKey(conversationId);
     }
 
     /**

@@ -137,4 +137,16 @@ public class ConversationManagerImplTest extends TestCase
         manager.deleteConversation(1234);
     }
 
+    @Test
+    public void testConversationExists() throws SimulatorException, ConversationNotFoundException {
+        RouteManager routeManager = new RouteManagerImpl();
+        ConversationManager manager = new ConversationManagerImpl(routeManager);
+        assertFalse(manager.conversationExists(1));
+        Conversation conversation = manager.createConversation(1, in, out, AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT), AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT));
+        assertTrue(manager.conversationExists(1));
+        manager.activate(1);
+        assertTrue(manager.conversationExists(1));
+        manager.deactivate(1);
+        assertFalse(manager.conversationExists(1));
+    }
 }

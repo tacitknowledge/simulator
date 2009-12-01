@@ -68,7 +68,7 @@ class SimulatorConnector
   end
 
   def create_or_update_conversation_scenario(scenario)
-    system = System.find( scenario.conversation.system_id)
+    system = System.find(scenario.conversation.system_id)
     script_language = system.script_language
     @conv_mgr.createOrUpdateConversationScenario(scenario.conversation_id, scenario.id,  script_language, scenario.criteria_script, scenario.execution_script)
   end
@@ -78,18 +78,24 @@ class SimulatorConnector
     if (!is_active(conversation))
       system = System.find(conversation.system_id)
       script_language = system.script_language
-      jconvers=create_conversation(conversation)
-      conversation.scenarios.each do |scenario|
-        jconvers.addOrUpdateScenario( scenario.id, script_language, scenario.criteria_script, scenario.execution_script)
+
+      exists = @conv_mgr.conversationExists(conversation.id)
+# if conversation is not already in simulator then create it and activate. otherwise just activate     
+      if (!exists)
+        jconvers=create_conversation(conversation)
+        conversation.scenarios.each do |scenario|
+          jconvers.addOrUpdateScenario( scenario.id, script_language, scenario.criteria_script, scenario.execution_script)
+        end
+        @conv_mgr.activate(conversation.getId())
+        return jconvers
       end
-      @conv_mgr.activate(jconvers.getId())
+      @conv_mgr.activate(conversation.getId())
     end
   end
 
 
   def is_active(conversation)
-    isActive = @conv_mgr.isActive(conversation.id)
-    return isActive
+    return @conv_mgr.isActive(conversation.id)
   end
 
   def deactivate(conversation)
