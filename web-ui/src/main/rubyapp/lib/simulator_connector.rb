@@ -30,42 +30,32 @@ class SimulatorConnector
 
 
   def create_conversation (conversation)
+
     in_transport = @conv_mgr.getClassByName( conversation.in_transport.transport_type.class_name )
-
-    parameters = java.util.HashMap.new;
-
-    conversation.in_transport.configurations.each do |configuration|
-      parameters.put(configuration.attribute_name, configuration.attribute_value)
-    end
-    in_transport.setParameters(parameters)
-
+    set_parameters(in_transport, conversation.in_transport.configurations)
 
     out_transport = @conv_mgr.getClassByName( conversation.out_transport.transport_type.class_name )
-    parameters = java.util.HashMap.new;
-    conversation.out_transport.configurations.each do |configuration|
-      parameters.put(configuration.attribute_name, configuration.attribute_value)
-    end
-    out_transport.setParameters(parameters)
-
+    set_parameters(out_transport,conversation.out_transport.configurations)
 
     in_adapter = @conv_mgr.getClassByName(conversation.in_format.format_type.class_name )
-    parameters = java.util.HashMap.new;
-    conversation.in_format.configurations.each do |configuration|
-      parameters.put(configuration.attribute_name, configuration.attribute_value)
-    end
-    in_adapter.setParameters(parameters)
+    set_parameters(in_adapter,conversation.in_format.configurations)
 
 
     out_adapter = @conv_mgr.getClassByName(conversation.out_format.format_type.class_name)
-    parameters = java.util.HashMap.new;
-    conversation.out_format.configurations.each do |configuration|
-      parameters.put(configuration.attribute_name, configuration.attribute_value)
-    end
-    out_adapter.setParameters(parameters)
-
+    set_parameters(out_adapter,conversation.out_format.configurations)
 
     @conv_mgr.createConversation(conversation.id, in_transport, out_transport, in_adapter, out_adapter)
   end
+
+
+  def set_parameters(jobject, configurations)
+    parameters = java.util.HashMap.new;
+    configurations.each do |configuration|
+      parameters.put(configuration.attribute_name, configuration.attribute_value)
+    end
+    jobject.setParameters(parameters)
+  end
+
 
   def create_or_update_conversation_scenario(scenario)
     system = System.find(scenario.conversation.system_id)
