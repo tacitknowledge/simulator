@@ -160,4 +160,96 @@ class ConversationsControllerTest < ActionController::TestCase
     assert(trans_types.length == json['data'].length)
     assert(trans_types[0].name.eql? json['data'][0]['name'])
   end
+
+  def test_format_types
+    form_types = FormatType.find(:all)
+
+    get :format_types
+
+    assert_response :success
+    json  = JSON.parse(@response.body)
+
+    assert(form_types.length == json['data'].length)
+    assert(form_types[0].name.eql? json['data'][0]['name'])
+  end
+
+  def test_transport_parameters
+    get :transport_parameters, :type => transport_types(:file).name
+
+    assert_response :success
+    json = JSON.parse(@response.body)
+
+    assert(json['data'].length > 0)
+
+    # Parameter defintions should be arrays with 4 strings
+    param1 = json['data'][0]
+    assert(param1.length == 4)
+  end
+
+  def test_format_parameters
+    get :format_parameters, :format => format_types(:xml).name
+
+    assert_response :success
+    json = JSON.parse(@response.body)
+
+    assert(json['data'].length > 0)
+
+    # Parameter defintions should be arrays with 4 strings
+    param1 = json['data'][0]
+    assert(param1.length == 4)
+  end
+
+  def test_enable_conversation
+    # First, create a new conversation
+    post :create,
+        :name => 'New disabled conversation',
+        :system_id => systems(:one).id,
+        :inbound_transport_type_id => 2,
+        :outbound_transport_type_id => 1,
+        :inbound_format_type_id => 2,
+        :outbound_format_type_id => 1,
+        :transport_in_host => 'localhost',
+        :transport_in_directoryName => 'inbox',
+        :transport_out_directoryName => 'outbox',
+        :format_in_csvContent => 'employees',
+        :format_out_validate => 'true'
+
+   assert_response :success
+   json = JSON.parse(@response.body)
+   json_conv = json['data']
+
+    # Assert we got a disabled new conversation
+    assert json['success'] == true
+    assert_not_nil json['data']
+    assert(!json_conv['enabled'])
+
+    # Enable
+    get :enable, :id => json_conv['id']
+
+    assert_response :success
+    json = JSON.parse(@response.body)
+    json_conv = json['data']
+
+    assert(json_conv['enabled'])
+  end
+
+  def test_activate_conversation
+    # Original conversation should be disabled
+    get :show, :format => 'json', :id => conversations(:one).id
+
+    assert_response :success
+    json = JSON.parse @response.body
+    assert_not_nil(json['data'])
+
+    json_conv = json['data']
+    assert json_conv['enabled'] == false
+
+    # A disabled conversation cannot be activated
+    get :activate, :id => json_conv['id']
+
+    assert_response :success
+    json = JSON.parse @response.body
+    assert_not_nil json['data']
+    assert !json['is_active']
+  end
 end

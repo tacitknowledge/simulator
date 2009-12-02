@@ -159,6 +159,7 @@ class ConversationsController < ApplicationController
         SimulatorConnector.instance.activate(conversation)
       end
     end
-    render :json => { :success=>true, :data => conversation}
+    is_active = SimulatorConnector.instance.is_active(conversation)
+    render :json => { :success=>true, :data => conversation, :is_active => is_active}
   end
 end

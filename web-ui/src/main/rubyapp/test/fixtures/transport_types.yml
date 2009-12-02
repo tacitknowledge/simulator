@@ -9,12 +9,12 @@
 file:
   id: 1
   name: 'FILE'
-  class_name: 'FileTransport'
+  class_name: 'com.tacitknowledge.simulator.transports.FileTransport'
 
 ftp:
   id: 2
   name: 'FTP'
-  class_name: 'FtpTransport'
+  class_name: 'com.tacitknowledge.simulator.transports.FtpTransport'
 
 mockin:
   id: 3
