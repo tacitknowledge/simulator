@@ -151,7 +151,7 @@ public class FtpTransport extends FileTransport implements Transport
                 {
                     add(PARAM_BINARY);
                     add("Is file transfer binary? (defaults to NO)");
-                    add("string");
+                    add("boolean");
                     add("optional");
                 }
             });
