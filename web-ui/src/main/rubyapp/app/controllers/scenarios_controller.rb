@@ -1,8 +1,8 @@
 class ScenariosController < ApplicationController
 
   def index
-    @scenarios = Scenario.find_all_by_conversation_id(params[:conversation_id])
-    if(params[:format]=='json')
+    if (params[:format]=='json')
+      @scenarios = Scenario.find_all_by_conversation_id(params[:conversation_id])
       render :json => { :data => @scenarios }
     else
       redirect_to :controller => "conversations", :action => "show", :id => params[:conversation_id]
@@ -21,7 +21,7 @@ class ScenariosController < ApplicationController
       flash[:notice] = "Successfully created new Scenario '#{scenario.name}' with id #{scenario.id}"
       render :json => { :success => true, :data => scenario }
     else
-      render :json => { :message => "Failed to create Scenario"}
+      render :json => { :success => false, :message => "Failed to create Scenario"}
     end
   end
 
@@ -39,13 +39,13 @@ class ScenariosController < ApplicationController
       msg = "Successfully updated Scenario '#{scenario.name}' with id #{scenario.id}"
       render :json => { :success => true, :message => msg, :data => scenario }
     else
-      render :json => { :message => "Failed to update Scenario"}
+      render :json => { :success => false, :message => "Failed to update Scenario"}
     end
   end
 
   def show
-   @scenario = Scenario.find(params[:id])
    if(params[:format]=='json')
+     @scenario = Scenario.find(params[:id])
      render :json => { :success => true, :data => @scenario }
    end
   end
