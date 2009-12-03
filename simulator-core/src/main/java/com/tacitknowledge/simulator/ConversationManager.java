@@ -51,7 +51,6 @@ public interface ConversationManager
      * Deactivates the conversation with provided conversation id.
      *
      * @param conversationId id of the conversation to be deactivated.
-     * @throws ConversationNotFoundException in case the conversation is not found
      * @throws SimulatorException            in case there is an error deactivating the conversation
      */
     void deactivate(int conversationId) throws SimulatorException;
@@ -84,6 +83,9 @@ public interface ConversationManager
      *
      * @param name to get an instance for
      * @return an instance of this ClassName
+     * @throws ClassNotFoundException
+     * @throws IllegalAccessException
+     * @throws InstantiationException
      */
     Object getClassByName(String name) throws ClassNotFoundException, IllegalAccessException, InstantiationException;
 

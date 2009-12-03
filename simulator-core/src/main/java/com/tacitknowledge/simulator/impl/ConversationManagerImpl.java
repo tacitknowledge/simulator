@@ -140,9 +140,6 @@ public class ConversationManagerImpl implements ConversationManager
     }
 
     /**
-     * @param conversationId conversation id of the conversation to be deactivated.
-     * @throws ConversationNotFoundException exception.
-     * @throws SimulatorException            exception.
      * @inheritDoc
      */
     public void deactivate(int conversationId) throws SimulatorException
@@ -160,7 +157,7 @@ public class ConversationManagerImpl implements ConversationManager
         } catch (Exception e) {
             logger.error("Conversation with id : "
                     + conversationId + " couldn't be deactivated.", e);
-            throw new SimulatorException("Conversation deactivation exception", e);
+            throw new SimulatorException("Conversation deactivation exception:" + e.getMessage(), e);
         }
 
     }
@@ -171,8 +168,15 @@ public class ConversationManagerImpl implements ConversationManager
      * @inheritDoc
      */
     public void deleteConversation(int conversationId) throws SimulatorException {
-        deactivate(conversationId);
-        conversations.remove(conversationId);
+        try {
+            ConversationImpl conversation = conversations.get(conversationId);
+            if (conversation != null) {
+                routeManager.delete(conversation);
+                conversations.remove(conversationId);
+            }
+        } catch (Exception e) {
+            throw new SimulatorException("", e);
+        }
     }
 
     public void deleteScenario(int conversationId, int scenarioId) {

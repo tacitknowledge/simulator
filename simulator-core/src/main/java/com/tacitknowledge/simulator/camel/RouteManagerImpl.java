@@ -81,6 +81,7 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager {
 
         } else {
             if (!activeRoutes.contains(conversationId)) {
+                activeRoutes.add(conversationId);
                 getContext().startRoute(definition);
             }
         }
@@ -106,6 +107,14 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager {
      * {@inheritDoc}
      */
     public boolean isActive(Conversation conversation) throws SimulatorException {
-        return convRoutes.get(conversation.getId()) != null;
+        return activeRoutes.contains(conversation.getId());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void delete(Conversation conversation) throws Exception {
+        deactivate(conversation);
+        convRoutes.remove(conversation.getId());
     }
 }

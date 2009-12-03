@@ -39,4 +39,10 @@ public interface RouteManager
      */
     boolean isActive(Conversation conversation) throws SimulatorException;
 
+    /**
+     *
+     * @param conversation
+     */
+    void delete(Conversation conversation) throws Exception;
+
 }

@@ -18,7 +18,7 @@ one:
   outbound_format_id: 2
 
 
-two:one:
+two:
   id: 2
   system_id: 1
   name: 'My second test conversation'

@@ -61,12 +61,17 @@
 
         </plugins>
     </build>
-    
+
     <dependencies>
-         <dependency>
-             <groupId>org.apache.activemq</groupId>
-             <artifactId>activemq-core</artifactId>
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-core</artifactId>
             <version>5.3.0</version>
-         </dependency>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>1.4</version>
+        </dependency>
     </dependencies>
 </project>

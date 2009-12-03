@@ -88,9 +88,25 @@ class ConversationsController < ApplicationController
   end
 
   def update
-    conversation = update_conversation(params)
-
+#   remove conversation from the system if it's currently running
+    conversation = Conversation.find params[:id]
+    was_active=false
+    if(SimulatorConnector.instance.is_active(conversation))
+      puts 'removing conversation'
+      was_active=true
+      SimulatorConnector.instance.delete_conversation(conversation)
+    else
+      puts 'not deactivating'
+    end
+    conversation = update_conversation(params, conversation)
+#   restart conversation using new configuration
     if conversation.save
+      if(was_active)
+        SimulatorConnector.instance.activate(conversation)
+        puts 'activating'
+      else
+        puts 'not activating'
+      end
       msg = "Successfully updated conversation '#{conversation.name}' with id #{conversation.id}"
       render :json => { :success => true, :message => msg, :data => conversation }
     else

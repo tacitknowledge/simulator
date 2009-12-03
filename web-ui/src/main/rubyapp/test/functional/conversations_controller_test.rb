@@ -94,19 +94,19 @@ class ConversationsControllerTest < ActionController::TestCase
     end
   end
 
-  def test_update
+  def test_update_inactive
     #Original
-    original = Conversation.find_by_id(conversations(:one).id)
+    original = Conversation.find_by_id(conversations(:two).id)
     orig_name = original.name
     orig_in_tran_type = original.in_transport.transport_type_id
     orig_out_form_type = original.out_format.format_type_id
 
     post :update,
-        :id => 1,
+        :id => 2,
         :name => 'Updated conv',
         :system_id => systems(:one).id,
-        :inbound_transport_type_id => 2,
-        :outbound_transport_type_id => 1,
+        :inbound_transport_type_id => 5,
+        :outbound_transport_type_id => 6,
         :inbound_format_type_id => 2,
         :outbound_format_type_id => 1,
         :transport_in_host => 'localhost',
@@ -120,7 +120,8 @@ class ConversationsControllerTest < ActionController::TestCase
     json = JSON.parse(@response.body)
     assert(json['success'] == true)
 
-    conv = Conversation.find(1)
+    conv = Conversation.find(2)
+    assert(!SimulatorConnector.instance.is_active(conv))
 
     assert(conv.id == original.id)
     assert(conv.name.eql? 'Updated conv')
@@ -131,11 +132,61 @@ class ConversationsControllerTest < ActionController::TestCase
     assert_not_nil(trans_in)
     assert_not_nil(form_out)
 
-    assert(trans_in.transport_type_id.eql?('2'), "Expecting inbound transport type of 2, instead got #{trans_in.transport_type_id}")
+    assert(trans_in.transport_type_id.eql?('5'), "Expecting inbound transport type of 5, instead got #{trans_in.transport_type_id}")
 
     assert_not_nil(TransportConfiguration.find_by_transport_id_and_attribute_name(trans_in.id, 'host'))
     assert_not_nil(FormatConfiguration.find_by_format_id_and_attribute_name(form_out.id, 'validate'))
   end
+
+  def test_update_active
+    #Original
+    original = Conversation.find_by_id(conversations(:two).id)
+    original.enabled=true
+    original.save
+    SimulatorConnector.instance.activate(original)
+
+    orig_name = original.name
+    orig_in_tran_type = original.in_transport.transport_type_id
+    orig_out_form_type = original.out_format.format_type_id
+
+    post :update,
+        :id => 2,
+        :name => 'Updated conv',
+        :system_id => systems(:one).id,
+        :inbound_transport_type_id => 5,
+        :outbound_transport_type_id => 6,
+        :inbound_format_type_id => 2,
+        :outbound_format_type_id => 1,
+        :transport_in_host => 'localhost',
+        :transport_in_directoryName => 'inbox',
+        :transport_out_directoryName => 'outbox',
+        :format_in_csvContent => 'employees',
+        :format_out_validate => 'true'
+
+    assert_response :success
+    json = JSON.parse(@response.body)
+    assert(json['success'] == true)
+
+    conv = Conversation.find(2)
+    assert(SimulatorConnector.instance.is_active(conv))
+
+    assert(conv.id == original.id)
+    assert(conv.name.eql? 'Updated conv')
+
+    trans_in = conv.in_transport
+    form_out = conv.out_format
+
+    assert_not_nil(trans_in)
+    assert_not_nil(form_out)
+
+    assert(trans_in.transport_type_id.eql?('5'), "Expecting inbound transport type of 5, instead got #{trans_in.transport_type_id}")
+
+    assert_not_nil(TransportConfiguration.find_by_transport_id_and_attribute_name(trans_in.id, 'host'))
+    assert_not_nil(FormatConfiguration.find_by_format_id_and_attribute_name(form_out.id, 'validate'))
+    SimulatorConnector.instance.delete_conversation(conv)
+
+  end
+
 
   def test_destroy
     assert_difference('Conversation.count', -1) do

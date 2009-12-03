@@ -46,7 +46,7 @@ module ConversationHelper
     conversation
   end
 
-  def update_conversation(params)
+  def update_conversation(params, conversation)
     name = params[:name]
     description = params[:description]
     in_tt = params[:inbound_transport_type_id]
@@ -54,8 +54,6 @@ module ConversationHelper
     in_ft = params[:inbound_format_type_id]
     out_ft = params[:outbound_format_type_id]
     sys_id = params[:system_id]
-
-    conversation = Conversation.find params[:id]
 
     conversation.name = name;
     conversation.description = description;

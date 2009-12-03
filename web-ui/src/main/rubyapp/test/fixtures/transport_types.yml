@@ -25,3 +25,13 @@ mockout:
   id: 4
   name: 'MockOut'  
   class_name: 'com.tacitknowledge.simulator.transports.MockOutTransport'
+
+mockin2:
+  id: 5
+  name: 'MockIn2'
+  class_name: 'com.tacitknowledge.simulator.transports.MockInTransport'
+
+mockout2:
+  id: 6
+  name: 'MockOut2'
+  class_name: 'com.tacitknowledge.simulator.transports.MockOutTransport'
