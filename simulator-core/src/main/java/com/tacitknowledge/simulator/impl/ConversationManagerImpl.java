@@ -44,7 +44,7 @@ public class ConversationManagerImpl implements ConversationManager
      *
      * @param routeManager RouteManager to use
      */
-    ConversationManagerImpl(RouteManager routeManager)
+    public ConversationManagerImpl(RouteManager routeManager)
     {
         this.routeManager = routeManager;
     }
