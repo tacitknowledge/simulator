@@ -24,7 +24,7 @@ TK.editEntity = function(entityName, relativeUrl) {
     relativeUrl = relativeUrl == undefined ? entityName : relativeUrl
     var rec = Ext.getCmp(entityName + '_grid').getSelectionModel().getSelected();
     if (rec != undefined) {
-        window.location = relativeUrl + '/' + rec.data.id + '/'
+        window.location = relativeUrl + '/' + + '/'
     }
 }
 /**
@@ -40,7 +40,7 @@ TK.enableEntity = function(entity, entityId) {
         url: entity + '/' + entityId + '/enable'  ,
         method: 'GET',
         success: function() {
-         //do nothing
+            //do nothing
         },
         failure: function() {
             //todo handler
@@ -62,7 +62,7 @@ TK.activateEntity = function(entity, entityId) {
         url: entity + '/' + entityId + '/activate'  ,
         method: 'GET',
         success: function() {
-         //do nothing
+            //do nothing
         },
         failure: function() {
             //todo handler
@@ -70,3 +70,17 @@ TK.activateEntity = function(entity, entityId) {
     })
 
 }
+
+TK.cloneScenario = function (scenarioId) {
+    Ext.Ajax.request({
+        url: 'scenarios/' + scenarioId + '/clone'  ,
+        method: 'GET',
+        success: function(result, request) {
+            var jsonResponse = Ext.util.JSON.decode(result.responseText)
+            window.location = "scenarios/" + jsonResponse.data.id + "/"
+        },
+        failure: function() {
+            //todo handler
+        }
+    })
+};

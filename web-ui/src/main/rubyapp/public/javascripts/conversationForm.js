@@ -414,6 +414,16 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                                 window.location = 'scenarios/new/'
                             }
                         },
+                         {
+                            text:'Clone',
+                            id: 'scenario_clone',
+                            handler:function() {
+                                var rec = Ext.getCmp('scenarios_grid').getSelectionModel().getSelected()
+                                if (rec != undefined) {
+                                    TK.cloneScenario(rec.data.id)
+                                }
+                            }
+                        },
                         {
                             text:'Edit',
                             id: 'scenarion_edit',

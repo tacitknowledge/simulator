@@ -74,5 +74,20 @@ class ScenariosController < ApplicationController
     scenario.save
     render :json => { :success=>true, :data => scenario}
   end
-  
+
+
+  def clone
+     scenario = Scenario.find(params[:id])
+     new_scenario = Scenario.new
+     new_scenario.name=scenario.name + " copy";
+     new_scenario.enabled=true;
+     new_scenario.conversation=scenario.conversation;
+     new_scenario.criteria_script=scenario.criteria_script;
+     new_scenario.execution_script=scenario.execution_script;
+   if(new_scenario.save)
+     render :json => { :success=>true, :data => new_scenario}
+   else
+     render :json => { :message => "Failed to clone Scenario" }
+   end
+  end
 end

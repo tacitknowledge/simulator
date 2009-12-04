@@ -121,4 +121,24 @@ class ScenariosControllerTest < ActionController::TestCase
 
     assert is_enabled != json['data']['enabled']
   end
+
+  
+    def test_clone
+    source_scenario = scenarios(:one)
+    get :clone, :id=> source_scenario.id
+    assert_response(:success)
+    json = JSON.parse @response.body
+
+    new_scenario = Scenario.find json['data']['id']
+    assert_not_nil(new_scenario)
+    assert(new_scenario.id != source_scenario.id)
+    assert(new_scenario.enabled?)
+
+    assert_equal(new_scenario.conversation, source_scenario.conversation);
+    assert_equal(new_scenario.criteria_script, source_scenario.criteria_script);
+    assert_equal(new_scenario.execution_script, source_scenario.execution_script);
+
+    assert_equal(source_scenario.name+' copy', new_scenario.name)
+
+    end
 end

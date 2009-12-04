@@ -17,6 +17,7 @@ ActionController::Routing::Routes.draw do |map|
       conversation.resources :scenarios do |scenario|
 
         map.connect "systems/:system_id/conversations/:conversation_id/scenarios/:id/enable", :controller => 'scenarios', :action => 'enable'
+        map.connect "systems/:system_id/conversations/:conversation_id/scenarios/:id/clone", :controller => 'scenarios', :action => 'clone'
       end
     end
   end
