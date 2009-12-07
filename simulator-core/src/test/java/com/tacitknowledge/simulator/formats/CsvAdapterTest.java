@@ -3,6 +3,7 @@ package com.tacitknowledge.simulator.formats;
 import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
+import com.tacitknowledge.simulator.TestHelper;
 import junit.framework.TestCase;
 
 import java.util.Arrays;
@@ -16,10 +17,7 @@ import java.util.regex.Pattern;
  */
 public class CsvAdapterTest extends TestCase
 {
-    private final static String DATA =
-            "primero, segundo, tercero, cuarto, quinto, sexto\n" +
-                    "yo,tu,el,nosotros,ustedes,ellos\n" +
-                    "hoy,ma�ana,ayer,pasado ma�ana,antier,proximo mes";
+
 
     private Adapter adapter;
 
@@ -39,7 +37,7 @@ public class CsvAdapterTest extends TestCase
 
             adapter.setParameters(params);
 
-            SimulatorPojo pojo = adapter.adaptFrom(DATA);
+            SimulatorPojo pojo = adapter.adaptFrom(TestHelper.CSV_DATA);
 
             Object o = pojo.getRoot().get("Words");
             // --- First, make sure we got the root Map with a Words key
@@ -74,7 +72,7 @@ public class CsvAdapterTest extends TestCase
 
             adapter.setParameters(params);
 
-            SimulatorPojo pojo = adapter.adaptFrom(DATA);
+            SimulatorPojo pojo = adapter.adaptFrom(TestHelper.CSV_DATA);
 
             Object o = pojo.getRoot().get("Words");
             // --- First, make sure we got the root Map with a Words key
@@ -108,7 +106,7 @@ public class CsvAdapterTest extends TestCase
             adapter.setParameters(params);
 
             // --- First, get the pojo from the same adapter
-            SimulatorPojo pojo = adapter.adaptFrom(DATA);
+            SimulatorPojo pojo = adapter.adaptFrom(TestHelper.CSV_DATA);
 
             // --- Now, go the other way around
             Object o = adapter.adaptTo(pojo);

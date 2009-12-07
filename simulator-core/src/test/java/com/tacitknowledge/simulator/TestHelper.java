@@ -60,6 +60,25 @@ public abstract class TestHelper
     public final static String[] ITEM_FIELDS = {"sku", "quantity", "price"};
 
     /**
+     *  Default CSV test data
+     */
+    public final static String CSV_DATA =
+        "primero, segundo, tercero, cuarto, quinto, sexto\n" +
+        "yo,tu,el,nosotros,ustedes,ellos\n" +
+        "hoy,manana,ayer,pasado manana,antier,proximo mes";
+
+    /**
+     * Default PROPERTIES test data
+     */
+    public final static String PROPERTIES_DATA =
+            "employee.firstName=John\n" +
+            "employee.lastName=Smith\n" +
+            "employee.address.streetAddress=21 2nd Street\n" +
+            "employee.address.city=New York\n" +
+            "employee.address.state=NY\n" +
+            "employee.title=Manager";
+
+    /**
      * Creates and populates a SimulatorPojo for consumption of the PojoClassGenerator.
      * PojoClassGenerator should generate JavaBeans from the Maps inside the SimulatorPojo
      *
