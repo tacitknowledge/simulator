@@ -50,6 +50,12 @@ public class FtpTransport extends FileTransport implements Transport
     public static final String PARAM_BINARY = "binary";
 
     /**
+     * Polling interval parameter. Milliseconds before the next poll of the directory. OPTIONAL
+     * Defaults to 500 (Camel default)
+     */
+    public static final String PARAM_POLLING_INTERVAL = "pollingInterval";
+
+    /**
      * Transport parameters definition.
      */
     private List<List> parametersList = new ArrayList<List>()
@@ -142,6 +148,16 @@ public class FtpTransport extends FileTransport implements Transport
                     add(PARAM_DELETE_FILE);
                     add("Delete file after simulation? (defaults to NO)");
                     add("boolean");
+                    add("optional");
+                }
+            });
+
+            add(new ArrayList<String>()
+            {
+                {
+                    add(PARAM_POLLING_INTERVAL);
+                    add("Milliseconds before the next poll (defaults to 500)");
+                    add("string");
                     add("optional");
                 }
             });
@@ -253,6 +269,11 @@ public class FtpTransport extends FileTransport implements Transport
         if (isDeleteFile())
         {
             sb.append("delete=true").append(AMP);
+        }
+
+        if (getParamValue(PARAM_POLLING_INTERVAL) != null)
+        {
+            sb.append("delay=").append(getParamValue(PARAM_POLLING_INTERVAL)).append(AMP);
         }
 
         // --- If file transfer is binary

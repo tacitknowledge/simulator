@@ -33,6 +33,12 @@ public class FileTransport extends BaseTransport implements Transport
     public static final String PARAM_FILE_EXTENSION = "fileExtension";
 
     /**
+     * Polling interval parameter. Milliseconds before the next poll of the directory. OPTIONAL
+     * Defaults to 500 (Camel default)
+     */
+    public static final String PARAM_POLLING_INTERVAL = "pollingInterval";
+
+    /**
      * Delete file parameter. Determines if file should be deleted after processing. OPTIONAL.
      * Defaults to false. For inbound transports only.
      */
@@ -74,6 +80,16 @@ public class FileTransport extends BaseTransport implements Transport
                 {
                     add(PARAM_FILE_EXTENSION);
                     add("File Extension the transport will only poll from (without dot)");
+                    add("string");
+                    add("optional");
+                }
+            });
+
+            add(new ArrayList<String>()
+            {
+                {
+                    add(PARAM_POLLING_INTERVAL);
+                    add("Milliseconds before the next poll (defaults to 500)");
                     add("string");
                     add("optional");
                 }
@@ -165,6 +181,12 @@ public class FileTransport extends BaseTransport implements Transport
             sb.append("include=^.*(i)(.").append(getParamValue(PARAM_FILE_EXTENSION)).append(")");
             sb.append(AMP);
         }
+
+        if (getParamValue(PARAM_POLLING_INTERVAL) != null)
+        {
+            sb.append("delay=").append(getParamValue(PARAM_POLLING_INTERVAL)).append(AMP);
+        }
+
         if (this.deleteFile)
         {
             sb.append("delete=true");

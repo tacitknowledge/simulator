@@ -79,4 +79,24 @@ public class FileTransportTest extends TestCase
             fail("Shouldn't be getting an exception here: " + e.getMessage());
         }
     }
+
+    public void testGetUriWithLongDelay()
+    {
+        // --- Try to get this URI: file://inbox/?delay=10000
+        params.put(FileTransport.PARAM_DIRECTORY_NAME, "inbox");
+        params.put(FileTransport.PARAM_POLLING_INTERVAL, "10000");
+
+        Transport transport = new FileTransport(params);
+
+        try
+        {
+            String uri = transport.toUriString();
+
+            assertTrue("Returned uri isn't as expected: " + uri, uri.indexOf("file://inbox?delay=10000") > -1);
+        }
+        catch (TransportException e)
+        {
+            fail("Shouldn't be getting an exception here: " + e.getMessage());
+        }
+    }
 }
