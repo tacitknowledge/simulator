@@ -349,7 +349,7 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
                     {
                         // --- ...a String (should be safe to assume),
                         // add the text element   D0 ,�r
-                        element.appendChild(getTextElement(entry.getKey(), (String) item));
+                        element.appendChild(getTextElement(entry.getKey(), item.toString()));
                     }
                 }
                 // --- We don't return a child Element here,
