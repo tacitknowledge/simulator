@@ -22,15 +22,24 @@ public class FileTransport extends BaseTransport implements Transport
 
     /**
      * File name parameter. Name of the file to listen for/write to. OPTIONAL.
-     * Mutually exclusive to File Extension. File Name takes priority if both are passed.
+     * Mutually exclusive to File Extension & Regex filter.
+     * File Name has highest priority if more than one is passed.
      */
     public static final String PARAM_FILE_NAME = "fileName";
 
     /**
      * File extension parameter. Extension of files the transport will only poll from. OPTIONAL.
-     * Mutually exclusive to File Name. File Name takes priority if both are passed.
+     * Mutually exclusive to File Name & Regex filter.
+     * File extension has higher priority than Regex filter.
      */
     public static final String PARAM_FILE_EXTENSION = "fileExtension";
+
+    /**
+     * Regex filter parameter. Only file name matching the provided regex will be polled. OPTIONAL.
+     * Mutually exclusive to File Name & Regex filter.
+     * Will be applied only it's the only filter passed.
+     */
+    public static final String PARAM_REGEX_FILTER = "regexFilter";
 
     /**
      * Polling interval parameter. Milliseconds before the next poll of the directory. OPTIONAL
@@ -80,6 +89,18 @@ public class FileTransport extends BaseTransport implements Transport
                 {
                     add(PARAM_FILE_EXTENSION);
                     add("File Extension the transport will only poll from (without dot)");
+                    add("string");
+                    add("optional");
+                }
+            });
+
+            add(new ArrayList<String>()
+            {
+                {
+                    add(PARAM_REGEX_FILTER);
+                    add("Regex filter " +
+                            "(will only be applied if neither " +
+                            "file name nor extension filters are provided)");
                     add("string");
                     add("optional");
                 }
@@ -170,7 +191,7 @@ public class FileTransport extends BaseTransport implements Transport
         // registered.
         //sb.append("?initialDelay=2000").append(AMP);
 
-        // --- fileName & fileExtension should be mutually exclusive options
+        // --- fileName, fileExtension & Regex filter should be mutually exclusive options
         if (getParamValue(PARAM_FILE_NAME) != null)
         {
             sb.append("fileName=").append(getParamValue(PARAM_FILE_NAME)).append(AMP);
@@ -180,6 +201,12 @@ public class FileTransport extends BaseTransport implements Transport
             // --- File extension is used as a RegEx filter for transport routing
             sb.append("include=^.*(i)(.").append(getParamValue(PARAM_FILE_EXTENSION)).append(")");
             sb.append(AMP);
+        }
+        else if (getParamValue(PARAM_REGEX_FILTER) != null)
+        {
+            // --- Regex filter is the last filter to be applied, only if neither of the other 2
+            // were provided.
+            sb.append("include=").append(getParamValue(PARAM_REGEX_FILTER)).append(AMP);
         }
 
         if (getParamValue(PARAM_POLLING_INTERVAL) != null)

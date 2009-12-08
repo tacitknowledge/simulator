@@ -12,17 +12,17 @@ import java.util.Map;
  */
 public class FtpTransportTest extends TestCase
 {
+    private Transport transport;
     private Map<String, String> params;
 
     public void setUp()
     {
+        transport = new FtpTransport();
         params = new HashMap<String, String>();
     }
 
     public void testGetUriWithoutParams()
     {
-        Transport transport = new FtpTransport();
-
         assertEquals("FTP", transport.getType());
 
         // --- Try to get the URI
@@ -40,7 +40,7 @@ public class FtpTransportTest extends TestCase
     {
         // --- Try to get this URI: ftp://127.0.0.1
         params.put(FtpTransport.PARAM_HOST, "127.0.0.1");
-        Transport transport = new FtpTransport(params);
+        transport.setParameters(params);
 
         try
         {
@@ -59,7 +59,8 @@ public class FtpTransportTest extends TestCase
         // --- Try to get this URI: sftp://127.0.0.1
         params.put(FtpTransport.PARAM_HOST, "127.0.0.1");
         params.put(FtpTransport.PARAM_SFTP, "true");
-        Transport transport = new FtpTransport(params);
+
+        transport.setParameters(params);
 
         try
         {
@@ -82,7 +83,7 @@ public class FtpTransportTest extends TestCase
         params.put(FtpTransport.PARAM_PASSWORD, "secret");
         params.put(FtpTransport.PARAM_DIRECTORY_NAME, "inbox");
 
-        Transport transport = new FtpTransport(params);
+        transport.setParameters(params);
 
         try
         {
@@ -104,7 +105,7 @@ public class FtpTransportTest extends TestCase
         params.put(FtpTransport.PARAM_FILE_EXTENSION, "csv");
         params.put(FtpTransport.PARAM_BINARY, "true");
 
-        Transport transport = new FtpTransport(params);
+        transport.setParameters(params);
 
         try
         {
@@ -118,6 +119,29 @@ public class FtpTransportTest extends TestCase
         }
     }
 
+    public void testGetUriForFilesWithSomething()
+    {
+        // --- Try to get this URI: ftp://inbox/csv?include=(.*)(something)(.*)
+        params.put(FtpTransport.PARAM_HOST, "127.0.0.1");
+        params.put(FtpTransport.PARAM_DIRECTORY_NAME, "inbox/csv");
+        params.put(FtpTransport.PARAM_REGEX_FILTER, "(.*)(something)(.*)");
+
+        transport.setParameters(params);
+
+        try
+        {
+            String uri = transport.toUriString();
+
+            assertTrue(
+                    "Returned uri isn't as expected: " + uri,
+                    uri.indexOf("ftp://127.0.0.1/inbox/csv?include=(.*)(something)(.*)") > -1);
+        }
+        catch (TransportException e)
+        {
+            fail("Shouldn't be getting an exception here: " + e.getMessage());
+        }
+    }
+
     public void testGetUriWithLongDelay()
     {
         // --- Try to get this URI: ftp://127.0.0.1/inbox?delay=10000
@@ -125,7 +149,7 @@ public class FtpTransportTest extends TestCase
         params.put(FtpTransport.PARAM_DIRECTORY_NAME, "inbox");
         params.put(FtpTransport.PARAM_POLLING_INTERVAL, "10000");
 
-        Transport transport = new FtpTransport(params);
+        transport.setParameters(params);
 
         try
         {

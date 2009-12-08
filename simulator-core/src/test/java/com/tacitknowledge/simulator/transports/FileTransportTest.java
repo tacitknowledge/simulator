@@ -52,7 +52,9 @@ public class FileTransportTest extends TestCase
         {
             String uri = transport.toUriString();
 
-            assertTrue("Returned uri isn't as expected: " + uri, uri.indexOf("file://inbox?delete=true") > -1);
+            assertTrue(
+                    "Returned uri isn't as expected: " + uri,
+                    uri.indexOf("file://inbox?delete=true") > -1);
         }
         catch (TransportException e)
         {
@@ -72,7 +74,31 @@ public class FileTransportTest extends TestCase
         {
             String uri = transport.toUriString();
 
-            assertTrue("Returned uri isn't as expected: " + uri, uri.indexOf("file://inbox/csv?include=^.*(i)(.csv)") > -1);
+            assertTrue(
+                    "Returned uri isn't as expected: " + uri,
+                    uri.indexOf("file://inbox/csv?include=^.*(i)(.csv)") > -1);
+        }
+        catch (TransportException e)
+        {
+            fail("Shouldn't be getting an exception here: " + e.getMessage());
+        }
+    }
+
+    public void testGetUriForFilesWithSomething()
+    {
+        // --- Try to get this URI: file://inbox/csv?include=(.*)(something)(.*)
+        params.put(FileTransport.PARAM_DIRECTORY_NAME, "inbox/csv");
+        params.put(FileTransport.PARAM_REGEX_FILTER, "(.*)(something)(.*)");
+
+        Transport transport = new FileTransport(params);
+
+        try
+        {
+            String uri = transport.toUriString();
+
+            assertTrue(
+                    "Returned uri isn't as expected: " + uri,
+                    uri.indexOf("file://inbox/csv?include=(.*)(something)(.*)") > -1);
         }
         catch (TransportException e)
         {
@@ -92,7 +118,9 @@ public class FileTransportTest extends TestCase
         {
             String uri = transport.toUriString();
 
-            assertTrue("Returned uri isn't as expected: " + uri, uri.indexOf("file://inbox?delay=10000") > -1);
+            assertTrue(
+                    "Returned uri isn't as expected: " + uri,
+                    uri.indexOf("file://inbox?delay=10000") > -1);
         }
         catch (TransportException e)
         {

@@ -50,12 +50,6 @@ public class FtpTransport extends FileTransport implements Transport
     public static final String PARAM_BINARY = "binary";
 
     /**
-     * Polling interval parameter. Milliseconds before the next poll of the directory. OPTIONAL
-     * Defaults to 500 (Camel default)
-     */
-    public static final String PARAM_POLLING_INTERVAL = "pollingInterval";
-
-    /**
      * Transport parameters definition.
      */
     private List<List> parametersList = new ArrayList<List>()
@@ -137,6 +131,18 @@ public class FtpTransport extends FileTransport implements Transport
                 {
                     add(PARAM_FILE_EXTENSION);
                     add("File Extension the transport will only poll from (without dot)");
+                    add("string");
+                    add("optional");
+                }
+            });
+
+            add(new ArrayList<String>()
+            {
+                {
+                    add(PARAM_REGEX_FILTER);
+                    add("Regex filter " +
+                            "(will only be applied if neither " +
+                            "file name nor extension filters are provided)");
                     add("string");
                     add("optional");
                 }
@@ -253,8 +259,8 @@ public class FtpTransport extends FileTransport implements Transport
             sb.append("password=").append(getParamValue(PARAM_PASSWORD)).append(AMP);
         }
 
-        // --- fileName & fileExtension should be mutually exclusive options.
-        // fileName takes priority.
+        // --- fileName, fileExtension & Regex filter should be mutually exclusive options.
+        // fileName takes priority, Regex filter having the lowest.
         if (getParamValue(PARAM_FILE_NAME) != null)
         {
             sb.append("fileName=").append(getParamValue(PARAM_FILE_NAME)).append(AMP);
@@ -265,6 +271,13 @@ public class FtpTransport extends FileTransport implements Transport
             sb.append("include=^.*(i)(.").append(getParamValue(PARAM_FILE_EXTENSION)).append(")");
             sb.append(AMP);
         }
+        else if (getParamValue(PARAM_REGEX_FILTER) != null)
+        {
+            // --- Regex filter is the last filter to be applied, only if neither of the other 2
+            // were provided.
+            sb.append("include=").append(getParamValue(PARAM_REGEX_FILTER)).append(AMP);
+        }
+
         // ---
         if (isDeleteFile())
         {
