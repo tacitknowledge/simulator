@@ -24,7 +24,7 @@ TK.editEntity = function(entityName, relativeUrl) {
     relativeUrl = relativeUrl == undefined ? entityName : relativeUrl
     var rec = Ext.getCmp(entityName + '_grid').getSelectionModel().getSelected();
     if (rec != undefined) {
-        window.location = relativeUrl + '/' + + '/'
+        window.location = relativeUrl + '/' + rec.data.id + '/'
     }
 }
 /**
