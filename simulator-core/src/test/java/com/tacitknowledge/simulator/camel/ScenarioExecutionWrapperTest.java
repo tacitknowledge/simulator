@@ -1,8 +1,10 @@
 package com.tacitknowledge.simulator.camel;
 
+import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.ConversationScenario;
 import com.tacitknowledge.simulator.TestHelper;
 import com.tacitknowledge.simulator.formats.JsonAdapter;
+import com.tacitknowledge.simulator.formats.PlainTextAdapter;
 import com.tacitknowledge.simulator.formats.XmlAdapter;
 import com.tacitknowledge.simulator.impl.ConversationScenarioImpl;
 import org.json.JSONException;
@@ -131,7 +133,35 @@ public class ScenarioExecutionWrapperTest {
             Assert.fail("Returned string is not a valid JSON format: " + je.getMessage());
         }
     }
-    
+
+     @Test
+    public void testRubyScenario() throws Exception {
+
+        ScenarioExecutionWrapper wrapper = createExecutionWrapper("require 'java'\n$employees.employee[0].name == 'John';",
+                 "$employees.employee[0].name='John12345';" +
+                         "$employees", new XmlAdapter(), new XmlAdapter());
+
+        String s = wrapper.process(TestHelper.XML_DATA);
+        Assert.assertTrue(s.contains("John12345"));
+    }
+
+     @Test
+    public void testReturnDifferentObject() throws Exception {
+
+        ScenarioExecutionWrapper wrapper = createExecutionWrapper("require 'java'\n$employees.employee[0].name == 'John';",
+                 "$employees.employee[0].name='John12345';" +
+                         "return 'Success'", new XmlAdapter(), new PlainTextAdapter());
+        String s = wrapper.process(TestHelper.XML_DATA);
+        Assert.assertTrue(s.contains("Success"));
+    }
+
+    private ScenarioExecutionWrapper createExecutionWrapper(String criteria, String execution, Adapter inAdapter, Adapter outAdapter) {
+        ConversationScenario scenario = createScenario(0, criteria, execution, "ruby");
+        List<ConversationScenario> scenarios = new ArrayList<ConversationScenario>();
+        scenarios.add(scenario);
+        return new ScenarioExecutionWrapper(scenarios, inAdapter, outAdapter);
+    }
+
     private ConversationScenario createScenario(int scenarioId, String criteria, String execution, String language) {
         ConversationScenario scenario = new ConversationScenarioImpl(scenarioId, language, criteria, execution);
         scenario.setActive(true);
@@ -142,17 +172,24 @@ public class ScenarioExecutionWrapperTest {
 
 
      @Test
-    public void testRubyScenario() throws Exception {
+    public void testReturnJavaScriptNativeObject() throws Exception {
 
-        String criteria = "" +
-                "require 'java'\n" +
-                "$employees.employee[0].name == 'John';";
+        String criteria = "employees.employee[0].name=='John';";
+        String execution = "employees.employee[0].name='John12345';\n" +
+                "var xxx= { " +
+                "stringFieldName: \"xxxx\", " +
+                "numberFieldName: 1234, " +
+                "arrayField:[" +
+                "       {intProperty:134}," +
+                "" +
+                "[1234]" +
+                "           ]," +
+                "objectProperty:{stringgg:'ffff'}," +
+                "undefinedVar: undefined" +
+                "}\n" +
+                "xxx";
 
-
-        String execution = "$employees.employee[0].name='John12345';" +
-                "$employees";
-
-        ConversationScenario scenario = createScenario(0, criteria, execution, "ruby");
+        ConversationScenario scenario = createScenario(0, criteria, execution, "javascript");
 
 
         List<ConversationScenario> scenarios = new ArrayList<ConversationScenario>();
@@ -160,6 +197,8 @@ public class ScenarioExecutionWrapperTest {
         ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(scenarios, new XmlAdapter(), new XmlAdapter());
 
         String s = wrapper.process(TestHelper.XML_DATA);
-        Assert.assertTrue(s.contains("John12345"));
+//        Assert.assertTrue(s.contains("John12345"));
+
+
     }
 }

@@ -2,18 +2,12 @@ package com.tacitknowledge.simulator.impl;
 
 import com.tacitknowledge.simulator.ConversationScenario;
 import com.tacitknowledge.simulator.SimulatorException;
-import com.tacitknowledge.simulator.SimulatorPojo;
-import com.tacitknowledge.simulator.scripting.PojoClassGenerator;
 import com.tacitknowledge.simulator.scripting.ScriptException;
 import com.tacitknowledge.simulator.scripting.ScriptExecutionService;
-import com.tacitknowledge.simulator.scripting.SimulatorPojoPopulator;
 import javassist.CannotCompileException;
-import javassist.ClassPool;
 import javassist.NotFoundException;
 import org.apache.log4j.Logger;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.util.Map;
 
 /**
@@ -54,16 +48,6 @@ public class ConversationScenarioImpl implements ConversationScenario {
     private ScriptExecutionService execServ;
 
     /**
-     * Generates the classes for the incoming data *
-     */
-    private PojoClassGenerator generator;
-
-    /**
-     * Beans needed for the script executions service to run the simulation against *
-     */
-    private Map scriptExecutionBeans;
-
-    /**
      * Whether this scenario is active or not
      */
     private boolean active = true;
@@ -86,7 +70,6 @@ public class ConversationScenarioImpl implements ConversationScenario {
         this.execServ = new ScriptExecutionService();
         this.execServ.setLanguage(scriptLanguage);
 
-        this.generator = new PojoClassGenerator(ClassPool.getDefault());
     }
     
     /**
@@ -123,16 +106,10 @@ public class ConversationScenarioImpl implements ConversationScenario {
      * {@inheritDoc}
      *
      * @throws ScriptException
+     * @param scriptExecutionBeans
      */
-    public SimulatorPojo executeTransformation(SimulatorPojo pojo) throws ScriptException, SimulatorException {
-        generateClasses(pojo);
-
-        Object result = execServ.eval(transformationScript, "Transformation Script", scriptExecutionBeans);
-
-        //TODO Call the not yet implemented method to transform the
-        //scriptExecutionBeans into SimulatorPojo
-        SimulatorPojo resultPojo = SimulatorPojoPopulator.getInstance().populateSimulatorPojoFromBean(result);
-        return resultPojo;
+    public Object executeTransformation(Map<String, Object> scriptExecutionBeans) throws ScriptException, SimulatorException {
+        return execServ.eval(transformationScript, "Transformation Script", scriptExecutionBeans);
     }
 
 
@@ -142,14 +119,14 @@ public class ConversationScenarioImpl implements ConversationScenario {
      * @throws ScriptException
      * @throws NotFoundException
      * @throws CannotCompileException
+     * @param scriptExecutionBeans
      */
-    public boolean matchesCondition(SimulatorPojo pojo) throws ScriptException {
-        generateClasses(pojo);
+    public boolean matchesCondition(Map<String, Object> scriptExecutionBeans) throws ScriptException {
 
         Object result = execServ.eval(criteriaScript, "Criteria Script", scriptExecutionBeans);
 
         if (result != null && result instanceof Boolean) {
-            return ((Boolean) result).booleanValue();
+            return (Boolean) result;
         } else {
             return false;
         }
@@ -228,35 +205,6 @@ public class ConversationScenarioImpl implements ConversationScenario {
         return result;
     }
 
-    /**
-     * Generates the classes from the incoming data and registers them in the class pool.
-     *
-     * @param pojo incoming data pojo
-     * @throws ScriptException in case an exception has occured.
-     */
-    private void generateClasses(SimulatorPojo pojo) throws ScriptException {
-        try {
-            scriptExecutionBeans = generator.generateBeansMap(pojo);
-            scriptExecutionBeans.put("out",new FileOutputStream("wwwww.log"));
-        }
-        catch (CannotCompileException e) {
-            String errorMessage = "A compilation error has occured when "
-                    + "generating classes for SimulatorPojo";
-            logger.error(errorMessage, e);
-            throw new ScriptException("error_message", e);
-        }
-        catch (NotFoundException e) {
-            String errorMessage = "A class was not found in the ClassPool";
-            logger.error(errorMessage, e);
-            throw new ScriptException("error_message", e);
-        }
-        catch (SimulatorException se) {
-            String errorMsg = "SimulatorPojo was not properly generated: " + se.getMessage();
-            logger.error(errorMsg, se);
-            throw new ScriptException("error_message", se);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-    }
+
 
 }

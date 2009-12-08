@@ -36,11 +36,11 @@ public class SimulatorPojoPopulatorTest extends TestCase
         {
             // --- Now, get back a SimulatorPojo from the beans map' root entry
             SimulatorPojo pojo =
-                    SimulatorPojoPopulator.getInstance().
+                    SimulatorPojoPopulatorImpl.getInstance().
                             populateSimulatorPojoFromBean(beansMap.get("order"));
 
             assertTrue(
-                    "SimulatorPojo's root from SimulatorPojoPopulator " +
+                    "SimulatorPojo's root from SimulatorPojoPopulatorImpl " +
                             "should be equal to original pojo's root",
                     originalPojo.getRoot().equals(pojo.getRoot()));
         }
@@ -81,11 +81,11 @@ public class SimulatorPojoPopulatorTest extends TestCase
         {
             // --- Now, get back a SimulatorPojo from the beans map' root entry
             SimulatorPojo pojo =
-                    SimulatorPojoPopulator.getInstance().
+                    SimulatorPojoPopulatorImpl.getInstance().
                             populateSimulatorPojoFromBean(beansMap.get("employees"));
 
             assertTrue(
-                    "SimulatorPojo's root from SimulatorPojoPopulator " +
+                    "SimulatorPojo's root from SimulatorPojoPopulatorImpl " +
                             "should be equal to original pojo's root",
                     originalPojo.getRoot().equals(pojo.getRoot()));
         }
