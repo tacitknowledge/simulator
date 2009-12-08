@@ -71,7 +71,7 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
                 {
                     add(PARAM_JSON_ARRAY_CONTENT);
                     add("JSON Array content (What each array element represents. " +
-                            "e.g.: employee, order. Required if )");
+                            "e.g.: employee, order. Required if content is array)");
                     add("string");
                     add("optional");
                 }
@@ -84,6 +84,9 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
      */
     private static Logger logger = Logger.getLogger(JsonAdapter.class);
 
+    /**
+     * @see #PARAM_IS_ARRAY
+     */
     private boolean isArray = false;
 
     public JsonAdapter()

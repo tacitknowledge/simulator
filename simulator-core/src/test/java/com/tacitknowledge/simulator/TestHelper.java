@@ -79,6 +79,31 @@ public abstract class TestHelper
             "employee.title=Manager";
 
     /**
+     * Default YAML test data
+     */
+    public final static String YAML_DATA =
+            "---\n" +
+            "firstName: John\n" +
+            "lastName: Smith\n" +
+            "address:\n" +
+            "    streetAddress: 21 2nd Street\n" +
+            "    city: New York\n" +
+            "    state: NY\n" +
+            "title: Manager\n" +
+            "expirationDate: 12/21/2012";
+
+    public final static String YAML_SEQUENCE_DATA =
+            "- firstName: John\n" +
+            "  lastName: Smith\n" +
+            "  age: 40\n" +
+            "- firstName: Sara\n" +
+            "  lastName: Jameson\n" +
+            "  age: 28\n" +
+            "- firstName: Mary\n" +
+            "  lastName: Carlson\n" +
+            "  age: 25";
+
+    /**
      * Creates and populates a SimulatorPojo for consumption of the PojoClassGenerator.
      * PojoClassGenerator should generate JavaBeans from the Maps inside the SimulatorPojo
      *
