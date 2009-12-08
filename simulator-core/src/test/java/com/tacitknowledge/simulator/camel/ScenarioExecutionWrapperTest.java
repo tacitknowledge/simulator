@@ -7,11 +7,15 @@ import com.tacitknowledge.simulator.formats.JsonAdapter;
 import com.tacitknowledge.simulator.formats.PlainTextAdapter;
 import com.tacitknowledge.simulator.formats.XmlAdapter;
 import com.tacitknowledge.simulator.impl.ConversationScenarioImpl;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.input.SAXBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +35,7 @@ public class ScenarioExecutionWrapperTest {
 
         String testString = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><xxxxxx/>";
         String s = wrapper.process(testString);
-        Assert.assertEquals(testString, s);
+        Assert.assertNull(s);
     }
 
     @Test
@@ -180,9 +184,8 @@ public class ScenarioExecutionWrapperTest {
                 "stringFieldName: \"xxxx\", " +
                 "numberFieldName: 1234, " +
                 "arrayField:[" +
-                "       {intProperty:134}," +
-                "" +
-                "[1234]" +
+                "       {intProp:134}," +
+                "       {intProp:1234}" +
                 "           ]," +
                 "objectProperty:{stringgg:'ffff'}," +
                 "undefinedVar: undefined" +
@@ -196,9 +199,21 @@ public class ScenarioExecutionWrapperTest {
         scenarios.add(scenario);
         ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(scenarios, new XmlAdapter(), new XmlAdapter());
 
-        String s = wrapper.process(TestHelper.XML_DATA);
-//        Assert.assertTrue(s.contains("John12345"));
+         String s = wrapper.process(TestHelper.XML_DATA);
+         System.out.println("s = " + s);
+         SAXBuilder builder = new SAXBuilder();
+         Document doc = builder.build(new StringReader(s));
+         //todo nativeobject is correct for now but should be fixed
+         Element rootElement = doc.getRootElement();
+         Assert.assertEquals(rootElement.getName(),"nativeobject");
 
+         List<Element> list = rootElement.getChildren();
 
-    }
+         Assert.assertEquals("arrayField", list.get(0).getName());
+         Assert.assertEquals("arrayField", list.get(1).getName());
+         Assert.assertEquals("objectProperty", list.get(2).getName());
+         Assert.assertEquals("undefinedVar", list.get(3).getName());
+         Assert.assertEquals("numberFieldName", list.get(4).getName());
+         Assert.assertEquals("stringFieldName", list.get(5).getName());
+     }
 }
