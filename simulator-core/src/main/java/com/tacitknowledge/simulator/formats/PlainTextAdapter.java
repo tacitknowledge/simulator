@@ -1,8 +1,6 @@
 package com.tacitknowledge.simulator.formats;
 
 import com.tacitknowledge.simulator.FormatAdapterException;
-import com.tacitknowledge.simulator.SimulatorPojo;
-import com.tacitknowledge.simulator.StructuredSimulatorPojo;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,20 +23,22 @@ public class PlainTextAdapter extends BaseAdapter {
     }
 
     /**
-     *  Structured pojo root is 'text'
+     * Structured pojo root is 'text'
+     *
      * @param o text String
      * @return
      * @throws FormatAdapterException
      */
 
-    protected SimulatorPojo createSimulatorPojo(String o)
+    @Override
+    public Map<String, Object> generateBeans(String o) throws FormatAdapterException
     {
-        SimulatorPojo pojo = new StructuredSimulatorPojo();
-        Map<String, Object> root = new HashMap<String, Object>();
-        root.put("text",o==null?"":o.toString());
-        pojo.setRoot(root);
-        return pojo;
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("text", o);
+        return map;
     }
+
 
     @Override
     public String adaptTo(Object scriptExecutionResult) throws FormatAdapterException

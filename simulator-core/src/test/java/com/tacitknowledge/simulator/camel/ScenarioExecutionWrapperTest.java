@@ -31,11 +31,14 @@ public class ScenarioExecutionWrapperTest {
 
     @Test
     public void testWithoutScenarios() throws Exception {
-        ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(new ArrayList<ConversationScenario>(), new XmlAdapter(), new XmlAdapter());
+        ArrayList<ConversationScenario> list = new ArrayList<ConversationScenario>();
+        list.add(new ConversationScenarioImpl(1,"javascript","true","text"));
+        ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(list, new PlainTextAdapter(), new PlainTextAdapter());
 
         String testString = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><xxxxxx/>";
         String s = wrapper.process(testString);
-        Assert.assertNull(s);
+        Assert.assertNotNull(s);
+        Assert.assertSame(testString, s);
     }
 
     @Test

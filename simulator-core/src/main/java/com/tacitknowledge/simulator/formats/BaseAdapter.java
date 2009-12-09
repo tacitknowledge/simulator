@@ -67,19 +67,22 @@ public abstract class BaseAdapter implements Adapter<Object>
      */
     abstract void validateParameters() throws FormatAdapterException;
 
-    public final Map<String, Object> generateBeans(String o) throws FormatAdapterException
+    public Map<String, Object> generateBeans(String o) throws FormatAdapterException
     {
         validateParameters();
         SimulatorPojo pojo = createSimulatorPojo(o);
         return generateClasses(pojo);
     }
 
-    protected abstract SimulatorPojo createSimulatorPojo(String o) throws FormatAdapterException ;
+    protected SimulatorPojo createSimulatorPojo(String o) throws FormatAdapterException
+    {
+        throw new UnsupportedOperationException("override me");
+    }
 
 
-
-    protected  String getString(SimulatorPojo scriptExecutionResult) throws FormatAdapterException{
-        throw new UnsupportedOperationException();
+    protected String getString(SimulatorPojo scriptExecutionResult) throws FormatAdapterException
+    {
+        throw new UnsupportedOperationException("override me");
     }
     
     /**
