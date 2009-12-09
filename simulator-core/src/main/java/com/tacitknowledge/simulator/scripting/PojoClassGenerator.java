@@ -2,16 +2,28 @@ package com.tacitknowledge.simulator.scripting;
 
 import com.tacitknowledge.simulator.SimulatorException;
 import com.tacitknowledge.simulator.SimulatorPojo;
-import javassist.*;
+
 import org.apache.log4j.Logger;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
+import javassist.CannotCompileException;
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.CtField;
+import javassist.Modifier;
+import javassist.NotFoundException;
+
 /**
- * @author galo
+ * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
 public class PojoClassGenerator
 {
@@ -37,7 +49,7 @@ public class PojoClassGenerator
     //private List<CtClass> generatedClasses;
     private Map<String, CtClass> generatedClasses;
 
-    /**                                                 
+    /**
      * Logger for this class.
      */
     private static Logger logger = Logger.getLogger(PojoClassGenerator.class);
@@ -54,7 +66,7 @@ public class PojoClassGenerator
     }
 
     /**
-     * Constructor                                                  
+     * Constructor
      *
      * @param pool        The ClassPool to be used.
      * @param packageName The full package name in which the generated-classes are contained.
@@ -87,11 +99,13 @@ public class PojoClassGenerator
      * @throws NotFoundException      If a referenced class cannot be found in the ClassPool
      * @throws ScriptException        If an error happens while trying to populate the
      *                                generated-class beans
+     * @throws SimulatorException     If the value coming from the incoming does not comply
+     *                                with the criteria.
      */
     public Map<String, Object> generateBeansMap(SimulatorPojo pojo)
             throws CannotCompileException, NotFoundException, ScriptException, SimulatorException
     {
-        //�--- The SimulatorPojo's root must contain only one entry
+        // --- The SimulatorPojo's root must contain only one entry
         // --- Beans Map should only contain ONE entry
         if (pojo.getRoot().isEmpty() || pojo.getRoot().size() > 1)
         {
@@ -107,11 +121,19 @@ public class PojoClassGenerator
         for (Entry<String, Object> entry : pojo.getRoot().entrySet())
         {
             String className = getValidClassName(entry.getKey());
-            Map<String, Object> bean = (Map<String, Object>) entry.getValue();
 
-            beansMap.put(
-                    entry.getKey(),
-                    populateClassIntanceFromMap(getPackClassName(className), bean));
+            Object beanValue = entry.getValue();
+            // We should only cast the beanValue to map if it is map
+            // Sometimes it can be other type such as String, for example
+            // the xml we use in the tests.
+            if (beanValue instanceof Map)
+            {
+                Map<String, Object> bean = (Map<String, Object>) beanValue;
+
+                beansMap.put(
+                        entry.getKey(),
+                        populateClassIntanceFromMap(getPackClassName(className), bean));
+            }
         }
 
         return beansMap;
@@ -480,13 +502,23 @@ public class PojoClassGenerator
         return (name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase());
     }
 
+    /**
+     *
+     * @param name
+     * @return
+     */
     private String getPackClassName(String name)
-    {                                                                           
+    {
         return generatedClassesPackage + name;
     }
 
+    /**
+     *
+     * @param name
+     * @return
+     */
     private String getPackTimeClassName(String name)
     {
-        return generatedClassesPackage +"q"+ new Date().getTime() + "." + name;
+        return generatedClassesPackage + "q" + new Date().getTime() + "." + name;
     }
 }
