@@ -92,11 +92,7 @@ public class ScenarioExecutionWrapperTest {
         Assert.assertFalse(s.contains("John12345"));
         Assert.assertTrue(s.contains("Johnaaaa"));
 
-
-
     }
-
-
 
 
     @Test
@@ -104,18 +100,10 @@ public class ScenarioExecutionWrapperTest {
 
         List<ConversationScenario> scenarios = new ArrayList<ConversationScenario>();
 
-//        String criteria1 = "employees.employee[0].name=='John12345';"; //false
-//        String execution1 = "employees.employee[0].name='Johnffff';employees";
-
         String criteria2 = "employees.employee[0].name=='John';";      //true
         String execution2 = "employees.employee[0].name='Johnaaaa';employees";  //this script should be executed
 
-//        String criteria3 = "employees.employee[0].name=='Johnffff';";      //false
-//        String execution3 = "employees.employee[0].name='John12345';employees";
-
-//        scenarios.add(createScenario(criteria1, execution1));
         scenarios.add(createScenario(0, criteria2, execution2, "javascript"));
-//        scenarios.add(createScenario(criteria3, execution3));
 
         JsonAdapter outAdapter = new JsonAdapter();
         Map<String, String> param = new HashMap<String, String>();
@@ -160,6 +148,34 @@ public class ScenarioExecutionWrapperTest {
                          "return 'Success'", new XmlAdapter(), new PlainTextAdapter());
         String s = wrapper.process(TestHelper.XML_DATA);
         Assert.assertTrue(s.contains("Success"));
+    }
+
+
+    @Test
+    public void testReturnRubyEmptyHash() throws Exception
+    {
+
+        ScenarioExecutionWrapper wrapper = createExecutionWrapper("require 'java'\n$employees.employee[0].name == 'John';",
+                "$employees.employee[0].name='John12345';" +
+                        "return {}", new XmlAdapter(), new XmlAdapter());
+        String s = wrapper.process(TestHelper.XML_DATA);
+        Assert.assertTrue(s.contains("rubyhash"));
+    }
+
+    @Test
+    public void testReturnRubyNotEmptyHash() throws Exception
+    {
+
+        ScenarioExecutionWrapper wrapper = createExecutionWrapper("require 'java'\n$employees.employee[0].name == 'John';",
+                "$employees.employee[0].name='John12345';" +
+                        "return { :nilProperty => nil," +
+                        ":numberProperty => 1234," +
+                        ":arrayProperty => [ ]" +
+                        "" +
+                        "" +
+                        "}", new XmlAdapter(), new XmlAdapter());
+        String s = wrapper.process(TestHelper.XML_DATA);
+        Assert.assertTrue(s.contains("rubyhash"));
     }
 
     private ScenarioExecutionWrapper createExecutionWrapper(String criteria, String execution, Adapter inAdapter, Adapter outAdapter) {

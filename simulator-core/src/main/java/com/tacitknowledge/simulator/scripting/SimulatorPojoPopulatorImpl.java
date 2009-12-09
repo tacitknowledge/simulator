@@ -69,9 +69,12 @@ public class SimulatorPojoPopulatorImpl
 
         Map<String, Object> stringObjectMap;
 
-        if (bean.getClass().getName().startsWith("org.mozilla.javascript")) {
+        String className = bean.getClass().getName();
+        if (className.startsWith("org.mozilla.javascript")) {
             stringObjectMap = new JavaScriptObjectMapper().getMapFromObject(bean);
-        } else {
+        } else if(className.startsWith("org.jruby")){
+             stringObjectMap = new RubyObjectMapper().getMapFromObject(bean);
+        }else{
             stringObjectMap = new JavaObjectMapper().getMapFromObject(bean);
         }
 

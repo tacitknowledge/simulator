@@ -1,7 +1,5 @@
 package com.tacitknowledge.simulator.scripting;
 
-import com.tacitknowledge.simulator.SimulatorException;
-
 import java.util.Map;
 
 /**
@@ -12,5 +10,5 @@ import java.util.Map;
  */
 public interface ObjectMapper {
     
-    Map<String, Object> getMapFromObject(Object o) throws SimulatorException, ObjectMapperException;
+    Map<String, Object> getMapFromObject(Object o) throws ObjectMapperException;
 }
