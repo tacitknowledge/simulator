@@ -8,7 +8,6 @@ import org.apache.log4j.Logger;
 import org.ho.yaml.YamlDecoder;
 
 import java.io.EOFException;
-import java.io.InputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -108,16 +107,9 @@ public class YamlAdapter extends BaseAdapter implements Adapter<Object>
         super(parameters);
     }
 
-    /**
-     * @inheritDoc
-     * @param object @see Adapter#adaptFrom
-     * @return @see Adapter#adaptFrom
-     * @throws com.tacitknowledge.simulator.FormatAdapterException @see Adapter#adaptFrom
-     */
-    public SimulatorPojo adaptFrom(String object) throws FormatAdapterException
+    protected SimulatorPojo createSimulatorPojo(String object)
+            throws FormatAdapterException
     {
-        validateParameters();
-
         SimulatorPojo pojo = new StructuredSimulatorPojo();
 
         YamlDecoder enc = new YamlDecoder(new StringReader(object));
@@ -145,17 +137,13 @@ public class YamlAdapter extends BaseAdapter implements Adapter<Object>
         return pojo;
     }
 
-    /**
-     * @inheritDoc
-     * @param pojo @see Adapter#adaptTo
-     * @return @see Adapter#adaptTo
-     * @throws FormatAdapterException @see Adapter#adaptTo
-     */
-    public String adaptTo(SimulatorPojo pojo) throws FormatAdapterException
+    @Override
+    protected String getString(SimulatorPojo scriptExecutionResult) throws FormatAdapterException
     {
-        //TODO Implement this functionality.
+        //todo implement
         return null;
     }
+
 
     /**
      * @inheritDoc

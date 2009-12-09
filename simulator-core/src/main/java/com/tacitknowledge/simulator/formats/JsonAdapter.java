@@ -102,16 +102,9 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
         super(parameters);
     }
 
-    /**
-     * @param o The incoming data object to adapt to JSON format.
-     * @return an object constructed based on the inboud transport data.
-     * @inheritDoc
-     */
-    public SimulatorPojo adaptFrom(String o) throws FormatAdapterException
+    protected SimulatorPojo createSimulatorPojo(String o)
+            throws FormatAdapterException
     {
-        // ---
-        validateParameters();
-
         SimulatorPojo pojo = new StructuredSimulatorPojo();
 
         try
@@ -147,36 +140,29 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
             logger.error(errorMsg, je);
             throw new FormatAdapterException(errorMsg, je);
         }
-
         return pojo;
     }
 
-    /**
-     * Adapts the data from simulation to the JSON formatted object
-     *
-     * @param pojo simulator pojo with data to be adapted to JSON format
-     * @return an object constructed based on the data received from execution of the simulation
-     */
-    public String adaptTo(SimulatorPojo pojo) throws FormatAdapterException
-    {
-        validateParameters();
 
+    protected String getString(SimulatorPojo simulatorPojo)
+            throws FormatAdapterException
+    {
         // --- The SimulatorPojo for JSONAdapter should contain only one key in its root
-        if (pojo.getRoot().isEmpty() || pojo.getRoot().size() > 1)
+        if (simulatorPojo.getRoot().isEmpty() || simulatorPojo.getRoot().size() > 1)
         {
             logger.error("  Incorrect SimulatorPojo's root size. Expecting 1, but found"
-                    + pojo.getRoot().size());
+                    + simulatorPojo.getRoot().size());
             throw new
                     FormatAdapterException(
                     "Incorrect SimulatorPojo's root size. Expecting 1, but found"
-                            + pojo.getRoot().size());
+                            + simulatorPojo.getRoot().size());
         }
 
         // --- The pojo's root should only contain an entry with key PARAM_JSON_CONTENT
         Map<String, Object> map =
-                (Map<String, Object>) pojo.getRoot().get(getParamValue(PARAM_JSON_CONTENT));
+                (Map<String, Object>) simulatorPojo.getRoot().get(getParamValue(PARAM_JSON_CONTENT));
 
-        String jsonString;
+        String jsonString1;
 
         // --- If the JSON content is an array...
         if (this.isArray)
@@ -185,15 +171,15 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
             // (key should be #PARAM_JSON_ARRAY_CONTENT)
             List items = (List) map.get(getParamValue(PARAM_JSON_ARRAY_CONTENT));
             JSONArray jsonArray = new JSONArray(items);
-            jsonString = jsonArray.toString();
+            jsonString1 = jsonArray.toString();
         }
         else
         {
             // ...otherwise, go with the default JSONObject
             JSONObject jsonObject = new JSONObject(map);
-            jsonString = jsonObject.toString();
+            jsonString1 = jsonObject.toString();
         }
-
+        String jsonString = jsonString1;
         return jsonString;
     }
 

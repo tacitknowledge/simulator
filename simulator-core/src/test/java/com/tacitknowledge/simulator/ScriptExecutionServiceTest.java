@@ -2,7 +2,7 @@ package com.tacitknowledge.simulator;
 
 import com.tacitknowledge.simulator.formats.AdapterFactory;
 import com.tacitknowledge.simulator.formats.FormatConstants;
-import com.tacitknowledge.simulator.scripting.PojoClassGenerator;
+import com.tacitknowledge.simulator.formats.XmlAdapter;
 import com.tacitknowledge.simulator.scripting.ScriptException;
 import com.tacitknowledge.simulator.scripting.ScriptExecutionService;
 import javassist.ClassPool;
@@ -29,13 +29,10 @@ public class ScriptExecutionServiceTest extends TestCase
         ClassPool pool = ClassPool.getDefault();
 
         // --- First, get the SimulatorPojo from the data
-        Adapter adapter = AdapterFactory.getAdapter(FormatConstants.XML);
+        XmlAdapter adapter = (XmlAdapter) AdapterFactory.getAdapter(FormatConstants.XML);
         // --- Get the data in a strcutured form as a SimulatorPojo
-        SimulatorPojo pojo = adapter.adaptFrom(TestHelper.XML_DATA);
+        Map<String, Object> beans = adapter.generateBeans(TestHelper.XML_DATA);
 
-        // --- Get a map of (temporary and dinamically generated) beans out of the SimulatorPojo
-        PojoClassGenerator generator = new PojoClassGenerator(pool);
-        Map beans = generator.generateBeansMap(pojo);
         // --- Now, get a ScriptExecutionService and set the language (javascript)
         ScriptExecutionService execServ = new ScriptExecutionService();
         execServ.setLanguage("javascript");
@@ -49,12 +46,6 @@ public class ScriptExecutionServiceTest extends TestCase
 
         result = execServ.eval("employees.employee[1].name", "Second employee name", beans);
         assertEquals(result, "Sara");
-
-        // --- Detach the generated classes
-        generator.detachGeneratedClasses();
-        // --- Get rid of the reference to the generator and ClassPool
-        generator = null;
-        pool = null;
     }
 
     /**

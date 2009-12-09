@@ -5,7 +5,6 @@ import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.StructuredSimulatorPojo;
 import org.apache.log4j.Logger;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -55,7 +54,8 @@ public class SimulatorPojoPopulatorImpl
      * @throws SimulatorException If anything goes wrong during analyzing the object fields
      */
     public SimulatorPojo populateSimulatorPojoFromBean(Object bean)
-            throws SimulatorException {
+            throws ObjectMapperException
+    {
 
         // ---
         SimulatorPojo pojo = new StructuredSimulatorPojo();
@@ -63,11 +63,11 @@ public class SimulatorPojoPopulatorImpl
 
         // --- Bean should only contain ONE entry
         if (bean == null) {
-            throw new SimulatorException(
+            throw new ObjectMapperException(
                     "Bean is empty.");
         }
 
-        Map<String, Object> stringObjectMap = new HashMap<String, Object>();
+        Map<String, Object> stringObjectMap;
 
         if (bean.getClass().getName().startsWith("org.mozilla.javascript")) {
             stringObjectMap = new JavaScriptObjectMapper().getMapFromObject(bean);

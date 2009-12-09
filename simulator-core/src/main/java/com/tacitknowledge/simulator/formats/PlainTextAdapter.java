@@ -30,7 +30,9 @@ public class PlainTextAdapter extends BaseAdapter {
      * @return
      * @throws FormatAdapterException
      */
-    public SimulatorPojo adaptFrom(String o) throws FormatAdapterException {
+
+    protected SimulatorPojo createSimulatorPojo(String o)
+    {
         SimulatorPojo pojo = new StructuredSimulatorPojo();
         Map<String, Object> root = new HashMap<String, Object>();
         root.put("text",o==null?"":o.toString());
@@ -38,14 +40,10 @@ public class PlainTextAdapter extends BaseAdapter {
         return pojo;
     }
 
-    /**
-     *
-     * @param pojo SimulatorPojo object
-     * @return text as String
-     * @throws FormatAdapterException
-     */
-    public String adaptTo(SimulatorPojo pojo) throws FormatAdapterException {
-        return pojo.getRoot().get("text").toString();
+    @Override
+    public String adaptTo(Object scriptExecutionResult) throws FormatAdapterException
+    {
+        return scriptExecutionResult.toString();
     }
 
     /**

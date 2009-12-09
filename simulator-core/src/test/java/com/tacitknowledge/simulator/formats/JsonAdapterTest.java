@@ -1,6 +1,5 @@
 package com.tacitknowledge.simulator.formats;
 
-import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.TestHelper;
@@ -19,18 +18,18 @@ import java.util.Map;
  */
 public class JsonAdapterTest extends TestCase
 {
-    private Adapter adapter;
+    private JsonAdapter adapter;
 
     public void setUp()
     {
-        adapter = AdapterFactory.getAdapter(FormatConstants.JSON);
+        adapter = new JsonAdapter();
     }
 
     public void testAdapterWithoutParameters()
     {
         try
         {
-            adapter.adaptFrom(TestHelper.JSON_DATA);
+            adapter.generateBeans(TestHelper.JSON_DATA);
             fail("JSON Adapter should throw exception if the required parameters are not provided.");
         }
         catch(FormatAdapterException fae)
@@ -48,7 +47,7 @@ public class JsonAdapterTest extends TestCase
 
         try
         {
-            SimulatorPojo pojo = adapter.adaptFrom(TestHelper.JSON_DATA);
+            SimulatorPojo pojo = adapter.createSimulatorPojo(TestHelper.JSON_DATA);
 
             assertNotNull(pojo.getRoot().get("person"));
             Map<String, Object> person = (Map<String, Object>) pojo.getRoot().get("person");
@@ -89,10 +88,10 @@ public class JsonAdapterTest extends TestCase
         try
         {
             // --- Use the same data to get a pojo first
-            SimulatorPojo pojo = adapter.adaptFrom(TestHelper.JSON_DATA);
+            SimulatorPojo pojo = adapter.createSimulatorPojo(TestHelper.JSON_DATA);
 
             // --- Now, use the same pojo to generate a JSON string
-            String jsonString = adapter.adaptTo(pojo);
+            String jsonString = adapter.getString(pojo);
 
             // --- Use the JSON parsers to compare the original and the output
             JSONObject original = new JSONObject(TestHelper.JSON_DATA);
@@ -123,7 +122,7 @@ public class JsonAdapterTest extends TestCase
         }
     }
 
-    public void testSuccessfulAdaptToWithOnlyArrays()
+    public void testSuccessfulAdaptToWithOnlyArrays() throws FormatAdapterException, JSONException
     {
         // ---
         // --- Provide required configuration
@@ -132,41 +131,29 @@ public class JsonAdapterTest extends TestCase
         params.put(JsonAdapter.PARAM_IS_ARRAY, "true");
         params.put(JsonAdapter.PARAM_JSON_ARRAY_CONTENT, "anArray");
         adapter.setParameters(params);
-
+        adapter.validateParameters();
         // ---
-        try
-        {
-            // --- Use JSON arrays data to get a pojo first
-            SimulatorPojo pojo = adapter.adaptFrom(TestHelper.JSON_DATA_ARRAY);
+        // --- Use JSON arrays data to get a pojo first
+        SimulatorPojo pojo = adapter.createSimulatorPojo(TestHelper.JSON_DATA_ARRAY);
 
-            // --- Now, use the same pojo to generate a JSON string
-            String jsonString = adapter.adaptTo(pojo);
+        // --- Now, use the same pojo to generate a JSON string
+        String jsonString = adapter.getString(pojo);
 
-            // --- Make sure string starts and ends with square brackets
-            assertEquals(0, jsonString.indexOf("["));
-            assertEquals(jsonString.length() - 1, jsonString.lastIndexOf("]"));
+        // --- Make sure string starts and ends with square brackets
+        assertEquals(0, jsonString.indexOf("["));
+        assertEquals(jsonString.length() - 1, jsonString.lastIndexOf("]"));
 
-            // --- Need to compare returned values by indexes
-            JSONArray original = new JSONArray(TestHelper.JSON_DATA_ARRAY);
-            JSONArray generated = new JSONArray(jsonString);
+        // --- Need to compare returned values by indexes
+        JSONArray original = new JSONArray(TestHelper.JSON_DATA_ARRAY);
+        JSONArray generated = new JSONArray(jsonString);
 
-            assertEquals(original.length(), generated.length());
+        assertEquals(original.length(), generated.length());
 
-            JSONArray originalItem1 = original.getJSONArray(0);
-            JSONArray generatedItem1 = generated.getJSONArray(0);
+        JSONArray originalItem1 = original.getJSONArray(0);
+        JSONArray generatedItem1 = generated.getJSONArray(0);
 
-            assertEquals(originalItem1.length(), generatedItem1.length());
-            assertEquals(originalItem1.getString(0), generatedItem1.getString(0));
-        }
-        catch (FormatAdapterException e)
-        {
-            e.printStackTrace();
-            fail("Not expecting exception!");
-        }
-        catch (JSONException je)
-        {
-            je.printStackTrace();
-            fail("Not expecting exception!");
-        }
+        assertEquals(originalItem1.length(), generatedItem1.length());
+        assertEquals(originalItem1.getString(0), generatedItem1.getString(0));
+
     }
 }

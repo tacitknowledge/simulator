@@ -12,5 +12,5 @@ import java.util.Map;
  */
 public interface ObjectMapper {
     
-    Map<String, Object> getMapFromObject(Object o) throws SimulatorException;
+    Map<String, Object> getMapFromObject(Object o) throws SimulatorException, ObjectMapperException;
 }

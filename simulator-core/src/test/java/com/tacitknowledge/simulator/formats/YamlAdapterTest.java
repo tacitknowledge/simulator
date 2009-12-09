@@ -1,6 +1,5 @@
 package com.tacitknowledge.simulator.formats;
 
-import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.TestHelper;
@@ -16,18 +15,18 @@ import java.util.Map;
  */
 public class YamlAdapterTest extends TestCase
 {
-    private Adapter adapter;
+    private YamlAdapter adapter;
 
     public void setUp()
     {
-        adapter = AdapterFactory.getAdapter(FormatConstants.YAML);
+        adapter = (YamlAdapter) AdapterFactory.getAdapter(FormatConstants.YAML);
     }
 
     public void testAdapterWithoutParameters()
     {
         try
         {
-            adapter.adaptFrom(TestHelper.YAML_DATA);
+            adapter.generateBeans(TestHelper.YAML_DATA);
             fail("JSON Adapter should throw exception if the required parameters are not provided.");
         }
         catch(FormatAdapterException fae)
@@ -45,7 +44,7 @@ public class YamlAdapterTest extends TestCase
 
         try
         {
-            SimulatorPojo pojo = adapter.adaptFrom(TestHelper.YAML_DATA);
+            SimulatorPojo pojo = adapter.createSimulatorPojo(TestHelper.YAML_DATA);
 
             assertNotNull(pojo.getRoot().get("employee"));
 
@@ -61,7 +60,7 @@ public class YamlAdapterTest extends TestCase
         }
     }
 
-    public void testSuccessfulAdaptFromSequence()
+    public void testSuccessfulAdaptFromSequence() throws FormatAdapterException
     {
         // --- Provide the required configuration
         Map<String, String> params = new HashMap<String, String>();
@@ -69,10 +68,10 @@ public class YamlAdapterTest extends TestCase
         params.put(YamlAdapter.PARAM_IS_ARRAY, "true");
         params.put(YamlAdapter.PARAM_YAML_ARRAY_CONTENT, "person");
         adapter.setParameters(params);
-        
+        adapter.validateParameters();
         try
         {
-            SimulatorPojo pojo = adapter.adaptFrom(TestHelper.YAML_SEQUENCE_DATA);
+            SimulatorPojo pojo = adapter.createSimulatorPojo(TestHelper.YAML_SEQUENCE_DATA);
 
             assertNotNull(pojo.getRoot().get("persons"));
 

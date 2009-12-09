@@ -2,6 +2,15 @@ package com.tacitknowledge.simulator.formats;
 
 import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.FormatAdapterException;
+import com.tacitknowledge.simulator.SimulatorException;
+import com.tacitknowledge.simulator.SimulatorPojo;
+import com.tacitknowledge.simulator.scripting.ObjectMapperException;
+import com.tacitknowledge.simulator.scripting.PojoClassGenerator;
+import com.tacitknowledge.simulator.scripting.ScriptException;
+import com.tacitknowledge.simulator.scripting.SimulatorPojoPopulatorImpl;
+import javassist.CannotCompileException;
+import javassist.ClassPool;
+import javassist.NotFoundException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -58,6 +67,21 @@ public abstract class BaseAdapter implements Adapter<Object>
      */
     abstract void validateParameters() throws FormatAdapterException;
 
+    public final Map<String, Object> generateBeans(String o) throws FormatAdapterException
+    {
+        validateParameters();
+        SimulatorPojo pojo = createSimulatorPojo(o);
+        return generateClasses(pojo);
+    }
+
+    protected abstract SimulatorPojo createSimulatorPojo(String o) throws FormatAdapterException ;
+
+
+
+    protected  String getString(SimulatorPojo scriptExecutionResult) throws FormatAdapterException{
+        throw new UnsupportedOperationException();
+    }
+    
     /**
      * @param name The parameter name. Parameter names should be defined by each implementation.
      * @return The parameter value or null if not defined.
@@ -65,5 +89,65 @@ public abstract class BaseAdapter implements Adapter<Object>
     protected String getParamValue(String name)
     {
         return parameters.get(name);
+    }
+
+    private SimulatorPojo getSimulatorPojo(Object object) throws ObjectMapperException
+    {
+        return SimulatorPojoPopulatorImpl.getInstance().populateSimulatorPojoFromBean(object);
+    }
+
+
+    public String adaptTo(Object scriptExecutionResult) throws FormatAdapterException
+    {
+        validateParameters();
+        SimulatorPojo getSimulatorPojo;
+        try
+        {
+            getSimulatorPojo = getSimulatorPojo(scriptExecutionResult);
+        }
+        catch (ObjectMapperException e)
+        {
+            throw new FormatAdapterException("Error trying to generate temporary classes",e);
+        }
+        return getString(getSimulatorPojo);
+    }
+
+    /**
+     * Generates the classes from the incoming data and registers them in the class pool.
+     *
+     * @param pojo incoming data pojo
+     * @throws com.tacitknowledge.simulator.scripting.ScriptException
+     *          in case an exception has occured.
+     * @return
+     */
+    protected Map<String, Object> generateClasses(SimulatorPojo pojo) throws FormatAdapterException
+    {
+        Map<String, Object> scriptExecutionBeans;
+        try {
+            /**
+             * Generates the classes for the incoming data *
+             */
+            PojoClassGenerator generator = new PojoClassGenerator(ClassPool.getDefault());
+
+            scriptExecutionBeans = generator.generateBeansMap(pojo);
+        }
+        catch (CannotCompileException e) {
+            String errorMessage = "A compilation error has occured when "
+                    + "generating classes for SimulatorPojo";
+            throw new FormatAdapterException(errorMessage, e);
+        }
+        catch (NotFoundException e) {
+            String errorMessage = "A class was not found in the ClassPool";
+            throw new FormatAdapterException(errorMessage, e);
+        }
+        catch (SimulatorException se) {
+            String errorMsg = "SimulatorPojo was not properly generated: " + se.getMessage();
+            throw new FormatAdapterException(errorMsg, se);
+        }
+        catch (ScriptException e)
+        {
+            throw new FormatAdapterException("", e);
+        }
+        return scriptExecutionBeans;
     }
 }

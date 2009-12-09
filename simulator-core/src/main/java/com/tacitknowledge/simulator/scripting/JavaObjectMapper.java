@@ -29,7 +29,7 @@ public class JavaObjectMapper implements ObjectMapper {
      * @return The map representation of the passed object
      * @throws SimulatorException If anything goes wrong
      */
-    public Map<String, Object> getMapFromObject(Object o) throws SimulatorException
+    public Map<String, Object> getMapFromObject(Object o) throws ObjectMapperException
     {
         Map<String, Object> map = new HashMap<String, Object>();
 
@@ -45,7 +45,7 @@ public class JavaObjectMapper implements ObjectMapper {
             catch (IllegalAccessException iae)
             {
                 logger.error(iae.getMessage());
-                throw new SimulatorException(
+                throw new ObjectMapperException(
                         "Unexpected error accesing field value: " + iae.getMessage(),
                         iae);
             }
@@ -82,7 +82,7 @@ public class JavaObjectMapper implements ObjectMapper {
      * @return The list populated with eithert Strings or the Map representation of its items
      * @throws SimulatorException If anything goes wrong
      */
-    private List getListFromArray(Object[] objects) throws SimulatorException {
+    private List getListFromArray(Object[] objects) throws ObjectMapperException {
         List list = new ArrayList();
         for (Object o : objects) {
             if (o instanceof String) {

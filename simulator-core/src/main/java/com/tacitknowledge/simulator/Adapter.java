@@ -42,15 +42,15 @@ public interface Adapter<E>
      * @throws FormatAdapterException in case the incoming data object is not in correct format
      *      or missing required parameters. Also @see #BaseAdapter
      */
-    SimulatorPojo adaptFrom(String body) throws FormatAdapterException;
+    Map<String, Object> generateBeans(String body) throws FormatAdapterException;
 
     /**
      * Adapts the data from the simulation result SimulatorPojo into the desired format used
      * for outbound transport.
-     * @param pojo SimulatorPojo object
+     * @param scriptExecutionResult
      * @return generic data object.
      * @throws FormatAdapterException If the pojo object is not properly structured
      *      , an error occurs during convertion.
      */
-    String adaptTo(SimulatorPojo pojo) throws FormatAdapterException;
+    String adaptTo(Object scriptExecutionResult) throws FormatAdapterException;
 }

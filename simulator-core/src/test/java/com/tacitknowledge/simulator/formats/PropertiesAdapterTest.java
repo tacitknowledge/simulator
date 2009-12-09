@@ -1,6 +1,5 @@
 package com.tacitknowledge.simulator.formats;
 
-import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.TestHelper;
@@ -13,18 +12,18 @@ import java.util.Map;
  */
 public class PropertiesAdapterTest extends TestCase
 {
-    private Adapter adapter;
+    private PropertiesAdapter adapter;
 
     public void setUp()
     {
-        adapter = AdapterFactory.getAdapter(FormatConstants.PROPERTIES);
+        adapter = new PropertiesAdapter();
     }
 
     public void testSuccessfulAdaptFrom()
     {
         try
         {
-            SimulatorPojo pojo = adapter.adaptFrom(TestHelper.PROPERTIES_DATA);
+            SimulatorPojo pojo = adapter.createSimulatorPojo(TestHelper.PROPERTIES_DATA);
 
             assertNotNull(pojo.getRoot().get("employee"));
 
@@ -51,12 +50,12 @@ public class PropertiesAdapterTest extends TestCase
     {
         try
         {
-            SimulatorPojo pojo = adapter.adaptFrom(TestHelper.PROPERTIES_DATA);
+            SimulatorPojo pojo = adapter.createSimulatorPojo(TestHelper.PROPERTIES_DATA);
 
             assertNotNull(pojo.getRoot().get("employee"));
 
             // --- Now,. do the inverse
-            String props = adapter.adaptTo(pojo);
+            String props = adapter.getString(pojo);
 
             assertTrue(props.contains("employee.firstName=John"));
             assertTrue(props.contains("employee.title=Manager"));

@@ -6,12 +6,7 @@ import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.StructuredSimulatorPojo;
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
-
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -79,16 +74,9 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
         super(parameters);
     }
 
-    /**
-     * @inheritDoc
-     * @param object @see Adapter#adaptFrom
-     * @return @see Adapter#adaptFrom
-     * @throws com.tacitknowledge.simulator.FormatAdapterException @see Adapter#adaptFrom
-     */
-    public SimulatorPojo adaptFrom(String object) throws FormatAdapterException
+    protected SimulatorPojo createSimulatorPojo(String object)
+            throws FormatAdapterException
     {
-        validateParameters();
-
         SimulatorPojo pojo = new StructuredSimulatorPojo();
 
         // --- The SimulatorPojo's root will contain only one key (csvContent) with a List value
@@ -130,26 +118,17 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
         return pojo;
     }
 
-    /**
-     * @inheritDoc
-     * @param pojo @see Adapter#adaptTo
-     * @return @see Adapter#adaptTo
-     * @throws com.tacitknowledge.simulator.FormatAdapterException @see Adapter#adaptTo
-     */
-    public String adaptTo(SimulatorPojo pojo) throws FormatAdapterException
-    {
-        validateParameters();
 
-        if (pojo == null)
-        {
-            throw new FormatAdapterException("Simulator Pojo can't be null");
-        }
-        if (pojo.getRoot().isEmpty())
+    protected String getString(SimulatorPojo simulatorPojo)
+            throws FormatAdapterException
+    {
+
+        if (simulatorPojo.getRoot().isEmpty())
         {
             throw new FormatAdapterException("Simulator Pojo root is empty.");
         }
 
-        return getPropertiesAsString("", pojo.getRoot());
+        return getPropertiesAsString("", simulatorPojo.getRoot());
     }
 
     /**

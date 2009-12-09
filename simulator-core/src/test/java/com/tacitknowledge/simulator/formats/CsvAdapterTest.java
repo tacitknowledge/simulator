@@ -1,6 +1,5 @@
 package com.tacitknowledge.simulator.formats;
 
-import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.TestHelper;
@@ -15,21 +14,20 @@ import java.util.regex.Pattern;
 /**
  * @author galo
  */
-public class CsvAdapterTest extends TestCase
+public class
+        CsvAdapterTest extends TestCase
 {
 
 
-    private Adapter adapter;
+    private CsvAdapter adapter;
 
     public void setUp()
     {
-        adapter = AdapterFactory.getAdapter(FormatConstants.CSV);
+        adapter = (CsvAdapter) AdapterFactory.getAdapter(FormatConstants.CSV);
     }
 
     public void testSuccessfulAdaptFromWithHeaders()
     {
-        try
-        {
             // --- Provide the required configuration
             // (only CSV_CONTENT is required if using headers)
             Map<String, String> params = new HashMap<String, String>();
@@ -37,7 +35,7 @@ public class CsvAdapterTest extends TestCase
 
             adapter.setParameters(params);
 
-            SimulatorPojo pojo = adapter.adaptFrom(TestHelper.CSV_DATA);
+            SimulatorPojo pojo = adapter.createSimulatorPojo(TestHelper.CSV_DATA);
 
             Object o = pojo.getRoot().get("Words");
             // --- First, make sure we got the root Map with a Words key
@@ -51,19 +49,10 @@ public class CsvAdapterTest extends TestCase
 
             Map<String, String> row = (Map<String, String>) list.get(0);
             assertEquals("el", row.get("tercero"));
-
-        }
-        catch (FormatAdapterException e)
-        {
-            e.printStackTrace();
-            fail("Not expecting exception!");
-        }
     }
 
-    public void testSuccessFullAdaptFromWithoutHeaders()
+    public void testSuccessFullAdaptFromWithoutHeaders() throws FormatAdapterException
     {
-        try
-        {
             // --- Provide the required configuration
             Map<String, String> params = new HashMap<String, String>();
             params.put(CsvAdapter.PARAM_CSV_CONTENT, "Words");
@@ -71,8 +60,9 @@ public class CsvAdapterTest extends TestCase
             params.put(CsvAdapter.PARAM_ROW_CONTENT, "wordSet");
 
             adapter.setParameters(params);
-
-            SimulatorPojo pojo = adapter.adaptFrom(TestHelper.CSV_DATA);
+             adapter.validateParameters();
+        
+            SimulatorPojo pojo = adapter.createSimulatorPojo(TestHelper.CSV_DATA);
 
             Object o = pojo.getRoot().get("Words");
             // --- First, make sure we got the root Map with a Words key
@@ -88,12 +78,6 @@ public class CsvAdapterTest extends TestCase
             assertNotNull(row.get("wordSet"));
             assertEquals("primero", row.get("wordSet").get(0));
 
-        }
-        catch (FormatAdapterException e)
-        {
-            e.printStackTrace();
-            fail("Not expecting exception!");
-        }
     }
 
     public void testSuccessfulAdaptToWithHeaders()
@@ -104,12 +88,13 @@ public class CsvAdapterTest extends TestCase
             params.put(CsvAdapter.PARAM_CSV_CONTENT, "Words");
 
             adapter.setParameters(params);
+            adapter.validateParameters();
 
             // --- First, get the pojo from the same adapter
-            SimulatorPojo pojo = adapter.adaptFrom(TestHelper.CSV_DATA);
+            SimulatorPojo pojo = adapter.createSimulatorPojo(TestHelper.CSV_DATA);
 
             // --- Now, go the other way around
-            Object o = adapter.adaptTo(pojo);
+            Object o = adapter.getString(pojo);
             assertTrue(o instanceof String);
 
             String csvData = (String) o;

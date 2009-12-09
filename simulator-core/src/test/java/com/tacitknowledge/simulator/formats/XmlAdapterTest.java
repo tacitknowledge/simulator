@@ -1,12 +1,9 @@
 package com.tacitknowledge.simulator.formats;
 
+import com.tacitknowledge.simulator.FormatAdapterException;
+import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.TestHelper;
 import junit.framework.TestCase;
-import com.tacitknowledge.simulator.formats.AdapterFactory;
-import com.tacitknowledge.simulator.formats.FormatConstants;
-import com.tacitknowledge.simulator.Adapter;
-import com.tacitknowledge.simulator.SimulatorPojo;
-import com.tacitknowledge.simulator.FormatAdapterException;
 
 /**
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
@@ -15,13 +12,13 @@ public class XmlAdapterTest extends TestCase
 {
     public void testAdaptFromXml()
     {
-        Adapter adapter = AdapterFactory.getAdapter(FormatConstants.XML);
+        XmlAdapter adapter = (XmlAdapter) AdapterFactory.getAdapter(FormatConstants.XML);
 
         SimulatorPojo pojo;
         try
         {
             // --- Get a SimulatorPojo from our fake little XML
-            pojo = adapter.adaptFrom(TestHelper.XML_DATA);
+            pojo = adapter.createSimulatorPojo(TestHelper.XML_DATA);
 
             // --- Assert the pojo has a root
             assertNotNull(pojo.getRoot());
@@ -35,13 +32,13 @@ public class XmlAdapterTest extends TestCase
 
     public void testAdaptToXml()
     {
-        Adapter adapter = AdapterFactory.getAdapter(FormatConstants.XML);
+        XmlAdapter adapter = (XmlAdapter) AdapterFactory.getAdapter(FormatConstants.XML);
 
-        // --- Lets use the same pojo generated in the adaptFrom() method
+        // --- Lets use the same pojo generated in the generateBeans() method
         try {
-            SimulatorPojo pojo = adapter.adaptFrom(TestHelper.XML_DATA);
+            SimulatorPojo pojo = adapter.createSimulatorPojo(TestHelper.XML_DATA);
 
-            String xml = (String) adapter.adaptTo(pojo);
+            String xml = adapter.getString(pojo);
 
             // --- Test some nodes, just to make sure the most important things are there
             assertTrue(

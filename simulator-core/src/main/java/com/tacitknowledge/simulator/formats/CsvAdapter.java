@@ -125,22 +125,12 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
         super(parameters);
     }
 
-    /**
-     * @inheritDoc
-     * @param o @see Adapter#adaptFrom
-     * @return @see Adapter#adaptFrom
-     * @throws FormatAdapterException @see Adapter#adaptFrom
-     */
-    public SimulatorPojo adaptFrom(String o) throws FormatAdapterException
+    protected SimulatorPojo createSimulatorPojo(String o)
     {
-        // --- Before going further, set the instance variables from the received parameters
-        //  and validate them
-        validateParameters();
-
         SimulatorPojo pojo = new StructuredSimulatorPojo();
 
         // --- The SimulatorPojo's root will contain only one key (csvContent) with a List value
-        List rowObjects = new ArrayList();
+        List<Map> rowObjects = new ArrayList<Map>();
 
         // --- First, split the incoming data into lines
         Pattern p = Pattern.compile("$", Pattern.MULTILINE);
@@ -165,7 +155,7 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
             // a List of values in key rowContent
             for (String rowString : rows)
             {
-                Map<String, List> row = new HashMap<String, List>();
+                Map<String, List<String>> row = new HashMap<String, List<String>>();
                 row.put(getParamValue(PARAM_ROW_CONTENT), getRowAsList(rowString));
                 rowObjects.add(row);
             }
@@ -173,22 +163,17 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
 
         // --- Set the resulting list in the SimulatorPojo root
         pojo.getRoot().put(getParamValue(PARAM_CSV_CONTENT), rowObjects);
-
         return pojo;
     }
 
-    /**
-     * @inheritDoc
-     * @param pojo @see Adapter#adaptTo
-     * @return @see Adapter#adaptTo
-     * @throws FormatAdapterException @see Adapter#adaptTo
-     */
-    public String adaptTo(SimulatorPojo pojo) throws FormatAdapterException
-    {
-        StringBuilder sb = new StringBuilder();
 
+    protected String getString(SimulatorPojo simulatorPojo)
+            throws FormatAdapterException
+    {
+
+        StringBuilder sb1 = new StringBuilder();
         // --- Only one entry in the root should exist
-        if (pojo.getRoot().size() > 1)
+        if (simulatorPojo.getRoot().size() > 1)
         {
             String errorMsg = "SimulatorPojo's root should only one Entry for CSV adaptTo";
             logger.error(errorMsg);
@@ -201,26 +186,26 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
 
         // --- Use the CsvContent parameter to get the only object, which should be a List
         List<Map<String, Object>> list =
-                (List<Map<String, Object>>) pojo.getRoot().get(getParamValue(PARAM_CSV_CONTENT));
+                (List<Map<String, Object>>) simulatorPojo.getRoot().get(getParamValue(PARAM_CSV_CONTENT));
 
         // --- If using first row as headers, get the headers from the first row's keys
         if (this.firstRowHeader)
         {
-            sb.append(getHeadersFromKeys(list.get(0).keySet())).append(LINE_SEP);
+            sb1.append(getHeadersFromKeys(list.get(0).keySet())).append(LINE_SEP);
         }
 
         // --- Iterate through each list item
         for (int i = 0; i < list.size(); i++)
         {
-            sb.append(getValuesFromMap(list.get(i)));
+            sb1.append(getValuesFromMap(list.get(i)));
 
             if (i < (list.size() - 1))
             {
-                sb.append(LINE_SEP);
+                sb1.append(LINE_SEP);
             }
         }
 
-        return sb.toString();
+        return sb1.toString();
     }
 
     /**

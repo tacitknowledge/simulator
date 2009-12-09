@@ -95,15 +95,10 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
         super(parameters);
     }
 
-    /**
-     * {@inheritDoc}
-     * @param o @see Adapter#adaptFrom
-     * @return @see Adapter#adaptFrom
-     * @throws FormatAdapterException @see Adapter#adaptFrom
-     */
-    public SimulatorPojo adaptFrom(String o) throws FormatAdapterException
+
+    protected SimulatorPojo createSimulatorPojo(String o)
+            throws FormatAdapterException
     {
-        validateParameters();
         SimulatorPojo pojo = new StructuredSimulatorPojo();
 
         try
@@ -143,48 +138,37 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
             logger.error(errorMessage, e);
             throw new FormatAdapterException(errorMessage, e);
         }
-
         return pojo;
     }
 
-    /**
-     * {@inheritDoc}
-     * @param pojo @see Adapter#adaptTo
-     * @return @see Adapter#adaptTo
-     * @throws FormatAdapterException @see Adapter#adaptTo
-     */
-    public String adaptTo(SimulatorPojo pojo) throws FormatAdapterException
+
+    protected String getString(SimulatorPojo simulatorPojo)
+            throws FormatAdapterException
     {
-        validateParameters();
+        try
+        {
+
 
         // --- The SimulatorPojo for XmlAdapter should contain only one key in its root
-        if (pojo.getRoot().isEmpty() || pojo.getRoot().size() > 1)
+        if (simulatorPojo.getRoot().isEmpty() || simulatorPojo.getRoot().size() > 1)
         {
             logger.error("Incorrect SimulatorPojo's root size. Expecting 1, but found"
-                    + pojo.getRoot().size());
+                    + simulatorPojo.getRoot().size());
             throw new
                     FormatAdapterException(
                     "Incorrect SimulatorPojo's root size. Expecting 1, but found"
-                            + pojo.getRoot().size());
+                            + simulatorPojo.getRoot().size());
         }
 
         // --- Get a DOM DocumentFactoryBuilder and the corresponding builder
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        DocumentBuilder db;
-        try
-        {
-            db = dbf.newDocumentBuilder();
-        }
-        catch (ParserConfigurationException pce)
-        {
-            throw new FormatAdapterException("Error trying to get a DocumentBuilder", pce);
-        }
+            DocumentBuilder db = dbf.newDocumentBuilder();
 
-        doc = db.newDocument();
+            doc = db.newDocument();
 
         // --- Generate the XML document - In XmlAdapter,
         // the only element in root is guaranteed to be a Map
-        for (Map.Entry<String, Object> entry : pojo.getRoot().entrySet())
+        for (Map.Entry<String, Object> entry : simulatorPojo.getRoot().entrySet())
         {
             doc.appendChild(
                     getStructuredElement(
@@ -198,8 +182,7 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
         StreamResult result = new StreamResult(writer);
         TransformerFactory tf = TransformerFactory.newInstance();
         tf.setAttribute("indent-number", XML_INDENT);
-        try
-        {
+
             Transformer transformer = tf.newTransformer();
             transformer.transform(domSource, result);
             return writer.toString();
@@ -217,6 +200,10 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
                     + te.getMessage();
             logger.error(errorMsg, te);
             throw new FormatAdapterException(errorMsg, te);
+        }
+        catch (ParserConfigurationException pce)
+        {
+            throw new FormatAdapterException("Error trying to get a DocumentBuilder", pce);
         }
     }
 

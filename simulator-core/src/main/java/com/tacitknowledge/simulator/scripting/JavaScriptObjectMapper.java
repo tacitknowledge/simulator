@@ -1,6 +1,5 @@
 package com.tacitknowledge.simulator.scripting;
 
-import com.tacitknowledge.simulator.SimulatorException;
 import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.NativeObject;
 import org.mozilla.javascript.Undefined;
@@ -21,7 +20,8 @@ public class JavaScriptObjectMapper implements ObjectMapper {
 
     private JavaObjectMapper javaMapper = new JavaObjectMapper();
 
-    public Map<String, Object> getMapFromObject(Object o) throws SimulatorException {
+    public Map<String, Object> getMapFromObject(Object o) throws ObjectMapperException
+    {
 
         Map<String, Object> map = new HashMap<String, Object>();
         if (o instanceof NativeObject) {
@@ -56,7 +56,7 @@ public class JavaScriptObjectMapper implements ObjectMapper {
         return map;
     }
 
-    private List<Object> getListFromArray(NativeArray array) throws SimulatorException {
+    private List<Object> getListFromArray(NativeArray array) throws ObjectMapperException {
 
         List<Object> list = new ArrayList<Object>();
 
