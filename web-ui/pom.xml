@@ -94,7 +94,6 @@
             <id>webui-reports</id>
             <build>
                 <plugins>
-                    
                     <plugin>
                         <artifactId>maven-antrun-plugin</artifactId>
                         <executions>
@@ -161,10 +160,10 @@
 
     <build>
         <plugins>
-            <plugin>
+        	<plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
-                    <execution>
+                	<execution>
                         <id>create-war-file</id>
                         <phase>package</phase>
                         <configuration>
@@ -190,11 +189,6 @@
                             <goal>run</goal>
                         </goals>
                     </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
                     <execution>
                         <id>clean-ruby</id>
                         <phase>clean</phase>
@@ -220,6 +214,17 @@
                         <configuration>
                             <executable>./installGems.sh</executable>
                             <workingDirectory>.</workingDirectory>
+                        </configuration>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>execute-tests</id>
+                        <phase>test</phase>
+                        <configuration>
+                        	<executable>${jruby.home}/bin/rake</executable>
+                        	<workingDirectory>${rubyapp.dir}</workingDirectory>
                         </configuration>
                         <goals>
                             <goal>exec</goal>
