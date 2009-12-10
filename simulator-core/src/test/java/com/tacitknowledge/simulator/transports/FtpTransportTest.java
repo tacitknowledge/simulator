@@ -144,7 +144,7 @@ public class FtpTransportTest extends TestCase
 
     public void testGetUriWithLongDelay()
     {
-        // --- Try to get this URI: ftp://127.0.0.1/inbox?delay=10000
+        // --- Try to get this URI: ftp://127.0.0.1/inbox?initialDelay=10000&delay=10000
         params.put(FtpTransport.PARAM_HOST, "127.0.0.1");
         params.put(FtpTransport.PARAM_DIRECTORY_NAME, "inbox");
         params.put(FtpTransport.PARAM_POLLING_INTERVAL, "10000");
@@ -155,7 +155,8 @@ public class FtpTransportTest extends TestCase
         {
             String uri = transport.toUriString();
 
-            assertTrue("Returned uri isn't as expected: " + uri, uri.indexOf("ftp://127.0.0.1/inbox?delay=10000") > -1);
+            assertTrue("Returned uri isn't as expected: " + uri,
+                    uri.indexOf("ftp://127.0.0.1/inbox?initialDelay=10000&delay=10000") > -1);
         }
         catch (TransportException e)
         {

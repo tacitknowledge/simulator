@@ -108,7 +108,7 @@ public class FileTransportTest extends TestCase
 
     public void testGetUriWithLongDelay()
     {
-        // --- Try to get this URI: file://inbox/?delay=10000
+        // --- Try to get this URI: file://inbox?initialDelay=10000&delay=10000
         params.put(FileTransport.PARAM_DIRECTORY_NAME, "inbox");
         params.put(FileTransport.PARAM_POLLING_INTERVAL, "10000");
 
@@ -120,7 +120,7 @@ public class FileTransportTest extends TestCase
 
             assertTrue(
                     "Returned uri isn't as expected: " + uri,
-                    uri.indexOf("file://inbox?delay=10000") > -1);
+                    uri.indexOf("file://inbox?initialDelay=10000&delay=10000") > -1);
         }
         catch (TransportException e)
         {

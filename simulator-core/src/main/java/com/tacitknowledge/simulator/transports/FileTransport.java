@@ -211,6 +211,7 @@ public class FileTransport extends BaseTransport implements Transport
 
         if (getParamValue(PARAM_POLLING_INTERVAL) != null)
         {
+            sb.append("initialDelay=").append(getParamValue(PARAM_POLLING_INTERVAL)).append(AMP);
             sb.append("delay=").append(getParamValue(PARAM_POLLING_INTERVAL)).append(AMP);
         }
 
