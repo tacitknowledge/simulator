@@ -31,15 +31,6 @@ public abstract class BaseAdapter implements Adapter<Object>
     protected static final String LINE_SEP = System.getProperty("line.separator");
 
     /**
-     * Adapter parameters definitions.
-     * This attribute should be overwritten by implementing classes
-     * using the Simulator's custom DSL.
-     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder
-     * @see com.tacitknowledge.simulator.configuration.ParametersListBuilder
-     */
-    private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList;
-
-    /**
      * The Adapter parameters. Each Adapter implementation should define its corresponding
      * parameters.
      */
