@@ -224,6 +224,9 @@
                         <phase>test</phase>
                         <configuration>
                         	<executable>${jruby.home}/bin/rake</executable>
+                        	<arguments>
+					            <argument>test</argument>
+					        </arguments>
                         	<workingDirectory>${rubyapp.dir}</workingDirectory>
                         </configuration>
                         <goals>
