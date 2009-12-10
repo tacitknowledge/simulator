@@ -232,9 +232,9 @@ class ConversationsControllerTest < ActionController::TestCase
 
     assert(json['data'].length > 0)
 
-    # Parameter defintions should be arrays with 4 strings
+    # Parameter defintions should be arrays with 5 strings
     param1 = json['data'][0]
-    assert(param1.length == 4)
+    assert(param1.length == 5)
   end
 
   def test_format_parameters
@@ -245,7 +245,7 @@ class ConversationsControllerTest < ActionController::TestCase
 
     assert(json['data'].length > 0)
 
-    # Parameter defintions should be arrays with 4 strings
+    # Parameter defintions should be arrays with 5 strings
     param1 = json['data'][0]
     assert(param1.length == 5)
   end

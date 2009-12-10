@@ -2,6 +2,11 @@ package com.tacitknowledge.simulator.transports;
 
 import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.TransportException;
+
+import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.parameter;
+import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
+
+import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
@@ -61,72 +66,39 @@ public class FileTransport extends BaseTransport implements Transport
     /**
      * Transport parameters definition.
      */
-    private List<List> parametersList = new ArrayList<List>()
-    {
-        {
-            add(new ArrayList<String>()
-            {
-                {
-                    add(PARAM_DIRECTORY_NAME);
-                    add("Directory Name");
-                    add("string");
-                    add("required");
-                }
-            });
-
-            add(new ArrayList<String>()
-            {
-                {
-                    add(PARAM_FILE_NAME);
-                    add("File Name (file name the transport will only poll from)");
-                    add("string");
-                    add("optional");
-                }
-            });
-
-            add(new ArrayList<String>()
-            {
-                {
-                    add(PARAM_FILE_EXTENSION);
-                    add("File Extension the transport will only poll from (without dot)");
-                    add("string");
-                    add("optional");
-                }
-            });
-
-            add(new ArrayList<String>()
-            {
-                {
-                    add(PARAM_REGEX_FILTER);
-                    add("Regex filter " +
-                            "(will only be applied if neither " +
-                            "file name nor extension filters are provided)");
-                    add("string");
-                    add("optional");
-                }
-            });
-
-            add(new ArrayList<String>()
-            {
-                {
-                    add(PARAM_POLLING_INTERVAL);
-                    add("Milliseconds before the next poll (defaults to 500)");
-                    add("string");
-                    add("optional");
-                }
-            });
-
-            add(new ArrayList<String>()
-            {
-                {
-                    add(PARAM_DELETE_FILE);
-                    add("Delete file after simulation? (defaults to NO)");
-                    add("boolean");
-                    add("optional");
-                }
-            });
-        }
-    };
+    private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
+        parameters().
+            add(parameter().
+                name(PARAM_DIRECTORY_NAME).
+                label("Directory Name").
+                required(true)
+            ).
+            add(parameter().
+                name(PARAM_FILE_NAME).
+                label("File Name")
+            ).
+            add(parameter().
+                name(PARAM_FILE_EXTENSION).
+                label("File Extension the transport will only poll from " +
+                    "(without dot, inbound only)")
+            ).
+            add(parameter().
+                name(PARAM_REGEX_FILTER).
+                label("Regex filter " +
+                        "(will only be applied if neither " +
+                        "file name nor extension filters are provided, inbound only)")
+            ).
+            add(parameter().
+                name(PARAM_POLLING_INTERVAL).
+                label("Milliseconds before the next poll").
+                defaultValue("500")
+            ).
+            add(parameter().
+                name(PARAM_DELETE_FILE).
+                label("Delete file after simulation?").
+                type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN)
+            ).
+        build();
 
     /**
      * If true, the processed file will be deleted.
@@ -229,7 +201,7 @@ public class FileTransport extends BaseTransport implements Transport
      */
     public List<List> getParametersList()
     {
-        return this.parametersList;
+        return getParametersDefinitionsAsList(parametersList);
     }
 
     /**

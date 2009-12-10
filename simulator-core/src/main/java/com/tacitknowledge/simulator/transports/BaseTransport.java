@@ -2,8 +2,11 @@ package com.tacitknowledge.simulator.transports;
 
 import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.TransportException;
+import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -97,5 +100,21 @@ public abstract class BaseTransport implements Transport
     protected String getParamValue(String name)
     {
         return parameters.get(name);
+    }
+
+    /**
+     * Returns a List of ParameterDefinitions in their List representation
+     * @param parametersList The parameter definitions list
+     * @return The list of lists
+     */
+    protected List<List> getParametersDefinitionsAsList(
+            List<ParameterDefinitionBuilder.ParameterDefinition> parametersList)
+    {
+        List<List> list = new ArrayList<List>();
+        for (ParameterDefinitionBuilder.ParameterDefinition param : parametersList)
+        {
+            list.add(param.getAsList());
+        }
+        return list;
     }
 }

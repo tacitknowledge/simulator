@@ -166,6 +166,11 @@ public abstract class BaseAdapter implements Adapter<Object>
         return scriptExecutionBeans;
     }
 
+    /**
+     * Returns a List of ParameterDefinitions in their List representation
+     * @param parametersList The parameter definitions list
+     * @return The list of lists
+     */
     protected List<List> getParametersDefinitionsAsList(
             List<ParameterDefinitionBuilder.ParameterDefinition> parametersList)
     {

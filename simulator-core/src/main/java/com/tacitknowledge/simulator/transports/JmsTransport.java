@@ -3,7 +3,11 @@ package com.tacitknowledge.simulator.transports;
 import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.TransportException;
 
-import java.util.ArrayList;
+import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.parameter;
+import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
+
+import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
+
 import java.util.List;
 import java.util.Map;
 
@@ -48,72 +52,32 @@ public class JmsTransport extends BaseTransport implements Transport
     /**
      * Transport parameters definition.
      */
-    private static List<List> parametersList = new ArrayList<List>()
-    {
-        {
-            /* For the time being, defaults to ActiveMQ
-            add(new ArrayList<String>()
-            {
-                {
-                    add(PARAM_ACTIVE_MQ);
-                    add("Is this JMS an Apache ActiveMQ? (defaults to NO)");
-                    add("boolean");
-                    add("optional");
-                }
-            });
-            */
-
-            add(new ArrayList<String>()
-            {
-                {
-                    add(PARAM_DESTINATION_NAME);
-                    add("Destination Name");
-                    add("string");
-                    add("required");
-                }
-            });
-
-            add(new ArrayList<String>()
-            {
-                {
-                    add(PARAM_IS_TOPIC);
-                    add("Is the destination a topic (defaults to Queue)");
-                    add("boolean");
-                    add("optional");
-                }
-            });
-
-            add(new ArrayList<String>()
-            {
-                {
-                    add(PARAM_BROKER_URL);
-                    add("Broker URL (e.g. tcp://localhost:61616)");
-                    add("string");
-                    add("required");
-                }
-            });
-
-            add(new ArrayList<String>()
-            {
-                {
-                    add(PARAM_USER_NAME);
-                    add("ActiveMQ Broker user name");
-                    add("string");
-                    add("optional");
-                }
-            });
-
-            add(new ArrayList<String>()
-            {
-                {
-                    add(PARAM_PASSWORD);
-                    add("ActiveMQ Broker password");
-                    add("string");
-                    add("optional");
-                }
-            });
-        }
-    };
+    private static List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
+        parameters().
+            add(parameter().
+                name(PARAM_DESTINATION_NAME).
+                label("Destination Name").
+                required(true)
+            ).
+            add(parameter().
+                name(PARAM_IS_TOPIC).
+                label("Is the destination a topic (defaults to Queue)").
+                type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN)
+            ).
+            add(parameter().
+                name(PARAM_BROKER_URL).
+                label("Broker URL (e.g. tcp://localhost:61616)").
+                required(true)
+            ).
+            add(parameter().
+                name(PARAM_USER_NAME).
+                label("Broker user name")
+            ).
+            add(parameter().
+                name(PARAM_PASSWORD).
+                label("Broker password")
+            ).
+        build();
 
     /**
      * @see #PARAM_ACTIVE_MQ
@@ -192,7 +156,7 @@ public class JmsTransport extends BaseTransport implements Transport
      */
     public List<List> getParametersList()
     {
-        return parametersList;
+        return getParametersDefinitionsAsList(parametersList);
     }
 
     /**

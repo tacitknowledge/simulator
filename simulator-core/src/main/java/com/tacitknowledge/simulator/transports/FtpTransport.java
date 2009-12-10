@@ -2,8 +2,11 @@ package com.tacitknowledge.simulator.transports;
 
 import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.TransportException;
+import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
 
-import java.util.ArrayList;
+import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.parameter;
+import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
+
 import java.util.List;
 import java.util.Map;
 
@@ -52,133 +55,65 @@ public class FtpTransport extends FileTransport implements Transport
     /**
      * Transport parameters definition.
      */
-    private List<List> parametersList = new ArrayList<List>()
-    {
-        {
-
-            add(new ArrayList<String>()
-            {
-                {
-                    add(PARAM_HOST);
-                    add("Host Name");
-                    add("string");
-                    add("required");
-                }
-            });
-
-            add(new ArrayList<String>()
-            {
-                {
-                    add(PARAM_SFTP);
-                    add("Is this an SFTP transport? (defaults to FTP)");
-                    add("boolean");
-                    add("optional");
-                }
-            });
-
-            add(new ArrayList<String>()
-            {
-                {
-                    add(PARAM_PORT);
-                    add("Port (defaults to 21 for FTP and 22 for SFTP)");
-                    add("string");
-                    add("optional");
-                }
-            });
-
-            add(new ArrayList<String>()
-            {
-                {
-                    add(PARAM_DIRECTORY_NAME);
-                    add("Directory Name");
-                    add("string");
-                    add("optional");
-                }
-            });
-
-            add(new ArrayList<String>()
-            {
-                {
-                    add(PARAM_USERNAME);
-                    add("User Name");
-                    add("string");
-                    add("optional");
-                }
-            });
-
-            add(new ArrayList<String>()
-            {
-                {
-                    add(PARAM_PASSWORD);
-                    add("Password");
-                    add("string");
-                    add("optional");
-                }
-            });
-
-            add(new ArrayList<String>()
-            {
-                {
-                    add(PARAM_FILE_NAME);
-                    add("File Name (file name the transport will only poll from)");
-                    add("string");
-                    add("optional");
-                }
-            });
-
-            add(new ArrayList<String>()
-            {
-                {
-                    add(PARAM_FILE_EXTENSION);
-                    add("File Extension the transport will only poll from (without dot)");
-                    add("string");
-                    add("optional");
-                }
-            });
-
-            add(new ArrayList<String>()
-            {
-                {
-                    add(PARAM_REGEX_FILTER);
-                    add("Regex filter " +
+    private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
+        parameters().
+            add(parameter().
+                name(PARAM_HOST).
+                label("Host Name").
+                required(true)
+            ).
+            add(parameter().
+                name(PARAM_SFTP).
+                label("Is this an SFTP transport? (defaults to FTP)").
+                type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN)
+            ).
+            add(parameter().
+                name(PARAM_PORT).
+                label("Port (defaults to 21 for FTP and 22 for SFTP if not provided)")
+            ).
+            add(parameter().
+                name(PARAM_DIRECTORY_NAME).
+                label("Directory Name")
+            ).
+            add(parameter().
+                name(PARAM_USERNAME).
+                label("User Name")
+            ).
+            add(parameter().
+                name(PARAM_PASSWORD).
+                label("Password")
+            ).
+            add(parameter().
+                name(PARAM_FILE_NAME).
+                label("File Name")
+            ).
+            add(parameter().
+                name(PARAM_FILE_EXTENSION).
+                label("File Extension the transport will only poll from " +
+                    "(without dot, inbound only)")
+            ).
+            add(parameter().
+                name(PARAM_REGEX_FILTER).
+                label("Regex filter " +
                             "(will only be applied if neither " +
-                            "file name nor extension filters are provided)");
-                    add("string");
-                    add("optional");
-                }
-            });
-
-            add(new ArrayList<String>()
-            {
-                {
-                    add(PARAM_DELETE_FILE);
-                    add("Delete file after simulation? (defaults to NO)");
-                    add("boolean");
-                    add("optional");
-                }
-            });
-
-            add(new ArrayList<String>()
-            {
-                {
-                    add(PARAM_POLLING_INTERVAL);
-                    add("Milliseconds before the next poll (defaults to 500)");
-                    add("string");
-                    add("optional");
-                }
-            });
-
-            add(new ArrayList<String>()
-            {
-                {
-                    add(PARAM_BINARY);
-                    add("Is file transfer binary? (defaults to NO)");
-                    add("boolean");
-                    add("optional");
-                }
-            });
-        }
-    };
+                            "file name nor extension filters are provided, inbound only)")
+            ).
+            add(parameter().
+                name(PARAM_DELETE_FILE).
+                label("Delete file after simulation? (Inbound only)").
+                type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN)
+            ).
+            add(parameter().
+                name(PARAM_POLLING_INTERVAL).
+                label("Milliseconds before the next poll").
+                defaultValue("500")
+            ).
+            add(parameter().
+                name(PARAM_BINARY).
+                label("Is file transfer binary? (defaults to NO)").
+                type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN)
+            ).
+        build();
 
     /**
      * Flag to determine if this transport is FTP or SFTP. Defaults to FTP
@@ -306,7 +241,7 @@ public class FtpTransport extends FileTransport implements Transport
     @Override
     public List<List> getParametersList()
     {
-        return this.parametersList;
+        return getParametersDefinitionsAsList(parametersList);
     }
 
     /**
