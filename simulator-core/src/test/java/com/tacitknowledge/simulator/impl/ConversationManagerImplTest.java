@@ -4,9 +4,6 @@ import com.tacitknowledge.simulator.*;
 import com.tacitknowledge.simulator.camel.RouteManagerImpl;
 import com.tacitknowledge.simulator.formats.AdapterFactory;
 import com.tacitknowledge.simulator.formats.FormatConstants;
-import com.tacitknowledge.simulator.transports.MockInTransport;
-import com.tacitknowledge.simulator.transports.MockOutTransport;
-import junit.framework.TestCase;
 import org.junit.Test;
 
 import java.util.List;
@@ -14,10 +11,8 @@ import java.util.List;
 /**
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class ConversationManagerImplTest extends TestCase
+public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
 {
-    private Transport in = new MockInTransport();
-    private Transport out = new MockOutTransport();
 
     @Test
     public void testGetXmlFormatParameters()
@@ -35,7 +30,7 @@ public class ConversationManagerImplTest extends TestCase
         RouteManager routeManager = new RouteManagerImpl();
         ConversationManager manager = new ConversationManagerImpl(routeManager);
 
-        Conversation conversation = manager.createConversation(null, in, out,  AdapterFactory.getAdapter(FormatConstants.JSON), AdapterFactory.getAdapter(FormatConstants.JSON));
+        Conversation conversation = manager.createConversation(null, inTransport, outTransport,  AdapterFactory.getAdapter(FormatConstants.JSON), AdapterFactory.getAdapter(FormatConstants.JSON), "");
         assertNotNull(conversation);
         assertNotNull(conversation.getInboundTransport());
         assertNotNull(conversation.getOutboundTransport());
@@ -50,7 +45,7 @@ public class ConversationManagerImplTest extends TestCase
         Conversation conversation = null;
         try
         {
-            conversation = manager.createConversation(null, in, out, AdapterFactory.getAdapter("WTF?"), AdapterFactory.getAdapter("WTF?"));
+            conversation = manager.createConversation(null, inTransport, outTransport, AdapterFactory.getAdapter("WTF?"), AdapterFactory.getAdapter("WTF?"), "");
             fail();
         }
         catch (SimulatorException e)
@@ -74,7 +69,7 @@ public class ConversationManagerImplTest extends TestCase
         ConversationManager manager = new ConversationManagerImpl(routeManager);
 
         Conversation conversation = null;
-        conversation = manager.createConversation(1, in, out, AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT), AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT));
+        conversation = manager.createConversation(1, inTransport, outTransport, AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT), AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT), "");
         assertFalse(manager.isActive(conversation.getId()));
         manager.activate(conversation.getId());
         assertTrue(manager.isActive(conversation.getId()));
@@ -86,7 +81,7 @@ public class ConversationManagerImplTest extends TestCase
         RouteManager routeManager = new RouteManagerImpl();
         ConversationManager manager = new ConversationManagerImpl(routeManager);
 
-        Conversation conversation = manager.createConversation(1, in, out, AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT), AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT));
+        Conversation conversation = manager.createConversation(1, inTransport, outTransport, AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT), AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT), "");
         ConversationScenario scenario = manager.createOrUpdateConversationScenario(2, 2, "javascript", "true", "2+2");
         assertNull(scenario);
     }
@@ -97,12 +92,12 @@ public class ConversationManagerImplTest extends TestCase
         RouteManager routeManager = new RouteManagerImpl();
         ConversationManager manager = new ConversationManagerImpl(routeManager);
 
-        Conversation conversation = manager.createConversation(1, in, out, AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT), AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT));
+        Conversation conversation = manager.createConversation(1, inTransport, outTransport, AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT), AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT), "defaultScenario");
         ConversationScenario scenario = manager.createOrUpdateConversationScenario(1, 2, "javascript", "true", "2+2");
         assertNotNull(scenario);
         assertEquals("javascript",scenario.getScriptLanguage());
         assertEquals("true",scenario.getCriteriaScript());
-        assertEquals("2+2",scenario.getTransformationScript());
+        assertEquals("defaultScenario\n2+2",scenario.getTransformationScript());
 
 
         
@@ -112,7 +107,7 @@ public class ConversationManagerImplTest extends TestCase
 
         assertEquals("ruby",scenario.getScriptLanguage());
         assertEquals("ttttrue",scenario.getCriteriaScript());
-        assertEquals("2+2+2",scenario.getTransformationScript());
+        assertEquals("defaultScenario\n2+2+2",scenario.getTransformationScript());
 
     }
 
@@ -121,7 +116,7 @@ public class ConversationManagerImplTest extends TestCase
         RouteManager routeManager = new RouteManagerImpl();
         ConversationManager manager = new ConversationManagerImpl(routeManager);
 
-        Conversation conversation = manager.createConversation(1, in, out, AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT), AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT));
+        Conversation conversation = manager.createConversation(1, inTransport, outTransport, AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT), AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT), "");
         ConversationScenario scenario = manager.createOrUpdateConversationScenario(1, 2, "javascript", "true", "2+2");
         assertNotNull(scenario);
 
@@ -142,11 +137,35 @@ public class ConversationManagerImplTest extends TestCase
         RouteManager routeManager = new RouteManagerImpl();
         ConversationManager manager = new ConversationManagerImpl(routeManager);
         assertFalse(manager.conversationExists(1));
-        Conversation conversation = manager.createConversation(1, in, out, AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT), AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT));
+        Conversation conversation = manager.createConversation(1, inTransport, outTransport, AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT), AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT), "");
         assertTrue(manager.conversationExists(1));
         manager.activate(1);
         assertTrue(manager.conversationExists(1));
         manager.deactivate(1);
         assertFalse(manager.conversationExists(1));
     }
+
+
+    @Test
+    public void testDefaultScenarioWasExecuted() throws SimulatorException, ConversationNotFoundException, InterruptedException
+    {
+        ConversationManager manager = new ConversationManagerImpl(routeManager);
+
+        Conversation conversation = manager.createConversation(1, inTransport, outTransport, AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT), AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT), "var testVar=123");
+        ConversationScenario scenario = manager.createOrUpdateConversationScenario(1, 2, "javascript", "true",
+                "testVar=testVar+1\n" +
+                "testVar");
+
+        manager.activate(1);
+        
+        sendMessage("124.0");
+
+        manager.deactivate(1);
+        resultEndpoint.assertIsSatisfied();
+        assertNotNull(scenario);
+    }
+
+
 }
+
+

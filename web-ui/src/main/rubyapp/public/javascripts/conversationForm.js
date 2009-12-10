@@ -371,6 +371,11 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                     ]
                 },
                 {
+                    fieldLabel:"Default response",
+                    id:"default_response",
+                    xtype:"textarea"
+                },
+                {
                     store: scenariosStore,
                     id: 'scenarios_grid',
                     xtype:'editorgrid',

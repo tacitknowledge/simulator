@@ -1,15 +1,11 @@
 package com.tacitknowledge.simulator.camel;
 
 import com.tacitknowledge.simulator.Conversation;
+import com.tacitknowledge.simulator.SimulatorCamelTestSupportBase;
 import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.formats.PlainTextAdapter;
 import com.tacitknowledge.simulator.impl.ConversationImpl;
-import org.apache.camel.EndpointInject;
-import org.apache.camel.Produce;
-import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.component.mock.MockEndpoint;
-import org.apache.camel.test.junit4.CamelTestSupport;
 import org.junit.Test;
 
 import java.util.List;
@@ -21,72 +17,13 @@ import java.util.Map;
  * @author Nikita Belenkiy (nbelenkiy@tacitknowledge.com)
  * @author Alexandru Dereveanco (adereveanco@tacitknowledge.com)
  */
-public class RouteManagerTest extends CamelTestSupport {
+public class RouteManagerTest extends SimulatorCamelTestSupportBase
+{
     /**
      * Timeout for the camel end point to wait
      */
     private static final int TIMEOUT = 500;
 
-    /**
-     * Class under test
-     */
-    private RouteManagerImpl routeManager;
-
-    /**
-     * MockEnd point to receive the message
-     */
-    @EndpointInject(uri = "mock:result")
-    private MockEndpoint resultEndpoint;
-
-    /**
-     * MockEntry point to send the message
-     */
-    @Produce(uri = "direct:start")
-    private ProducerTemplate template;
-
-    /**
-     * A transport to use in tests
-     */
-    private final Transport inTransport = new Transport() {
-
-        public String getType() {
-            return "file";
-        }
-
-        public String toUriString() {
-            return "direct:start";
-        }
-
-        public List<List> getParametersList() {
-            return null;
-        }
-
-        public void setParameters(Map<String, String> parameters) {
-
-        }
-    };
-
-    /**
-     * A transport to use in tests
-     */
-    private final Transport outTransport = new Transport() {
-
-        public String getType() {
-            return "file";
-        }
-
-        public String toUriString() {
-            return "mock:result";
-        }
-
-        public List<List> getParametersList() {
-            return null;
-        }
-
-        public void setParameters(Map<String, String> parameters) {
-
-        }
-    };
 
     /**
      * A transport to use in tests
@@ -110,17 +47,18 @@ public class RouteManagerTest extends CamelTestSupport {
         }
     };
 
+    
     /**
      * Conversation to be used in tests
      */
     private final Conversation conversation1
-            = new ConversationImpl(1, inTransport, outTransport, new PlainTextAdapter(), new PlainTextAdapter());
+            = new ConversationImpl(1, inTransport, outTransport, new PlainTextAdapter(), new PlainTextAdapter(), "");
 
     /**
      * Conversation to be used in tests
      */
     private final Conversation conversation2
-            = new ConversationImpl(2, inTransport, outTransport1, new PlainTextAdapter(), new PlainTextAdapter());
+            = new ConversationImpl(2, inTransport, outTransport1, new PlainTextAdapter(), new PlainTextAdapter(), "");
 
 
     {

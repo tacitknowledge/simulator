@@ -14,7 +14,7 @@ module ConversationHelper
     in_ft = params[:inbound_format_type_id]
     out_ft = params[:outbound_format_type_id]
     sys_id = params[:system_id]
-
+    default_response = params[:default_response]
     conversation = Conversation.new
     
     inbound_transport = Transport.new
@@ -36,6 +36,7 @@ module ConversationHelper
     conversation.name = name;
     conversation.description = description;
     conversation.system_id = sys_id;
+    conversation.default_response=default_response
 
     conversation.in_transport = inbound_transport;
     conversation.in_format = inbound_format;
@@ -54,10 +55,12 @@ module ConversationHelper
     in_ft = params[:inbound_format_type_id]
     out_ft = params[:outbound_format_type_id]
     sys_id = params[:system_id]
+    default_response = params[:default_response]
 
     conversation.name = name;
     conversation.description = description;
     conversation.system_id = sys_id;
+    conversation.default_response = default_response
 
     #conversation.in_transport.transport_type_id = in_tt
     trans_in = conversation.in_transport

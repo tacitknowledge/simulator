@@ -77,4 +77,10 @@ public interface Conversation
      */
     Collection<ConversationScenario> getScenarios();
 
+    /**
+     * Default script. Will be executed before any scenario
+     *
+     * @return script code
+     */
+    String getDefaultResponse();
 }

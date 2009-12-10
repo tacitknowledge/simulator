@@ -51,6 +51,7 @@ public class ConversationImpl implements Conversation
      * Wrapper for outbound format adapter
      */
     private Adapter outboundAdapter;
+    private String defaultResponse;
 
     /**
      * List of configured scenarios for this conversation
@@ -61,22 +62,23 @@ public class ConversationImpl implements Conversation
      * @param id
      *            Conversation ID
      * @param inboundTransport
-     *            Wrapper for inbound transport configuration
+ *            Wrapper for inbound transport configuration
      * @param outboundTransport
-     *            Wrapper for outbound transport configuration
+*            Wrapper for outbound transport configuration
      * @param inboundAdapter
-     *            Wrapper for inbound format adapter
+*            Wrapper for inbound format adapter
      * @param outboundAdapter
-     *            Wrapper for outbound format adapter
+     * @param defaultResponse
      */
     public ConversationImpl(Integer id, Transport inboundTransport, Transport outboundTransport,
-            Adapter inboundAdapter, Adapter outboundAdapter)
+                            Adapter inboundAdapter, Adapter outboundAdapter, String defaultResponse)
     {
         this.id = id;
         this.inboundTransport = inboundTransport;
         this.outboundTransport = outboundTransport;
         this.inboundAdapter = inboundAdapter;
         this.outboundAdapter = outboundAdapter;
+        this.defaultResponse = defaultResponse;
     }
 
     /**
@@ -132,6 +134,14 @@ public class ConversationImpl implements Conversation
     public Adapter getOutboundAdapter()
     {
         return outboundAdapter;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getDefaultResponse()
+    {
+        return defaultResponse;
     }
 
     /**

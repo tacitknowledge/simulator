@@ -62,11 +62,11 @@ public class ConversationManagerImpl implements ConversationManager
      * {@inheritDoc}
      */
     public Conversation createConversation(Integer id, Transport inboundTransport,
-        Transport outboundTransport, Adapter inAdapter, Adapter outAdapter)
+                                           Transport outboundTransport, Adapter inAdapter, Adapter outAdapter, String defaultResponse)
         throws SimulatorException
     {
         ConversationImpl conversation = ConversationFactory.createConversation(id, inboundTransport,
-                outboundTransport, inAdapter, outAdapter);
+                outboundTransport, inAdapter, outAdapter, defaultResponse);
         assert conversations.get(id) == null;
 
         conversations.put(id, conversation);
@@ -100,17 +100,20 @@ public class ConversationManagerImpl implements ConversationManager
      * @param scenarioId
      * @param language       The scripting language for the scenario. This would be System wide.
      * @param criteria       The criteria script
-     * @param transformation The transformation script    @inheritDoc
+     * @param transformation The transformation script
+     *
+     * @return new scenario object. null if conversation does not exist
      */
     public ConversationScenario createOrUpdateConversationScenario(int conversationId, int scenarioId, String language, String criteria,
                                            String transformation)
     {
         Conversation conversation = conversations.get(conversationId);
-        ConversationScenario conversationScenario=null;
-
+        ConversationScenario conversationScenario = null;
         if (conversation != null)
         {
-            conversationScenario = conversation.addOrUpdateScenario(scenarioId, language, criteria, transformation);
+            String defaultResponse = conversation.getDefaultResponse();
+            conversationScenario = conversation.addOrUpdateScenario(scenarioId, language, criteria,
+                    defaultResponse == null ? transformation : defaultResponse + "\n" + transformation);
         }
         return conversationScenario;
     }

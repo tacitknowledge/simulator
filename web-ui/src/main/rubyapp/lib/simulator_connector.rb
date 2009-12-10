@@ -44,7 +44,7 @@ class SimulatorConnector
     out_adapter = @conv_mgr.getClassByName(conversation.out_format.format_type.class_name)
     set_parameters(out_adapter,conversation.out_format.configurations)
 
-    @conv_mgr.createConversation(conversation.id, in_transport, out_transport, in_adapter, out_adapter)
+    @conv_mgr.createConversation(conversation.id, in_transport, out_transport, in_adapter, out_adapter, conversation.default_response)
   end
 
 
