@@ -4,6 +4,11 @@ import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.StructuredSimulatorPojo;
+
+import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.parameter;
+import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
+
+import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -54,20 +59,14 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
     /**
      * Adapter parameters definition.
      */
-    private List<List> parametersList = new ArrayList<List>()
-    {
-        {
-            add(new ArrayList<String>()
-            {
-                {
-                    add(PARAM_VALIDATE);
-                    add("Validate?");
-                    add("boolean");
-                    add("optional");
-                }
-            });
-        }
-    };
+    private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
+        parameters().
+            add(parameter().
+                name(PARAM_VALIDATE).
+                label("Validate?").
+                type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN)
+            ).
+        build();
 
     /**
      * The Document object used for XML generation in adaptTo() and helper methods
@@ -372,15 +371,6 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
 
     /**
      * @inheritDoc
-     * @return @see Adapter#getParametersList
-     */
-    public List<List> getParametersList()
-    {
-        return parametersList;
-    }
-
-    /**
-     * @inheritDoc
      * @throws FormatAdapterException
      */
     @Override
@@ -390,5 +380,10 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
         {
             this.validate = Boolean.parseBoolean(getParamValue(PARAM_VALIDATE));
         }
+    }
+
+    public List<List> getParametersList()
+    {
+        return getParametersDefinitionsAsList(parametersList);
     }
 }

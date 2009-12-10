@@ -4,6 +4,7 @@ import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorException;
 import com.tacitknowledge.simulator.SimulatorPojo;
+import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
 import com.tacitknowledge.simulator.scripting.ObjectMapperException;
 import com.tacitknowledge.simulator.scripting.PojoClassGenerator;
 import com.tacitknowledge.simulator.scripting.ScriptException;
@@ -12,7 +13,9 @@ import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.NotFoundException;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,6 +29,15 @@ public abstract class BaseAdapter implements Adapter<Object>
      * Line separator constant. Available for all adapters
      */
     protected static final String LINE_SEP = System.getProperty("line.separator");
+
+    /**
+     * Adapter parameters definitions.
+     * This attribute should be overwritten by implementing classes
+     * using the Simulator's custom DSL.
+     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder
+     * @see com.tacitknowledge.simulator.configuration.ParametersListBuilder
+     */
+    private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList;
 
     /**
      * The Adapter parameters. Each Adapter implementation should define its corresponding
@@ -152,5 +164,16 @@ public abstract class BaseAdapter implements Adapter<Object>
             throw new FormatAdapterException("", e);
         }
         return scriptExecutionBeans;
+    }
+
+    protected List<List> getParametersDefinitionsAsList(
+            List<ParameterDefinitionBuilder.ParameterDefinition> parametersList)
+    {
+        List<List> list = new ArrayList<List>();
+        for (ParameterDefinitionBuilder.ParameterDefinition param : parametersList)
+        {
+            list.add(param.getAsList());
+        }
+        return list;
     }
 }

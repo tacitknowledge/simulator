@@ -4,6 +4,11 @@ import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.StructuredSimulatorPojo;
+
+import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.parameter;
+import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
+
+import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
 import org.apache.log4j.Logger;
 
 import java.util.*;
@@ -34,19 +39,14 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
     /**
      * Adapter parameters definition.
      */
-    private List<List> parametersList = new ArrayList<List>() {
-        {
-            add(new ArrayList<String>()
-            {
-                {
-                    add(PARAM_PROPERTY_SEPARATOR);
-                    add("Property level separator (defaults to dot \".\")");
-                    add("string");
-                    add("optional");
-                }
-            });
-        }
-    };
+    private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
+        parameters().
+            add(parameter().
+                name(PARAM_PROPERTY_SEPARATOR).
+                label("Property level separator (defaults to dot \".\")").
+                defaultValue(".")
+            ).
+        build();
 
     /**
      * Logger for this class.
@@ -78,9 +78,6 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
             throws FormatAdapterException
     {
         SimulatorPojo pojo = new StructuredSimulatorPojo();
-
-        // --- The SimulatorPojo's root will contain only one key (csvContent) with a List value
-        List rowObjects = new ArrayList();
 
         // --- First, split the incoming data into lines
         Pattern p = Pattern.compile("$", Pattern.MULTILINE);
@@ -129,15 +126,6 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
         }
 
         return getPropertiesAsString("", simulatorPojo.getRoot());
-    }
-
-    /**
-     * @inheritDoc
-     * @return @see Adapter#getParametersList
-     */
-    public List<List> getParametersList()
-    {
-        return parametersList;
     }
 
     /**
@@ -237,5 +225,10 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
             }
         }
         return sb.toString();
+    }
+
+    public List<List> getParametersList()
+    {
+        return getParametersDefinitionsAsList(parametersList);
     }
 }

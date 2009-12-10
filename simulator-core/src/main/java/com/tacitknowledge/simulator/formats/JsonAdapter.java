@@ -4,6 +4,11 @@ import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.StructuredSimulatorPojo;
+
+import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.parameter;
+import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
+
+import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,41 +48,24 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
     /**
      * Adapter parameters definition.
      */
-    private List<List> parametersList = new ArrayList<List>()
-    {
-        {
-            add(new ArrayList<String>()
-            {
-                {
-                    add(PARAM_JSON_CONTENT);
-                    add("JSON Contents (e.g. employee(s), order(s), etc.)");
-                    add("string");
-                    add("required");
-                }
-            });
-
-            add(new ArrayList<String>()
-            {
-                {
-                    add(PARAM_IS_ARRAY);
-                    add("Is JSON content an array? e.g. [ ... ]");
-                    add("boolean");
-                    add("optional");
-                }
-            });
-
-            add(new ArrayList<String>()
-            {
-                {
-                    add(PARAM_JSON_ARRAY_CONTENT);
-                    add("JSON Array content (What each array element represents. " +
-                            "e.g.: employee, order. Required if content is array)");
-                    add("string");
-                    add("optional");
-                }
-            });
-        }
-    };
+    private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
+        parameters().
+            add(parameter().
+                name(PARAM_JSON_CONTENT).
+                label("JSON Contents (e.g. employee(s), order(s), etc.)").
+                required(true)
+            ).
+            add(parameter().
+                name(PARAM_IS_ARRAY).
+                label("Is JSON content an array? e.g. [ ... ]").
+                type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN)
+            ).
+            add(parameter().
+                name(PARAM_JSON_ARRAY_CONTENT).
+                label("JSON Array content (What each array element represents. " +
+                            "e.g.: employee, order. Required if content is array)")
+            ).
+        build();
 
     /**
      * Logger for this class.
@@ -181,15 +169,6 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
         }
         String jsonString = jsonString1;
         return jsonString;
-    }
-
-    /**
-     * @return @see Adapter#getParametersList
-     * @inheritDoc
-     */
-    public List<List> getParametersList()
-    {
-        return parametersList;
     }
 
     private Map<String, Object> getMapFromJsonObj(JSONObject json) throws FormatAdapterException
@@ -313,5 +292,10 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
             throw new FormatAdapterException(
                     "JSON Array Content parameter is required if JSON content is an array");
         }
+    }
+
+    public List<List> getParametersList()
+    {
+        return getParametersDefinitionsAsList(parametersList);
     }
 }

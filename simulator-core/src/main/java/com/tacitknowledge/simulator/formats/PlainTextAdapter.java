@@ -1,7 +1,9 @@
 package com.tacitknowledge.simulator.formats;
 
 import com.tacitknowledge.simulator.FormatAdapterException;
+import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,16 +14,8 @@ import java.util.Map;
  *
  * @author Nikita Belenkiy (nbelenkiy@tacitknowledge.com)
  */
-public class PlainTextAdapter extends BaseAdapter {
-
-    /**
-     *    doesn't have any parameters
-     * @return null
-     */
-    public List<List> getParametersList() {
-        return null;
-    }
-
+public class PlainTextAdapter extends BaseAdapter
+{
     /**
      * Structured pojo root is 'text'
      *
@@ -53,5 +47,11 @@ public class PlainTextAdapter extends BaseAdapter {
     @Override
     void validateParameters() throws FormatAdapterException {
 
+    }
+
+    public List<List> getParametersList()
+    {
+        return getParametersDefinitionsAsList(
+                new ArrayList<ParameterDefinitionBuilder.ParameterDefinition>());
     }
 }

@@ -4,6 +4,11 @@ import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.StructuredSimulatorPojo;
+
+import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.parameter;
+import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
+
+import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
 import org.apache.log4j.Logger;
 
 import java.util.*;
@@ -41,50 +46,28 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
     /**
      * Adapter parameters definition.
      */
-    private List<List> parametersList = new ArrayList<List>()
-    {
-        {
-            add(new ArrayList<String>()
-            {
-                {
-                    add(PARAM_CSV_CONTENT);
-                    add("CSV Contents (e.g. employees, orders, etc.)");
-                    add("string");
-                    add("required");
-                }
-            });
-
-            add(new ArrayList<String>()
-            {
-                {
-                    add(PARAM_ROW_CONTENT);
-                    add("Row Contents (What each row represents. e.g. employee, order, etc.)");
-                    add("string");
-                    add("optional");
-                }
-            });
-
-            add(new ArrayList<String>()
-            {
-                {
-                    add(PARAM_FIRST_ROW_HEADER);
-                    add("Is first row headers row? (If not, Row Contents is required)");
-                    add("boolean");
-                    add("optional   ");
-                }
-            });
-
-            add(new ArrayList<String>()
-            {
-                {
-                    add(PARAM_COLUMN_SEPARATOR);
-                    add("Column Separator (defaults to comma ',')");
-                    add("string");
-                    add("optional");
-                }
-            });
-        }
-    };
+    private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
+        parameters().
+            add(parameter().
+                name(PARAM_CSV_CONTENT).
+                label("CSV Contents (e.g. employees, orders, etc.)").
+                required(true)
+            ).
+            add(parameter().
+                name(PARAM_ROW_CONTENT).
+                label("Row Contents (What each row represents. e.g. employee, order, etc.)")
+            ).
+            add(parameter().
+                name(PARAM_FIRST_ROW_HEADER).
+                label("Is first row headers row? (If not, Row Contents is required)").
+                type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN)
+            ).
+            add(parameter().
+                name(PARAM_COLUMN_SEPARATOR).
+                label("Column Separator").
+                defaultValue(",")
+            ).
+        build();
 
     /**
      * Logger for this class.
@@ -351,12 +334,8 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
         return sb.toString();
     }
 
-    /**
-     * @inheritDoc
-     * @return @see Adapter#getParametersList
-     */
     public List<List> getParametersList()
     {
-        return parametersList;
+        return getParametersDefinitionsAsList(parametersList);
     }
 }

@@ -15,7 +15,7 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
 {
 
     @Test
-    public void testGetXmlFormatParameters()
+    public void testGetCsvFormatParameters()
     {
         RouteManager routeManager = new RouteManagerImpl();
         ConversationManager manager = new ConversationManagerImpl(routeManager);
