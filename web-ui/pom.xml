@@ -126,7 +126,7 @@
                                     <arguments>
                                         <argument>-c</argument>
                                         <argument>
-                                            rcov -T --rails test/*.rb -i "app/*/*.rb" -x "/opt/jruby/*, *recognize_optimized*, *yaml*, *parser*" --aggregate coverage.data
+                                            rcov --rails test/*.rb -i "app/*/*.rb" -x "/opt/jruby/*, *recognize_optimized*, *yaml*, *parser*, *eval*, *\(erb\)*"
                                         </argument>
                                     </arguments>
                                 </configuration>
