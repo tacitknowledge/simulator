@@ -238,7 +238,7 @@ class ConversationsControllerTest < ActionController::TestCase
   end
 
   def test_format_parameters
-    get :format_parameters, :format => format_types(:xml).name
+    get :format_parameters, :format => format_types(:csv).name
 
     assert_response :success
     json = JSON.parse(@response.body)
@@ -247,7 +247,7 @@ class ConversationsControllerTest < ActionController::TestCase
 
     # Parameter defintions should be arrays with 4 strings
     param1 = json['data'][0]
-    assert(param1.length == 4)
+    assert(param1.length == 5)
   end
 
   def test_enable_conversation
