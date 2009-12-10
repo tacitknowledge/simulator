@@ -119,14 +119,14 @@
                         <executions>
                             <execution>
                                 <id>test-coverage-ruby</id>
-                                <phase>compile</phase>
+                                <phase>site</phase>
                                 <configuration>
                                     <executable>/bin/sh</executable>
                                     <workingDirectory>${rubyapp.dir}/</workingDirectory>
                                     <arguments>
                                         <argument>-c</argument>
                                         <argument>
-                                            rcov -T --rails test/*.rb -i "app/*/*.rb" -x "/opt/jruby/*, *recognize_optimized*, *yaml*, *parser*"
+                                            rcov -T --rails test/*.rb -i "app/*/*.rb" -x "/opt/jruby/*, *recognize_optimized*, *yaml*, *parser*" --aggregate coverage.data
                                         </argument>
                                     </arguments>
                                 </configuration>
@@ -136,7 +136,7 @@
                             </execution>
                             <execution>
                                 <id>checkstyle-ruby</id>
-                                <phase>compile</phase>
+                                <phase>site</phase>
                                 <configuration>
                                     <executable>/bin/sh</executable>
                                     <workingDirectory>${rubyapp.dir}</workingDirectory>
