@@ -41,6 +41,7 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
         var field_label = param_data[1];
         var field_type = param_data[2];
         var is_required = param_data[3] == 'required';
+        var defaultValue = param_data[4];
 
         var field;
         if (field_type == 'boolean') {
@@ -48,7 +49,8 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                 id: field_name,
                 name: field_name,
                 fieldLabel: field_label,
-                inputValue: 'true'
+                inputValue: 'true',
+                checked: defaultValue == 'true' ? true : false
             });
         } else {
             // --- Text field is default
@@ -57,7 +59,8 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                     fieldLabel: field_label,
                     name: field_name,
                     allowBlank: !is_required,
-                    xtype: 'textfield'
+                    xtype: 'textfield',
+                    value: (defaultValue != '' ? defaultValue : '')
                 });
         }
 
