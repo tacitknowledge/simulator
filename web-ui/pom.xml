@@ -15,9 +15,8 @@
         <app.name>rubyapp</app.name>
         <rubyapp.dir>src/main/${app.name}</rubyapp.dir>
         <rubyapp.target.war>${rubyapp.dir}/simulator.war</rubyapp.target.war>
-        <tomcat.manager.url>http://127.0.0.1:8080/manager/html</tomcat.manager.url>
-        <tomcat.manager.deploy.url>${tomcat.manager.url}/upload</tomcat.manager.deploy.url>
-        <tomcat.manager.undeploy.url>${tomcat.manager.url}/undeploy?path=/simulator</tomcat.manager.undeploy.url>
+        <tomcat.manager.url>http://127.0.0.1:8080/manager</tomcat.manager.url>
+        <tomcat.manager.deploy.url>${tomcat.manager.url}/deploy</tomcat.manager.deploy.url>
         <rails.environment>production</rails.environment>
         <mysql.connector>mysql-connector-java-5.1.10-bin.jar</mysql.connector>
     </properties>
@@ -70,14 +69,9 @@
                                     <arguments>
                                         <argument>-c</argument>
                                         <argument>
-                                        echo "Undeploying the simulator web app..."
-					                    curl -o /dev/null ${tomcat.manager.undeploy.url} -u both:tomcat
-					                    echo "Finished."
-					                    echo "Pausing 30 seconds ..."
-					                    sleep 30
-					                    echo "Deploying the simulator web app..."
-					                    curl -o /dev/null -F deployWar=@${rubyapp.target.war} ${tomcat.manager.deploy.url} -u both:tomcat
-					                    echo "Finished."
+                                        	echo "Deploying the simulator web app..."
+					                    	curl -T ${rubyapp.target.war} "${tomcat.manager.deploy.url}?update=true&amp;path=/simulator" -u both:tomcat
+					                    	echo "Finished."
                                         </argument>
                                     </arguments>
                                 </configuration>
