@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: transports
+#
+#  id                :integer(10)     not null, primary key
+#  transport_type_id :string(255)     not null
+#  created_at        :datetime
+#  updated_at        :datetime
+#
+
 class Transport < ActiveRecord::Base
 #  has_one :conversation
   belongs_to :transport_type , :foreign_key => :transport_type_id

@@ -40,10 +40,11 @@ class ScenariosControllerTest < ActionController::TestCase
   def test_should_create
     assert_difference('Scenario.count', 1, 'Should create scenario') do
       post :create,
-        :conversation_id => conversations(:one).id,
-        :name => 'New scenario',
-        :criteria_script => '2 + 2 = 4',
-        :execution_script => '4'
+           :conversation_id => conversations(:one).id,
+           :name => 'New scenario',
+           :criteria_script => '2 + 2 = 4',
+           :execution_script => '4',
+           :label => 'label'
 
       assert_response :success
       json = JSON.parse(@response.body)
@@ -73,13 +74,15 @@ class ScenariosControllerTest < ActionController::TestCase
     orig_name = scenarios(:one).name
     orig_criteria = scenarios(:one).criteria_script
     orig_exec = scenarios(:one).criteria_script
+    orig_label = scenarios(:one).label
 
     post :update,
-      :id => scenarios(:one).id,
-      :conversation_id => scenarios(:one).conversation_id,
-      :name => 'Updated name',
-      :criteria_script => 'a==4',
-      :execution_script => 'a = 3 x 3'
+         :id => scenarios(:one).id,
+         :conversation_id => scenarios(:one).conversation_id,
+         :name => 'Updated name',
+         :criteria_script => 'a==4',
+         :execution_script => 'a = 3 x 3',
+         :label => 'label 2'
 
     assert_response :success
     json = JSON.parse(@response.body)
@@ -90,14 +93,15 @@ class ScenariosControllerTest < ActionController::TestCase
     assert !(orig_name.eql? json_conv['name'])
     assert !(orig_criteria.eql? json_conv['criteria_script'])
     assert !(orig_exec.eql? json_conv['execution_script'])
+    assert !(orig_label.eql? json_conv['label'])
   end
 
   def test_delete
     post :create,
-        :conversation_id => conversations(:one).id,
-        :name => 'New scenario',
-        :criteria_script => '2 + 2 = 4',
-        :execution_script => '4'
+         :conversation_id => conversations(:one).id,
+         :name => 'New scenario',
+         :criteria_script => '2 + 2 = 4',
+         :execution_script => '4'
 
     assert_response :success
     json = JSON.parse(@response.body)
@@ -122,8 +126,7 @@ class ScenariosControllerTest < ActionController::TestCase
     assert is_enabled != json['data']['enabled']
   end
 
-  
-    def test_clone
+  def test_clone
     source_scenario = scenarios(:one)
     get :clone, :id=> source_scenario.id
     assert_response(:success)
@@ -140,5 +143,6 @@ class ScenariosControllerTest < ActionController::TestCase
 
     assert_equal(source_scenario.name+' copy', new_scenario.name)
 
-    end
+  end
+
 end

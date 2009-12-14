@@ -1,3 +1,21 @@
+# == Schema Information
+#
+# Table name: conversations
+#
+#  id                    :integer(10)     not null, primary key
+#  system_id             :integer(10)     not null
+#  name                  :string(255)     not null
+#  description           :text
+#  enabled               :boolean
+#  inbound_transport_id  :integer(10)
+#  outbound_transport_id :integer(10)
+#  inbound_format_id     :integer(10)
+#  outbound_format_id    :integer(10)
+#  created_at            :datetime
+#  updated_at            :datetime
+#  default_response      :string(1000)
+#
+
 class Conversation < ActiveRecord::Base
   belongs_to :system
 
