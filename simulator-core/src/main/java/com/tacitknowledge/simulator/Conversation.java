@@ -53,15 +53,6 @@ public interface Conversation
     Adapter getOutboundAdapter();
 
     /**
-     * Gets the unique id of the conversation based on the parameters provided
-     * on object construction. Needed to ensure that RouteManager doesn't add
-     * two identic routes to camel.
-     * @return unique id based on the parameters of the object.
-     * @throws SimulatorException If anything goes wrong.
-     */
-    String getUniqueId() throws SimulatorException;
-
-    /**
      *
      *
      * @return unique id

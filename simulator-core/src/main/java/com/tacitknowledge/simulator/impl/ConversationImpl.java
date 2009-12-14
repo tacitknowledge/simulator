@@ -1,6 +1,9 @@
 package com.tacitknowledge.simulator.impl;
 
-import com.tacitknowledge.simulator.*;
+import com.tacitknowledge.simulator.Adapter;
+import com.tacitknowledge.simulator.Conversation;
+import com.tacitknowledge.simulator.ConversationScenario;
+import com.tacitknowledge.simulator.Transport;
 import org.apache.log4j.Logger;
 
 import java.util.Collection;
@@ -28,9 +31,6 @@ public class ConversationImpl implements Conversation
      * Conversation ID.
      */
     private Integer id;
-
-    /** Unique id is used to identify conversations inside camel  */
-    private String uniqueId;
 
     /**
      * Wrapper for inbound transport configuration
@@ -93,11 +93,11 @@ public class ConversationImpl implements Conversation
 
             scenario = new ConversationScenarioImpl(scenarioId, language, criteria, transformation);
             scenarios.put(scenarioId, scenario);
-            logger.debug("Added new conversation scenario"
+            logger.info("Added new conversation scenario"
                     + " to the conversation with id : " + this.id);
         }else{
             scenario.setScripts(criteria, transformation, language);
-            logger.debug("Updated conversation scenario with id "+scenarioId
+            logger.info("Updated conversation scenario with id "+scenarioId
                     + " to the conversation with id : " + this.id);
         }
 
@@ -142,42 +142,6 @@ public class ConversationImpl implements Conversation
     public String getDefaultResponse()
     {
         return defaultResponse;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public String getUniqueId() throws SimulatorException
-    {
-        if (uniqueId == null)
-        {
-           createUniqueId();
-        }
-        return uniqueId;
-    }
-
-    /**
-     * This method will set the uniqueId for this instance
-     * @throws SimulatorException
-     */
-    private void createUniqueId() throws SimulatorException
-    {
-      StringBuffer sb = new StringBuffer();
-
-        try
-        {
-            sb.append(id.toString()).append("|").
-                append(getInboundTransport().toUriString()).append("|").
-                    append(getOutboundTransport().toUriString());
-        }
-        catch (TransportException te)
-        {
-            logger.error("Unexpected error trying to get unique Id: " + te.getMessage());
-            throw new SimulatorException(
-                    "Unexpected error trying to get unique Id: " + te.getMessage(), te);
-        }
-
-        uniqueId = sb.toString();
     }
 
     public int getId(){
@@ -250,5 +214,19 @@ public class ConversationImpl implements Conversation
         result = HASH_CODE_PRIME * result + inboundAdapter.hashCode();
         result = HASH_CODE_PRIME * result + outboundAdapter.hashCode();
         return result;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "ConversationImpl{" +
+                "id=" + id +
+                ", inboundTransport=" + inboundTransport +
+                ", outboundTransport=" + outboundTransport +
+                ", inboundAdapter=" + inboundAdapter +
+                ", outboundAdapter=" + outboundAdapter +
+                ", defaultResponse='" + defaultResponse + '\'' +
+                ", scenarios=" + scenarios +
+                '}';
     }
 }

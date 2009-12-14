@@ -54,6 +54,8 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager {
     public void activate(Conversation conversation) throws Exception {
         Integer conversationId = conversation.getId();
 
+        logger.info("Activating conversation: " + conversation);
+
         RouteDefinition definition = convRoutes.get(conversationId);
 
         if (!contextStarted) {
@@ -61,19 +63,22 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager {
             contextStarted = true;
         }
         if (definition == null) {
-            // --- Entry endpoint
-            definition = this.from(conversation.getInboundTransport().toUriString());
 
+            // --- Entry endpoint
+            String inboundTransportURI = conversation.getInboundTransport().toUriString();
+            String outboundTransportURI = conversation.getOutboundTransport().toUriString();
+
+            definition = this.from(inboundTransportURI);
             // --- Adapt input format, run scenarios and finally adapt into output format
             definition.bean(new ScenarioExecutionWrapper(conversation.getScenarios(), conversation
                     .getInboundAdapter(), conversation.getOutboundAdapter()));
 
             // --- Exit endpoint
-            definition.to(conversation.getOutboundTransport().toUriString());
+            definition.to(outboundTransportURI);
             definition.setId(conversationId.toString());
             convRoutes.put(conversationId, definition);
 
-            logger.debug("Route : " + definition.getId() + " was added to the context : "
+            logger.info("Route : " + definition.getId() + " was added to the context : "
                     + getContext().getName());
 
             getContext().startRoute(definition);
@@ -91,12 +96,13 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager {
      * {@inheritDoc}
      */
     public void deactivate(Conversation conversation) throws Exception {
+        logger.info("Deactivating conversation: " + conversation);
         int i = conversation.getId();
         RouteDefinition definition = convRoutes.get(i);
         if (definition != null) {
             getContext().stopRoute(definition);
             activeRoutes.remove(i);
-            logger.debug("Route : " + definition.getId() + " was stopped in the context : "
+            logger.info("Route : " + definition.getId() + " was stopped in the context : "
                     + getContext().getName());
         } else {
             logger.warn("Trying to deactivate route which is not active ");

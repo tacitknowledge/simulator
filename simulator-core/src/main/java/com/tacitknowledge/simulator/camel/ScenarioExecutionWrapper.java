@@ -62,7 +62,6 @@ public class ScenarioExecutionWrapper
      */
     public String process(String body) throws Exception
     {
-
         /**
          * Beans needed for the script executions service to run the simulation against *
          */
@@ -74,10 +73,12 @@ public class ScenarioExecutionWrapper
         for (ConversationScenario scenario : scenarios)
         {
             synchronized (scenario) {
-                logger.debug("Evaluating scenario : " + scenario.toString());
-                if (scenario.isActive() && scenario.matchesCondition(scriptExecutionBeans)) {
-                    logger.debug("Scenario : " + scenario
-                            + " was matched, executing the transformation script.");
+                logger.info("Evaluating scenario : " + scenario.toString());
+                boolean active = scenario.isActive();
+                boolean matchesCondition = scenario.matchesCondition(scriptExecutionBeans);
+                logger.info("active: " + active + " matches condition: " + matchesCondition);
+                if (active && matchesCondition) {
+                    logger.info("Executing the transformation script.");
                     result = scenario.executeTransformation(scriptExecutionBeans);
                     break;
                 }

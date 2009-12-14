@@ -117,4 +117,13 @@ public abstract class BaseTransport implements Transport
         }
         return list;
     }
+    
+    @Override
+    public String toString()
+    {
+        return "BaseTransport{" +
+                "parameters=" + parameters +
+                ", type='" + type + '\'' +
+                '}';
+    }
 }

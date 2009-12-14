@@ -205,6 +205,16 @@ public class ConversationScenarioImpl implements ConversationScenario {
         return result;
     }
 
-
-
+    @Override
+    public String toString()
+    {
+        return "ConversationScenarioImpl{" +
+                "scenarioId=" + scenarioId +
+                ", scriptLanguage='" + scriptLanguage + '\'' +
+                ", criteriaScript='" + criteriaScript + '\'' +
+                ", transformationScript='" + transformationScript + '\'' +
+                ", execServ=" + execServ +
+                ", active=" + active +
+                '}';
+    }
 }
