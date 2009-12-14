@@ -132,8 +132,9 @@ public class ScenarioExecutionWrapperTest {
      @Test
     public void testRubyScenario() throws Exception {
 
-        ScenarioExecutionWrapper wrapper = createExecutionWrapper("require 'java'\n$employees.employee[0].name == 'John';",
-                 "$employees.employee[0].name='John12345';" +
+        ScenarioExecutionWrapper wrapper = createExecutionWrapper(
+                "require 'java'\n$employees.employee[0].name == 'John';",
+                "$employees.employee[0].name='John12345';" +
                          "$employees", new XmlAdapter(), new XmlAdapter());
 
         String s = wrapper.process(TestHelper.XML_DATA);
@@ -165,6 +166,9 @@ public class ScenarioExecutionWrapperTest {
     @Test
     public void testReturnRubyNotEmptyHash() throws Exception
     {
+        Map<String, String> params = new HashMap<String, String>();
+        params.put(XmlAdapter.PARAM_ROOT_TAG_NAME, "root");
+        Adapter outAdapter = new XmlAdapter(params);
 
         ScenarioExecutionWrapper wrapper = createExecutionWrapper("require 'java'\n$employees.employee[0].name == 'John';",
                 "$employees.employee[0].name='John12345';" +
@@ -173,9 +177,9 @@ public class ScenarioExecutionWrapperTest {
                         ":arrayProperty => [ ]" +
                         "" +
                         "" +
-                        "}", new XmlAdapter(), new XmlAdapter());
+                        "}", new XmlAdapter(), outAdapter);
         String s = wrapper.process(TestHelper.XML_DATA);
-        Assert.assertTrue(s.contains("rubyhash"));
+        Assert.assertTrue(s.contains("root"));
     }
 
     private ScenarioExecutionWrapper createExecutionWrapper(String criteria, String execution, Adapter inAdapter, Adapter outAdapter) {
@@ -203,9 +207,9 @@ public class ScenarioExecutionWrapperTest {
                 "stringFieldName: \"xxxx\", " +
                 "numberFieldName: 1234, " +
                 "arrayField:[" +
-                "       {intProp:134}," +
-                "       {intProp:1234}" +
-                "           ]," +
+                "       [134, 12345]," +
+                "       [1234, 123456]" +
+                "]," +
                 "objectProperty:{stringgg:'ffff'}," +
                 "undefinedVar: undefined" +
                 "}\n" +
@@ -220,9 +224,10 @@ public class ScenarioExecutionWrapperTest {
 
          String s = wrapper.process(TestHelper.XML_DATA);
          System.out.println("s = " + s);
+         
          SAXBuilder builder = new SAXBuilder();
          Document doc = builder.build(new StringReader(s));
-         //todo nativeobject is correct for now but should be fixed
+         
          Element rootElement = doc.getRootElement();
          Assert.assertEquals(rootElement.getName(),"nativeobject");
 

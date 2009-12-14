@@ -10,6 +10,7 @@ import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.p
 
 import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
 import org.apache.log4j.Logger;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -47,6 +48,11 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
     public static final String PARAM_VALIDATE = "validate";
 
     /**
+     *
+     */
+    public static final String PARAM_ROOT_TAG_NAME = "rootTagName";
+
+    /**
      * XML indentation value
      */
     private static final int XML_INDENT = 4;
@@ -65,6 +71,11 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
                 name(PARAM_VALIDATE).
                 label("Validate?").
                 type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN)
+            ).
+            add(parameter().
+                name(PARAM_ROOT_TAG_NAME).
+                label("XML root tag name " +
+                    "(outbound only)")
             ).
         build();
 
@@ -146,41 +157,46 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
     {
         try
         {
+            // --- The SimulatorPojo for XmlAdapter should contain only one key in its root
+            if (simulatorPojo.getRoot().isEmpty() || simulatorPojo.getRoot().size() > 1)
+            {
+                logger.error("Incorrect SimulatorPojo's root size. Expecting 1, but found"
+                        + simulatorPojo.getRoot().size());
+                throw new
+                        FormatAdapterException(
+                        "Incorrect SimulatorPojo's root size. Expecting 1, but found"
+                                + simulatorPojo.getRoot().size());
+            }
 
+            // --- Get a DOM DocumentFactoryBuilder and the corresponding builder
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                DocumentBuilder db = dbf.newDocumentBuilder();
 
-        // --- The SimulatorPojo for XmlAdapter should contain only one key in its root
-        if (simulatorPojo.getRoot().isEmpty() || simulatorPojo.getRoot().size() > 1)
-        {
-            logger.error("Incorrect SimulatorPojo's root size. Expecting 1, but found"
-                    + simulatorPojo.getRoot().size());
-            throw new
-                    FormatAdapterException(
-                    "Incorrect SimulatorPojo's root size. Expecting 1, but found"
-                            + simulatorPojo.getRoot().size());
-        }
+                doc = db.newDocument();
 
-        // --- Get a DOM DocumentFactoryBuilder and the corresponding builder
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
+            // --- Generate the XML document - In XmlAdapter,
+            // the only element in root is guaranteed to be a Map
+            for (Map.Entry<String, Object> entry : simulatorPojo.getRoot().entrySet())
+            {
+                String rootTagName = entry.getKey();
+                // --- Override the default root name is one was provided
+                if (getParamValue(PARAM_ROOT_TAG_NAME) != null)
+                {
+                    rootTagName = getParamValue(PARAM_ROOT_TAG_NAME);
+                }
 
-            doc = db.newDocument();
+                doc.appendChild(
+                        getStructuredElement(
+                                rootTagName,
+                                (Map<String, Object>) entry.getValue()));
+            }
 
-        // --- Generate the XML document - In XmlAdapter,
-        // the only element in root is guaranteed to be a Map
-        for (Map.Entry<String, Object> entry : simulatorPojo.getRoot().entrySet())
-        {
-            doc.appendChild(
-                    getStructuredElement(
-                            entry.getKey(),
-                            (Map<String, Object>) entry.getValue()));
-        }
-
-        // --- Serialize the generated XML document
-        DOMSource domSource = new DOMSource(doc);
-        StringWriter writer = new StringWriter();
-        StreamResult result = new StreamResult(writer);
-        TransformerFactory tf = TransformerFactory.newInstance();
-        tf.setAttribute("indent-number", XML_INDENT);
+            // --- Serialize the generated XML document
+            DOMSource domSource = new DOMSource(doc);
+            StringWriter writer = new StringWriter();
+            StreamResult result = new StreamResult(writer);
+            TransformerFactory tf = TransformerFactory.newInstance();
+            tf.setAttribute("indent-number", XML_INDENT);
 
             Transformer transformer = tf.newTransformer();
             transformer.transform(domSource, result);
@@ -297,11 +313,11 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
     }
 
     /**
-     * Returns an new XML Element with its inners childs
+     * Returns an new XML Element with its inners children
      *
      * @param elemName The node name of the element to be returned
      * @param childs   Map containing the childs to be contained within the generated Element
-     * @return The generated XML Element with its inner childs
+     * @return The generated XML Element with its inner children
      */
     private Element getStructuredElement(String elemName, Map<String, Object> childs)
     {
@@ -327,15 +343,30 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
                     // --- If the item is...
                     if (item instanceof Map)
                     {
-                        // --- ...a Map, add the structured element and corresponding childs
+                        // --- ...a Map, add the structured element and corresponding children
+                        String newElName = entry.getKey();
+                        if (newElName == null)
+                        {
+                            newElName = "anonymous-list";
+                        }
                         element.appendChild(
-                                getStructuredElement(entry.getKey(), (Map<String, Object>) item));
+                                getStructuredElement(newElName, (Map<String, Object>) item));
+                    }
+                    else if (item instanceof List)
+                    {
+                        // --- If it's a recurring list, get an anonymously-name-elements list
+                        element.appendChild(getListElement(entry.getKey(), (List) item));
                     }
                     else
                     {
                         // --- ...a String (should be safe to assume),
-                        // add the text element   D0 ,�r
-                        element.appendChild(getTextElement(entry.getKey(), item.toString()));
+                        // add the text element   directly
+                        String newElName = entry.getKey();
+                        if (newElName == null)
+                        {
+                            newElName = "anonymous-list-element";
+                        }
+                        element.appendChild(getTextElement(newElName, item.toString()));
                     }
                 }
                 // --- We don't return a child Element here,
@@ -354,6 +385,43 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
     }
 
     /**
+     * Returns an new XML Element with its inner children
+     *
+     * @param elemName The node name of the element to be returned
+     * @param childs   List containing the children to be contained within the generated Element
+     * @return The generated XML Element with its inner children
+     */
+    private Element getListElement(String elemName, List childs)
+    {
+        Element element = doc.createElement(elemName);
+
+        for (Object o : childs)
+        {
+            Element child;
+            // --- If the Entry value is...
+            if (o instanceof Map)
+            {
+                // --- ...a Map, get the structured element
+                child = getStructuredElement(
+                        "list-element",
+                        (Map<String, Object>) o);
+            }
+            else if (o instanceof List)
+            {
+                child = getListElement("list-element", (List) o);
+            }
+            else
+            {
+                // ...a String (should be), add a text element
+                child = getTextElement("list-element", o.toString());
+            }
+            // --- Append the returned child to the current Element
+            element.appendChild(child);
+        }
+        return element;
+    }
+
+    /**
      * Returns an XML Element containing only one TextNode child.
      *
      * @param elemName The containing element node name
@@ -363,10 +431,19 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
     private Element getTextElement(String elemName, String text)
     {
         Node textNode = doc.createTextNode(text);
-        Element container = doc.createElement(elemName);
-        container.appendChild(textNode);
 
-        return container;
+        try
+        {
+            Element container = doc.createElement(elemName);
+            container.appendChild(textNode);
+
+            return container;
+        } catch (DOMException de)
+        {
+            logger.debug("Unexpected DOM Exception for element name: " + elemName + ". \n"
+                    + de.getMessage());
+            throw de;
+        }
     }
 
     /**
