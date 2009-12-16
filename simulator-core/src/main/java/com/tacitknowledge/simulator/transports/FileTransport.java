@@ -90,8 +90,7 @@ public class FileTransport extends BaseTransport implements Transport
             ).
             add(parameter().
                 name(PARAM_POLLING_INTERVAL).
-                label("Milliseconds before the next poll").
-                defaultValue("500")
+                label("Milliseconds before the next poll")
             ).
             add(parameter().
                 name(PARAM_DELETE_FILE).

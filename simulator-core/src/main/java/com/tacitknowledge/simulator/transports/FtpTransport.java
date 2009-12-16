@@ -105,8 +105,7 @@ public class FtpTransport extends FileTransport implements Transport
             ).
             add(parameter().
                 name(PARAM_POLLING_INTERVAL).
-                label("Milliseconds before the next poll").
-                defaultValue("500")
+                label("Milliseconds before the next poll")
             ).
             add(parameter().
                 name(PARAM_BINARY).
