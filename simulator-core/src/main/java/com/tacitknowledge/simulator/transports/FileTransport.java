@@ -158,38 +158,45 @@ public class FileTransport extends BaseTransport implements Transport
 
         // --- directory name
         sb.append(getParamValue(PARAM_DIRECTORY_NAME));
-        sb.append("?");
-        // --- Options. Take a 2 seconds delay before polling the directory after the route is
-        // registered.
-        //sb.append("?initialDelay=2000").append(AMP);
 
-        // --- fileName, fileExtension & Regex filter should be mutually exclusive options
+        // --- Options
+        StringBuilder options = new StringBuilder();
+        if (getParamValue(PARAM_POLLING_INTERVAL) != null)
+        {
+            options.append("initialDelay=").append(getParamValue(PARAM_POLLING_INTERVAL)).append(AMP);
+            options.append("delay=").append(getParamValue(PARAM_POLLING_INTERVAL)).append(AMP);
+        }
+
+        if (this.deleteFile)
+        {
+            options.append("delete=true").append(AMP);
+        }
+
+                // --- fileName, fileExtension & Regex filter should be mutually exclusive options
         if (getParamValue(PARAM_FILE_NAME) != null)
         {
-            sb.append("fileName=").append(getParamValue(PARAM_FILE_NAME)).append(AMP);
+            options.append("fileName=").append(getParamValue(PARAM_FILE_NAME));
         }
         else if (getParamValue(PARAM_FILE_EXTENSION) != null)
         {
             // --- File extension is used as a RegEx filter for transport routing
-            sb.append("include=^.*(i)(.").append(getParamValue(PARAM_FILE_EXTENSION)).append(")");
-            sb.append(AMP);
+            options.append("include=^.*\\.(").
+                    append(getParamValue(PARAM_FILE_EXTENSION).toLowerCase()).
+                    append("|").
+                    append(getParamValue(PARAM_FILE_EXTENSION).toUpperCase()).
+                    append(")$");
         }
         else if (getParamValue(PARAM_REGEX_FILTER) != null)
         {
             // --- Regex filter is the last filter to be applied, only if neither of the other 2
             // were provided.
-            sb.append("include=").append(getParamValue(PARAM_REGEX_FILTER)).append(AMP);
+            options.append("include=").append(getParamValue(PARAM_REGEX_FILTER));
         }
 
-        if (getParamValue(PARAM_POLLING_INTERVAL) != null)
+        // --- If there are options set, append to the current URI
+        if (options.length() > 0)
         {
-            sb.append("initialDelay=").append(getParamValue(PARAM_POLLING_INTERVAL)).append(AMP);
-            sb.append("delay=").append(getParamValue(PARAM_POLLING_INTERVAL)).append(AMP);
-        }
-
-        if (this.deleteFile)
-        {
-            sb.append("delete=true");
+            sb.append("?").append(options.toString());
         }
 
         return sb.toString();

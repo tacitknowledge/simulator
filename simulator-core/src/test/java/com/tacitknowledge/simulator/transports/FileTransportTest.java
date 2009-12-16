@@ -64,7 +64,7 @@ public class FileTransportTest extends TestCase
 
     public void testGetUriForCsvFilesOnly()
     {
-        // --- Try to get this URI: file://inbox/csv?include=^.*(i)(.csv)
+        // --- Try to get this URI: file://inbox/csv?include=^.*\\.(csv|CSV)$
         params.put(FileTransport.PARAM_DIRECTORY_NAME, "inbox/csv");
         params.put(FileTransport.PARAM_FILE_EXTENSION, "csv");
 
@@ -76,7 +76,7 @@ public class FileTransportTest extends TestCase
 
             assertTrue(
                     "Returned uri isn't as expected: " + uri,
-                    uri.indexOf("file://inbox/csv?include=^.*(i)(.csv)") > -1);
+                    uri.indexOf("file://inbox/csv?include=^.*\\.(csv|CSV)$") > -1);
         }
         catch (TransportException e)
         {

@@ -186,49 +186,58 @@ public class FtpTransport extends FileTransport implements Transport
             sb.append("/").append(getParamValue(PARAM_DIRECTORY_NAME));
         }
 
-        // --- Append the options...
-        sb.append("?");
+        // --- Options...
+        StringBuilder options = new StringBuilder();
         // --- If we have password
         if (getParamValue(PARAM_PASSWORD) != null)
         {
-            sb.append("password=").append(getParamValue(PARAM_PASSWORD)).append(AMP);
-        }
-
-        // --- fileName, fileExtension & Regex filter should be mutually exclusive options.
-        // fileName takes priority, Regex filter having the lowest.
-        if (getParamValue(PARAM_FILE_NAME) != null)
-        {
-            sb.append("fileName=").append(getParamValue(PARAM_FILE_NAME)).append(AMP);
-        }
-        else if (getParamValue(PARAM_FILE_EXTENSION) != null)
-        {
-            // --- File extension is used as a RegEx filter for transport routing
-            sb.append("include=^.*(i)(.").append(getParamValue(PARAM_FILE_EXTENSION)).append(")");
-            sb.append(AMP);
-        }
-        else if (getParamValue(PARAM_REGEX_FILTER) != null)
-        {
-            // --- Regex filter is the last filter to be applied, only if neither of the other 2
-            // were provided.
-            sb.append("include=").append(getParamValue(PARAM_REGEX_FILTER)).append(AMP);
+            options.append("password=").append(getParamValue(PARAM_PASSWORD)).append(AMP);
         }
 
         // ---
         if (isDeleteFile())
         {
-            sb.append("delete=true").append(AMP);
+            options.append("delete=true").append(AMP);
         }
 
         if (getParamValue(PARAM_POLLING_INTERVAL) != null)
         {
-            sb.append("initialDelay=").append(getParamValue(PARAM_POLLING_INTERVAL)).append(AMP);
-            sb.append("delay=").append(getParamValue(PARAM_POLLING_INTERVAL)).append(AMP);
+            options.append("initialDelay=").append(getParamValue(PARAM_POLLING_INTERVAL)).append(AMP);
+            options.append("delay=").append(getParamValue(PARAM_POLLING_INTERVAL)).append(AMP);
         }
 
         // --- If file transfer is binary
         if (this.binary)
         {
-            sb.append("binary=true");
+            options.append("binary=true").append(AMP);
+        }
+
+                // --- fileName, fileExtension & Regex filter should be mutually exclusive options.
+        // fileName takes priority, Regex filter having the lowest.
+        if (getParamValue(PARAM_FILE_NAME) != null)
+        {
+            options.append("fileName=").append(getParamValue(PARAM_FILE_NAME));
+        }
+        else if (getParamValue(PARAM_FILE_EXTENSION) != null)
+        {
+            // --- File extension is used as a RegEx filter for transport routing
+            options.append("include=^.*\\.(").
+                    append(getParamValue(PARAM_FILE_EXTENSION).toLowerCase()).
+                    append("|").
+                    append(getParamValue(PARAM_FILE_EXTENSION).toUpperCase()).
+                    append(")$");
+        }
+        else if (getParamValue(PARAM_REGEX_FILTER) != null)
+        {
+            // --- Regex filter is the last filter to be applied, only if neither of the other 2
+            // were provided.
+            options.append("include=").append(getParamValue(PARAM_REGEX_FILTER));
+        }
+
+        // --- If there are options set, append to the current URI
+        if (options.length() > 0)
+        {
+            sb.append("?").append(options.toString());
         }
 
         return sb.toString();

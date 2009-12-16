@@ -1,5 +1,6 @@
 package com.tacitknowledge.simulator;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -170,5 +171,26 @@ public abstract class TestHelper
             item.put(ITEM_FIELDS[i], values[i]);
         }
         return item;
+    }
+
+    public static void copyFile(File file1, File file2)
+            throws Exception
+    {
+        // --- Make sure file1 exists
+        if (!file1.exists()) {
+            throw new Exception("Original file must exist: " + file1.getAbsolutePath());
+        }
+
+        InputStream in = new FileInputStream(file1);
+        OutputStream out = new FileOutputStream(file2);
+
+        byte[] buf = new byte[1024];
+        int len;
+        while ((len = in.read(buf)) > 0) {
+            out.write(buf, 0, len);
+        }
+        in.close();
+        out.close();
+        System.out.println("File copied to " + file2.getAbsolutePath());
     }
 }

@@ -99,7 +99,7 @@ public class FtpTransportTest extends TestCase
 
     public void testGetUriWithFileOptionsAndBinary()
     {
-        // --- Try to get this URI: ftp://127.0.0.1/inbox?include=^.*(i)(.csv)&binary=true
+        // --- Try to get this URI: ftp://127.0.0.1/inbox?binary=true&include=^.*\\.(csv|CSV)$
         params.put(FtpTransport.PARAM_HOST, "127.0.0.1");
         params.put(FtpTransport.PARAM_DIRECTORY_NAME, "inbox");
         params.put(FtpTransport.PARAM_FILE_EXTENSION, "csv");
@@ -112,7 +112,7 @@ public class FtpTransportTest extends TestCase
             String uri = transport.toUriString();
 
             assertTrue("Returned uri isn't as expected: " + uri,
-                    uri.indexOf("ftp://127.0.0.1/inbox?include=^.*(i)(.csv)&binary=true") > -1);
+                    uri.indexOf("ftp://127.0.0.1/inbox?binary=true&include=^.*\\.(csv|CSV)$") > -1);
         } catch (TransportException e)
         {
             fail("Shouldn't be getting an exception here: " + e.getMessage());
