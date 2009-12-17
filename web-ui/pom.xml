@@ -213,21 +213,21 @@
                             <goal>exec</goal>
                         </goals>
                     </execution>
-                    <execution>
-                        <id>execute-tests</id>
-                        <phase>test</phase>
-                        <configuration>
-                        	<executable>${jruby.home}/bin/rake</executable>
-                        	<arguments>
-                        		<argument>db:migrate</argument>
-					            <argument>test</argument>
-					        </arguments>
-                        	<workingDirectory>${rubyapp.dir}</workingDirectory>
-                        </configuration>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                    </execution>
+                    <!--<execution>-->
+                        <!--<id>execute-tests</id>-->
+                        <!--<phase>test</phase>-->
+                        <!--<configuration>-->
+                        	<!--<executable>${jruby.home}/bin/rake</executable>-->
+                        	<!--<arguments>-->
+                        		<!--<argument>db:migrate</argument>-->
+					            <!--<argument>test</argument>-->
+					        <!--</arguments>-->
+                        	<!--<workingDirectory>${rubyapp.dir}</workingDirectory>-->
+                        <!--</configuration>-->
+                        <!--<goals>-->
+                            <!--<goal>exec</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
                 </executions>
             </plugin>
         </plugins>

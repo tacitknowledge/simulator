@@ -61,11 +61,11 @@ public class ConversationManagerImpl implements ConversationManager
     /**
      * {@inheritDoc}
      */
-    public Conversation createConversation(Integer id, Transport inboundTransport,
+    public Conversation createConversation(Integer id, String name, Transport inboundTransport,
                                            Transport outboundTransport, Adapter inAdapter, Adapter outAdapter, String defaultResponse)
         throws SimulatorException
     {
-        ConversationImpl conversation = ConversationFactory.createConversation(id, inboundTransport,
+        ConversationImpl conversation = ConversationFactory.createConversation(id, name, inboundTransport,
                 outboundTransport, inAdapter, outAdapter, defaultResponse);
         assert conversations.get(id) == null;
 

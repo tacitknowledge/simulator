@@ -12,6 +12,12 @@ public interface Conversation
 {
 
     /**
+     *
+     * @return any name. will be used as log file name
+     */
+    String getName();
+
+    /**
      * Adds or updates a Scenario to this Conversation
      *
      * @param scenarioId

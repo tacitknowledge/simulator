@@ -32,6 +32,7 @@ public class ConversationImpl implements Conversation
      */
     private Integer id;
 
+    private String name;
     /**
      * Wrapper for inbound transport configuration
      */
@@ -61,6 +62,7 @@ public class ConversationImpl implements Conversation
     /**
      * @param id
      *            Conversation ID
+     * @param name
      * @param inboundTransport
  *            Wrapper for inbound transport configuration
      * @param outboundTransport
@@ -70,15 +72,21 @@ public class ConversationImpl implements Conversation
      * @param outboundAdapter
      * @param defaultResponse
      */
-    public ConversationImpl(Integer id, Transport inboundTransport, Transport outboundTransport,
+    public ConversationImpl(Integer id, String name, Transport inboundTransport, Transport outboundTransport,
                             Adapter inboundAdapter, Adapter outboundAdapter, String defaultResponse)
     {
         this.id = id;
+        this.name = name;
         this.inboundTransport = inboundTransport;
         this.outboundTransport = outboundTransport;
         this.inboundAdapter = inboundAdapter;
         this.outboundAdapter = outboundAdapter;
         this.defaultResponse = defaultResponse;
+    }
+
+    public String getName()
+    {
+        return name;
     }
 
     /**
