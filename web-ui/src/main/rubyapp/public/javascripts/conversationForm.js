@@ -265,7 +265,11 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                             labelWidth: 300,
                             collapsible: false,
                             autoHeight: true,
-                            hidden: true
+                            hidden: true,
+                            defaults:
+                            {
+                                width: 250
+                            }
                         },
 
                         new Ext.form.ComboBox({
@@ -333,7 +337,11 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                             labelWidth: 300,
                             collapsible: false,
                             autoHeight: true,
-                            hidden: true
+                            hidden: true,
+                            defaults:
+                            {
+                                width: 250
+                            }
                         },
 
                         new Ext.form.ComboBox({
