@@ -3,7 +3,7 @@ package com.tacitknowledge.simulator.transports;
 import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.TransportException;
 
-import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.parameter;
+import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.name;
 import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
 
 import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
@@ -54,30 +54,29 @@ public class JmsTransport extends BaseTransport implements Transport
      */
     private static List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
         parameters().
-            add(parameter().
+            add(
                 name(PARAM_DESTINATION_NAME).
                 label("Destination Name").
-                required(true)
+                required()
             ).
-            add(parameter().
+            add(
                 name(PARAM_IS_TOPIC).
                 label("Is the destination a topic (defaults to Queue)").
                 type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN)
             ).
-            add(parameter().
+            add(
                 name(PARAM_BROKER_URL).
                 label("Broker URL (e.g. tcp://localhost:61616)").
-                required(true)
+                required()
             ).
-            add(parameter().
+            add(
                 name(PARAM_USER_NAME).
                 label("Broker user name")
             ).
-            add(parameter().
+            add(
                 name(PARAM_PASSWORD).
                 label("Broker password")
-            ).
-        build();
+            );
 
     /**
      * @see #PARAM_ACTIVE_MQ

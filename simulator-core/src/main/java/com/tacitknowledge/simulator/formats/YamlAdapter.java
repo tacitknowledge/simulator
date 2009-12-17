@@ -5,7 +5,7 @@ import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.StructuredSimulatorPojo;
 
-import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.parameter;
+import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.name;
 import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
 
 import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
@@ -57,22 +57,21 @@ public class YamlAdapter extends BaseAdapter implements Adapter<Object>
      */
     private static List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
         parameters().
-            add(parameter().
+            add(
                 name(PARAM_YAML_CONTENT).
                 label("YAML Contents (e.g. employees, orders, etc.)").
-                required(true)
+                required()
             ).
-            add(parameter().
+            add(
                 name(PARAM_IS_ARRAY).
                 label("Is YAML content an array?").
                 type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN)
             ).
-            add(parameter().
+            add(
                 name(PARAM_YAML_ARRAY_CONTENT).
                 label("YAML Array content (What each array element represents. " +
                             "e.g.: employee, order. Required if content is array)")
-            ).
-        build();
+            );
 
     /**
      * Logger for this class.

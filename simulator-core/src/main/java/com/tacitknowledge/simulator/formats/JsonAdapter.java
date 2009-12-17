@@ -5,7 +5,7 @@ import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.StructuredSimulatorPojo;
 
-import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.parameter;
+import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.name;
 import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
 
 import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
@@ -50,22 +50,21 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
      */
     private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
         parameters().
-            add(parameter().
+            add(
                 name(PARAM_JSON_CONTENT).
                 label("JSON Contents (e.g. employee(s), order(s), etc.)").
-                required(true)
+                required()
             ).
-            add(parameter().
+            add(
                 name(PARAM_IS_ARRAY).
                 label("Is JSON content an array? e.g. [ ... ]").
                 type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN)
             ).
-            add(parameter().
+            add(
                 name(PARAM_JSON_ARRAY_CONTENT).
                 label("JSON Array content (What each array element represents. " +
                             "e.g.: employee, order. Required if content is array)")
-            ).
-        build();
+            );
 
     /**
      * Logger for this class.

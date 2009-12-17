@@ -5,7 +5,7 @@ import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.StructuredSimulatorPojo;
 
-import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.parameter;
+import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.name;
 import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
 
 import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
@@ -48,26 +48,25 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
      */
     private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
         parameters().
-            add(parameter().
+            add(
                 name(PARAM_CSV_CONTENT).
                 label("CSV Contents (e.g. employees, orders, etc.)").
-                required(true)
+                required()
             ).
-            add(parameter().
+            add(
                 name(PARAM_ROW_CONTENT).
                 label("Row Contents (What each row represents. e.g. employee, order, etc.)")
             ).
-            add(parameter().
+            add(
                 name(PARAM_FIRST_ROW_HEADER).
                 label("Is first row headers row? (If not, Row Contents is required)").
                 type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN)
             ).
-            add(parameter().
+            add(
                 name(PARAM_COLUMN_SEPARATOR).
                 label("Column Separator").
                 defaultValue(",")
-            ).
-        build();
+            );
 
     /**
      * Logger for this class.

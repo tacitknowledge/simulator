@@ -1,27 +1,13 @@
 package com.tacitknowledge.simulator.configuration;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
- * DSL builder for a list of ParameterDefinition objects
+ * DSL builder for a list of ParameterDefinition objects, extending an ArrayList.
  * @author galo
  */
-public class ParametersListBuilder
+public class ParametersListBuilder extends ArrayList
 {
-    /**
-     * The list to be built
-     */
-    private final List<ParameterDefinitionBuilder.ParameterDefinition> list;
-
-    /**
-     * Hide default constructor
-     */
-    private ParametersListBuilder()
-    {
-        list = new ArrayList<ParameterDefinitionBuilder.ParameterDefinition>();
-    }
-
     /**
      * Initial DSL command
      * @return The instance to work with
@@ -38,15 +24,7 @@ public class ParametersListBuilder
      */
     public ParametersListBuilder add(ParameterDefinitionBuilder.ParameterDefinition paramDef)
     {
-        list.add(paramDef);
-        return this;
-    }
-
-    /**
-     * @return The built list
-     */
-    public List<ParameterDefinitionBuilder.ParameterDefinition> build()
-    {
-        return list;
+       super.add(paramDef);
+       return this;
     }
 }

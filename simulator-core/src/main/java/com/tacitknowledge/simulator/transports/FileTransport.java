@@ -3,7 +3,7 @@ package com.tacitknowledge.simulator.transports;
 import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.TransportException;
 
-import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.parameter;
+import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.name;
 import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
 
 import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
@@ -68,36 +68,35 @@ public class FileTransport extends BaseTransport implements Transport
      */
     private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
         parameters().
-            add(parameter().
+            add(
                 name(PARAM_DIRECTORY_NAME).
                 label("Directory Name").
-                required(true)
+                required()
             ).
-            add(parameter().
+            add(
                 name(PARAM_FILE_NAME).
                 label("File Name")
             ).
-            add(parameter().
+            add(
                 name(PARAM_FILE_EXTENSION).
                 label("File Extension the transport will only poll from " +
                     "(without dot, inbound only)")
             ).
-            add(parameter().
+            add(
                 name(PARAM_REGEX_FILTER).
                 label("Regex filter " +
                         "(will only be applied if neither " +
                         "file name nor extension filters are provided, inbound only)")
             ).
-            add(parameter().
+            add(
                 name(PARAM_POLLING_INTERVAL).
                 label("Milliseconds before the next poll")
             ).
-            add(parameter().
+            add(
                 name(PARAM_DELETE_FILE).
                 label("Delete file after simulation?").
                 type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN)
-            ).
-        build();
+            );
 
     /**
      * If true, the processed file will be deleted.

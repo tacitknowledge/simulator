@@ -37,23 +37,25 @@ public class ParameterDefinitionBuilder
     }
 
     /**
-     * This is the initial DSL command
-     * @return The instance to work with
-     */
-    public static ParameterDefinitionBuilder parameter()
-    {
-        return new ParameterDefinitionBuilder();
-    }
-
-    /**
-     * Required for successfully building the parameter definition.
+     * Starting ParameterDefinition command and required
+     * for successfully building the parameter definition.
      * @param name The parameter name
      * @return This instance
      */
-    public ParameterDefinitionBuilder name(String name)
+    public static ParameterDefinitionBuilder name(String name)
     {
-        paramDef.setName(name);
-        return this;
+        ParameterDefinitionBuilder builder = new ParameterDefinitionBuilder();
+        builder.paramName(name);
+        return builder;
+    }
+
+    /**
+     * Private method to set the ParameterDefinition name
+     * @param name
+     */
+    private void paramName(String name)
+    {
+        paramDef.name = name;
     }
 
     /**
@@ -118,6 +120,9 @@ public class ParameterDefinitionBuilder
          */
         private String defaultValue;
 
+        /**
+         * Hide default constructor
+         */
         private ParameterDefinition()
         {
         }
@@ -206,14 +211,13 @@ public class ParameterDefinitionBuilder
         }
 
         /**
-         * Sets if the parameter is required or not.
-         * If this attribute is not set, the parameter won't be required by default.
-         * @param required True is the parameter is required.
+         * Flags the parameter as required.
+         * If this method is not called, the parameter is NOT required.
          * @return
          */
-        public ParameterDefinition required(boolean required)
+        public ParameterDefinition required()
         {
-            this.required = required;
+            this.required = true;
             return this;
         }
 

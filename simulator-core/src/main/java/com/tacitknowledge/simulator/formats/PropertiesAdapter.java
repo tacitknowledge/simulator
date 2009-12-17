@@ -5,7 +5,7 @@ import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.StructuredSimulatorPojo;
 
-import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.parameter;
+import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.name;
 import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
 
 import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
@@ -46,12 +46,11 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
      */
     private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
         parameters().
-            add(parameter().
+            add(
                 name(PARAM_PROPERTY_SEPARATOR).
                 label("Property level separator (defaults to dot \".\")").
                 defaultValue(".")
-            ).
-        build();
+            );
 
     /**
      * Logger for this class.
