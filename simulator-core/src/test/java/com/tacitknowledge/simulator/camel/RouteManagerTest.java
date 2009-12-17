@@ -52,13 +52,13 @@ public class RouteManagerTest extends SimulatorCamelTestSupportBase
      * Conversation to be used in tests
      */
     private final Conversation conversation1
-            = new ConversationImpl(1, inTransport, outTransport, new PlainTextAdapter(), new PlainTextAdapter(), "");
+            = new ConversationImpl(1, "conversation1", inTransport, outTransport, new PlainTextAdapter(), new PlainTextAdapter(), "");
 
     /**
      * Conversation to be used in tests
      */
     private final Conversation conversation2
-            = new ConversationImpl(2, inTransport, outTransport1, new PlainTextAdapter(), new PlainTextAdapter(), "");
+            = new ConversationImpl(2, "conversation2", inTransport, outTransport1, new PlainTextAdapter(), new PlainTextAdapter(), "");
 
 
     {

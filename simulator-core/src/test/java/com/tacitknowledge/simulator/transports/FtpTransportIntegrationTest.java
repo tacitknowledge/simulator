@@ -90,7 +90,7 @@ public class FtpTransportIntegrationTest extends CamelTestSupport {
     public void testSimple() throws FtpException, SimulatorException, InterruptedException, ConversationNotFoundException {
         ConversationManager manager = new ConversationManagerImpl(routeManager);
 
-        Conversation conversation = manager.createConversation(1, ftpTransport, out, new XmlAdapter(), new XmlAdapter(), "");
+        Conversation conversation = manager.createConversation(1, "testSimple", ftpTransport, out, new XmlAdapter(), new XmlAdapter(), "");
         conversation.addOrUpdateScenario(1,"javascript","true","employees.employee[0].name='John12345';employees");
         Assert.assertNotNull(conversation);
         manager.activate(1);
