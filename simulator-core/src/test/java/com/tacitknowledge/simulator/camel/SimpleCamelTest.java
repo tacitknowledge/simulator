@@ -50,8 +50,7 @@ public class SimpleCamelTest extends TestCase
 
         // --- Out transport & format
         Map<String, String> ot_params = new HashMap<String, String>();
-        ot_params.put(FileTransport.PARAM_DIRECTORY_NAME,
-                OUTBOX);
+        ot_params.put(FileTransport.PARAM_DIRECTORY_NAME, OUTBOX);
         //ot_params.put(FileTransport.PARAM_FILE_NAME, "regex_result.xml");
         final Transport out_t = new FileTransport(ot_params);
 
@@ -69,10 +68,18 @@ public class SimpleCamelTest extends TestCase
 
             File orig = new File(ORIG_PATH + "/" + FILE_NAME);
             assertTrue(orig.exists());
+
+            // --- Don't assert on these, rather just delete them
             File copy = new File(INBOX + "/" + FILE_NAME);
-            assertFalse(copy.exists());
+            if (copy.exists())
+            {
+                copy.delete();
+            }
             File result = new File(OUTBOX + "/" + FILE_NAME);
-            assertFalse(result.exists());
+            if (result.exists())
+            {
+                copy.delete();
+            }
 
             TestHelper.copyFile(orig, copy);
 
