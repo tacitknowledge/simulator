@@ -8,7 +8,9 @@ import junit.framework.TestCase;
 import java.util.Map;
 
 /**
- * @author galo
+ * Test class for SimulatorPojoPopulator
+ *
+ * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
 public class SimulatorPojoPopulatorTest extends TestCase
 {

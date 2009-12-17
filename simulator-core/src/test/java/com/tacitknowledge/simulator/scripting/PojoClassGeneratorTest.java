@@ -11,7 +11,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author galo
+ * Test class for PojoClassGenerator
+ *
+ * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
 public class PojoClassGeneratorTest extends TestCase
 {

@@ -6,6 +6,8 @@ import com.tacitknowledge.simulator.TestHelper;
 import junit.framework.TestCase;
 
 /**
+ * Test class for XmlAdapter
+ *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
 public class XmlAdapterTest extends TestCase

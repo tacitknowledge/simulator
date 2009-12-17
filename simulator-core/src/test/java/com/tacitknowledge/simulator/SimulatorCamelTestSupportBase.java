@@ -11,7 +11,9 @@ import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.junit4.CamelTestSupport;
 
 /**
- * @author nikitabelenkiy
+ * Simulator Camel Test Support Base
+ * 
+ * @author Nikita Belenkiy (nbelenkiy@tacitknowledge.com)
  */
 public class SimulatorCamelTestSupportBase extends CamelTestSupport
 {

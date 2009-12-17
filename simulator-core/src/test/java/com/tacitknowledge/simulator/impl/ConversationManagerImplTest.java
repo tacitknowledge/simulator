@@ -9,6 +9,8 @@ import org.junit.Test;
 import java.util.List;
 
 /**
+ * Test class for ConversationManagerImpl
+ * 
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
 public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase

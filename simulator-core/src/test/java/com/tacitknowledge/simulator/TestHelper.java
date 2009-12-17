@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author galo
+ * Test Helper abstract class
+ *
+ * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
 public abstract class TestHelper
 {

@@ -8,7 +8,9 @@ import junit.framework.TestCase;
 import java.util.Map;
 
 /**
- * @author galo
+ * Test class for PropertiesAdapter
+ *
+ * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
 public class PropertiesAdapterTest extends TestCase
 {

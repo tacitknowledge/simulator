@@ -31,8 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Date: 03.12.2009
- * Time: 11:38:28
+ * Test class for FtpTransportIntegration
  *
  * @author Nikita Belenkiy (nbelenkiy@tacitknowledge.com)
  */

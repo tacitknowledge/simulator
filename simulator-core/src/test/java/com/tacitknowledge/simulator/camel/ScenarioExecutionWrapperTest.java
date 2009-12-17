@@ -22,8 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Date: 24.11.2009
- * Time: 17:26:26
+ * Test class for ScenarioExecutionWrapper
  *
  * @author Nikita Belenkiy (nbelenkiy@tacitknowledge.com)
  */

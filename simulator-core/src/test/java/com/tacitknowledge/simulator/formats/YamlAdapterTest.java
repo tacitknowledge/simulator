@@ -11,7 +11,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author galo
+ * Test class for YamlAdapter
+ *
+ * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
 public class YamlAdapterTest extends TestCase
 {

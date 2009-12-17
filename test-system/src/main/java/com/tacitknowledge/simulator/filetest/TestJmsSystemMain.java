@@ -11,9 +11,8 @@ import java.io.InputStream;
 import java.util.Properties;
 
 /**
- * Date: 27.11.2009
- * Time: 11:32:46
- * Sends a jms text message using properties file passed as parameter
+ * This class sends a jms text message using properties file passed as parameter
+ * 
  * @author Nikita Belenkiy (nbelenkiy@tacitknowledge.com)
  */
 public class TestJmsSystemMain {

@@ -12,12 +12,13 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
- * @author galo
+ * Test class for CvsAdapterTest
+ *
+ * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
 public class
         CsvAdapterTest extends TestCase
 {
-
 
     private CsvAdapter adapter;
 

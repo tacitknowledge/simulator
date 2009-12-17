@@ -14,7 +14,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author galo
+ * Test class for JsonAdapterTest
+ *
+ * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
 public class JsonAdapterTest extends TestCase
 {

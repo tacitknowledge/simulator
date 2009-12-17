@@ -10,12 +10,12 @@ import org.apache.ftpserver.usermanager.impl.PropertiesUserManager;
 import java.io.File;
 
 /**
- * Date: 03.12.2009
- * Time: 12:29:02
+ * This class creates an FTP system and starts it
  *
  * @author Nikita Belenkiy (nbelenkiy@tacitknowledge.com)
  */
 public class TestFtpSystemMain {
+
     public static void main(String[] args) throws FtpException {
         FtpServerFactory serverFactory = new FtpServerFactory();
         serverFactory.setUserManager(new PropertiesUserManager(new Md5PasswordEncryptor(),new File("user.properties"),"admin"));
@@ -27,4 +27,5 @@ public class TestFtpSystemMain {
         // start the server
         server.start();
     }
+
 }

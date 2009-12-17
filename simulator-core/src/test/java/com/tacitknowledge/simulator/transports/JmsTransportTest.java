@@ -8,7 +8,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author galo
+ * Test class for JmsTransport
+ *
+ * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
 public class JmsTransportTest extends TestCase
 {
