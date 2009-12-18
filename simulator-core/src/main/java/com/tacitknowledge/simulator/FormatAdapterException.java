@@ -9,6 +9,7 @@ public class FormatAdapterException extends Exception
 {
     /**
      * Constructor for the FormatAdapterException class
+     *
      * @param s exception message
      */
     public FormatAdapterException(String s)
@@ -18,7 +19,8 @@ public class FormatAdapterException extends Exception
 
     /**
      * Constructor for the FormatAdapterException class
-     * @param s exception message
+     *
+     * @param s         exception message
      * @param throwable the original exception
      */
     public FormatAdapterException(String s, Throwable throwable)

@@ -4,14 +4,16 @@ import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.StructuredSimulatorPojo;
-
+import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
 import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.name;
 import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
-
-import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
 import org.apache.log4j.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -50,22 +52,22 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
         parameters().
             add(
                 name(PARAM_CSV_CONTENT).
-                label("CSV Contents (e.g. employees, orders, etc.)").
-                required()
+                    label("CSV Contents (e.g. employees, orders, etc.)").
+                    required()
             ).
             add(
                 name(PARAM_ROW_CONTENT).
-                label("Row Contents (What each row represents. e.g. employee, order, etc.)")
+                    label("Row Contents (What each row represents. e.g. employee, order, etc.)")
             ).
             add(
                 name(PARAM_FIRST_ROW_HEADER).
-                label("Is first row headers row? (If not, Row Contents is required)").
-                type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN)
+                    label("Is first row headers row? (If not, Row Contents is required)").
+                    type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN)
             ).
             add(
                 name(PARAM_COLUMN_SEPARATOR).
-                label("Column Separator").
-                defaultValue(",")
+                    label("Column Separator").
+                    defaultValue(",")
             );
 
     /**
@@ -99,8 +101,8 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
     }
 
     /**
-     * @inheritDoc
      * @param parameters @see Adapter#parameters
+     * @inheritDoc
      */
     public CsvAdapter(Map<String, String> parameters)
     {
@@ -150,7 +152,7 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
 
 
     protected String getString(SimulatorPojo simulatorPojo)
-            throws FormatAdapterException
+        throws FormatAdapterException
     {
 
         StringBuilder sb1 = new StringBuilder();
@@ -168,7 +170,7 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
 
         // --- Use the CsvContent parameter to get the only object, which should be a List
         List<Map<String, Object>> list =
-                (List<Map<String, Object>>) simulatorPojo.getRoot().get(getParamValue(PARAM_CSV_CONTENT));
+            (List<Map<String, Object>>) simulatorPojo.getRoot().get(getParamValue(PARAM_CSV_CONTENT));
 
         // --- If using first row as headers, get the headers from the first row's keys
         if (this.firstRowHeader)
@@ -191,15 +193,15 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
     }
 
     /**
-     * @inheritDoc
      * @throws FormatAdapterException if any required parameter is missing
+     * @inheritDoc
      */
     void validateParameters() throws FormatAdapterException
     {
         // --- Check that if firstRowHeader is false, that rowContent has been provided
         this.firstRowHeader =
-                getParamValue(PARAM_FIRST_ROW_HEADER) == null
-                        || Boolean.parseBoolean(getParamValue(PARAM_FIRST_ROW_HEADER));
+            getParamValue(PARAM_FIRST_ROW_HEADER) == null
+                || Boolean.parseBoolean(getParamValue(PARAM_FIRST_ROW_HEADER));
         // --- Override the default column separator if it has been set
         if (getParamValue(PARAM_COLUMN_SEPARATOR) != null)
         {
@@ -222,7 +224,7 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
     /**
      * Returns a Map representing the given row. colNames will be used as keys.
      *
-     * @param row      The row values as a String, separated by #columnSeparator
+     * @param row The row values as a String, separated by #columnSeparator
      * @return The Map populated with the given column keys and row values
      */
     private Map<String, String> getRowAsMap(String row)

@@ -6,13 +6,11 @@ import java.util.Collection;
  * Defines the contract for the Conversation.
  *
  * @author Alexandru Dereveanco (adereveanco@tacitknowledge.com)
- *
  */
 public interface Conversation
 {
 
     /**
-     *
      * @return any name. will be used as log file name
      */
     String getName();
@@ -21,9 +19,8 @@ public interface Conversation
      * Adds or updates a Scenario to this Conversation
      *
      * @param scenarioId
-     *@param language
-     *            The scripting language to be used. if scenario already exists - will be ignored???
-     * @param criteria criteria script to be executed by the simulator
+     * @param language       The scripting language to be used. if scenario already exists - will be ignored???
+     * @param criteria       criteria script to be executed by the simulator
      * @param transformation transformation script to be executed by the simulator    @return ConversationScenario conversation scenario added to the conversation
      * @return
      */
@@ -59,8 +56,6 @@ public interface Conversation
     Adapter getOutboundAdapter();
 
     /**
-     *
-     *
      * @return unique id
      * @throws SimulatorException If anything goes wrong.
      */

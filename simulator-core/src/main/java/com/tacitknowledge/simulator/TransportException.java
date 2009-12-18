@@ -2,12 +2,14 @@ package com.tacitknowledge.simulator;
 
 /**
  * Exception to be thrown when a transport parameters are not properly set.
+ *
  * @author galo
  */
 public class TransportException extends Exception
 {
     /**
      * Constructor
+     *
      * @param s the exception message
      */
     public TransportException(String s)
@@ -16,8 +18,7 @@ public class TransportException extends Exception
     }
 
     /**
-     *
-     * @param s exception message
+     * @param s         exception message
      * @param throwable the original exception
      */
     public TransportException(String s, Throwable throwable)

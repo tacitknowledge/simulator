@@ -4,11 +4,9 @@ import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.StructuredSimulatorPojo;
-
+import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
 import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.name;
 import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
-
-import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
 import org.apache.log4j.Logger;
 import org.ho.yaml.YamlDecoder;
 import org.ho.yaml.YamlEncoder;
@@ -17,7 +15,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
 import java.io.OutputStream;
 import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +48,7 @@ public class YamlAdapter extends BaseAdapter implements Adapter<Object>
      */
     public static final String PARAM_YAML_ARRAY_CONTENT = "jsonArrayContent";
 
-    
+
     /**
      * Adapter parameters definition.
      */
@@ -59,18 +56,18 @@ public class YamlAdapter extends BaseAdapter implements Adapter<Object>
         parameters().
             add(
                 name(PARAM_YAML_CONTENT).
-                label("YAML Contents (e.g. employees, orders, etc.)").
-                required()
+                    label("YAML Contents (e.g. employees, orders, etc.)").
+                    required()
             ).
             add(
                 name(PARAM_IS_ARRAY).
-                label("Is YAML content an array?").
-                type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN)
+                    label("Is YAML content an array?").
+                    type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN)
             ).
             add(
                 name(PARAM_YAML_ARRAY_CONTENT).
-                label("YAML Array content (What each array element represents. " +
-                            "e.g.: employee, order. Required if content is array)")
+                    label("YAML Array content (What each array element represents. " +
+                    "e.g.: employee, order. Required if content is array)")
             );
 
     /**
@@ -91,8 +88,8 @@ public class YamlAdapter extends BaseAdapter implements Adapter<Object>
     }
 
     /**
-     * @inheritDoc
      * @param parameters @see Adapter#parameters
+     * @inheritDoc
      */
     public YamlAdapter(Map<String, String> parameters)
     {
@@ -100,7 +97,7 @@ public class YamlAdapter extends BaseAdapter implements Adapter<Object>
     }
 
     protected SimulatorPojo createSimulatorPojo(String object)
-            throws FormatAdapterException
+        throws FormatAdapterException
     {
         SimulatorPojo pojo = new StructuredSimulatorPojo();
 
@@ -121,7 +118,7 @@ public class YamlAdapter extends BaseAdapter implements Adapter<Object>
                 pojo.getRoot().put(getParamValue(PARAM_YAML_CONTENT), yaml);
             }
         }
-        catch(EOFException e)
+        catch (EOFException e)
         {
             logger.error("Unexpected error trying to read YAML object: " + e.getMessage());
             throw new FormatAdapterException(e.getMessage(), e);
@@ -138,10 +135,10 @@ public class YamlAdapter extends BaseAdapter implements Adapter<Object>
 
 
     /**
-     * @inheritDoc
      * @param pojo @see Adapter#adaptTo
      * @return @see Adapter#adaptTo
      * @throws FormatAdapterException @see Adapter#adaptTo
+     * @inheritDoc
      */
     public String adaptTo(SimulatorPojo pojo) throws FormatAdapterException
     {
@@ -165,8 +162,8 @@ public class YamlAdapter extends BaseAdapter implements Adapter<Object>
     }
 
     /**
-     * @inheritDoc
      * @throws FormatAdapterException if any required parameter is missing
+     * @inheritDoc
      */
     @Override
     void validateParameters() throws FormatAdapterException
@@ -183,7 +180,7 @@ public class YamlAdapter extends BaseAdapter implements Adapter<Object>
         if (this.isArray && getParamValue(PARAM_YAML_ARRAY_CONTENT) == null)
         {
             throw new FormatAdapterException(
-                    "YAML Array Content parameter is required if YAML content is an array");
+                "YAML Array Content parameter is required if YAML content is an array");
         }
     }
 

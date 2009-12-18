@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
 public class
-        CsvAdapterTest extends TestCase
+    CsvAdapterTest extends TestCase
 {
 
     private CsvAdapter adapter;
@@ -29,61 +29,62 @@ public class
 
     public void testSuccessfulAdaptFromWithHeaders()
     {
-            // --- Provide the required configuration
-            // (only CSV_CONTENT is required if using headers)
-            Map<String, String> params = new HashMap<String, String>();
-            params.put(CsvAdapter.PARAM_CSV_CONTENT, "Words");
+        // --- Provide the required configuration
+        // (only CSV_CONTENT is required if using headers)
+        Map<String, String> params = new HashMap<String, String>();
+        params.put(CsvAdapter.PARAM_CSV_CONTENT, "Words");
 
-            adapter.setParameters(params);
+        adapter.setParameters(params);
 
-            SimulatorPojo pojo = adapter.createSimulatorPojo(TestHelper.CSV_DATA);
+        SimulatorPojo pojo = adapter.createSimulatorPojo(TestHelper.CSV_DATA);
 
-            Object o = pojo.getRoot().get("Words");
-            // --- First, make sure we got the root Map with a Words key
-            assertNotNull(pojo.getRoot().get("Words"));
-            // --- Next, check that it's a List
-            assertTrue(o instanceof List);
+        Object o = pojo.getRoot().get("Words");
+        // --- First, make sure we got the root Map with a Words key
+        assertNotNull(pojo.getRoot().get("Words"));
+        // --- Next, check that it's a List
+        assertTrue(o instanceof List);
 
-            List list = (List) o;
-            assertEquals(2, list.size());
-            assertTrue(list.get(0) instanceof Map);
+        List list = (List) o;
+        assertEquals(2, list.size());
+        assertTrue(list.get(0) instanceof Map);
 
-            Map<String, String> row = (Map<String, String>) list.get(0);
-            assertEquals("el", row.get("tercero"));
+        Map<String, String> row = (Map<String, String>) list.get(0);
+        assertEquals("el", row.get("tercero"));
     }
 
     public void testSuccessFullAdaptFromWithoutHeaders() throws FormatAdapterException
     {
-            // --- Provide the required configuration
-            Map<String, String> params = new HashMap<String, String>();
-            params.put(CsvAdapter.PARAM_CSV_CONTENT, "Words");
-            params.put(CsvAdapter.PARAM_FIRST_ROW_HEADER, "false");
-            params.put(CsvAdapter.PARAM_ROW_CONTENT, "wordSet");
+        // --- Provide the required configuration
+        Map<String, String> params = new HashMap<String, String>();
+        params.put(CsvAdapter.PARAM_CSV_CONTENT, "Words");
+        params.put(CsvAdapter.PARAM_FIRST_ROW_HEADER, "false");
+        params.put(CsvAdapter.PARAM_ROW_CONTENT, "wordSet");
 
-            adapter.setParameters(params);
-             adapter.validateParameters();
-        
-            SimulatorPojo pojo = adapter.createSimulatorPojo(TestHelper.CSV_DATA);
+        adapter.setParameters(params);
+        adapter.validateParameters();
 
-            Object o = pojo.getRoot().get("Words");
-            // --- First, make sure we got the root Map with a Words key
-            assertNotNull(pojo.getRoot().get("Words"));
-            // --- Next, check that it's a List
-            assertTrue(o instanceof List);
+        SimulatorPojo pojo = adapter.createSimulatorPojo(TestHelper.CSV_DATA);
 
-            List list = (List) o;
-            assertEquals(3, list.size());
-            assertTrue(list.get(0) instanceof Map);
+        Object o = pojo.getRoot().get("Words");
+        // --- First, make sure we got the root Map with a Words key
+        assertNotNull(pojo.getRoot().get("Words"));
+        // --- Next, check that it's a List
+        assertTrue(o instanceof List);
 
-            Map<String, List> row = (Map<String, List>) list.get(0);
-            assertNotNull(row.get("wordSet"));
-            assertEquals("primero", row.get("wordSet").get(0));
+        List list = (List) o;
+        assertEquals(3, list.size());
+        assertTrue(list.get(0) instanceof Map);
+
+        Map<String, List> row = (Map<String, List>) list.get(0);
+        assertNotNull(row.get("wordSet"));
+        assertEquals("primero", row.get("wordSet").get(0));
 
     }
 
     public void testSuccessfulAdaptToWithHeaders()
     {
-        try {
+        try
+        {
             // --- Provide the required configuration
             Map<String, String> params = new HashMap<String, String>();
             params.put(CsvAdapter.PARAM_CSV_CONTENT, "Words");
@@ -117,7 +118,7 @@ public class
 
             assertEquals(primeroIdx, row1.indexOf("yo"));
             assertEquals(primeroIdx, row2.indexOf("hoy"));
-        } catch(FormatAdapterException e)
+        } catch (FormatAdapterException e)
         {
             fail("Not expecting exception!");
         }

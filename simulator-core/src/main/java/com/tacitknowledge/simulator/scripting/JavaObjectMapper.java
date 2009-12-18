@@ -15,7 +15,8 @@ import java.util.Map;
  *
  * @author Nikita Belenkiy (nbelenkiy@tacitknowledge.com)
  */
-public class JavaObjectMapper implements ObjectMapper {
+public class JavaObjectMapper implements ObjectMapper
+{
 
     /**
      * Logger for this class.
@@ -46,8 +47,8 @@ public class JavaObjectMapper implements ObjectMapper {
             {
                 logger.error(iae.getMessage());
                 throw new ObjectMapperException(
-                        "Unexpected error accesing field value: " + iae.getMessage(),
-                        iae);
+                    "Unexpected error accesing field value: " + iae.getMessage(),
+                    iae);
             }
 
             // --- Depending on the value type, get it's representation
@@ -82,12 +83,17 @@ public class JavaObjectMapper implements ObjectMapper {
      * @return The list populated with eithert Strings or the Map representation of its items
      * @throws SimulatorException If anything goes wrong
      */
-    private List getListFromArray(Object[] objects) throws ObjectMapperException {
+    private List getListFromArray(Object[] objects) throws ObjectMapperException
+    {
         List list = new ArrayList();
-        for (Object o : objects) {
-            if (o instanceof String) {
+        for (Object o : objects)
+        {
+            if (o instanceof String)
+            {
                 list.add(o);
-            } else {
+            }
+            else
+            {
                 list.add(getMapFromObject(o));
             }
         }

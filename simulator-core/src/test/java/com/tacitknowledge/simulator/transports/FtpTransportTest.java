@@ -49,7 +49,7 @@ public class FtpTransportTest extends TestCase
             String uri = transport.toUriString();
 
             assertTrue("Returned uri isn't as expected: " + uri,
-                    uri.indexOf("ftp://127.0.0.1") > -1);
+                uri.indexOf("ftp://127.0.0.1") > -1);
         } catch (TransportException e)
         {
             fail("Shouldn't be getting an exception here: " + e.getMessage());
@@ -69,7 +69,7 @@ public class FtpTransportTest extends TestCase
             String uri = transport.toUriString();
 
             assertTrue("Returned uri isn't as expected: " + uri,
-                    uri.indexOf("sftp://127.0.0.1") > -1);
+                uri.indexOf("sftp://127.0.0.1") > -1);
         } catch (TransportException e)
         {
             fail("Shouldn't be getting an exception here: " + e.getMessage());
@@ -92,7 +92,7 @@ public class FtpTransportTest extends TestCase
             String uri = transport.toUriString();
 
             assertTrue("Returned uri isn't as expected: " + uri,
-                    uri.indexOf("ftp://meandmyself@127.0.0.1:2121/inbox?password=secret") > -1);
+                uri.indexOf("ftp://meandmyself@127.0.0.1:2121/inbox?password=secret") > -1);
         } catch (TransportException e)
         {
             fail("Shouldn't be getting an exception here: " + e.getMessage());
@@ -114,7 +114,7 @@ public class FtpTransportTest extends TestCase
             String uri = transport.toUriString();
 
             assertTrue("Returned uri isn't as expected: " + uri,
-                    uri.indexOf("ftp://127.0.0.1/inbox?binary=true&include=^.*\\.(csv|CSV)$") > -1);
+                uri.indexOf("ftp://127.0.0.1/inbox?binary=true&include=^.*\\.(csv|CSV)$") > -1);
         } catch (TransportException e)
         {
             fail("Shouldn't be getting an exception here: " + e.getMessage());
@@ -135,8 +135,8 @@ public class FtpTransportTest extends TestCase
             String uri = transport.toUriString();
 
             assertTrue(
-                    "Returned uri isn't as expected: " + uri,
-                    uri.indexOf("ftp://127.0.0.1/inbox/csv?include=(.*)(something)(.*)") > -1);
+                "Returned uri isn't as expected: " + uri,
+                uri.indexOf("ftp://127.0.0.1/inbox/csv?include=(.*)(something)(.*)") > -1);
         }
         catch (TransportException e)
         {
@@ -158,7 +158,7 @@ public class FtpTransportTest extends TestCase
             String uri = transport.toUriString();
 
             assertTrue("Returned uri isn't as expected: " + uri,
-                    uri.indexOf("ftp://127.0.0.1/inbox?initialDelay=10000&delay=10000") > -1);
+                uri.indexOf("ftp://127.0.0.1/inbox?initialDelay=10000&delay=10000") > -1);
         }
         catch (TransportException e)
         {

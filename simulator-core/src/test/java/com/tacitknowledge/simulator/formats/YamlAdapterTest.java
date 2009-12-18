@@ -31,7 +31,7 @@ public class YamlAdapterTest extends TestCase
             adapter.generateBeans(TestHelper.YAML_DATA);
             fail("JSON Adapter should throw exception if the required parameters are not provided.");
         }
-        catch(FormatAdapterException fae)
+        catch (FormatAdapterException fae)
         {
             // --- This is ok!
         }
@@ -55,7 +55,7 @@ public class YamlAdapterTest extends TestCase
             assertEquals("Smith", employee.get("lastName"));
             assertNotNull(employee.get("address"));
 
-        } catch(FormatAdapterException fae)
+        } catch (FormatAdapterException fae)
         {
             fae.printStackTrace();
             fail("Not expecting exception!");
@@ -92,7 +92,7 @@ public class YamlAdapterTest extends TestCase
             assertEquals("Carlson", person3.get("lastName"));
             assertEquals(25, person3.get("age"));
 
-        } catch(FormatAdapterException fae)
+        } catch (FormatAdapterException fae)
         {
             fae.printStackTrace();
             fail("Not expecting exception!");

@@ -8,7 +8,8 @@ import java.util.Map;
  *
  * @author Nikita Belenkiy (nbelenkiy@tacitknowledge.com)
  */
-public interface ObjectMapper {
-    
+public interface ObjectMapper
+{
+
     Map<String, Object> getMapFromObject(Object o) throws ObjectMapperException;
 }

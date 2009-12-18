@@ -10,16 +10,15 @@ import java.util.List;
  * - invoke the name and label required-attributes methods name().label()
  * - A ParameterDefinition object will be returned.
  * - Set the optional ParameterDefinition attributes (type, required, defaultValue)
- *
+ * <p/>
  * Example:
- *      parameter().
- *          name("newParameter").
- *          label("New Parameter").
- *          defaultValue("hello, World!");
- *
- * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.ParameterDefinition
+ * parameter().
+ * name("newParameter").
+ * label("New Parameter").
+ * defaultValue("hello, World!");
  *
  * @author galo
+ * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.ParameterDefinition
  */
 public class ParameterDefinitionBuilder
 {
@@ -39,6 +38,7 @@ public class ParameterDefinitionBuilder
     /**
      * Starting ParameterDefinition command and required
      * for successfully building the parameter definition.
+     *
      * @param name The parameter name
      * @return This instance
      */
@@ -51,6 +51,7 @@ public class ParameterDefinitionBuilder
 
     /**
      * Private method to set the ParameterDefinition name
+     *
      * @param name
      */
     private void paramName(String name)
@@ -60,6 +61,7 @@ public class ParameterDefinitionBuilder
 
     /**
      * Required for successfully building the parameter definition.
+     *
      * @param label The parameter field label
      * @return This instance
      */
@@ -75,8 +77,8 @@ public class ParameterDefinitionBuilder
      * can/should be set for each implementation.
      * Can be created using the custom DSL defined in ParameterDefinitionBuilder only
      *
-     * @see ParameterDefinitionBuilder
      * @author galo
+     * @see ParameterDefinitionBuilder
      */
     public static class ParameterDefinition
     {
@@ -128,7 +130,6 @@ public class ParameterDefinitionBuilder
         }
 
         /**
-         *
          * @return name
          */
         public String getName()
@@ -137,7 +138,6 @@ public class ParameterDefinitionBuilder
         }
 
         /**
-         *
          * @param name The parameter name.
          */
         private void setName(String name)
@@ -146,7 +146,6 @@ public class ParameterDefinitionBuilder
         }
 
         /**
-         *
          * @return label
          */
         public String getLabel()
@@ -155,7 +154,6 @@ public class ParameterDefinitionBuilder
         }
 
         /**
-         *
          * @param label The parameter field label
          */
         private void setLabel(String label)
@@ -166,9 +164,10 @@ public class ParameterDefinitionBuilder
         /**
          * Returns the parameter type.
          * Values can be:
-         *      - #TYPE_STRING
-         *      - #TYPE_BOOLEAN
+         * - #TYPE_STRING
+         * - #TYPE_BOOLEAN
          * Defaults to #TYPE_STRING
+         *
          * @return type
          */
         public String getType()
@@ -177,7 +176,6 @@ public class ParameterDefinitionBuilder
         }
 
         /**
-         *
          * @return isRequired
          */
         public boolean isRequired()
@@ -186,7 +184,6 @@ public class ParameterDefinitionBuilder
         }
 
         /**
-         *
          * @return defaultValue
          */
         public String getDefaultValue()
@@ -198,9 +195,10 @@ public class ParameterDefinitionBuilder
         /**
          * Sets the parameter type.
          * Must be one of:
-         *  - ParameterDefinition.TYPE_STRING
-         *  - ParameterDefinition.TYPE_BOOLEAN
+         * - ParameterDefinition.TYPE_STRING
+         * - ParameterDefinition.TYPE_BOOLEAN
          * If this attribute is not set, the type will be String by default.
+         *
          * @param type The parameter type.
          * @return This instance
          */
@@ -213,6 +211,7 @@ public class ParameterDefinitionBuilder
         /**
          * Flags the parameter as required.
          * If this method is not called, the parameter is NOT required.
+         *
          * @return
          */
         public ParameterDefinition required()
@@ -223,6 +222,7 @@ public class ParameterDefinitionBuilder
 
         /**
          * Sets the parameter's default value
+         *
          * @param defaultValue The default value
          * @return This instance
          */
@@ -239,6 +239,7 @@ public class ParameterDefinitionBuilder
          * - 2 : Parameter type. Useful for GUI rendition.
          * - 3 : Required or Optional parameter. Useful for GUI validation.
          * - 4 : Default value
+         *
          * @return Parameter definition as List
          */
         public List<String> getAsList()

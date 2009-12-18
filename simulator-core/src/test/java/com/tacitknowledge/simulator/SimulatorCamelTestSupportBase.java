@@ -12,7 +12,7 @@ import org.apache.camel.test.junit4.CamelTestSupport;
 
 /**
  * Simulator Camel Test Support Base
- * 
+ *
  * @author Nikita Belenkiy (nbelenkiy@tacitknowledge.com)
  */
 public class SimulatorCamelTestSupportBase extends CamelTestSupport
@@ -35,8 +35,7 @@ public class SimulatorCamelTestSupportBase extends CamelTestSupport
     protected Transport outTransport = new MockOutTransport();
 
 
-
-         /**
+    /**
      * Overriding the route builder as suggested by Camel testing
      * techniques.
      *
@@ -44,7 +43,8 @@ public class SimulatorCamelTestSupportBase extends CamelTestSupport
      * @throws Exception in case of an error.
      */
     @Override
-    protected RouteBuilder createRouteBuilder() throws Exception {
+    protected RouteBuilder createRouteBuilder() throws Exception
+    {
         routeManager = new RouteManagerImpl();
         return routeManager;
     }
@@ -52,10 +52,11 @@ public class SimulatorCamelTestSupportBase extends CamelTestSupport
     /**
      * Utility method to send a message to Camel.
      *
-     * @throws InterruptedException in case of an error
      * @param expectedBody
+     * @throws InterruptedException in case of an error
      */
-    protected void sendMessage(String expectedBody) throws InterruptedException {
+    protected void sendMessage(String expectedBody) throws InterruptedException
+    {
         String body = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><matched/>";
 
         resultEndpoint.expectedBodiesReceived(expectedBody);

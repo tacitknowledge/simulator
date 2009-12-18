@@ -1,13 +1,24 @@
 package com.tacitknowledge.simulator.impl;
 
-import com.tacitknowledge.simulator.*;
+import com.tacitknowledge.simulator.Adapter;
+import com.tacitknowledge.simulator.Conversation;
+import com.tacitknowledge.simulator.ConversationManager;
+import com.tacitknowledge.simulator.ConversationNotFoundException;
+import com.tacitknowledge.simulator.ConversationScenario;
+import com.tacitknowledge.simulator.RouteManager;
+import com.tacitknowledge.simulator.SimulatorException;
+import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.camel.RouteManagerImpl;
 import com.tacitknowledge.simulator.formats.AdapterFactory;
 import com.tacitknowledge.simulator.scripting.ScriptExecutionService;
 import com.tacitknowledge.simulator.transports.TransportFactory;
 import org.apache.log4j.Logger;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Conversation manager implementation.
@@ -35,7 +46,8 @@ public class ConversationManagerImpl implements ConversationManager
     private static final ConversationManager instance = new ConversationManagerImpl();
 
 
-    public static ConversationManager getInstance() {
+    public static ConversationManager getInstance()
+    {
         return instance;
     }
 
@@ -66,7 +78,7 @@ public class ConversationManagerImpl implements ConversationManager
         throws SimulatorException
     {
         ConversationImpl conversation = ConversationFactory.createConversation(id, name, inboundTransport,
-                outboundTransport, inAdapter, outAdapter, defaultResponse);
+            outboundTransport, inAdapter, outAdapter, defaultResponse);
         assert conversations.get(id) == null;
 
         conversations.put(id, conversation);
@@ -82,7 +94,7 @@ public class ConversationManagerImpl implements ConversationManager
      * @throws ConversationNotFoundException in case conversation is not found
      */
     private Conversation getConversationById(int conversationId)
-            throws ConversationNotFoundException
+        throws ConversationNotFoundException
     {
         Conversation conversation = conversations.get(conversationId);
         if (conversation == null)
@@ -90,7 +102,7 @@ public class ConversationManagerImpl implements ConversationManager
             logger.error("Conversation with id : " + conversationId + " is not found.");
 
             throw new ConversationNotFoundException("Conversation with id " + conversationId
-                    + " is not created.");
+                + " is not created.");
         }
         return conversation;
     }
@@ -101,11 +113,10 @@ public class ConversationManagerImpl implements ConversationManager
      * @param language       The scripting language for the scenario. This would be System wide.
      * @param criteria       The criteria script
      * @param transformation The transformation script
-     *
      * @return new scenario object. null if conversation does not exist
      */
     public ConversationScenario createOrUpdateConversationScenario(int conversationId, int scenarioId, String language, String criteria,
-                                           String transformation)
+                                                                   String transformation)
     {
         Conversation conversation = conversations.get(conversationId);
         ConversationScenario conversationScenario = null;
@@ -113,7 +124,7 @@ public class ConversationManagerImpl implements ConversationManager
         {
             String defaultResponse = conversation.getDefaultResponse();
             conversationScenario = conversation.addOrUpdateScenario(scenarioId, language, criteria,
-                    defaultResponse == null ? transformation : defaultResponse + "\n" + transformation);
+                defaultResponse == null ? transformation : defaultResponse + "\n" + transformation);
         }
         return conversationScenario;
     }
@@ -125,7 +136,7 @@ public class ConversationManagerImpl implements ConversationManager
      * @inheritDoc
      */
     public void activate(int conversationId) throws ConversationNotFoundException,
-            SimulatorException
+        SimulatorException
     {
         Conversation conversation = getConversationById(conversationId);
         try
@@ -136,7 +147,7 @@ public class ConversationManagerImpl implements ConversationManager
         catch (Exception e)
         {
             logger.error("Conversation with id : "
-                    + conversationId + " couldn't be activated.", e);
+                + conversationId + " couldn't be activated.", e);
 
             throw new SimulatorException("Conversation activation exception", e);
         }
@@ -155,11 +166,13 @@ public class ConversationManagerImpl implements ConversationManager
             conversations.remove(conversationId);
             logger.debug("Deactivated conversation " + conversation);
 
-        } catch (ConversationNotFoundException cne){
-           //do nothing
-        } catch (Exception e) {
+        } catch (ConversationNotFoundException cne)
+        {
+            //do nothing
+        } catch (Exception e)
+        {
             logger.error("Conversation with id : "
-                    + conversationId + " couldn't be deactivated.", e);
+                + conversationId + " couldn't be deactivated.", e);
             throw new SimulatorException("Conversation deactivation exception:" + e.getMessage(), e);
         }
 
@@ -170,25 +183,33 @@ public class ConversationManagerImpl implements ConversationManager
      * @throws SimulatorException exception.
      * @inheritDoc
      */
-    public void deleteConversation(int conversationId) throws SimulatorException {
-        try {
+    public void deleteConversation(int conversationId) throws SimulatorException
+    {
+        try
+        {
             ConversationImpl conversation = conversations.get(conversationId);
-            if (conversation != null) {
+            if (conversation != null)
+            {
                 routeManager.delete(conversation);
                 conversations.remove(conversationId);
             }
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             throw new SimulatorException("", e);
         }
     }
 
-    public void deleteScenario(int conversationId, int scenarioId) {
+    public void deleteScenario(int conversationId, int scenarioId)
+    {
         ConversationImpl conversation = conversations.get(conversationId);
-        if (conversation != null) {
+        if (conversation != null)
+        {
             Collection<ConversationScenario> scenarios = conversation.getScenarios();
-            for (Iterator<ConversationScenario> iterator = scenarios.iterator(); iterator.hasNext();) {
+            for (Iterator<ConversationScenario> iterator = scenarios.iterator(); iterator.hasNext();)
+            {
                 ConversationScenario scenario = iterator.next();
-                if (scenario.getScenarioId() == scenarioId) {
+                if (scenario.getScenarioId() == scenarioId)
+                {
                     iterator.remove();
                     break;
                 }
@@ -198,10 +219,10 @@ public class ConversationManagerImpl implements ConversationManager
     }
 
     /**
-     * 
      * {@inheritDoc}
      */
-    public boolean conversationExists(int conversationId) {
+    public boolean conversationExists(int conversationId)
+    {
         return conversations.containsKey(conversationId);
     }
 
@@ -230,7 +251,8 @@ public class ConversationManagerImpl implements ConversationManager
      * @return instance of the class
      * @inheritDoc
      */
-    public Object getClassByName(String name) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+    public Object getClassByName(String name) throws ClassNotFoundException, IllegalAccessException, InstantiationException
+    {
         return Class.forName(name).newInstance();
     }
 
@@ -250,7 +272,8 @@ public class ConversationManagerImpl implements ConversationManager
         }
     }
 
-    public String[][] getAvailableLanguages() {
+    public String[][] getAvailableLanguages()
+    {
         return ScriptExecutionService.getAvailableLanguages();
     }
 

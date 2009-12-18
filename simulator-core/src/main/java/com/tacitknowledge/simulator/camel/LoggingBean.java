@@ -36,14 +36,14 @@ public class LoggingBean
     }
 
     private void configureLogger(Conversation conversation)
-            throws IOException
+        throws IOException
     {
         //remove parent appenders
         logger.setLevel(org.apache.log4j.Level.ALL);
 
         //create a new appender for each conversation
         RollingFileAppender newAppender = new RollingFileAppender(new PatternLayout("%d{MMM dd HH:mm:ss} [%t] %-5p %c %x - %m%n"),
-                "Conversation " + conversation.getId() + ".log", true);
+            "Conversation " + conversation.getId() + ".log", true);
         newAppender.setName("Conversation " + conversation.getId());
         newAppender.setBufferSize(1024 * 3);
         newAppender.setMaxBackupIndex(5);

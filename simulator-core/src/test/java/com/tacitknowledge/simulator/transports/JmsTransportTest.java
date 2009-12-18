@@ -21,6 +21,7 @@ public class JmsTransportTest extends TestCase
 
     /**
      * Setup
+     *
      * @throws Exception Anything goes wrong
      */
     @Override
@@ -58,7 +59,7 @@ public class JmsTransportTest extends TestCase
             String uri = transport.toUriString();
 
             assertTrue("Returned uri isn't as expected: " + uri,
-                    uri.indexOf("activemq:foo.bar?brokerURL=tcp://localhost:61616") > -1);
+                uri.indexOf("activemq:foo.bar?brokerURL=tcp://localhost:61616") > -1);
         } catch (TransportException e)
         {
             fail("Shouldn't be getting an exception here: " + e.getMessage());
@@ -79,7 +80,7 @@ public class JmsTransportTest extends TestCase
             String uri = transport.toUriString();
 
             assertTrue("Returned uri isn't as expected: " + uri,
-                    uri.indexOf("activemq:topic:foo.bar?brokerURL=tcp://localhost:61616") > -1);
+                uri.indexOf("activemq:topic:foo.bar?brokerURL=tcp://localhost:61616") > -1);
         } catch (TransportException e)
         {
             fail("Shouldn't be getting an exception here: " + e.getMessage());

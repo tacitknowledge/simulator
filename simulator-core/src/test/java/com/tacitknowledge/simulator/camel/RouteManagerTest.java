@@ -28,51 +28,58 @@ public class RouteManagerTest extends SimulatorCamelTestSupportBase
     /**
      * A transport to use in tests
      */
-    private final Transport outTransport1 = new Transport() {
+    private final Transport outTransport1 = new Transport()
+    {
 
-        public String getType() {
+        public String getType()
+        {
             return "file";
         }
 
-        public String toUriString() {
+        public String toUriString()
+        {
             return "mock:result1";
         }
 
-        public List<List> getParametersList() {
+        public List<List> getParametersList()
+        {
             return null;
         }
 
-        public void setParameters(Map<String, String> parameters) {
+        public void setParameters(Map<String, String> parameters)
+        {
 
         }
     };
 
-    
+
     /**
      * Conversation to be used in tests
      */
     private final Conversation conversation1
-            = new ConversationImpl(1, "conversation1", inTransport, outTransport, new PlainTextAdapter(), new PlainTextAdapter(), "");
+        = new ConversationImpl(1, "conversation1", inTransport, outTransport, new PlainTextAdapter(), new PlainTextAdapter(), "");
 
     /**
      * Conversation to be used in tests
      */
     private final Conversation conversation2
-            = new ConversationImpl(2, "conversation2", inTransport, outTransport1, new PlainTextAdapter(), new PlainTextAdapter(), "");
+        = new ConversationImpl(2, "conversation2", inTransport, outTransport1, new PlainTextAdapter(), new PlainTextAdapter(), "");
 
 
     {
-        conversation1.addOrUpdateScenario(1,"javascript","true","text");
-        conversation1.addOrUpdateScenario(2,"javascript","true","text");
+        conversation1.addOrUpdateScenario(1, "javascript", "true", "text");
+        conversation1.addOrUpdateScenario(2, "javascript", "true", "text");
 
     }
+
     /**
      * Test for activating a route.
      *
      * @throws Exception in case of an error.
      */
     @Test
-    public void testActivate() throws Exception {
+    public void testActivate() throws Exception
+    {
         routeManager.activate(conversation1);
 
         sendMessage();
@@ -87,7 +94,8 @@ public class RouteManagerTest extends SimulatorCamelTestSupportBase
      * @throws Exception in case of an error.
      */
     @Test
-    public void testTwoCallsToActivateWithTheSameConversation() throws Exception {
+    public void testTwoCallsToActivateWithTheSameConversation() throws Exception
+    {
         routeManager.activate(conversation1);
 
         routeManager.activate(conversation1);
@@ -105,7 +113,8 @@ public class RouteManagerTest extends SimulatorCamelTestSupportBase
      * @throws Exception in case of an error.
      */
     @Test
-    public void testActivateDeactivateActivateAgain() throws Exception {
+    public void testActivateDeactivateActivateAgain() throws Exception
+    {
         routeManager.activate(conversation1);
 
         routeManager.deactivate(conversation1);
@@ -132,7 +141,8 @@ public class RouteManagerTest extends SimulatorCamelTestSupportBase
      * @throws Exception in case of an error.
      */
     @Test
-    public void testTwoCallsToActivateWithDifferentConversations() throws Exception {
+    public void testTwoCallsToActivateWithDifferentConversations() throws Exception
+    {
         routeManager.activate(conversation1);
 
         routeManager.activate(conversation2);
@@ -146,7 +156,8 @@ public class RouteManagerTest extends SimulatorCamelTestSupportBase
      * @throws Exception in case of an error.
      */
     @Test
-    public void testDeactivate() throws Exception {
+    public void testDeactivate() throws Exception
+    {
         routeManager.activate(conversation1);
 
         routeManager.deactivate(conversation1);
@@ -166,7 +177,8 @@ public class RouteManagerTest extends SimulatorCamelTestSupportBase
      * @throws Exception in case of an error.
      */
     @Override
-    protected RouteBuilder createRouteBuilder() throws Exception {
+    protected RouteBuilder createRouteBuilder() throws Exception
+    {
         routeManager = new RouteManagerImpl();
         return routeManager;
     }
@@ -205,7 +217,8 @@ public class RouteManagerTest extends SimulatorCamelTestSupportBase
      *
      * @throws InterruptedException in case of an error
      */
-    private void sendMessage() throws InterruptedException {
+    private void sendMessage() throws InterruptedException
+    {
         String expectedBody = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><matched/>";
 
         resultEndpoint.expectedBodiesReceived(expectedBody);

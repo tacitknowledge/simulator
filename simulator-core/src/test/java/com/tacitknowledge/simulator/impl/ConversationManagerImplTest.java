@@ -1,6 +1,12 @@
 package com.tacitknowledge.simulator.impl;
 
-import com.tacitknowledge.simulator.*;
+import com.tacitknowledge.simulator.Conversation;
+import com.tacitknowledge.simulator.ConversationManager;
+import com.tacitknowledge.simulator.ConversationNotFoundException;
+import com.tacitknowledge.simulator.ConversationScenario;
+import com.tacitknowledge.simulator.RouteManager;
+import com.tacitknowledge.simulator.SimulatorCamelTestSupportBase;
+import com.tacitknowledge.simulator.SimulatorException;
 import com.tacitknowledge.simulator.camel.RouteManagerImpl;
 import com.tacitknowledge.simulator.formats.AdapterFactory;
 import com.tacitknowledge.simulator.formats.FormatConstants;
@@ -10,7 +16,7 @@ import java.util.List;
 
 /**
  * Test class for ConversationManagerImpl
- * 
+ *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
 public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
@@ -32,7 +38,7 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         RouteManager routeManager = new RouteManagerImpl();
         ConversationManager manager = new ConversationManagerImpl(routeManager);
 
-        Conversation conversation = manager.createConversation(null, "testCreateConversation", inTransport, outTransport,  AdapterFactory.getAdapter(FormatConstants.JSON), AdapterFactory.getAdapter(FormatConstants.JSON), "");
+        Conversation conversation = manager.createConversation(null, "testCreateConversation", inTransport, outTransport, AdapterFactory.getAdapter(FormatConstants.JSON), AdapterFactory.getAdapter(FormatConstants.JSON), "");
         assertNotNull(conversation);
         assertNotNull(conversation.getInboundTransport());
         assertNotNull(conversation.getOutboundTransport());
@@ -59,14 +65,16 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
     }
 
     @Test
-    public void testIsActiveConversationNotFound() throws SimulatorException {
+    public void testIsActiveConversationNotFound() throws SimulatorException
+    {
         ConversationManager manager = new ConversationManagerImpl();
         assertFalse(manager.isActive(1234));
     }
 
 
     @Test
-    public void testIsActive() throws SimulatorException, ConversationNotFoundException {
+    public void testIsActive() throws SimulatorException, ConversationNotFoundException
+    {
         RouteManager routeManager = new RouteManagerImpl();
         ConversationManager manager = new ConversationManagerImpl(routeManager);
 
@@ -77,9 +85,10 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         assertTrue(manager.isActive(conversation.getId()));
     }
 
-    
+
     @Test
-    public void testCreateOrUpdateScenarioConversationDoesntExits() throws SimulatorException, ConversationNotFoundException {
+    public void testCreateOrUpdateScenarioConversationDoesntExits() throws SimulatorException, ConversationNotFoundException
+    {
         RouteManager routeManager = new RouteManagerImpl();
         ConversationManager manager = new ConversationManagerImpl(routeManager);
 
@@ -90,31 +99,31 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
 
 
     @Test
-    public void testCreateScenario() throws SimulatorException, ConversationNotFoundException {
+    public void testCreateScenario() throws SimulatorException, ConversationNotFoundException
+    {
         RouteManager routeManager = new RouteManagerImpl();
         ConversationManager manager = new ConversationManagerImpl(routeManager);
 
         Conversation conversation = manager.createConversation(1, "testCreateScenario", inTransport, outTransport, AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT), AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT), "defaultScenario");
         ConversationScenario scenario = manager.createOrUpdateConversationScenario(1, 2, "javascript", "true", "2+2");
         assertNotNull(scenario);
-        assertEquals("javascript",scenario.getScriptLanguage());
-        assertEquals("true",scenario.getCriteriaScript());
-        assertEquals("defaultScenario\n2+2",scenario.getTransformationScript());
+        assertEquals("javascript", scenario.getScriptLanguage());
+        assertEquals("true", scenario.getCriteriaScript());
+        assertEquals("defaultScenario\n2+2", scenario.getTransformationScript());
 
-
-        
 
         ConversationScenario scenario1 = manager.createOrUpdateConversationScenario(1, 2, "ruby", "ttttrue", "2+2+2");
-        assertSame(scenario,scenario1);
+        assertSame(scenario, scenario1);
 
-        assertEquals("ruby",scenario.getScriptLanguage());
-        assertEquals("ttttrue",scenario.getCriteriaScript());
-        assertEquals("defaultScenario\n2+2+2",scenario.getTransformationScript());
+        assertEquals("ruby", scenario.getScriptLanguage());
+        assertEquals("ttttrue", scenario.getCriteriaScript());
+        assertEquals("defaultScenario\n2+2+2", scenario.getTransformationScript());
 
     }
 
-     @Test
-    public void testDeleteConversation() throws SimulatorException, ConversationNotFoundException {
+    @Test
+    public void testDeleteConversation() throws SimulatorException, ConversationNotFoundException
+    {
         RouteManager routeManager = new RouteManagerImpl();
         ConversationManager manager = new ConversationManagerImpl(routeManager);
 
@@ -122,20 +131,22 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         ConversationScenario scenario = manager.createOrUpdateConversationScenario(1, 2, "javascript", "true", "2+2");
         assertNotNull(scenario);
 
-         manager.activate(1);
-         manager.deleteConversation(1);
-         assertTrue(!manager.isActive(1));
+        manager.activate(1);
+        manager.deleteConversation(1);
+        assertTrue(!manager.isActive(1));
     }
 
     @Test
-    public void testDelete() throws SimulatorException, ConversationNotFoundException {
+    public void testDelete() throws SimulatorException, ConversationNotFoundException
+    {
         RouteManager routeManager = new RouteManagerImpl();
         ConversationManager manager = new ConversationManagerImpl(routeManager);
         manager.deleteConversation(1234);
     }
 
     @Test
-    public void testConversationExists() throws SimulatorException, ConversationNotFoundException {
+    public void testConversationExists() throws SimulatorException, ConversationNotFoundException
+    {
         RouteManager routeManager = new RouteManagerImpl();
         ConversationManager manager = new ConversationManagerImpl(routeManager);
         assertFalse(manager.conversationExists(1));
@@ -155,11 +166,11 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
 
         Conversation conversation = manager.createConversation(1, "testDefaultScenarioWasExecuted", inTransport, outTransport, AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT), AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT), "var testVar=123");
         ConversationScenario scenario = manager.createOrUpdateConversationScenario(1, 2, "javascript", "true",
-                "testVar=testVar+1\n" +
+            "testVar=testVar+1\n" +
                 "testVar");
 
         manager.activate(1);
-        
+
         sendMessage("124.0");
 
         manager.deactivate(1);

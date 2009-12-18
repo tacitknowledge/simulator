@@ -26,12 +26,14 @@ import java.util.Map;
  *
  * @author Nikita Belenkiy (nbelenkiy@tacitknowledge.com)
  */
-public class ScenarioExecutionWrapperTest {
+public class ScenarioExecutionWrapperTest
+{
 
     @Test
-    public void testWithoutScenarios() throws Exception {
+    public void testWithoutScenarios() throws Exception
+    {
         ArrayList<ConversationScenario> list = new ArrayList<ConversationScenario>();
-        list.add(new ConversationScenarioImpl(1,"javascript","true","text"));
+        list.add(new ConversationScenarioImpl(1, "javascript", "true", "text"));
         ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(list, new PlainTextAdapter(), new PlainTextAdapter());
 
         String testString = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><xxxxxx/>";
@@ -41,11 +43,12 @@ public class ScenarioExecutionWrapperTest {
     }
 
     @Test
-    public void testWithOneScenario() throws Exception {
+    public void testWithOneScenario() throws Exception
+    {
 
         String criteria = "employees.employee[0].name=='John';";
         String execution = "employees.employee[0].name='John12345';" +
-                "employees";
+            "employees";
 
         ConversationScenario scenario = createScenario(0, criteria, execution, "javascript");
 
@@ -59,7 +62,7 @@ public class ScenarioExecutionWrapperTest {
 
         //modify the script and see what happens
         scenario.setScripts(criteria, "employees.employee[0].name='John1234544444444';" +
-                "employees", "javascript");
+            "employees", "javascript");
 
         s = wrapper.process(TestHelper.XML_DATA);
 
@@ -67,7 +70,8 @@ public class ScenarioExecutionWrapperTest {
     }
 
     @Test
-    public void testTreeScenarios() throws Exception {
+    public void testTreeScenarios() throws Exception
+    {
 
         List<ConversationScenario> scenarios = new ArrayList<ConversationScenario>();
 
@@ -95,7 +99,8 @@ public class ScenarioExecutionWrapperTest {
 
 
     @Test
-    public void testDifferentAdapters() throws Exception {
+    public void testDifferentAdapters() throws Exception
+    {
 
         List<ConversationScenario> scenarios = new ArrayList<ConversationScenario>();
 
@@ -128,24 +133,26 @@ public class ScenarioExecutionWrapperTest {
         }
     }
 
-     @Test
-    public void testRubyScenario() throws Exception {
+    @Test
+    public void testRubyScenario() throws Exception
+    {
 
         ScenarioExecutionWrapper wrapper = createExecutionWrapper(
-                "require 'java'\n$employees.employee[0].name == 'John';",
-                "$employees.employee[0].name='John12345';" +
-                         "$employees", new XmlAdapter(), new XmlAdapter());
+            "require 'java'\n$employees.employee[0].name == 'John';",
+            "$employees.employee[0].name='John12345';" +
+                "$employees", new XmlAdapter(), new XmlAdapter());
 
         String s = wrapper.process(TestHelper.XML_DATA);
         Assert.assertTrue(s.contains("John12345"));
     }
 
-     @Test
-    public void testReturnDifferentObject() throws Exception {
+    @Test
+    public void testReturnDifferentObject() throws Exception
+    {
 
         ScenarioExecutionWrapper wrapper = createExecutionWrapper("require 'java'\n$employees.employee[0].name == 'John';",
-                 "$employees.employee[0].name='John12345';" +
-                         "return 'Success'", new XmlAdapter(), new PlainTextAdapter());
+            "$employees.employee[0].name='John12345';" +
+                "return 'Success'", new XmlAdapter(), new PlainTextAdapter());
         String s = wrapper.process(TestHelper.XML_DATA);
         Assert.assertTrue(s.contains("Success"));
     }
@@ -156,8 +163,8 @@ public class ScenarioExecutionWrapperTest {
     {
 
         ScenarioExecutionWrapper wrapper = createExecutionWrapper("require 'java'\n$employees.employee[0].name == 'John';",
-                "$employees.employee[0].name='John12345';" +
-                        "return {}", new XmlAdapter(), new XmlAdapter());
+            "$employees.employee[0].name='John12345';" +
+                "return {}", new XmlAdapter(), new XmlAdapter());
         String s = wrapper.process(TestHelper.XML_DATA);
         Assert.assertTrue(s.contains("rubyhash"));
     }
@@ -170,49 +177,50 @@ public class ScenarioExecutionWrapperTest {
         Adapter outAdapter = new XmlAdapter(params);
 
         ScenarioExecutionWrapper wrapper = createExecutionWrapper("require 'java'\n$employees.employee[0].name == 'John';",
-                "$employees.employee[0].name='John12345';" +
-                        "return { :nilProperty => nil," +
-                        ":numberProperty => 1234," +
-                        ":arrayProperty => [ ]" +
-                        "" +
-                        "" +
-                        "}", new XmlAdapter(), outAdapter);
+            "$employees.employee[0].name='John12345';" +
+                "return { :nilProperty => nil," +
+                ":numberProperty => 1234," +
+                ":arrayProperty => [ ]" +
+                "" +
+                "" +
+                "}", new XmlAdapter(), outAdapter);
         String s = wrapper.process(TestHelper.XML_DATA);
         Assert.assertTrue(s.contains("root"));
     }
 
-    private ScenarioExecutionWrapper createExecutionWrapper(String criteria, String execution, Adapter inAdapter, Adapter outAdapter) {
+    private ScenarioExecutionWrapper createExecutionWrapper(String criteria, String execution, Adapter inAdapter, Adapter outAdapter)
+    {
         ConversationScenario scenario = createScenario(0, criteria, execution, "ruby");
         List<ConversationScenario> scenarios = new ArrayList<ConversationScenario>();
         scenarios.add(scenario);
         return new ScenarioExecutionWrapper(scenarios, inAdapter, outAdapter);
     }
 
-    private ConversationScenario createScenario(int scenarioId, String criteria, String execution, String language) {
+    private ConversationScenario createScenario(int scenarioId, String criteria, String execution, String language)
+    {
         ConversationScenario scenario = new ConversationScenarioImpl(scenarioId, language, criteria, execution);
         scenario.setActive(true);
         return scenario;
     }
 
 
-
-
-     @Test
-    public void testReturnJavaScriptNativeObject() throws Exception {
+    @Test
+    public void testReturnJavaScriptNativeObject() throws Exception
+    {
 
         String criteria = "employees.employee[0].name=='John';";
         String execution = "employees.employee[0].name='John12345';\n" +
-                "var xxx= { " +
-                "stringFieldName: \"xxxx\", " +
-                "numberFieldName: 1234, " +
-                "arrayField:[" +
-                "       [134, 12345]," +
-                "       [1234, 123456]" +
-                "]," +
-                "objectProperty:{stringgg:'ffff'}," +
-                "undefinedVar: undefined" +
-                "}\n" +
-                "xxx";
+            "var xxx= { " +
+            "stringFieldName: \"xxxx\", " +
+            "numberFieldName: 1234, " +
+            "arrayField:[" +
+            "       [134, 12345]," +
+            "       [1234, 123456]" +
+            "]," +
+            "objectProperty:{stringgg:'ffff'}," +
+            "undefinedVar: undefined" +
+            "}\n" +
+            "xxx";
 
         ConversationScenario scenario = createScenario(0, criteria, execution, "javascript");
 
@@ -221,22 +229,22 @@ public class ScenarioExecutionWrapperTest {
         scenarios.add(scenario);
         ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(scenarios, new XmlAdapter(), new XmlAdapter());
 
-         String s = wrapper.process(TestHelper.XML_DATA);
-         System.out.println("s = " + s);
-         
-         SAXBuilder builder = new SAXBuilder();
-         Document doc = builder.build(new StringReader(s));
-         
-         Element rootElement = doc.getRootElement();
-         Assert.assertEquals(rootElement.getName(),"nativeobject");
+        String s = wrapper.process(TestHelper.XML_DATA);
+        System.out.println("s = " + s);
 
-         List<Element> list = rootElement.getChildren();
+        SAXBuilder builder = new SAXBuilder();
+        Document doc = builder.build(new StringReader(s));
 
-         Assert.assertEquals("arrayField", list.get(0).getName());
-         Assert.assertEquals("arrayField", list.get(1).getName());
-         Assert.assertEquals("objectProperty", list.get(2).getName());
-         Assert.assertEquals("undefinedVar", list.get(3).getName());
-         Assert.assertEquals("numberFieldName", list.get(4).getName());
-         Assert.assertEquals("stringFieldName", list.get(5).getName());
-     }
+        Element rootElement = doc.getRootElement();
+        Assert.assertEquals(rootElement.getName(), "nativeobject");
+
+        List<Element> list = rootElement.getChildren();
+
+        Assert.assertEquals("arrayField", list.get(0).getName());
+        Assert.assertEquals("arrayField", list.get(1).getName());
+        Assert.assertEquals("objectProperty", list.get(2).getName());
+        Assert.assertEquals("undefinedVar", list.get(3).getName());
+        Assert.assertEquals("numberFieldName", list.get(4).getName());
+        Assert.assertEquals("stringFieldName", list.get(5).getName());
+    }
 }

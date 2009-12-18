@@ -19,6 +19,7 @@ public class AdapterFactory
     private AdapterFactory()
     {
     }
+
     /**
      * Container for the adapters.
      */
@@ -40,15 +41,15 @@ public class AdapterFactory
      * @param format The format of the data. @see com.tacitknowledge.simulator.FormatConstants
      * @return Adapter for the specified format or null if the format is not supported.
      */
-    public static Adapter< ? > getAdapter(String format)
+    public static Adapter<?> getAdapter(String format)
     {
         return adapters.get(format);
     }
 
     /**
-     * @see com.tacitknowledge.simulator.Adapter#getParametersList()
      * @param format The format the adapter is needed for
      * @return The parameter descriptions list
+     * @see com.tacitknowledge.simulator.Adapter#getParametersList()
      */
     public static List<List> getAdapterParameters(String format)
     {

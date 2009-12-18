@@ -4,11 +4,9 @@ import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.StructuredSimulatorPojo;
-
+import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
 import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.name;
 import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
-
-import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
 import org.apache.log4j.Logger;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
@@ -69,12 +67,12 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
         parameters().
             add(
                 name(PARAM_VALIDATE).
-                label("Validate?").
-                type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN)
+                    label("Validate?").
+                    type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN)
             ).
             add(
                 name(PARAM_ROOT_TAG_NAME).
-                label("XML root tag name " +
+                    label("XML root tag name " +
                     "(outbound only)")
             );
 
@@ -96,8 +94,8 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
     }
 
     /**
-     * @inheritDoc
      * @param parameters @see Adapter#parameters
+     * @inheritDoc
      */
     public XmlAdapter(Map<String, String> parameters)
     {
@@ -106,7 +104,7 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
 
 
     protected SimulatorPojo createSimulatorPojo(String o)
-            throws FormatAdapterException
+        throws FormatAdapterException
     {
         SimulatorPojo pojo = new StructuredSimulatorPojo();
 
@@ -152,7 +150,7 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
 
 
     protected String getString(SimulatorPojo simulatorPojo)
-            throws FormatAdapterException
+        throws FormatAdapterException
     {
         try
         {
@@ -160,18 +158,18 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
             if (simulatorPojo.getRoot().isEmpty() || simulatorPojo.getRoot().size() > 1)
             {
                 logger.error("Incorrect SimulatorPojo's root size. Expecting 1, but found"
-                        + simulatorPojo.getRoot().size());
+                    + simulatorPojo.getRoot().size());
                 throw new
-                        FormatAdapterException(
-                        "Incorrect SimulatorPojo's root size. Expecting 1, but found"
-                                + simulatorPojo.getRoot().size());
+                    FormatAdapterException(
+                    "Incorrect SimulatorPojo's root size. Expecting 1, but found"
+                        + simulatorPojo.getRoot().size());
             }
 
             // --- Get a DOM DocumentFactoryBuilder and the corresponding builder
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-                DocumentBuilder db = dbf.newDocumentBuilder();
+            DocumentBuilder db = dbf.newDocumentBuilder();
 
-                doc = db.newDocument();
+            doc = db.newDocument();
 
             // --- Generate the XML document - In XmlAdapter,
             // the only element in root is guaranteed to be a Map
@@ -185,9 +183,9 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
                 }
 
                 doc.appendChild(
-                        getStructuredElement(
-                                rootTagName,
-                                (Map<String, Object>) entry.getValue()));
+                    getStructuredElement(
+                        rootTagName,
+                        (Map<String, Object>) entry.getValue()));
             }
 
             // --- Serialize the generated XML document
@@ -204,14 +202,14 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
         catch (TransformerConfigurationException tce)
         {
             String errorMsg = "Error trying to transform XML document into String: "
-                    + tce.getMessage();
+                + tce.getMessage();
             logger.error(errorMsg, tce);
             throw new FormatAdapterException(errorMsg, tce);
         }
         catch (TransformerException te)
         {
             String errorMsg = "Error trying to transform XML document into String: "
-                    + te.getMessage();
+                + te.getMessage();
             logger.error(errorMsg, te);
             throw new FormatAdapterException(errorMsg, te);
         }
@@ -331,8 +329,8 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
             {
                 // --- ...a Map, get the structured element
                 child = getStructuredElement(
-                        entry.getKey(),
-                        (Map<String, Object>) entry.getValue());
+                    entry.getKey(),
+                    (Map<String, Object>) entry.getValue());
             }
             else if (entry.getValue() instanceof List)
             {
@@ -349,7 +347,7 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
                             newElName = "anonymous-list";
                         }
                         element.appendChild(
-                                getStructuredElement(newElName, (Map<String, Object>) item));
+                            getStructuredElement(newElName, (Map<String, Object>) item));
                     }
                     else if (item instanceof List)
                     {
@@ -402,8 +400,8 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
             {
                 // --- ...a Map, get the structured element
                 child = getStructuredElement(
-                        "list-element",
-                        (Map<String, Object>) o);
+                    "list-element",
+                    (Map<String, Object>) o);
             }
             else if (o instanceof List)
             {
@@ -440,14 +438,14 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
         } catch (DOMException de)
         {
             logger.debug("Unexpected DOM Exception for element name: " + elemName + ". \n"
-                    + de.getMessage());
+                + de.getMessage());
             throw de;
         }
     }
 
     /**
-     * @inheritDoc
      * @throws FormatAdapterException
+     * @inheritDoc
      */
     @Override
     void validateParameters() throws FormatAdapterException

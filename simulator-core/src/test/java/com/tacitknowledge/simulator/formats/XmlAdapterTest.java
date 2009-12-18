@@ -37,25 +37,27 @@ public class XmlAdapterTest extends TestCase
         XmlAdapter adapter = (XmlAdapter) AdapterFactory.getAdapter(FormatConstants.XML);
 
         // --- Lets use the same pojo generated in the generateBeans() method
-        try {
+        try
+        {
             SimulatorPojo pojo = adapter.createSimulatorPojo(TestHelper.XML_DATA);
 
             String xml = adapter.getString(pojo);
 
             // --- Test some nodes, just to make sure the most important things are there
             assertTrue(
-                    "Could not find starting en ending employees tags",
-                    xml.indexOf("<employees>") > -1 && xml.indexOf("</employees>") > -1);
+                "Could not find starting en ending employees tags",
+                xml.indexOf("<employees>") > -1 && xml.indexOf("</employees>") > -1);
             assertTrue("Could not find report date element: " + xml,
-                    xml.indexOf("<reportDate>2009-11-05</reportDate>") > -1);
+                xml.indexOf("<reportDate>2009-11-05</reportDate>") > -1);
 
             // --- Grab pieces of the XML to test
             int firstEmpIdx = xml.indexOf("<employee>");
-            String employee = xml.substring(xml.indexOf("<employee>"), xml.indexOf("</employee>", firstEmpIdx+1) + "</employee>".length());
+            String employee = xml.substring(xml.indexOf("<employee>"), xml.indexOf("</employee>", firstEmpIdx + 1) + "</employee>".length());
 
             assertTrue(employee.indexOf("<name>John</name>") > -1);
-            
-        } catch(FormatAdapterException e) {
+
+        } catch (FormatAdapterException e)
+        {
             e.printStackTrace();
             fail("Error trying to adapt from/to XML: " + e.getMessage());
         }

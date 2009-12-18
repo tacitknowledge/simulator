@@ -4,29 +4,26 @@ import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.StructuredSimulatorPojo;
-
+import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
 import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.name;
 import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
-
-import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
-
 import java.util.regex.Pattern;
 
 /**
  * Implementation of the Adapter interface for the Properties format.
  * Properties should come in an "inheritance" structure.
  * e.g.:
- *      employee.firstName=
- *      employee.address.street=
- *      employee.title
- *
+ * employee.firstName=
+ * employee.address.street=
+ * employee.title
+ * <p/>
  * Only one "root" object should exist.
  * Duplicate property names are not allowed and would throw an error.
  *
@@ -48,8 +45,8 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
         parameters().
             add(
                 name(PARAM_PROPERTY_SEPARATOR).
-                label("Property level separator (defaults to dot \".\")").
-                defaultValue(".")
+                    label("Property level separator (defaults to dot \".\")").
+                    defaultValue(".")
             );
 
     /**
@@ -70,8 +67,8 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
     }
 
     /**
-     * @inheritDoc
      * @param parameters @see Adapter#parameters
+     * @inheritDoc
      */
     public PropertiesAdapter(Map<String, String> parameters)
     {
@@ -79,7 +76,7 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
     }
 
     protected SimulatorPojo createSimulatorPojo(String object)
-            throws FormatAdapterException
+        throws FormatAdapterException
     {
         SimulatorPojo pojo = new StructuredSimulatorPojo();
 
@@ -101,8 +98,8 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
             }
 
             List<String> propName =
-                    new ArrayList<String>(
-                            Arrays.asList(propNameValue[0].split(splitterRegEx)));
+                new ArrayList<String>(
+                    Arrays.asList(propNameValue[0].split(splitterRegEx)));
             String propValue = propNameValue[1];
 
             try
@@ -121,7 +118,7 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
 
 
     protected String getString(SimulatorPojo simulatorPojo)
-            throws FormatAdapterException
+        throws FormatAdapterException
     {
 
         if (simulatorPojo.getRoot().isEmpty())
@@ -133,8 +130,8 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
     }
 
     /**
-     * @inheritDoc
      * @throws FormatAdapterException if any required parameter is missing
+     * @inheritDoc
      */
     @Override
     void validateParameters() throws FormatAdapterException
@@ -171,15 +168,15 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
                 {
                     // --- If there are no path entries left, something is wrong
                     throw new FormatAdapterException(
-                            "Expecting either leaf path name or further path declaration. " +
-                                    "Current path name: " + current);
+                        "Expecting either leaf path name or further path declaration. " +
+                            "Current path name: " + current);
                 }
             }
             else if (keyValue instanceof String)
             {
                 // --- If the instance is a String, we got a duplicate property name
                 throw new FormatAdapterException(
-                        "Duplicate property name. Current path name: " + current
+                    "Duplicate property name. Current path name: " + current
                 );
             }
         }
@@ -218,9 +215,9 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
             {
                 // --- If it's a Map, append the key to the current path and go down
                 sb.append(
-                        getPropertiesAsString(
-                                fullPath + this.propertySeparator,
-                                (Map<String, Object>) value));
+                    getPropertiesAsString(
+                        fullPath + this.propertySeparator,
+                        (Map<String, Object>) value));
             }
             else
             {

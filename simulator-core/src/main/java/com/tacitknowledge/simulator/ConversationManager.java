@@ -15,16 +15,16 @@ public interface ConversationManager
      *
      * @param id                the id of the conversation
      * @param name
-     *@param inboundTransport  the inbound transport of the conversation
+     * @param inboundTransport  the inbound transport of the conversation
      * @param outboundTransport the inbound transport of the conversation
      * @param inAdapter         the outbound adapter of the conversation
      * @param outAdapter        the outbound transport of the conversation
-     * @param defaultResponse      @return the created conversation object
+     * @param defaultResponse   @return the created conversation object
      * @throws SimulatorException in case of an error
      */
     Conversation createConversation(Integer id, String name, Transport inboundTransport,
                                     Transport outboundTransport, Adapter inAdapter,
-                                    Adapter outAdapter, String defaultResponse)throws SimulatorException;
+                                    Adapter outAdapter, String defaultResponse) throws SimulatorException;
 
     /**
      * Creates a new scenario for an existing conversation
@@ -37,7 +37,7 @@ public interface ConversationManager
      * @return
      */
     ConversationScenario createOrUpdateConversationScenario(int conversationId, int scenarioId, String language, String criteria,
-                                    String transformation);
+                                                            String transformation);
 
     /**
      * Activates the conversation with provided conversation id.
@@ -52,7 +52,7 @@ public interface ConversationManager
      * Deactivates the conversation with provided conversation id.
      *
      * @param conversationId id of the conversation to be deactivated.
-     * @throws SimulatorException            in case there is an error deactivating the conversation
+     * @throws SimulatorException in case there is an error deactivating the conversation
      */
     void deactivate(int conversationId) throws SimulatorException;
 
@@ -101,19 +101,20 @@ public interface ConversationManager
 
     /**
      * returns available scripting languages
+     *
      * @return
      */
     String[][] getAvailableLanguages();
 
     /**
      * deletes scenario from list of scenarios
-     * @param conversationId 
+     *
+     * @param conversationId
      * @param scenarioId
      */
     void deleteScenario(int conversationId, int scenarioId);
 
     /**
-     *
      * @param conversationId
      * @return
      */

@@ -16,7 +16,8 @@ import java.util.Map;
  *
  * @author Nikita Belenkiy (nbelenkiy@tacitknowledge.com)
  */
-public class JavaScriptObjectMapper implements ObjectMapper {
+public class JavaScriptObjectMapper implements ObjectMapper
+{
 
     private JavaObjectMapper javaMapper = new JavaObjectMapper();
 
@@ -24,48 +25,67 @@ public class JavaScriptObjectMapper implements ObjectMapper {
     {
 
         Map<String, Object> map = new HashMap<String, Object>();
-        if (o instanceof NativeObject) {
+        if (o instanceof NativeObject)
+        {
             NativeObject nativeObject = (NativeObject) o;
             Object[] objects = nativeObject.getAllIds();
-            for (Object object : objects) {
+            for (Object object : objects)
+            {
                 String fieldName = object.toString();
                 Object fieldValue = NativeObject.getProperty(nativeObject, fieldName);
                 Object mapValue;
-                if (fieldValue instanceof String || fieldValue instanceof Number) {
+                if (fieldValue instanceof String || fieldValue instanceof Number)
+                {
                     // --- If it's a String or a Number, use as it is
                     mapValue = fieldValue;
-                } else {
-                    if (fieldValue instanceof NativeArray) {
+                }
+                else
+                {
+                    if (fieldValue instanceof NativeArray)
+                    {
                         mapValue = getListFromArray((NativeArray) fieldValue);
-                    } else {
+                    }
+                    else
+                    {
                         mapValue = getMapFromObject(fieldValue);
                     }
                 }
                 map.put(fieldName, mapValue);
             }
-        } else if (o instanceof NativeArray) {
+        }
+        else if (o instanceof NativeArray)
+        {
             // --- If it's an Array, get a List from it
             List<Object> fromArray = getListFromArray((NativeArray) o);
             map.put(null, fromArray);
 
-        } else if(o instanceof Undefined) {
+        }
+        else if (o instanceof Undefined)
+        {
             //todo what to do?
-        }else {
+        }
+        else
+        {
             javaMapper.getMapFromObject(o);
         }
         return map;
     }
 
-    private List<Object> getListFromArray(NativeArray array) throws ObjectMapperException {
+    private List<Object> getListFromArray(NativeArray array) throws ObjectMapperException
+    {
 
         List<Object> list = new ArrayList<Object>();
 
-        for (int i = 0; i < array.getLength(); i++) {
+        for (int i = 0; i < array.getLength(); i++)
+        {
             Object object = array.get(i, null);
-            if (object instanceof String || object instanceof Number) {
+            if (object instanceof String || object instanceof Number)
+            {
                 list.add(object);
-            }else{
-              list.add(getMapFromObject(object));
+            }
+            else
+            {
+                list.add(getMapFromObject(object));
             }
 
         }

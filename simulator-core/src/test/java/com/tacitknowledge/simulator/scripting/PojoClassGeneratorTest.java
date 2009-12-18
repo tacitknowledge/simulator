@@ -60,20 +60,20 @@ public class PojoClassGeneratorTest extends TestCase
         try
         {
             String realName =
-                    generator.getRealGeneratedClassName(
-                            generator.getGeneratedClassesPackage() + "Order");
+                generator.getRealGeneratedClassName(
+                    generator.getGeneratedClassesPackage() + "Order");
             Class.forName(realName);
 
             realName = generator.getRealGeneratedClassName(
-                            generator.getGeneratedClassesPackage() + "Order.Items");
+                generator.getGeneratedClassesPackage() + "Order.Items");
             Class.forName(realName);
 
             realName = generator.getRealGeneratedClassName(
-                            generator.getGeneratedClassesPackage() + "Order.Items.Item");
+                generator.getGeneratedClassesPackage() + "Order.Items.Item");
             Class.forName(realName);
 
             realName = generator.getRealGeneratedClassName(
-                            generator.getGeneratedClassesPackage() + "Order.Shippinginfo");
+                generator.getGeneratedClassesPackage() + "Order.Shippinginfo");
             Class.forName(realName);
         }
         catch (ClassNotFoundException e)
@@ -105,8 +105,8 @@ public class PojoClassGeneratorTest extends TestCase
         {
             // --- We need to know the actual class name
             String realName =
-                    generator.getRealGeneratedClassName(
-                            generator.getGeneratedClassesPackage() + "Order");
+                generator.getRealGeneratedClassName(
+                    generator.getGeneratedClassesPackage() + "Order");
             assertEquals(Class.forName(realName), order.getClass());
 
             // --- Test we got status and items fields
@@ -118,12 +118,12 @@ public class PojoClassGeneratorTest extends TestCase
             assertNotNull(items);
 
             realName = generator.getRealGeneratedClassName(
-                            generator.getGeneratedClassesPackage() + "Order.Items");
+                generator.getGeneratedClassesPackage() + "Order.Items");
             assertEquals(Class.forName(realName), items.getClass());
 
             // --- Go down, test that Items has an item field and that it's an array of Item beans
             String itemClassName = generator.getRealGeneratedClassName(
-                            generator.getGeneratedClassesPackage() + "Order.Items.Item");
+                generator.getGeneratedClassesPackage() + "Order.Items.Item");
             Class.forName(itemClassName);
 
             Field itemField = items.getClass().getField("item");

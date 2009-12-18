@@ -2,14 +2,11 @@ package com.tacitknowledge.simulator.transports;
 
 import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.TransportException;
-
+import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
 import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.name;
 import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
-
-import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -70,32 +67,32 @@ public class FileTransport extends BaseTransport implements Transport
         parameters().
             add(
                 name(PARAM_DIRECTORY_NAME).
-                label("Directory Name").
-                required()
+                    label("Directory Name").
+                    required()
             ).
             add(
                 name(PARAM_FILE_NAME).
-                label("File Name")
+                    label("File Name")
             ).
             add(
                 name(PARAM_FILE_EXTENSION).
-                label("File Extension the transport will only poll from " +
+                    label("File Extension the transport will only poll from " +
                     "(without dot, inbound only)")
             ).
             add(
                 name(PARAM_REGEX_FILTER).
-                label("Regex filter " +
-                        "(will only be applied if neither " +
-                        "file name nor extension filters are provided, inbound only)")
+                    label("Regex filter " +
+                    "(will only be applied if neither " +
+                    "file name nor extension filters are provided, inbound only)")
             ).
             add(
                 name(PARAM_POLLING_INTERVAL).
-                label("Milliseconds before the next poll")
+                    label("Milliseconds before the next poll")
             ).
             add(
                 name(PARAM_DELETE_FILE).
-                label("Delete file after simulation?").
-                type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN)
+                    label("Delete file after simulation?").
+                    type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN)
             );
 
     /**
@@ -170,7 +167,7 @@ public class FileTransport extends BaseTransport implements Transport
             options.append("delete=true").append(AMP);
         }
 
-                // --- fileName, fileExtension & Regex filter should be mutually exclusive options
+        // --- fileName, fileExtension & Regex filter should be mutually exclusive options
         if (getParamValue(PARAM_FILE_NAME) != null)
         {
             options.append("fileName=").append(getParamValue(PARAM_FILE_NAME));
@@ -179,10 +176,10 @@ public class FileTransport extends BaseTransport implements Transport
         {
             // --- File extension is used as a RegEx filter for transport routing
             options.append("include=^.*\\.(").
-                    append(getParamValue(PARAM_FILE_EXTENSION).toLowerCase()).
-                    append("|").
-                    append(getParamValue(PARAM_FILE_EXTENSION).toUpperCase()).
-                    append(")$");
+                append(getParamValue(PARAM_FILE_EXTENSION).toLowerCase()).
+                append("|").
+                append(getParamValue(PARAM_FILE_EXTENSION).toUpperCase()).
+                append(")$");
         }
         else if (getParamValue(PARAM_REGEX_FILTER) != null)
         {
@@ -237,7 +234,7 @@ public class FileTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @param deleteFile @see #deleteFile 
+     * @param deleteFile @see #deleteFile
      */
     protected void setDeleteFile(boolean deleteFile)
     {

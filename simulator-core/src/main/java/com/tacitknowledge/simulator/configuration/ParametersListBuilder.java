@@ -4,12 +4,14 @@ import java.util.ArrayList;
 
 /**
  * DSL builder for a list of ParameterDefinition objects, extending an ArrayList.
+ *
  * @author galo
  */
 public class ParametersListBuilder extends ArrayList
 {
     /**
      * Initial DSL command
+     *
      * @return The instance to work with
      */
     public static ParametersListBuilder parameters()
@@ -18,13 +20,12 @@ public class ParametersListBuilder extends ArrayList
     }
 
     /**
-     *
      * @param paramDef The ParameterDefinition to be added to the list
      * @return This instance
      */
     public ParametersListBuilder add(ParameterDefinitionBuilder.ParameterDefinition paramDef)
     {
-       super.add(paramDef);
-       return this;
+        super.add(paramDef);
+        return this;
     }
 }

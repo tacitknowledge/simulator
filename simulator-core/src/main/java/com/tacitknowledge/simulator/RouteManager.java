@@ -2,8 +2,8 @@ package com.tacitknowledge.simulator;
 
 /**
  * Defines the interface for the RouteManager Implementations
- * @author Alexandru Dereveanco (adereveanco@tacitknowledge.com)
  *
+ * @author Alexandru Dereveanco (adereveanco@tacitknowledge.com)
  */
 public interface RouteManager
 {
@@ -33,14 +33,12 @@ public interface RouteManager
     void deactivate(Conversation conversation) throws Exception;
 
     /**
-     *
      * @param conversation
      * @return
      */
     boolean isActive(Conversation conversation) throws SimulatorException;
 
     /**
-     *
      * @param conversation
      */
     void delete(Conversation conversation) throws Exception;

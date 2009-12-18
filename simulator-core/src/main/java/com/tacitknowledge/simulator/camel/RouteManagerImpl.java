@@ -19,7 +19,8 @@ import java.util.Set;
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  * @author Nikita Belenkiy (nbelenkiy@tacitknowledge.com)
  */
-public class RouteManagerImpl extends RouteBuilder implements RouteManager {
+public class RouteManagerImpl extends RouteBuilder implements RouteManager
+{
     /**
      * Logger for this class.
      */
@@ -31,38 +32,43 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager {
      */
     private Map<Integer, RouteDefinition> convRoutes = new HashMap<Integer, RouteDefinition>();
     /**
-     *  container for active routes ids. 
+     * container for active routes ids.
      */
     Set<Integer> activeRoutes = new HashSet<Integer>();
 
     boolean contextStarted = false;
 
-    public RouteManagerImpl() {
-       super(new DefaultCamelContext());
+    public RouteManagerImpl()
+    {
+        super(new DefaultCamelContext());
     }
 
     /**
      * {@inheritDoc}
      */
-    public void configure() throws Exception {
+    public void configure() throws Exception
+    {
 
     }
 
     /**
      * {@inheritDoc}
      */
-    public void activate(Conversation conversation) throws Exception {
+    public void activate(Conversation conversation) throws Exception
+    {
         Integer conversationId = conversation.getId();
 
         logger.info("Activating conversation: " + conversation);
 
         RouteDefinition definition = convRoutes.get(conversationId);
 
-        if (!contextStarted) {
+        if (!contextStarted)
+        {
             getContext().start();
             contextStarted = true;
         }
-        if (definition == null) {
+        if (definition == null)
+        {
 
             // --- Entry endpoint
             String inboundTransportURI = conversation.getInboundTransport().toUriString();
@@ -72,7 +78,7 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager {
             definition.bean(new LoggingBean(true, conversation));
             // --- Adapt input format, run scenarios and finally adapt into output format
             definition.bean(new ScenarioExecutionWrapper(conversation.getScenarios(), conversation
-                    .getInboundAdapter(), conversation.getOutboundAdapter()));
+                .getInboundAdapter(), conversation.getOutboundAdapter()));
             definition.bean(new LoggingBean(false, conversation));
 
             // --- Exit endpoint
@@ -81,13 +87,16 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager {
             convRoutes.put(conversationId, definition);
 
             logger.info("Route : " + definition.getId() + " was added to the context : "
-                    + getContext().getName());
+                + getContext().getName());
 
             getContext().startRoute(definition);
             activeRoutes.add(conversationId);
 
-        } else {
-            if (!activeRoutes.contains(conversationId)) {
+        }
+        else
+        {
+            if (!activeRoutes.contains(conversationId))
+            {
                 activeRoutes.add(conversationId);
                 getContext().startRoute(definition);
             }
@@ -97,16 +106,20 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager {
     /**
      * {@inheritDoc}
      */
-    public void deactivate(Conversation conversation) throws Exception {
+    public void deactivate(Conversation conversation) throws Exception
+    {
         logger.info("Deactivating conversation: " + conversation);
         int i = conversation.getId();
         RouteDefinition definition = convRoutes.get(i);
-        if (definition != null) {
+        if (definition != null)
+        {
             getContext().stopRoute(definition);
             activeRoutes.remove(i);
             logger.info("Route : " + definition.getId() + " was stopped in the context : "
-                    + getContext().getName());
-        } else {
+                + getContext().getName());
+        }
+        else
+        {
             logger.warn("Trying to deactivate route which is not active ");
         }
     }
@@ -114,14 +127,16 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager {
     /**
      * {@inheritDoc}
      */
-    public boolean isActive(Conversation conversation) throws SimulatorException {
+    public boolean isActive(Conversation conversation) throws SimulatorException
+    {
         return activeRoutes.contains(conversation.getId());
     }
 
     /**
      * {@inheritDoc}
      */
-    public void delete(Conversation conversation) throws Exception {
+    public void delete(Conversation conversation) throws Exception
+    {
         deactivate(conversation);
         convRoutes.remove(conversation.getId());
     }

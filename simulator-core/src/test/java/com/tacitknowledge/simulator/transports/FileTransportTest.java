@@ -55,8 +55,8 @@ public class FileTransportTest extends TestCase
             String uri = transport.toUriString();
 
             assertTrue(
-                    "Returned uri isn't as expected: " + uri,
-                    uri.indexOf("file://inbox?delete=true") > -1);
+                "Returned uri isn't as expected: " + uri,
+                uri.indexOf("file://inbox?delete=true") > -1);
         }
         catch (TransportException e)
         {
@@ -77,8 +77,8 @@ public class FileTransportTest extends TestCase
             String uri = transport.toUriString();
 
             assertTrue(
-                    "Returned uri isn't as expected: " + uri,
-                    uri.indexOf("file://inbox/csv?include=^.*\\.(csv|CSV)$") > -1);
+                "Returned uri isn't as expected: " + uri,
+                uri.indexOf("file://inbox/csv?include=^.*\\.(csv|CSV)$") > -1);
         }
         catch (TransportException e)
         {
@@ -99,8 +99,8 @@ public class FileTransportTest extends TestCase
             String uri = transport.toUriString();
 
             assertTrue(
-                    "Returned uri isn't as expected: " + uri,
-                    uri.indexOf("file://inbox/csv?include=(.*)(something)(.*)") > -1);
+                "Returned uri isn't as expected: " + uri,
+                uri.indexOf("file://inbox/csv?include=(.*)(something)(.*)") > -1);
         }
         catch (TransportException e)
         {
@@ -121,8 +121,8 @@ public class FileTransportTest extends TestCase
             String uri = transport.toUriString();
 
             assertTrue(
-                    "Returned uri isn't as expected: " + uri,
-                    uri.indexOf("file://inbox?initialDelay=10000&delay=10000") > -1);
+                "Returned uri isn't as expected: " + uri,
+                uri.indexOf("file://inbox?initialDelay=10000&delay=10000") > -1);
         }
         catch (TransportException e)
         {

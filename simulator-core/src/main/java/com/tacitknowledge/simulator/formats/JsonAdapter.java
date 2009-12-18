@@ -4,17 +4,19 @@ import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.StructuredSimulatorPojo;
-
+import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
 import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.name;
 import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
-
-import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation of the Adapter interface for the JSON format
@@ -52,18 +54,19 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
         parameters().
             add(
                 name(PARAM_JSON_CONTENT).
-                label("JSON Contents (e.g. employee(s), order(s), etc.)").
-                required()
+                    label("JSON Contents (e.g. employee(s), order(s), etc.)").
+                    required()
             ).
             add(
                 name(PARAM_IS_ARRAY).
-                label("Is JSON content an array? e.g. [ ... ]").
-                type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN)
+                    label("Is JSON content an array? e.g. [ ... ]").
+                    type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN)
             ).
             add(
                 name(PARAM_JSON_ARRAY_CONTENT).
-                label("JSON Array content (What each array element represents. " +
-                            "e.g.: employee, order. Required if content is array)")
+                    label("JSON Array content (What each array element represents. "
+                    +
+                    "e.g.: employee, order. Required if content is array)")
             );
 
     /**
@@ -76,21 +79,33 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
      */
     private boolean isArray = false;
 
+    /**
+     * Constructor
+     */
     public JsonAdapter()
     {
     }
 
     /**
+     * Constructor
+     *
      * @param parameters @see Adapter#parameters
      * @inheritDoc
      */
-    public JsonAdapter(Map<String, String> parameters)
+    public JsonAdapter(final Map<String, String> parameters)
     {
         super(parameters);
     }
 
-    protected SimulatorPojo createSimulatorPojo(String o)
-            throws FormatAdapterException
+    /**
+     * Creates a simuator pojo
+     *
+     * @param o incoming data
+     * @return simulator pojo
+     * @throws FormatAdapterException if format adapter error occurs
+     */
+    protected SimulatorPojo createSimulatorPojo(final String o)
+        throws FormatAdapterException
     {
         SimulatorPojo pojo = new StructuredSimulatorPojo();
 
@@ -104,50 +119,55 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
                 // --- If the JSON content is an array, build the root Map a little different
                 Map<String, Object> mapFromJsonList = new HashMap<String, Object>();
                 mapFromJsonList.put(
-                        getParamValue(PARAM_JSON_ARRAY_CONTENT),
-                        getListFomJsonArray(new JSONArray(o))
+                    getParamValue(PARAM_JSON_ARRAY_CONTENT),
+                    getListFomJsonArray(new JSONArray(o))
                 );
 
                 pojo.getRoot().put(
-                        getParamValue(PARAM_JSON_CONTENT),
-                        mapFromJsonList
+                    getParamValue(PARAM_JSON_CONTENT),
+                    mapFromJsonList
                 );
             }
             else
             {
                 pojo.getRoot().put(
-                        getParamValue(PARAM_JSON_CONTENT),
-                        getMapFromJsonObj(new JSONObject(o)));
+                    getParamValue(PARAM_JSON_CONTENT),
+                    getMapFromJsonObj(new JSONObject(o)));
             }
         }
         catch (JSONException je)
         {
             String errorMsg =
-                    "Unexpected error trying to parse String into JSON: " + je.getMessage();
+                "Unexpected error trying to parse String into JSON: " + je.getMessage();
             logger.error(errorMsg, je);
             throw new FormatAdapterException(errorMsg, je);
         }
         return pojo;
     }
 
-
-    protected String getString(SimulatorPojo simulatorPojo)
-            throws FormatAdapterException
+    /**
+     * Gets String value from simulator pojo
+     *
+     * @param simulatorPojo the simulator pojo
+     * @return the string value
+     * @throws FormatAdapterException if a format adapter error occurs
+     */
+    protected String getString(final SimulatorPojo simulatorPojo) throws FormatAdapterException
     {
         // --- The SimulatorPojo for JSONAdapter should contain only one key in its root
         if (simulatorPojo.getRoot().isEmpty() || simulatorPojo.getRoot().size() > 1)
         {
             logger.error("  Incorrect SimulatorPojo's root size. Expecting 1, but found"
-                    + simulatorPojo.getRoot().size());
+                + simulatorPojo.getRoot().size());
             throw new
-                    FormatAdapterException(
-                    "Incorrect SimulatorPojo's root size. Expecting 1, but found"
-                            + simulatorPojo.getRoot().size());
+                FormatAdapterException(
+                "Incorrect SimulatorPojo's root size. Expecting 1, but found"
+                    + simulatorPojo.getRoot().size());
         }
 
         // --- The pojo's root should only contain an entry with key PARAM_JSON_CONTENT
         Map<String, Object> map =
-                (Map<String, Object>) simulatorPojo.getRoot().get(getParamValue(PARAM_JSON_CONTENT));
+            (Map<String, Object>) simulatorPojo.getRoot().get(getParamValue(PARAM_JSON_CONTENT));
 
         String jsonString1;
 
@@ -170,7 +190,15 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
         return jsonString;
     }
 
-    private Map<String, Object> getMapFromJsonObj(JSONObject json) throws FormatAdapterException
+    /**
+     * Gets map from json object
+     *
+     * @param json the json object
+     * @return the map
+     * @throws FormatAdapterException if a format adapter error occurs
+     */
+    private Map<String, Object> getMapFromJsonObj(final JSONObject json)
+        throws FormatAdapterException
     {
         if (json == null)
         {
@@ -212,7 +240,7 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
             catch (JSONException je)
             {
                 String errorMsg =
-                        "Unexpected error trying to get value JSON object: " + je.getMessage();
+                    "Unexpected error trying to get value JSON object: " + je.getMessage();
                 logger.error(errorMsg, je);
                 throw new FormatAdapterException(errorMsg, je);
             }
@@ -222,7 +250,14 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
         return map;
     }
 
-    private List getListFomJsonArray(JSONArray array) throws FormatAdapterException
+    /**
+     * Gets list from Json Array
+     *
+     * @param array - the json array
+     * @return list
+     * @throws FormatAdapterException if a format adapter problem occurs
+     */
+    private List getListFomJsonArray(final JSONArray array) throws FormatAdapterException
     {
         if (array == null)
         {
@@ -261,7 +296,7 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
             catch (JSONException je)
             {
                 String errorMsg =
-                        "Unexpected error trying to get value JSON object: " + je.getMessage();
+                    "Unexpected error trying to get value JSON object: " + je.getMessage();
                 logger.error(errorMsg, je);
                 throw new FormatAdapterException(errorMsg, je);
             }
@@ -270,6 +305,8 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
     }
 
     /**
+     * Validates parameters
+     *
      * @throws FormatAdapterException If a required parameter is missing or not properly formatted
      * @inheritDoc
      */
@@ -289,10 +326,15 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
         if (this.isArray && getParamValue(PARAM_IS_ARRAY) == null)
         {
             throw new FormatAdapterException(
-                    "JSON Array Content parameter is required if JSON content is an array");
+                "JSON Array Content parameter is required if JSON content is an array");
         }
     }
 
+    /**
+     * Gets parameters list
+     *
+     * @return list of parameters
+     */
     public List<List> getParametersList()
     {
         return getParametersDefinitionsAsList(parametersList);

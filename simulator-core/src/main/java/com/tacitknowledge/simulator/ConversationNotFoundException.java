@@ -9,6 +9,7 @@ public class ConversationNotFoundException extends Exception
 {
     /**
      * Constructor for the ConversationNotFoundException class
+     *
      * @param s exception message
      */
     public ConversationNotFoundException(String s)

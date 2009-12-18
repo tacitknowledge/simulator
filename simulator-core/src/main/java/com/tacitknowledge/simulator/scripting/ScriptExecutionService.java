@@ -15,7 +15,9 @@ import java.util.Map.Entry;
  */
 public class ScriptExecutionService
 {
-    /** The name of the scripting language to use */
+    /**
+     * The name of the scripting language to use
+     */
     private String language = null;
 
     /**
@@ -26,14 +28,10 @@ public class ScriptExecutionService
     /**
      * Executes the specified script.
      *
-     * @param script
-     *            the script text to execute
-     * @param scriptName
-     *            the name of the script input
-     * @param globals
-     *            a map of objects to expose as global variables in the script
-     * @throws ScriptException
-     *             if an unexpected error occurs
+     * @param script     the script text to execute
+     * @param scriptName the name of the script input
+     * @param globals    a map of objects to expose as global variables in the script
+     * @throws ScriptException if an unexpected error occurs
      */
     public void exec(String script, String scriptName, Map globals) throws ScriptException
     {
@@ -50,15 +48,11 @@ public class ScriptExecutionService
     /**
      * Evaluates the specified script.
      *
-     * @param script
-     *            the script text to execute
-     * @param scriptName
-     *            the name of the script input
-     * @param globals
-     *            a map of objects to expose as global variables in the script
+     * @param script     the script text to execute
+     * @param scriptName the name of the script input
+     * @param globals    a map of objects to expose as global variables in the script
      * @return the result of the script evaluation
-     * @throws ScriptException
-     *             if an unexpected error occurs
+     * @throws ScriptException if an unexpected error occurs
      */
     public Object eval(String script, String scriptName, Map globals) throws ScriptException
     {
@@ -78,22 +72,19 @@ public class ScriptExecutionService
      * define methods and command that should be made available to the user script). This
      * implementation of this method in <code>ScriptExecutionService</code> does nothing.
      *
-     * @param manager
-     *            the newly created BSFManager
+     * @param manager the newly created BSFManager
      */
     protected void configureBSFManager(BSFManager manager)
     {
-    // Nothing to do in the base class
+        // Nothing to do in the base class
     }
 
     /**
      * Returns a new, fully initialized <code>BSFManager</code> instance.
      *
-     * @param globals
-     *            a map of objects to expose as global variables in the script
+     * @param globals a map of objects to expose as global variables in the script
      * @return a new, fully initialized <code>BSFManager</code> instance
-     * @throws ScriptException
-     *             if an unexpected error occurs
+     * @throws ScriptException if an unexpected error occurs
      */
     private BSFManager initBSFManager(Map globals) throws ScriptException
     {
@@ -109,15 +100,12 @@ public class ScriptExecutionService
     /**
      * Binds each object in the given map to the script engine's runtime state.
      *
-     * @param manager
-     *            the BSFManager instance
-     * @param beans
-     *            the map of bean names-to-beans
-     * @throws ScriptException
-     *             if there was a problem adding a bean to the interpreter
+     * @param manager the BSFManager instance
+     * @param beans   the map of bean names-to-beans
+     * @throws ScriptException if there was a problem adding a bean to the interpreter
      */
     private void bindObjectToEngineRuntime(BSFManager manager,
-            Map<String, Object> beans) throws ScriptException
+                                           Map<String, Object> beans) throws ScriptException
     {
         if (beans == null)
         {
@@ -132,7 +120,7 @@ public class ScriptExecutionService
             if (varValue != null)
             {
                 logger.debug("Registering bean '" + varName + "' [" + varValue.getClass().getName()
-                        + "]");
+                    + "]");
                 try
                 {
                     manager.declareBean(varName, varValue, varValue.getClass());
@@ -140,21 +128,22 @@ public class ScriptExecutionService
                 catch (BSFException e)
                 {
                     throw new ScriptException("Error binding variable '" + varName + "': "
-                            + e.getMessage(), e);
+                        + e.getMessage(), e);
                 }
             }
         }
     }
 
-    /** @return Returns the language. */
+    /**
+     * @return Returns the language.
+     */
     public String getLanguage()
     {
         return language;
     }
 
     /**
-     * @param language
-     *            The language to set.
+     * @param language The language to set.
      */
     public void setLanguage(String language)
     {
@@ -162,11 +151,12 @@ public class ScriptExecutionService
     }
 
 
-    public static String[][] getAvailableLanguages(){
+    public static String[][] getAvailableLanguages()
+    {
         //todo automate this
         String[][] languages = {
-                {"javascript", "Java Script"},
-                {"ruby", "JRuby"}
+            {"javascript", "Java Script"},
+            {"ruby", "JRuby"}
         };
         return languages;
     }

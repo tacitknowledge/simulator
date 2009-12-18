@@ -20,35 +20,49 @@ public class RubyObjectMapper implements ObjectMapper
     public Map<String, Object> getMapFromObject(Object o) throws ObjectMapperException
     {
         Map<String, Object> map = new HashMap<String, Object>();
-        if (o instanceof RubyHash) {
+        if (o instanceof RubyHash)
+        {
             RubyHash rubyHash = (RubyHash) o;
             List<String> variableNames = rubyHash.getVariableNameList();
 
 
-            for (String fieldName : variableNames) {
+            for (String fieldName : variableNames)
+            {
 
                 Object fieldValue = rubyHash.get(fieldName);
                 Object mapValue;
-                if (fieldValue instanceof String || fieldValue instanceof Number) {
+                if (fieldValue instanceof String || fieldValue instanceof Number)
+                {
                     // --- If it's a String or a Number, use as it is
                     mapValue = fieldValue;
-                } else {
-                    if (fieldValue instanceof RubyArray) {
+                }
+                else
+                {
+                    if (fieldValue instanceof RubyArray)
+                    {
                         mapValue = getListFromArray((RubyArray) fieldValue);
-                    } else {
+                    }
+                    else
+                    {
                         mapValue = getMapFromObject(fieldValue);
                     }
                 }
                 map.put(fieldName, mapValue);
             }
-        } else if (o instanceof RubyArray) {
+        }
+        else if (o instanceof RubyArray)
+        {
             // --- If it's an Array, get a List from it
             List<Object> fromArray = getListFromArray((RubyArray) o);
             map.put(null, fromArray);
 
-        } else if(o instanceof RubyNil) {
+        }
+        else if (o instanceof RubyNil)
+        {
             //todo what to do?
-        }else {
+        }
+        else
+        {
             javaMapper.getMapFromObject(o);
         }
         return map;
@@ -56,14 +70,18 @@ public class RubyObjectMapper implements ObjectMapper
 
     private List<Object> getListFromArray(RubyArray rubyArray) throws ObjectMapperException
     {
-         List<Object> list = new ArrayList<Object>();
+        List<Object> list = new ArrayList<Object>();
 
-        for (int i = 0; i < rubyArray.getLength(); i++) {
+        for (int i = 0; i < rubyArray.getLength(); i++)
+        {
             Object object = rubyArray.get(i);
-            if (object instanceof String || object instanceof Number) {
+            if (object instanceof String || object instanceof Number)
+            {
                 list.add(object);
-            }else{
-              list.add(getMapFromObject(object));
+            }
+            else
+            {
+                list.add(getMapFromObject(object));
             }
 
         }

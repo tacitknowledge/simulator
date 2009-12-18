@@ -34,7 +34,7 @@ public class JsonAdapterTest extends TestCase
             adapter.generateBeans(TestHelper.JSON_DATA);
             fail("JSON Adapter should throw exception if the required parameters are not provided.");
         }
-        catch(FormatAdapterException fae)
+        catch (FormatAdapterException fae)
         {
             // --- This is ok!
         }
@@ -103,14 +103,14 @@ public class JsonAdapterTest extends TestCase
             assertEquals(original.getString("lastName"), generated.getString("lastName"));
 
             assertEquals(
-                    original.getJSONArray("phoneNumbers").getJSONArray(0).getString(1),
-                    generated.getJSONArray("phoneNumbers").getJSONArray(0).getString(1));
+                original.getJSONArray("phoneNumbers").getJSONArray(0).getString(1),
+                generated.getJSONArray("phoneNumbers").getJSONArray(0).getString(1));
 
             JSONObject originalAddress = original.getJSONObject("address");
             JSONObject generatedAddress = generated.getJSONObject("address");
             assertEquals(
-                    originalAddress.getString("streetAddress"),
-                    generatedAddress.getString("streetAddress"));
+                originalAddress.getString("streetAddress"),
+                generatedAddress.getString("streetAddress"));
         }
         catch (FormatAdapterException e)
         {

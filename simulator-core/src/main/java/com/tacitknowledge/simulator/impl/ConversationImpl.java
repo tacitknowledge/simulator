@@ -60,15 +60,11 @@ public class ConversationImpl implements Conversation
     private Map<Integer, ConversationScenario> scenarios = new HashMap<Integer, ConversationScenario>();
 
     /**
-     * @param id
-     *            Conversation ID
+     * @param id                Conversation ID
      * @param name
-     * @param inboundTransport
- *            Wrapper for inbound transport configuration
-     * @param outboundTransport
-*            Wrapper for outbound transport configuration
-     * @param inboundAdapter
-*            Wrapper for inbound format adapter
+     * @param inboundTransport  Wrapper for inbound transport configuration
+     * @param outboundTransport Wrapper for outbound transport configuration
+     * @param inboundAdapter    Wrapper for inbound format adapter
      * @param outboundAdapter
      * @param defaultResponse
      */
@@ -96,17 +92,19 @@ public class ConversationImpl implements Conversation
     {
 
         ConversationScenario scenario = scenarios.get(scenarioId);
-        if (scenario==null)
+        if (scenario == null)
         {
 
             scenario = new ConversationScenarioImpl(scenarioId, language, criteria, transformation);
             scenarios.put(scenarioId, scenario);
             logger.info("Added new conversation scenario"
-                    + " to the conversation with id : " + this.id);
-        }else{
+                + " to the conversation with id : " + this.id);
+        }
+        else
+        {
             scenario.setScripts(criteria, transformation, language);
-            logger.info("Updated conversation scenario with id "+scenarioId
-                    + " to the conversation with id : " + this.id);
+            logger.info("Updated conversation scenario with id " + scenarioId
+                + " to the conversation with id : " + this.id);
         }
 
         return scenario;
@@ -152,7 +150,8 @@ public class ConversationImpl implements Conversation
         return defaultResponse;
     }
 
-    public int getId(){
+    public int getId()
+    {
         return id;
     }
 
@@ -166,6 +165,7 @@ public class ConversationImpl implements Conversation
 
     /**
      * Determines if the current conversation object is equal to the one supplied as parameter.
+     *
      * @param o Conversation object to be compared with current one.
      * @return true if the objects are considered equal, false otherwise
      */
@@ -212,6 +212,7 @@ public class ConversationImpl implements Conversation
 
     /**
      * Override for the hashcode.
+     *
      * @return hashcode
      */
     public int hashCode()
@@ -228,13 +229,13 @@ public class ConversationImpl implements Conversation
     public String toString()
     {
         return "ConversationImpl{" +
-                "id=" + id +
-                ", inboundTransport=" + inboundTransport +
-                ", outboundTransport=" + outboundTransport +
-                ", inboundAdapter=" + inboundAdapter +
-                ", outboundAdapter=" + outboundAdapter +
-                ", defaultResponse='" + defaultResponse + '\'' +
-                ", scenarios=" + scenarios +
-                '}';
+            "id=" + id +
+            ", inboundTransport=" + inboundTransport +
+            ", outboundTransport=" + outboundTransport +
+            ", inboundAdapter=" + inboundAdapter +
+            ", outboundAdapter=" + outboundAdapter +
+            ", defaultResponse='" + defaultResponse + '\'' +
+            ", scenarios=" + scenarios +
+            '}';
     }
 }

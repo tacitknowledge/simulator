@@ -9,15 +9,18 @@ public class SimulatorException extends Exception
 {
     /**
      * Constructor for the SimulatorException class
+     *
      * @param s exception message
      */
     public SimulatorException(String s)
     {
         super(s);
     }
+
     /**
      * Constructor for the SimulatorException class
-     * @param s exception message
+     *
+     * @param s         exception message
      * @param throwable the original exception
      */
     public SimulatorException(String s, Throwable throwable)

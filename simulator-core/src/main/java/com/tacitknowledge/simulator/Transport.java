@@ -21,6 +21,7 @@ public interface Transport
      * - 1 : Parameter description. Useful for GUI rendition
      * - 2 : Parameter type (string, date, boolean). Useful for GUI rendition.
      * - 3 : Required or Optional parameter. Useful for GUI validation.
+     *
      * @return List of Parameters for the implementing Transport.
      */
     List<List> getParametersList();
@@ -28,6 +29,7 @@ public interface Transport
     /**
      * Allows to set Transport parameters.
      * Each implementing Transport must define its parameters.
+     *
      * @param parameters The Transport parameters
      */
     void setParameters(Map<String, String> parameters);

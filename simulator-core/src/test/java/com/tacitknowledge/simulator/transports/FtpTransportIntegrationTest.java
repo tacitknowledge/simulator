@@ -35,7 +35,8 @@ import java.util.Map;
  *
  * @author Nikita Belenkiy (nbelenkiy@tacitknowledge.com)
  */
-public class FtpTransportIntegrationTest extends CamelTestSupport {
+public class FtpTransportIntegrationTest extends CamelTestSupport
+{
     private FtpServer server;
     private FtpTransport ftpTransport;
     private MockOutTransport out = new MockOutTransport();
@@ -56,7 +57,8 @@ public class FtpTransportIntegrationTest extends CamelTestSupport {
 
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws Exception
+    {
         super.setUp();
         new File("./src/test/resources/ftp/admin").mkdirs();
         new File("./src/test/resources/ftp/anonymous").mkdirs();
@@ -81,34 +83,38 @@ public class FtpTransportIntegrationTest extends CamelTestSupport {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() throws Exception
+    {
         super.tearDown();
         server.stop();
     }
 
     @Test
-    public void testSimple() throws FtpException, SimulatorException, InterruptedException, ConversationNotFoundException {
+    public void testSimple() throws FtpException, SimulatorException, InterruptedException, ConversationNotFoundException
+    {
         ConversationManager manager = new ConversationManagerImpl(routeManager);
 
         Conversation conversation = manager.createConversation(1, "testSimple", ftpTransport, out, new XmlAdapter(), new XmlAdapter(), "");
-        conversation.addOrUpdateScenario(1,"javascript","true","employees.employee[0].name='John12345';employees");
+        conversation.addOrUpdateScenario(1, "javascript", "true", "employees.employee[0].name='John12345';employees");
         Assert.assertNotNull(conversation);
         manager.activate(1);
         Thread.sleep(10000);
         List<Exchange> list = resultEndpoint.getReceivedExchanges();
-         assertTrue(list.get(0).getIn().getBody().toString().contains("John12345"));
+        assertTrue(list.get(0).getIn().getBody().toString().contains("John12345"));
     }
+
     /**
-        * Overriding the route builder as suggested by Camel testing
-        * techniques.
-        *
-        * @return a route builder.
-        * @throws Exception in case of an error.
-        */
-       @Override
-       protected RouteBuilder createRouteBuilder() throws Exception {
+     * Overriding the route builder as suggested by Camel testing
+     * techniques.
+     *
+     * @return a route builder.
+     * @throws Exception in case of an error.
+     */
+    @Override
+    protected RouteBuilder createRouteBuilder() throws Exception
+    {
         routeManager = new RouteManagerImpl();
-           return routeManager;
-       }
+        return routeManager;
+    }
 
 }

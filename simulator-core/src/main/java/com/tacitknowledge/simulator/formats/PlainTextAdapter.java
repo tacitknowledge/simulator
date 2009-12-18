@@ -41,17 +41,19 @@ public class PlainTextAdapter extends BaseAdapter
     }
 
     /**
-     *  empty method.
+     * empty method.
+     *
      * @throws FormatAdapterException
      */
     @Override
-    void validateParameters() throws FormatAdapterException {
+    void validateParameters() throws FormatAdapterException
+    {
 
     }
 
     public List<List> getParametersList()
     {
         return getParametersDefinitionsAsList(
-                new ArrayList<ParameterDefinitionBuilder.ParameterDefinition>());
+            new ArrayList<ParameterDefinitionBuilder.ParameterDefinition>());
     }
 }

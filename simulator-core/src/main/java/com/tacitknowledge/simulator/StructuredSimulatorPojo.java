@@ -6,6 +6,7 @@ import java.util.Map;
 
 /**
  * The data transfer object used in simulations.
+ *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
 public class StructuredSimulatorPojo implements SimulatorPojo
@@ -36,6 +37,7 @@ public class StructuredSimulatorPojo implements SimulatorPojo
 
     /**
      * Setter for @see #root
+     *
      * @param root The structured data in a Map
      */
     public void setRoot(Map<String, Object> root)

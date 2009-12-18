@@ -15,11 +15,15 @@ import java.util.Map;
  */
 public class ScenarioExecutionWrapper
 {
-    /** inAdapter adapter which will take the information from the exchange
-    and adapt it to SimulatorPojo for scenario execution. **/
+    /**
+     * inAdapter adapter which will take the information from the exchange
+     * and adapt it to SimulatorPojo for scenario execution. *
+     */
     private Adapter inAdapter;
-    /** outAdapter adapter which will take the information from the SimulatorPojo
-    and adapt it to the desired format. **/
+    /**
+     * outAdapter adapter which will take the information from the SimulatorPojo
+     * and adapt it to the desired format. *
+     */
     private Adapter outAdapter;
 
     /**
@@ -31,13 +35,13 @@ public class ScenarioExecutionWrapper
      * Logger for the ScenarioExecutionWrapper class.
      */
     private static Logger logger
-            = Logger.getLogger(ScenarioExecutionWrapper.class);
+        = Logger.getLogger(ScenarioExecutionWrapper.class);
 
     /**
      * Constructor for the ScenarioExecutionWrapper.
      *
-     * @param scenarios list of the scenarios to run.
-     * @param inAdapter @see #inAdapter
+     * @param scenarios  list of the scenarios to run.
+     * @param inAdapter  @see #inAdapter
      * @param outAdapter @see #outAdapter
      */
     public ScenarioExecutionWrapper(Collection<ConversationScenario> scenarios,
@@ -57,8 +61,8 @@ public class ScenarioExecutionWrapper
      * all of the provided scenarios and return the processed result of the first matched scenario.
      *
      * @param body body.getIn().getBody() contains data from inbound adapter
-     * @throws Exception in case of error.
      * @return
+     * @throws Exception in case of error.
      */
     public String process(String body) throws Exception
     {
@@ -67,17 +71,19 @@ public class ScenarioExecutionWrapper
          */
         Map<String, Object> scriptExecutionBeans = inAdapter.generateBeans(body);
 
-        Object result=null;
+        Object result = null;
         //TODO add case when matching scenario is not found
         // here we are looking for first matching scenario and ignore all other scenarios
         for (ConversationScenario scenario : scenarios)
         {
-            synchronized (scenario) {
+            synchronized (scenario)
+            {
                 logger.info("Evaluating scenario : " + scenario.toString());
                 boolean active = scenario.isActive();
                 boolean matchesCondition = scenario.matchesCondition(scriptExecutionBeans);
                 logger.info("active: " + active + " matches condition: " + matchesCondition);
-                if (active && matchesCondition) {
+                if (active && matchesCondition)
+                {
                     logger.info("Executing the transformation script.");
                     result = scenario.executeTransformation(scriptExecutionBeans);
                     break;

@@ -15,7 +15,8 @@ import java.util.Map;
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class ConversationScenarioImpl implements ConversationScenario {
+public class ConversationScenarioImpl implements ConversationScenario
+{
     /**
      * Logger for this class.
      */
@@ -61,7 +62,8 @@ public class ConversationScenarioImpl implements ConversationScenario {
      * @param transformationScript the transformation script for the scenario.
      */
     public ConversationScenarioImpl(int scenarioId, String scriptLanguage, String criteriaScript,
-                                    String transformationScript) {
+                                    String transformationScript)
+    {
         this.scenarioId = scenarioId;
         this.scriptLanguage = scriptLanguage;
         this.criteriaScript = criteriaScript;
@@ -71,18 +73,20 @@ public class ConversationScenarioImpl implements ConversationScenario {
         this.execServ.setLanguage(scriptLanguage);
 
     }
-    
+
     /**
      * {@inheritDoc}
      */
-    public int getScenarioId() {
+    public int getScenarioId()
+    {
         return scenarioId;
     }
 
     /**
      * {@inheritDoc}
      */
-    public synchronized void setScripts(String criteriaScript, String transformationScript, String language) {
+    public synchronized void setScripts(String criteriaScript, String transformationScript, String language)
+    {
         this.criteriaScript = criteriaScript;
         this.transformationScript = transformationScript;
         this.scriptLanguage = language;
@@ -91,24 +95,27 @@ public class ConversationScenarioImpl implements ConversationScenario {
     /**
      * {@inheritDoc}
      */
-    public void setActive(boolean active) {
+    public void setActive(boolean active)
+    {
         this.active = active;
     }
 
     /**
      * {@inheritDoc}
      */
-    public boolean isActive() {
+    public boolean isActive()
+    {
         return active;
     }
 
     /**
      * {@inheritDoc}
      *
-     * @throws ScriptException
      * @param scriptExecutionBeans
+     * @throws ScriptException
      */
-    public Object executeTransformation(Map<String, Object> scriptExecutionBeans) throws ScriptException, SimulatorException {
+    public Object executeTransformation(Map<String, Object> scriptExecutionBeans) throws ScriptException, SimulatorException
+    {
         return execServ.eval(transformationScript, "Transformation Script", scriptExecutionBeans);
     }
 
@@ -116,18 +123,22 @@ public class ConversationScenarioImpl implements ConversationScenario {
     /**
      * {@inheritDoc}
      *
+     * @param scriptExecutionBeans
      * @throws ScriptException
      * @throws NotFoundException
      * @throws CannotCompileException
-     * @param scriptExecutionBeans
      */
-    public boolean matchesCondition(Map<String, Object> scriptExecutionBeans) throws ScriptException {
+    public boolean matchesCondition(Map<String, Object> scriptExecutionBeans) throws ScriptException
+    {
 
         Object result = execServ.eval(criteriaScript, "Criteria Script", scriptExecutionBeans);
 
-        if (result != null && result instanceof Boolean) {
+        if (result != null && result instanceof Boolean)
+        {
             return (Boolean) result;
-        } else {
+        }
+        else
+        {
             return false;
         }
     }
@@ -139,26 +150,33 @@ public class ConversationScenarioImpl implements ConversationScenario {
      * @param o Conversation scenario object to be compared with current one.
      * @return true if the objects are considered equal, false otherwise
      */
-    public boolean equals(Object o) {
-        if (this == o) {
+    public boolean equals(Object o)
+    {
+        if (this == o)
+        {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (o == null || getClass() != o.getClass())
+        {
             return false;
         }
 
         ConversationScenarioImpl that = (ConversationScenarioImpl) o;
 
-        if (active != that.active) {
+        if (active != that.active)
+        {
             return false;
         }
-        if (!criteriaScript.equals(that.criteriaScript)) {
+        if (!criteriaScript.equals(that.criteriaScript))
+        {
             return false;
         }
-        if (!scriptLanguage.equals(that.scriptLanguage)) {
+        if (!scriptLanguage.equals(that.scriptLanguage))
+        {
             return false;
         }
-        if (!transformationScript.equals(that.transformationScript)) {
+        if (!transformationScript.equals(that.transformationScript))
+        {
             return false;
         }
 
@@ -168,21 +186,24 @@ public class ConversationScenarioImpl implements ConversationScenario {
     /**
      * {@inheritDoc}
      */
-    public String getScriptLanguage() {
+    public String getScriptLanguage()
+    {
         return scriptLanguage;
     }
 
     /**
      * {@inheritDoc}
      */
-    public String getCriteriaScript() {
+    public String getCriteriaScript()
+    {
         return criteriaScript;
     }
 
     /**
      * {@inheritDoc}
      */
-    public String getTransformationScript() {
+    public String getTransformationScript()
+    {
         return transformationScript;
     }
 
@@ -191,14 +212,18 @@ public class ConversationScenarioImpl implements ConversationScenario {
      *
      * @return hashcode
      */
-    public int hashCode() {
+    public int hashCode()
+    {
         int result = scriptLanguage.hashCode();
         result = HASH_CODE_PRIME * result + criteriaScript.hashCode();
         result = HASH_CODE_PRIME * result + transformationScript.hashCode();
 
-        if (active) {
+        if (active)
+        {
             result = HASH_CODE_PRIME * result + 1;
-        } else {
+        }
+        else
+        {
             result = HASH_CODE_PRIME * result + 0;
         }
 
@@ -209,12 +234,12 @@ public class ConversationScenarioImpl implements ConversationScenario {
     public String toString()
     {
         return "ConversationScenarioImpl{" +
-                "scenarioId=" + scenarioId +
-                ", scriptLanguage='" + scriptLanguage + '\'' +
-                ", criteriaScript='" + criteriaScript + '\'' +
-                ", transformationScript='" + transformationScript + '\'' +
-                ", execServ=" + execServ +
-                ", active=" + active +
-                '}';
+            "scenarioId=" + scenarioId +
+            ", scriptLanguage='" + scriptLanguage + '\'' +
+            ", criteriaScript='" + criteriaScript + '\'' +
+            ", transformationScript='" + transformationScript + '\'' +
+            ", execServ=" + execServ +
+            ", active=" + active +
+            '}';
     }
 }

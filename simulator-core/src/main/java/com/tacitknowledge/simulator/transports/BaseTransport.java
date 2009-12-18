@@ -104,11 +104,12 @@ public abstract class BaseTransport implements Transport
 
     /**
      * Returns a List of ParameterDefinitions in their List representation
+     *
      * @param parametersList The parameter definitions list
      * @return The list of lists
      */
     protected List<List> getParametersDefinitionsAsList(
-            List<ParameterDefinitionBuilder.ParameterDefinition> parametersList)
+        List<ParameterDefinitionBuilder.ParameterDefinition> parametersList)
     {
         List<List> list = new ArrayList<List>();
         for (ParameterDefinitionBuilder.ParameterDefinition param : parametersList)
@@ -117,13 +118,13 @@ public abstract class BaseTransport implements Transport
         }
         return list;
     }
-    
+
     @Override
     public String toString()
     {
         return "BaseTransport{" +
-                "parameters=" + parameters +
-                ", type='" + type + '\'' +
-                '}';
+            "parameters=" + parameters +
+            ", type='" + type + '\'' +
+            '}';
     }
 }

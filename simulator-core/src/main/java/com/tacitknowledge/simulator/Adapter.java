@@ -23,6 +23,7 @@ public interface Adapter<E>
      * - 1 : Parameter description. Useful for GUI rendition
      * - 2 : Parameter type. Useful for GUI rendition.
      * - 3 : Required or Optional parameter. Useful for GUI validation.
+     *
      * @return List of Paramaters for the implementing Adapter.
      */
     List<List> getParametersList();
@@ -30,6 +31,7 @@ public interface Adapter<E>
     /**
      * Allows to set Adapter parameters.
      * Each implementing Adapter must defined its parameters.
+     *
      * @param parameters The Adapter parameters
      */
     void setParameters(Map<String, String> parameters);
@@ -37,20 +39,22 @@ public interface Adapter<E>
     /**
      * Adapts the data from the inbound transport format to the SimulatorPojo object graph.
      * Used in the simulation.
+     *
      * @param body
      * @return a SimulatorPojo object constructed based on the inboud transport data.
      * @throws FormatAdapterException in case the incoming data object is not in correct format
-     *      or missing required parameters. Also @see #BaseAdapter
+     *                                or missing required parameters. Also @see #BaseAdapter
      */
     Map<String, Object> generateBeans(String body) throws FormatAdapterException;
 
     /**
      * Adapts the data from the simulation result SimulatorPojo into the desired format used
      * for outbound transport.
+     *
      * @param scriptExecutionResult
      * @return generic data object.
      * @throws FormatAdapterException If the pojo object is not properly structured
-     *      , an error occurs during convertion.
+     *                                , an error occurs during convertion.
      */
     String adaptTo(Object scriptExecutionResult) throws FormatAdapterException;
 }

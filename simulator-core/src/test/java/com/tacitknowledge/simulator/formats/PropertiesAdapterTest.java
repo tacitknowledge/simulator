@@ -41,7 +41,7 @@ public class PropertiesAdapterTest extends TestCase
             assertEquals("New York", emp_address.get("city"));
             assertEquals("NY", emp_address.get("state"));
 
-        } catch(FormatAdapterException fae)
+        } catch (FormatAdapterException fae)
         {
             fae.printStackTrace();
             fail("Not expecting exception!");

@@ -3,7 +3,6 @@ package com.tacitknowledge.simulator.transports;
 import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.TransportException;
 import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
-
 import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.name;
 import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
 
@@ -59,58 +58,58 @@ public class FtpTransport extends FileTransport implements Transport
         parameters().
             add(
                 name(PARAM_HOST).
-                label("Host Name").
-                required()
+                    label("Host Name").
+                    required()
             ).
             add(
                 name(PARAM_SFTP).
-                label("Is this an SFTP transport? (defaults to FTP)").
-                type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN)
+                    label("Is this an SFTP transport? (defaults to FTP)").
+                    type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN)
             ).
             add(
                 name(PARAM_PORT).
-                label("Port (defaults to 21 for FTP and 22 for SFTP if not provided)")
+                    label("Port (defaults to 21 for FTP and 22 for SFTP if not provided)")
             ).
             add(
                 name(PARAM_DIRECTORY_NAME).
-                label("Directory Name")
+                    label("Directory Name")
             ).
             add(
                 name(PARAM_USERNAME).
-                label("User Name")
+                    label("User Name")
             ).
             add(
                 name(PARAM_PASSWORD).
-                label("Password")
+                    label("Password")
             ).
             add(
                 name(PARAM_FILE_NAME).
-                label("File Name")
+                    label("File Name")
             ).
             add(
                 name(PARAM_FILE_EXTENSION).
-                label("File Extension the transport will only poll from " +
+                    label("File Extension the transport will only poll from " +
                     "(without dot, inbound only)")
             ).
             add(
                 name(PARAM_REGEX_FILTER).
-                label("Regex filter " +
-                            "(will only be applied if neither " +
-                            "file name nor extension filters are provided, inbound only)")
+                    label("Regex filter " +
+                    "(will only be applied if neither " +
+                    "file name nor extension filters are provided, inbound only)")
             ).
             add(
                 name(PARAM_DELETE_FILE).
-                label("Delete file after simulation? (Inbound only)").
-                type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN)
+                    label("Delete file after simulation? (Inbound only)").
+                    type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN)
             ).
             add(
                 name(PARAM_POLLING_INTERVAL).
-                label("Milliseconds before the next poll")
+                    label("Milliseconds before the next poll")
             ).
             add(
                 name(PARAM_BINARY).
-                label("Is file transfer binary? (defaults to NO)").
-                type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN)
+                    label("Is file transfer binary? (defaults to NO)").
+                    type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN)
             );
 
     /**
@@ -210,7 +209,7 @@ public class FtpTransport extends FileTransport implements Transport
             options.append("binary=true").append(AMP);
         }
 
-                // --- fileName, fileExtension & Regex filter should be mutually exclusive options.
+        // --- fileName, fileExtension & Regex filter should be mutually exclusive options.
         // fileName takes priority, Regex filter having the lowest.
         if (getParamValue(PARAM_FILE_NAME) != null)
         {
@@ -220,10 +219,10 @@ public class FtpTransport extends FileTransport implements Transport
         {
             // --- File extension is used as a RegEx filter for transport routing
             options.append("include=^.*\\.(").
-                    append(getParamValue(PARAM_FILE_EXTENSION).toLowerCase()).
-                    append("|").
-                    append(getParamValue(PARAM_FILE_EXTENSION).toUpperCase()).
-                    append(")$");
+                append(getParamValue(PARAM_FILE_EXTENSION).toLowerCase()).
+                append("|").
+                append(getParamValue(PARAM_FILE_EXTENSION).toUpperCase()).
+                append(")$");
         }
         else if (getParamValue(PARAM_REGEX_FILTER) != null)
         {
@@ -252,8 +251,8 @@ public class FtpTransport extends FileTransport implements Transport
     }
 
     /**
-     * @inheritDoc
      * @throws TransportException If any required parameter is missing or incorrect
+     * @inheritDoc
      */
     @Override
     void validateParameters() throws TransportException

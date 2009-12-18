@@ -1,6 +1,10 @@
 package com.tacitknowledge.simulator;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,44 +21,44 @@ public abstract class TestHelper
      * Simple XML data for testing
      */
     public final static String XML_DATA =
-            "<employees>" +
-                    " <employee>" +
-                    "   <name>John</name>" +
-                    "   <title>Manager</title>" +
-                    " </employee>" +
-                    " <employee>" +
-                    "   <name>Sara</name>" +
-                    "   <title>Clerk</title>" +
-                    " </employee>" +
-                    " <reportDate>2009-11-05</reportDate>" +
-                    " <roles>" +
-                    "   <role>Clerk</role>" +
-                    "   <role>Manager</role>" +
-                    "   <role>Accountant</role>" +
-                    " </roles>" +
-                    "</employees>";
+        "<employees>" +
+            " <employee>" +
+            "   <name>John</name>" +
+            "   <title>Manager</title>" +
+            " </employee>" +
+            " <employee>" +
+            "   <name>Sara</name>" +
+            "   <title>Clerk</title>" +
+            " </employee>" +
+            " <reportDate>2009-11-05</reportDate>" +
+            " <roles>" +
+            "   <role>Clerk</role>" +
+            "   <role>Manager</role>" +
+            "   <role>Accountant</role>" +
+            " </roles>" +
+            "</employees>";
 
     public final static String JSON_DATA =
-            "{" + 
-                "'firstName': 'John'," +
-                "'lastName': 'Smith'," +
-                "'address': {" +
-                    "'streetAddress': '21 2nd Street'," +
-                    "'city': 'New York'," +
-                    "'state': 'NY'," +
-                    "'postalCode': 10021" +
-                "}," +
-                "'phoneNumbers': [" +
-                    "['home', '212 732-1234']," +
-                    "['mobile', '646 123-4567']" +
-                "]" +
+        "{" +
+            "'firstName': 'John'," +
+            "'lastName': 'Smith'," +
+            "'address': {" +
+            "'streetAddress': '21 2nd Street'," +
+            "'city': 'New York'," +
+            "'state': 'NY'," +
+            "'postalCode': 10021" +
+            "}," +
+            "'phoneNumbers': [" +
+            "['home', '212 732-1234']," +
+            "['mobile', '646 123-4567']" +
+            "]" +
             "}";
 
     public final static String JSON_DATA_ARRAY =
-            "[" +
-                "[1,2,3,4,5]," +
-                "['a', 'b', 'c', 'd', 'e']," +
-                "['alpha', 'beta', 'gamma', 'delta', 'eta']" +
+        "[" +
+            "[1,2,3,4,5]," +
+            "['a', 'b', 'c', 'd', 'e']," +
+            "['alpha', 'beta', 'gamma', 'delta', 'eta']" +
             "]";
 
     /**
@@ -63,18 +67,18 @@ public abstract class TestHelper
     public final static String[] ITEM_FIELDS = {"sku", "quantity", "price"};
 
     /**
-     *  Default CSV test data
+     * Default CSV test data
      */
     public final static String CSV_DATA =
         "primero, segundo, tercero, cuarto, quinto, sexto\n" +
-        "yo,tu,el,nosotros,ustedes,ellos\n" +
-        "hoy,manana,ayer,pasado manana,antier,proximo mes";
+            "yo,tu,el,nosotros,ustedes,ellos\n" +
+            "hoy,manana,ayer,pasado manana,antier,proximo mes";
 
     /**
      * Default PROPERTIES test data
      */
     public final static String PROPERTIES_DATA =
-            "employee.firstName=John\n" +
+        "employee.firstName=John\n" +
             "employee.lastName=Smith\n" +
             "employee.address.streetAddress=21 2nd Street\n" +
             "employee.address.city=New York\n" +
@@ -85,7 +89,7 @@ public abstract class TestHelper
      * Default YAML test data
      */
     public final static String YAML_DATA =
-            "---\n" +
+        "---\n" +
             "firstName: John\n" +
             "lastName: Smith\n" +
             "address:\n" +
@@ -96,7 +100,7 @@ public abstract class TestHelper
             "expirationDate: 12/21/2012";
 
     public final static String YAML_SEQUENCE_DATA =
-            "- firstName: John\n" +
+        "- firstName: John\n" +
             "  lastName: Smith\n" +
             "  age: 40\n" +
             "- firstName: Sara\n" +
@@ -176,10 +180,11 @@ public abstract class TestHelper
     }
 
     public static void copyFile(File file1, File file2)
-            throws Exception
+        throws Exception
     {
         // --- Make sure file1 exists
-        if (!file1.exists()) {
+        if (!file1.exists())
+        {
             throw new Exception("Original file must exist: " + file1.getAbsolutePath());
         }
 
@@ -188,7 +193,8 @@ public abstract class TestHelper
 
         byte[] buf = new byte[1024];
         int len;
-        while ((len = in.read(buf)) > 0) {
+        while ((len = in.read(buf)) > 0)
+        {
             out.write(buf, 0, len);
         }
         in.close();

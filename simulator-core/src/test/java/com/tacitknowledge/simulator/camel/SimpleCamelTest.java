@@ -1,16 +1,12 @@
 package com.tacitknowledge.simulator.camel;
 
-import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.TestHelper;
 import com.tacitknowledge.simulator.Transport;
-import com.tacitknowledge.simulator.TransportException;
-import com.tacitknowledge.simulator.formats.XmlAdapter;
 import com.tacitknowledge.simulator.transports.FileTransport;
 import junit.framework.TestCase;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.model.RouteDefinition;
 
 import java.io.File;
@@ -34,7 +30,8 @@ public class SimpleCamelTest extends TestCase
         builder = new RouteBuilder()
         {
             public void configure()
-            {}
+            {
+            }
         };
     }
 
@@ -44,7 +41,7 @@ public class SimpleCamelTest extends TestCase
 
         Map<String, String> it_params = new HashMap<String, String>();
         it_params.put(FileTransport.PARAM_DIRECTORY_NAME,
-                INBOX);
+            INBOX);
         it_params.put(FileTransport.PARAM_FILE_EXTENSION, "xml");
         final Transport in_t = new FileTransport(it_params);
 
@@ -57,7 +54,7 @@ public class SimpleCamelTest extends TestCase
         try
         {
             context.start();
-            
+
             System.out.println(in_t.toUriString());
             System.out.println(out_t.toUriString());
 

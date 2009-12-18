@@ -55,8 +55,8 @@ public abstract class BaseAdapter implements Adapter<Object>
 
 
     /**
-     * @inheritDoc
      * @param parameters The Adapter parameters Map
+     * @inheritDoc
      */
     public void setParameters(Map<String, String> parameters)
     {
@@ -66,6 +66,7 @@ public abstract class BaseAdapter implements Adapter<Object>
     /**
      * Sets and/or overrides instance variables from provided parameters and validates that
      * the required parameters are present.
+     *
      * @throws FormatAdapterException If any required parameter is missing or incorrect
      */
     abstract void validateParameters() throws FormatAdapterException;
@@ -87,7 +88,7 @@ public abstract class BaseAdapter implements Adapter<Object>
     {
         throw new UnsupportedOperationException("override me");
     }
-    
+
     /**
      * @param name The parameter name. Parameter names should be defined by each implementation.
      * @return The parameter value or null if not defined.
@@ -113,7 +114,7 @@ public abstract class BaseAdapter implements Adapter<Object>
         }
         catch (ObjectMapperException e)
         {
-            throw new FormatAdapterException("Error trying to generate temporary classes",e);
+            throw new FormatAdapterException("Error trying to generate temporary classes", e);
         }
         return getString(getSimulatorPojo);
     }
@@ -122,14 +123,15 @@ public abstract class BaseAdapter implements Adapter<Object>
      * Generates the classes from the incoming data and registers them in the class pool.
      *
      * @param pojo incoming data pojo
+     * @return
      * @throws com.tacitknowledge.simulator.scripting.ScriptException
      *          in case an exception has occured.
-     * @return
      */
     protected Map<String, Object> generateClasses(SimulatorPojo pojo) throws FormatAdapterException
     {
         Map<String, Object> scriptExecutionBeans;
-        try {
+        try
+        {
             /**
              * Generates the classes for the incoming data *
              */
@@ -137,16 +139,19 @@ public abstract class BaseAdapter implements Adapter<Object>
 
             scriptExecutionBeans = generator.generateBeansMap(pojo);
         }
-        catch (CannotCompileException e) {
+        catch (CannotCompileException e)
+        {
             String errorMessage = "A compilation error has occured when "
-                    + "generating classes for SimulatorPojo";
+                + "generating classes for SimulatorPojo";
             throw new FormatAdapterException(errorMessage, e);
         }
-        catch (NotFoundException e) {
+        catch (NotFoundException e)
+        {
             String errorMessage = "A class was not found in the ClassPool";
             throw new FormatAdapterException(errorMessage, e);
         }
-        catch (SimulatorException se) {
+        catch (SimulatorException se)
+        {
             String errorMsg = "SimulatorPojo was not properly generated: " + se.getMessage();
             throw new FormatAdapterException(errorMsg, se);
         }
@@ -159,11 +164,12 @@ public abstract class BaseAdapter implements Adapter<Object>
 
     /**
      * Returns a List of ParameterDefinitions in their List representation
+     *
      * @param parametersList The parameter definitions list
      * @return The list of lists
      */
     protected List<List> getParametersDefinitionsAsList(
-            List<ParameterDefinitionBuilder.ParameterDefinition> parametersList)
+        List<ParameterDefinitionBuilder.ParameterDefinition> parametersList)
     {
         List<List> list = new ArrayList<List>();
         for (ParameterDefinitionBuilder.ParameterDefinition param : parametersList)
