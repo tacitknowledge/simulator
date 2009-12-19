@@ -22,6 +22,10 @@ TK.AdminForm = Ext.extend(Ext.FormPanel, {
             },
             defaultType: 'textfield',
             items: [
+               new Ext.ux.form.FileUploadField({
+//                   renderTo: 'fi-basic',
+                   width: 400
+               }),
                 {
                     id: 'export_button',
                     text: 'Export',
@@ -33,8 +37,6 @@ TK.AdminForm = Ext.extend(Ext.FormPanel, {
                     }
                 }
             ]
-
-
         };
         TK.AdminForm.superclass.constructor.call(this, Ext.apply(initialConfig, config));
     }

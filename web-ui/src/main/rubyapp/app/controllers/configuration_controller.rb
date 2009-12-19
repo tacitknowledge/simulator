@@ -50,7 +50,12 @@ class ConfigurationController < ApplicationController
     response.headers["Content-Type"] = 'text/xml'
     render :xml => doc.to_s;
   end
-  
+
+  def import
+    
+  end
+
+
   private
 
   def convert_transport(transport_element, transport)
