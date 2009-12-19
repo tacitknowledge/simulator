@@ -83,4 +83,17 @@ TK.cloneScenario = function (scenarioId) {
             //todo handler
         }
     })
+},
+
+TK.export = function () {
+    window.location = 'configuration/export.xml'
+//    Ext.Ajax.request({
+//        url: 'configuration/export'  ,
+//        method: 'GET',
+//        success: function(result, request) {
+//        },
+//        failure: function() {
+//            todo handler
+//        }
+//    })
 };
