@@ -2,11 +2,12 @@ require "rexml/document"
 
 class ConfigurationController < ApplicationController
 
-  before_filter :header_xml
+#  before_filter :header_xml
 
-  def header_xml
-    response.headers['Content-type'] = 'text/xml; charset=utf-8'
-  end
+#  def header_xml
+#    response.headers['Content-type'] = 'text/xml; charset=utf-8'
+#  end
+
   def export
     systems = System.find(:all)
 
@@ -47,11 +48,12 @@ class ConfigurationController < ApplicationController
       end
     end
 
-    response.headers["Content-Type"] = 'text/xml'
+    response.headers["Content-Type"] = 'application/xml'
     render :xml => doc.to_s;
   end
 
   def import
+    id = params[:id]
     
   end
 

@@ -20,12 +20,39 @@ TK.AdminForm = Ext.extend(Ext.FormPanel, {
             defaults: {
                 width: "98%"
             },
+            frame: true,
             defaultType: 'textfield',
             items: [
                new Ext.ux.form.FileUploadField({
+                   id:"form-file",
+                   name:"file",
 //                   renderTo: 'fi-basic',
                    width: 400
                }),
+                {
+                    id:"import_button",
+                    name:"import_submit",
+                    xtype:"button",
+                    handler: function()
+                    {
+                        var form = Ext.getCmp("admin-form").getForm();
+                        if (form.isValid())
+                        {
+                            form.submit({
+                                url: "configuration/import",
+                                waitMsg: 'Uploading',
+                                success: function(fp, o)
+                                {
+                                    alert('success')
+                                },
+                                failure: function(fp, o)
+                                {
+                                    alert('failure')
+                                }
+                            })
+                        }
+                    }
+                },
                 {
                     id: 'export_button',
                     text: 'Export',
