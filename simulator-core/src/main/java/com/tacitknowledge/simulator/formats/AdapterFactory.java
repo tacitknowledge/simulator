@@ -11,14 +11,8 @@ import java.util.Map;
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class AdapterFactory
+public final class AdapterFactory
 {
-    /**
-     * Hiding the default constructor
-     */
-    private AdapterFactory()
-    {
-    }
 
     /**
      * Container for the adapters.
@@ -36,12 +30,19 @@ public class AdapterFactory
     };
 
     /**
+     * Hiding the default constructor
+     */
+    private AdapterFactory()
+    {
+    }
+
+    /**
      * Returns implementation of the adapter for the provided format.
      *
      * @param format The format of the data. @see com.tacitknowledge.simulator.FormatConstants
      * @return Adapter for the specified format or null if the format is not supported.
      */
-    public static Adapter<?> getAdapter(String format)
+    public static Adapter<?> getAdapter(final String format)
     {
         return adapters.get(format);
     }
@@ -51,7 +52,7 @@ public class AdapterFactory
      * @return The parameter descriptions list
      * @see com.tacitknowledge.simulator.Adapter#getParametersList()
      */
-    public static List<List> getAdapterParameters(String format)
+    public static List<List> getAdapterParameters(final String format)
     {
         List<List> list = null;
         // --- Formats should have been set with all-capitals
@@ -62,4 +63,5 @@ public class AdapterFactory
 
         return list;
     }
+
 }

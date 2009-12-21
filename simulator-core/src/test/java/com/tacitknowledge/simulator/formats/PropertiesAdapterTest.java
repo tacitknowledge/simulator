@@ -41,7 +41,8 @@ public class PropertiesAdapterTest extends TestCase
             assertEquals("New York", emp_address.get("city"));
             assertEquals("NY", emp_address.get("state"));
 
-        } catch (FormatAdapterException fae)
+        }
+        catch (FormatAdapterException fae)
         {
             fae.printStackTrace();
             fail("Not expecting exception!");
@@ -62,7 +63,8 @@ public class PropertiesAdapterTest extends TestCase
             assertTrue(props.contains("employee.firstName=John"));
             assertTrue(props.contains("employee.title=Manager"));
             assertTrue(props.contains("employee.address.streetAddress=21 2nd Street"));
-        } catch (FormatAdapterException fae)
+        }
+        catch (FormatAdapterException fae)
         {
             fae.printStackTrace();
             fail("Nor expecting exception!");

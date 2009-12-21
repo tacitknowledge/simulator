@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Date: 07.12.2009
- * Time: 18:04:19
  * Javascript specific pojo populator
  *
  * @author Nikita Belenkiy (nbelenkiy@tacitknowledge.com)
@@ -21,6 +19,9 @@ public class JavaScriptObjectMapper implements ObjectMapper
 
     private JavaObjectMapper javaMapper = new JavaObjectMapper();
 
+    /**
+     * {@inheritDoc}
+     */
     public Map<String, Object> getMapFromObject(Object o) throws ObjectMapperException
     {
 
@@ -71,6 +72,14 @@ public class JavaScriptObjectMapper implements ObjectMapper
         return map;
     }
 
+    /**
+     * Returns a List from an array. The array will be populated with either Maps or Strings,
+     * depending on the Array contents
+     *
+     * @param array The Array to be List-ified
+     * @return The list populated with eithert Strings or the Map representation of its items
+     * @throws ObjectMapperException If anything goes wrong
+     */
     private List<Object> getListFromArray(NativeArray array) throws ObjectMapperException
     {
 

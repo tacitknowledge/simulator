@@ -92,7 +92,8 @@
             <property name="checkHtml" value="true"/>
             <property name="scope" value="private"/>
             <property name="severity" value="warning"/>
-            <property name="tokens" value="INTERFACE_DEF, CLASS_DEF, METHOD_DEF, CTOR_DEF, VARIABLE_DEF"/>
+            <property name="tokens"
+                      value="INTERFACE_DEF, CLASS_DEF, METHOD_DEF, CTOR_DEF, VARIABLE_DEF"/>
         </module>
 
 

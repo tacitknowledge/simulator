@@ -55,7 +55,8 @@ public class YamlAdapterTest extends TestCase
             assertEquals("Smith", employee.get("lastName"));
             assertNotNull(employee.get("address"));
 
-        } catch (FormatAdapterException fae)
+        }
+        catch (FormatAdapterException fae)
         {
             fae.printStackTrace();
             fail("Not expecting exception!");
@@ -92,7 +93,8 @@ public class YamlAdapterTest extends TestCase
             assertEquals("Carlson", person3.get("lastName"));
             assertEquals(25, person3.get("age"));
 
-        } catch (FormatAdapterException fae)
+        }
+        catch (FormatAdapterException fae)
         {
             fae.printStackTrace();
             fail("Not expecting exception!");

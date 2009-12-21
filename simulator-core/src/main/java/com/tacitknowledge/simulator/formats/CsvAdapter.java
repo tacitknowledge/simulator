@@ -46,6 +46,11 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
     public static final String PARAM_FIRST_ROW_HEADER = "firstRowHeader";
 
     /**
+     * Logger for this class.
+     */
+    private static Logger logger = Logger.getLogger(CsvAdapter.class);
+
+    /**
      * Adapter parameters definition.
      */
     private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
@@ -69,11 +74,6 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
                     label("Column Separator").
                     defaultValue(",")
             );
-
-    /**
-     * Logger for this class.
-     */
-    private static Logger logger = Logger.getLogger(CsvAdapter.class);
 
     /**
      * Column value separator. Defaults to comma (,)

@@ -32,7 +32,8 @@ public class FtpTransportTest extends TestCase
         {
             transport.toUriString();
             fail("Transport should not work without required parameters");
-        } catch (TransportException e)
+        }
+        catch (TransportException e)
         {
             // --- That's ok
         }
@@ -50,7 +51,8 @@ public class FtpTransportTest extends TestCase
 
             assertTrue("Returned uri isn't as expected: " + uri,
                 uri.indexOf("ftp://127.0.0.1") > -1);
-        } catch (TransportException e)
+        }
+        catch (TransportException e)
         {
             fail("Shouldn't be getting an exception here: " + e.getMessage());
         }
@@ -70,7 +72,8 @@ public class FtpTransportTest extends TestCase
 
             assertTrue("Returned uri isn't as expected: " + uri,
                 uri.indexOf("sftp://127.0.0.1") > -1);
-        } catch (TransportException e)
+        }
+        catch (TransportException e)
         {
             fail("Shouldn't be getting an exception here: " + e.getMessage());
         }
@@ -93,7 +96,8 @@ public class FtpTransportTest extends TestCase
 
             assertTrue("Returned uri isn't as expected: " + uri,
                 uri.indexOf("ftp://meandmyself@127.0.0.1:2121/inbox?password=secret") > -1);
-        } catch (TransportException e)
+        }
+        catch (TransportException e)
         {
             fail("Shouldn't be getting an exception here: " + e.getMessage());
         }
@@ -115,7 +119,8 @@ public class FtpTransportTest extends TestCase
 
             assertTrue("Returned uri isn't as expected: " + uri,
                 uri.indexOf("ftp://127.0.0.1/inbox?binary=true&include=^.*\\.(csv|CSV)$") > -1);
-        } catch (TransportException e)
+        }
+        catch (TransportException e)
         {
             fail("Shouldn't be getting an exception here: " + e.getMessage());
         }

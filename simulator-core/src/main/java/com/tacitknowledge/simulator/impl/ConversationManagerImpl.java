@@ -166,10 +166,12 @@ public class ConversationManagerImpl implements ConversationManager
             conversations.remove(conversationId);
             logger.debug("Deactivated conversation " + conversation);
 
-        } catch (ConversationNotFoundException cne)
+        }
+        catch (ConversationNotFoundException cne)
         {
             //do nothing
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             logger.error("Conversation with id : "
                 + conversationId + " couldn't be deactivated.", e);
@@ -193,7 +195,8 @@ public class ConversationManagerImpl implements ConversationManager
                 routeManager.delete(conversation);
                 conversations.remove(conversationId);
             }
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new SimulatorException("", e);
         }

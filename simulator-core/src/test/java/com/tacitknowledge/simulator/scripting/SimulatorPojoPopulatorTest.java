@@ -41,7 +41,8 @@ public class SimulatorPojoPopulatorTest extends TestCase
                     populateSimulatorPojoFromBean(beansMap.get("order"));
 
             assertTrue(
-                "SimulatorPojo's root from SimulatorPojoPopulatorImpl " +
+                "SimulatorPojo's root from SimulatorPojoPopulatorImpl "
+                    +
                     "should be equal to original pojo's root",
                 originalPojo.getRoot().equals(pojo.getRoot()));
         }

@@ -41,7 +41,8 @@ public class JmsTransportTest extends TestCase
         {
             transport.toUriString();
             fail("Transport should not work without required parameters");
-        } catch (TransportException e)
+        }
+        catch (TransportException e)
         {
             // --- That's ok
         }
@@ -60,7 +61,8 @@ public class JmsTransportTest extends TestCase
 
             assertTrue("Returned uri isn't as expected: " + uri,
                 uri.indexOf("activemq:foo.bar?brokerURL=tcp://localhost:61616") > -1);
-        } catch (TransportException e)
+        }
+        catch (TransportException e)
         {
             fail("Shouldn't be getting an exception here: " + e.getMessage());
         }
@@ -81,7 +83,8 @@ public class JmsTransportTest extends TestCase
 
             assertTrue("Returned uri isn't as expected: " + uri,
                 uri.indexOf("activemq:topic:foo.bar?brokerURL=tcp://localhost:61616") > -1);
-        } catch (TransportException e)
+        }
+        catch (TransportException e)
         {
             fail("Shouldn't be getting an exception here: " + e.getMessage());
         }

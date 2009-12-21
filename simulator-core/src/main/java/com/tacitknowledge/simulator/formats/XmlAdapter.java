@@ -435,7 +435,8 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
             container.appendChild(textNode);
 
             return container;
-        } catch (DOMException de)
+        }
+        catch (DOMException de)
         {
             logger.debug("Unexpected DOM Exception for element name: " + elemName + ". \n"
                 + de.getMessage());

@@ -1,6 +1,5 @@
 package com.tacitknowledge.simulator.scripting;
 
-import com.tacitknowledge.simulator.SimulatorException;
 import org.apache.log4j.Logger;
 
 import java.lang.reflect.Field;
@@ -28,7 +27,7 @@ public class JavaObjectMapper implements ObjectMapper
      *
      * @param o The object to be mapped
      * @return The map representation of the passed object
-     * @throws SimulatorException If anything goes wrong
+     * @throws ObjectMapperException If anything goes wrong
      */
     public Map<String, Object> getMapFromObject(Object o) throws ObjectMapperException
     {
@@ -76,12 +75,12 @@ public class JavaObjectMapper implements ObjectMapper
     }
 
     /**
-     * Returns a List from an array. The array will populated with either Maps or Strings,
+     * Returns a List from an array. The array will be populated with either Maps or Strings,
      * depending on the Array contents
      *
      * @param objects The Array to be List-ified
      * @return The list populated with eithert Strings or the Map representation of its items
-     * @throws SimulatorException If anything goes wrong
+     * @throws ObjectMapperException If anything goes wrong
      */
     private List getListFromArray(Object[] objects) throws ObjectMapperException
     {

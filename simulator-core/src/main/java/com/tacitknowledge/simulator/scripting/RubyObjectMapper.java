@@ -10,14 +10,21 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author nikitabelenkiy
+ * Ruby specific pojo populator
+ *
+ * @author Nikita Belenkiy (nbelenkiy@tacitknowledge.com)
  */
 public class RubyObjectMapper implements ObjectMapper
 {
-
+    /**
+     * The Java Object Mapper
+     */
     private JavaObjectMapper javaMapper = new JavaObjectMapper();
 
-    public Map<String, Object> getMapFromObject(Object o) throws ObjectMapperException
+    /**
+     * {@inheritDoc}
+     */
+    public Map<String, Object> getMapFromObject(final Object o) throws ObjectMapperException
     {
         Map<String, Object> map = new HashMap<String, Object>();
         if (o instanceof RubyHash)
@@ -59,7 +66,7 @@ public class RubyObjectMapper implements ObjectMapper
         }
         else if (o instanceof RubyNil)
         {
-            //todo what to do?
+            //TODO: what to do?
         }
         else
         {
@@ -68,7 +75,15 @@ public class RubyObjectMapper implements ObjectMapper
         return map;
     }
 
-    private List<Object> getListFromArray(RubyArray rubyArray) throws ObjectMapperException
+    /**
+     * Returns a List from an array. The array will be populated with either Maps or Strings,
+     * depending on the Array contents
+     *
+     * @param rubyArray The Array to be List-ified
+     * @return The list populated with eithert Strings or the Map representation of its items
+     * @throws ObjectMapperException If anything goes wrong
+     */
+    private List<Object> getListFromArray(final RubyArray rubyArray) throws ObjectMapperException
     {
         List<Object> list = new ArrayList<Object>();
 

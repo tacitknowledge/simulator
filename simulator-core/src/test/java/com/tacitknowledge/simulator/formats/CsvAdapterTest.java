@@ -118,7 +118,8 @@ public class
 
             assertEquals(primeroIdx, row1.indexOf("yo"));
             assertEquals(primeroIdx, row2.indexOf("hoy"));
-        } catch (FormatAdapterException e)
+        }
+        catch (FormatAdapterException e)
         {
             fail("Not expecting exception!");
         }

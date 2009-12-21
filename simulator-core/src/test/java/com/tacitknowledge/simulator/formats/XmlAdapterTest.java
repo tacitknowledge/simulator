@@ -56,7 +56,8 @@ public class XmlAdapterTest extends TestCase
 
             assertTrue(employee.indexOf("<name>John</name>") > -1);
 
-        } catch (FormatAdapterException e)
+        }
+        catch (FormatAdapterException e)
         {
             e.printStackTrace();
             fail("Error trying to adapt from/to XML: " + e.getMessage());

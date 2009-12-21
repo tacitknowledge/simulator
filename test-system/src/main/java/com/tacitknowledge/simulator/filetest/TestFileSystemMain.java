@@ -1,6 +1,10 @@
 package com.tacitknowledge.simulator.filetest;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * This class represents a system that will wait for a file to be copied to a destination folder
