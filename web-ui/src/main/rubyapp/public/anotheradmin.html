@@ -6,9 +6,10 @@
 </head>
 <body>
 
-<form action="/configuration/import" enctype="multipart/form-data" method="post">
-    <p><input id="upload_datafile" name="upload" size="30" type="file"/></p>
-    <input name="commit" type="submit" value="Upload"/>
+<form target="upload_frame " id="upload-form" action="configuration/import" enctype="multipart/form-data" method="post">
+    <input name="upload"  type="file"/>
+    <input type="submit"/>
 </form>
+<iframe id="upload_frame" name="upload_frame" style="display: none"></iframe>
 </body>
 </html>

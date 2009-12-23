@@ -14,22 +14,23 @@ TK.AdminForm = Ext.extend(Ext.FormPanel, {
     {
         var initialConfig = {
             id:'admin-form',
-            labelWidth: 120, // label settings here cascade unless overridden
+            fileUpload:true,
+//            labelWidth: 120, // label settings here cascade unless overridden
             title: 'Admin',
-            bodyStyle: 'padding:5px 5px 0;',
-            defaults: {
-                width: "98%"
-            },
-            frame: true,
-            defaultType: 'textfield',
-            fileUpload: true,
+            method:"POST",
+//            bodyStyle: 'padding:5px 5px 0;',
+//            defaults: {
+//                width: "98%"
+//            },
+//            frame: true,
+//            defaultType: 'textfield',
             items: [
-                {
-                    xtype: 'fileupload',
-                    id: 'form-file',
-                    name: 'file',
-                    width: 400
-                },
+               new Ext.ux.form.FileUploadField({
+                   id:"form-file",
+                   name:"filefield",
+//                   renderTo: 'fi-basic',
+                   width: 400
+               }),
                 {
                     id:"import_button",
                     name:"import_submit",
@@ -44,11 +45,11 @@ TK.AdminForm = Ext.extend(Ext.FormPanel, {
                                 waitMsg: 'Uploading',
                                 success: function(fp, o)
                                 {
-                                    alert('success');
+                                    alert('success')
                                 },
                                 failure: function(fp, o)
                                 {
-                                    alert('failure');
+                                    alert('failure')
                                 }
                             })
                         }
