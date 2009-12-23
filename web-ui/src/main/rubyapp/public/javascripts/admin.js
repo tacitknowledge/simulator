@@ -14,23 +14,25 @@ TK.AdminForm = Ext.extend(Ext.FormPanel, {
     {
         var initialConfig = {
             id:'admin-form',
-            fileUpload:true,
-//            labelWidth: 120, // label settings here cascade unless overridden
+            //            labelWidth: 120, // label settings here cascade unless overridden
             title: 'Admin',
             method:"POST",
-//            bodyStyle: 'padding:5px 5px 0;',
-//            defaults: {
-//                width: "98%"
-//            },
-//            frame: true,
-//            defaultType: 'textfield',
+            fileUpload: true,
+
+            //            bodyStyle: 'padding:5px 5px 0;',
+            //            defaults: {
+            //                width: "98%"
+            //            },
+            //            frame: true,
+            //            defaultType: 'textfield',
             items: [
-               new Ext.ux.form.FileUploadField({
-                   id:"form-file",
-                   name:"filefield",
-//                   renderTo: 'fi-basic',
-                   width: 400
-               }),
+                {
+                    xtype: 'fileuploadfield',
+                    id: 'form-file',
+                    emptyText: 'Select a file',
+                    fieldLabel: 'File',
+                    name: 'filefield'
+                },
                 {
                     id:"import_button",
                     name:"import_submit",
@@ -45,13 +47,13 @@ TK.AdminForm = Ext.extend(Ext.FormPanel, {
                                 waitMsg: 'Uploading',
                                 success: function(fp, o)
                                 {
-                                    alert('success')
+                                    alert('success');
                                 },
                                 failure: function(fp, o)
                                 {
-                                    alert('failure')
+                                    alert('failure');
                                 }
-                            })
+                            });
                         }
                     }
                 },
