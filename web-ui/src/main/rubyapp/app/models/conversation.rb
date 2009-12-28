@@ -52,7 +52,7 @@ class Conversation < ActiveRecord::Base
 #  has_one :format, :foreign_key => :inbound_format_id  ,:as => 'zrrrr'
 #  has_one :format, :foreign_key =>:outbound_format_id  ,:as => 'srrrr'
 
-  has_many :scenarios ,:dependent => :destroy
+  has_many :scenarios ,:dependent => :destroy, :autosave => true
 
   validates_presence_of :name, :system_id
   # Transports and formats should be set before saving as well

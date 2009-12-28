@@ -71,9 +71,7 @@ class ConfigurationController < ApplicationController
        system.save
 
 #      parse conversation
-      conversations = parse_conversations(is_new, system, system_element)
-      system.conversations = conversations
-      system.save!
+       parse_conversations(is_new, system, system_element)
     end
      render :template => "success"
   end
@@ -81,7 +79,6 @@ class ConfigurationController < ApplicationController
   private
 
   def parse_conversations(is_new, system, system_element)
-    conversations = []
     conversations_elements = system_element.get_elements("conversation")
     conversations_elements.each do |conversation_element|
       conversation_name = get_property(conversation_element, "name")
@@ -108,20 +105,15 @@ class ConfigurationController < ApplicationController
       conversation.out_transport = parse_transport out_transport_element
       conversation.in_format = parse_format in_format_element
       conversation.out_format = parse_format out_format_element
+      conversation.save
 
 #     parse scenarios for each conversation
-
-      scenario_elements = system_element.get_elements("scenario")
-      conversation.save
-      scenarios = parse_scenarios(conversation, is_new, scenario_elements)
-      conversation.scenarios=scenarios
-
-      conversations << conversation
+      parse_scenarios(conversation, is_new, conversation_element)
     end
-    conversations
   end
 
-  def parse_scenarios(conversation, is_new, scenario_elements)
+  def parse_scenarios(conversation, is_new, conversation_element)
+    scenario_elements = conversation_element.get_elements("scenario")
     scenarios=[]
     scenario_elements.each do |scenario_element|
       scenario_name = get_property(scenario_element, "name")
@@ -131,13 +123,19 @@ class ConfigurationController < ApplicationController
         scenario.conversation_id = conversation.id
       else
         scenario = Scenario.find_by_conversation_id_and_name(conversation.id, scenario_name)
+        if(scenario.nil?)
+          scenario = Scenario.new
+          scenario.name=scenario_name
+          scenario.conversation_id = conversation.id
+        end
       end
       scenario.label=get_property(scenario_element, "label")
       scenario.criteria_script=get_property(scenario_element, "criteria_script")
       scenario.execution_script=get_property(scenario_element, "execution_script")
+      scenario.save
       scenarios<<scenario
     end
-    return scenarios
+    scenarios
   end
 
 
