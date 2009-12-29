@@ -14,5 +14,10 @@ one:
     id: 1
     name: 'Project 1'
     description: 'Description 1'
+    script_language: 'javascript'
+two:
+    id: 2
+    name: 'Second empty system'
+    description: 'Description 2'
 
 

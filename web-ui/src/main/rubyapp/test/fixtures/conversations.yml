@@ -26,6 +26,7 @@ one:
   outbound_transport_id: 2
   inbound_format_id: 1
   outbound_format_id: 2
+  default_response: "puts 'hello world'"
 
 
 two:

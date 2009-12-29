@@ -11,7 +11,7 @@
 
 file:
   id: 1
-  name: 'FILE'
+  name: 'File'
   class_name: 'com.tacitknowledge.simulator.transports.FileTransport'
 
 ftp:
