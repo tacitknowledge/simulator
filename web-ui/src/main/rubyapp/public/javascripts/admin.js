@@ -14,28 +14,23 @@ TK.AdminForm = Ext.extend(Ext.FormPanel, {
     {
         var initialConfig = {
             id:'admin-form',
-            //            labelWidth: 120, // label settings here cascade unless overridden
             title: 'Admin',
             method:"POST",
+            frame: true,
             fileUpload: true,
-
-            //            bodyStyle: 'padding:5px 5px 0;',
-            //            defaults: {
-            //                width: "98%"
-            //            },
-            //            frame: true,
-            //            defaultType: 'textfield',
+            autoHeight: true,
             items: [
                 {
                     xtype: 'fileuploadfield',
                     id: 'form-file',
                     emptyText: 'Select a file',
                     fieldLabel: 'File',
-                    name: 'filefield'
+                    name: 'file'
                 },
                 {
                     id:"import_button",
                     name:"import_submit",
+                    text:"Import",
                     xtype:"button",
                     handler: function()
                     {
@@ -45,9 +40,8 @@ TK.AdminForm = Ext.extend(Ext.FormPanel, {
                             form.submit({
                                 url: "configuration/import",
                                 waitMsg: 'Uploading',
-                                success: function(fp, o)
-                                {
-                                    alert('success');
+                                success: function(fp, o){
+                                    alert('Successfully imported');
                                 },
                                 failure: function(fp, o)
                                 {

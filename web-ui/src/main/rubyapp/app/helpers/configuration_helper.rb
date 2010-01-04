@@ -1,7 +1,7 @@
 module ConfigurationHelper
 
-
-# returns xml representation of systems
+  #systems - array of systems
+  # returns REXML::Document
   def systems_to_xml(systems)
     doc = REXML::Document.new("<?xml version='1.0?><systems/>")
 
@@ -40,6 +40,8 @@ module ConfigurationHelper
     doc
   end
 
+  # converts REXML document into systems/conversations/scnarios 
+  # doc - REXML::Document
   def import_xml(doc)
     doc.root.elements.each do |system_element|
       name = get_property(system_element, 'name')

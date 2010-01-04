@@ -9,27 +9,31 @@ class ConfigurationController < ApplicationController
   protect_from_forgery :only => [:create, :update, :destroy]
 
   def export
-    systems = System.find(:all)
+    begin
+      systems = System.find(:all)
 
-    #doc - REXML document
-    doc = systems_to_xml(systems)
-    #todo add error handling
+      #doc - REXML document
+      doc = systems_to_xml(systems)
+      #todo add error handling
 
-    response.headers["Content-Type"] = 'application/xml'
-    render :xml => doc.to_s;
+#      response.headers["Content-Type"] = 'text/xml'
+      render :xml => doc.to_s(2) ,:content_type=>"text/json"
+    rescue Exception => e
+      render :template => "error"
+    end
   end
 
-
-
-#
-#
-#
   def import
-    file_path = params[:upload].local_path
-    file = File.new(file_path)
-    doc = REXML::Document.new file
+    begin
+
+      file_path = params[:file].local_path
+
+      file = File.new(file_path)
+      doc = REXML::Document.new file
       import_xml(doc)
-     render :template => "success"
+      render :json =>{ :message => "Successfully imported"} ,:content_type=>"text/json"
+    rescue Exception => e
+      render :json => {:message => "Error" }
+    end
   end
- 
 end

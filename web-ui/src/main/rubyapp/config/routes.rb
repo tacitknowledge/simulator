@@ -1,5 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
   map.connect "systems/script_languages", :controller => 'systems', :action => 'script_languages'
+  map.connect "configuration/export.xml", :controller => 'configuration', :action => 'export'
 
 
   map.resources :systems do |system|
