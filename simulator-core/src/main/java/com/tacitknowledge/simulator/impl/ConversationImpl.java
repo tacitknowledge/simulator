@@ -32,6 +32,9 @@ public class ConversationImpl implements Conversation
      */
     private Integer id;
 
+    /**
+     * Conversation Name.
+     */
     private String name;
     /**
      * Wrapper for inbound transport configuration
@@ -52,24 +55,32 @@ public class ConversationImpl implements Conversation
      * Wrapper for outbound format adapter
      */
     private Adapter outboundAdapter;
+
+    /**
+     * Default response
+     */
     private String defaultResponse;
 
     /**
      * List of configured scenarios for this conversation
      */
-    private Map<Integer, ConversationScenario> scenarios = new HashMap<Integer, ConversationScenario>();
+    private Map<Integer, ConversationScenario> scenarios
+        = new HashMap<Integer, ConversationScenario>();
 
     /**
+     * Constructor
+     *
      * @param id                Conversation ID
-     * @param name
+     * @param name              Conversation name
      * @param inboundTransport  Wrapper for inbound transport configuration
      * @param outboundTransport Wrapper for outbound transport configuration
      * @param inboundAdapter    Wrapper for inbound format adapter
-     * @param outboundAdapter
-     * @param defaultResponse
+     * @param outboundAdapter   Outbound adapter
+     * @param defaultResponse   Default response
      */
-    public ConversationImpl(Integer id, String name, Transport inboundTransport, Transport outboundTransport,
-                            Adapter inboundAdapter, Adapter outboundAdapter, String defaultResponse)
+    public ConversationImpl(final Integer id, final String name, final Transport inboundTransport,
+                            final Transport outboundTransport, final Adapter inboundAdapter,
+                            final Adapter outboundAdapter, final String defaultResponse)
     {
         this.id = id;
         this.name = name;
@@ -80,17 +91,14 @@ public class ConversationImpl implements Conversation
         this.defaultResponse = defaultResponse;
     }
 
-    public String getName()
-    {
-        return name;
-    }
-
     /**
      * {@inheritDoc}
      */
-    public ConversationScenario addOrUpdateScenario(int scenarioId, String language, String criteria, String transformation)
+    public ConversationScenario addOrUpdateScenario(final int scenarioId,
+                                                    final String language,
+                                                    final String criteria,
+                                                    final String transformation)
     {
-
         ConversationScenario scenario = scenarios.get(scenarioId);
         if (scenario == null)
         {
@@ -150,9 +158,24 @@ public class ConversationImpl implements Conversation
         return defaultResponse;
     }
 
+    /**
+     * Gets the conversation ID
+     *
+     * @return the conversation ID
+     */
     public int getId()
     {
         return id;
+    }
+
+    /**
+     * Gets the conversation Name
+     *
+     * @return the conversation name
+     */
+    public String getName()
+    {
+        return name;
     }
 
     /**
@@ -169,45 +192,27 @@ public class ConversationImpl implements Conversation
      * @param o Conversation object to be compared with current one.
      * @return true if the objects are considered equal, false otherwise
      */
-    public boolean equals(Object o)
+    public boolean equals(final Object o)
     {
         if (this == o)
         {
             return true;
         }
-        if (o == null || getClass() != o.getClass())
-        {
-            return false;
-        }
 
         ConversationImpl that = (ConversationImpl) o;
 
-        if (!id.equals(that.id))
-        {
-            return false;
-        }
-        if (!inboundAdapter.equals(that.inboundAdapter))
-        {
-            return false;
-        }
-        if (!inboundTransport.equals(that.inboundTransport))
-        {
-            return false;
-        }
-        if (!outboundAdapter.equals(that.outboundAdapter))
-        {
-            return false;
-        }
-        if (!outboundTransport.equals(that.outboundTransport))
-        {
-            return false;
-        }
-        if (!scenarios.equals(that.scenarios))
+        if (o == null 
+            || getClass() != o.getClass()
+            || !id.equals(that.id)
+            || !inboundAdapter.equals(that.inboundAdapter)
+            || !inboundTransport.equals(that.inboundTransport)
+            || !outboundAdapter.equals(that.outboundAdapter)
+            || !outboundTransport.equals(that.outboundTransport))
         {
             return false;
         }
 
-        return true;
+        return scenarios.equals(that.scenarios);
     }
 
     /**
@@ -228,14 +233,23 @@ public class ConversationImpl implements Conversation
     @Override
     public String toString()
     {
-        return "ConversationImpl{" +
-            "id=" + id +
-            ", inboundTransport=" + inboundTransport +
-            ", outboundTransport=" + outboundTransport +
-            ", inboundAdapter=" + inboundAdapter +
-            ", outboundAdapter=" + outboundAdapter +
-            ", defaultResponse='" + defaultResponse + '\'' +
-            ", scenarios=" + scenarios +
-            '}';
+        return "ConversationImpl{"
+            + "id="
+            + id
+            + ", inboundTransport="
+            + inboundTransport
+            + ", outboundTransport="
+            + outboundTransport
+            + ", inboundAdapter="
+            + inboundAdapter
+            + ", outboundAdapter="
+            + outboundAdapter
+            + ", defaultResponse='"
+            + defaultResponse
+            + '\''
+            + ", scenarios="
+            + scenarios
+            + '}';
     }
+
 }

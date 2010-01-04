@@ -38,7 +38,12 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         RouteManager routeManager = new RouteManagerImpl();
         ConversationManager manager = new ConversationManagerImpl(routeManager);
 
-        Conversation conversation = manager.createConversation(null, "testCreateConversation", inTransport, outTransport, AdapterFactory.getAdapter(FormatConstants.JSON), AdapterFactory.getAdapter(FormatConstants.JSON), "");
+        Conversation conversation = manager.createConversation(null,
+            "testCreateConversation",
+            inTransport,
+            outTransport,
+            AdapterFactory.getAdapter(FormatConstants.JSON),
+            AdapterFactory.getAdapter(FormatConstants.JSON), "");
         assertNotNull(conversation);
         assertNotNull(conversation.getInboundTransport());
         assertNotNull(conversation.getOutboundTransport());
@@ -53,7 +58,12 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         Conversation conversation = null;
         try
         {
-            conversation = manager.createConversation(null, "testCreateConversationWithWrongFormat", inTransport, outTransport, AdapterFactory.getAdapter("WTF?"), AdapterFactory.getAdapter("WTF?"), "");
+            conversation = manager.createConversation(null,
+                "testCreateConversationWithWrongFormat",
+                inTransport,
+                outTransport,
+                AdapterFactory.getAdapter("WTF?"),
+                AdapterFactory.getAdapter("WTF?"), "");
             fail();
         }
         catch (SimulatorException e)
@@ -79,7 +89,13 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         ConversationManager manager = new ConversationManagerImpl(routeManager);
 
         Conversation conversation = null;
-        conversation = manager.createConversation(1, "testIsActive", inTransport, outTransport, AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT), AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT), "");
+        conversation = manager.createConversation(1,
+            "testIsActive",
+            inTransport,
+            outTransport,
+            AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT),
+            AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT),
+            "");
         assertFalse(manager.isActive(conversation.getId()));
         manager.activate(conversation.getId());
         assertTrue(manager.isActive(conversation.getId()));
@@ -87,12 +103,17 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
 
 
     @Test
-    public void testCreateOrUpdateScenarioConversationDoesntExits() throws SimulatorException, ConversationNotFoundException
+    public void testCreateOrUpdateScenarioConversationDoesntExits()
+        throws SimulatorException, ConversationNotFoundException
     {
         RouteManager routeManager = new RouteManagerImpl();
         ConversationManager manager = new ConversationManagerImpl(routeManager);
 
-        Conversation conversation = manager.createConversation(1, "testCreateOrUpdateScenarioConversationDoesntExits", inTransport, outTransport, AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT), AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT), "");
+        Conversation conversation = manager.createConversation(1,
+            "testCreateOrUpdateScenarioConversationDoesntExits",
+            inTransport,
+            outTransport,
+            AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT), AdapterFactory.getAdapter(FormatConstants.PLAIN_TEXT), "");
         ConversationScenario scenario = manager.createOrUpdateConversationScenario(2, 2, "javascript", "true", "2+2");
         assertNull(scenario);
     }
@@ -157,7 +178,6 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         manager.deactivate(1);
         assertFalse(manager.conversationExists(1));
     }
-
 
     @Test
     public void testDefaultScenarioWasExecuted() throws SimulatorException, ConversationNotFoundException, InterruptedException
