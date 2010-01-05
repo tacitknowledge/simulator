@@ -79,8 +79,8 @@ TK.cloneScenario = function (scenarioId) {
             var jsonResponse = Ext.util.JSON.decode(result.responseText)
             window.location = "scenarios/" + jsonResponse.data.id + "/"
         },
-        failure: function() {
-            //todo handler
+        failure: function(result, request) {
+            alert('errorrrrrr')
         }
     })
 },

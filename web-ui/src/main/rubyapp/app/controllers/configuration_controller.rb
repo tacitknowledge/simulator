@@ -31,9 +31,9 @@ class ConfigurationController < ApplicationController
       file = File.new(file_path)
       doc = REXML::Document.new file
       import_xml(doc)
-      render :json =>{ :message => "Successfully imported"} ,:content_type=>"text/json"
+      render :text => {:message => "Successfully imported"}.to_s 
     rescue Exception => e
-      render :json => {:message => "Error" }
+      render :text => {:message => "Error" }.to_s
     end
   end
 end
