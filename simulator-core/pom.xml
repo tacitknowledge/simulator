@@ -14,7 +14,7 @@
     <packaging>jar</packaging>
 
     <properties>
-        <camel.version>2.0.0</camel.version>
+        <camel.version>2.1.0</camel.version>
     </properties>
 
     <repositories>
@@ -172,6 +172,17 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.apache.camel</groupId>-->
+            <!--<artifactId>camel-cxf</artifactId>-->
+            <!--<version>${camel.version}</version>-->
+            <!--<exclusions>-->
+                <!--<exclusion>-->
+                    <!--<artifactId>asm</artifactId>-->
+                    <!--<groupId>asm</groupId>-->
+                <!--</exclusion>-->
+            <!--</exclusions>-->
+        <!--</dependency>-->
         <!-- <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>

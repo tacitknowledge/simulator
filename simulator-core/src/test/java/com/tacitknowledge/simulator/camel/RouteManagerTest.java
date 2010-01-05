@@ -52,6 +52,33 @@ public class RouteManagerTest extends SimulatorCamelTestSupportBase
         }
     };
 
+    /**
+     * A transport to use in tests
+     */
+    private final Transport inTransport1 = new Transport()
+    {
+
+        public String getType()
+        {
+            return "Mock In Transport1";
+        }
+
+        public String toUriString()
+        {
+            return "direct:start1";
+        }
+
+        public List<List> getParametersList()
+        {
+            return null;
+        }
+
+        public void setParameters(Map<String, String> parameters)
+        {
+
+        }
+    };
+
 
     /**
      * Conversation to be used in tests
@@ -63,7 +90,7 @@ public class RouteManagerTest extends SimulatorCamelTestSupportBase
      * Conversation to be used in tests
      */
     private final Conversation conversation2
-        = new ConversationImpl(2, "conversation2", inTransport, outTransport1, new PlainTextAdapter(), new PlainTextAdapter(), "");
+        = new ConversationImpl(2, "conversation2", inTransport1, outTransport1, new PlainTextAdapter(), new PlainTextAdapter(), "");
 
 
     {
