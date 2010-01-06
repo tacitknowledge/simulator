@@ -107,6 +107,8 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
     protected SimulatorPojo createSimulatorPojo(final String o)
         throws FormatAdapterException
     {
+        logger.debug("Attempting to generate SimulatorPojo from JSON content:\n" + o);
+
         SimulatorPojo pojo = new StructuredSimulatorPojo();
 
         try
@@ -116,6 +118,8 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
             //pojo.getRoot().put(getParamValue(PARAM_JSON_CONTENT), getMapFromJsonObj(json));
             if (this.isArray)
             {
+                logger.debug("Expecting JSON array in content. Processing as such.");
+
                 // --- If the JSON content is an array, build the root Map a little different
                 Map<String, Object> mapFromJsonList = new HashMap<String, Object>();
                 mapFromJsonList.put(
@@ -142,6 +146,8 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
             logger.error(errorMsg, je);
             throw new FormatAdapterException(errorMsg, je);
         }
+
+        logger.debug("Finished generating SimulatorPojo from JSON content");
         return pojo;
     }
 

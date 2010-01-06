@@ -299,6 +299,8 @@ public class PojoClassGenerator
             {
                 ctClass.toClass();
                 generatedClasses.put(packClassName, ctClass);
+
+                logger.debug("Finished generating new temporary class " + ctClass.getName());
             }
         }
 
@@ -325,6 +327,11 @@ public class PojoClassGenerator
 
         CtField ctField = new CtField(pool.get(className), fieldName, destClass);
         ctField.setModifiers(Modifier.PUBLIC);
+
+        logger.debug(
+                "Added field " + fieldName +
+                " of type " + className +
+                " to temporary class " + destClass.getName());
 
         return ctField;
     }

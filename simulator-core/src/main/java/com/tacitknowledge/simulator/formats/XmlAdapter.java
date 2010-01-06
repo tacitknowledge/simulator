@@ -106,6 +106,8 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
     protected SimulatorPojo createSimulatorPojo(String o)
         throws FormatAdapterException
     {
+        logger.debug("Attempting to generate SimulatorPojo from XML content:\n" + o);
+
         SimulatorPojo pojo = new StructuredSimulatorPojo();
 
         try
@@ -145,6 +147,8 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
             logger.error(errorMessage, e);
             throw new FormatAdapterException(errorMessage, e);
         }
+
+        logger.debug("Finished generating SimulatorPojo from XML content");
         return pojo;
     }
 

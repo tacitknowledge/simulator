@@ -111,6 +111,8 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
 
     protected SimulatorPojo createSimulatorPojo(String o)
     {
+        logger.debug("Attempting to generate SimulatorPojo from CSV content:\n" + o);
+
         SimulatorPojo pojo = new StructuredSimulatorPojo();
 
         // --- The SimulatorPojo's root will contain only one key (csvContent) with a List value
@@ -125,6 +127,8 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
         // --- If the first row will be treated as column names, get the list of col names
         if (firstRowHeader)
         {
+            logger.debug("Expecting first row as headers. Getting header names");
+
             colNames = getRowAsList(rows[0].trim());
 
             // --- Now, populate the pojos using the col names as attribute names
@@ -147,6 +151,8 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
 
         // --- Set the resulting list in the SimulatorPojo root
         pojo.getRoot().put(getParamValue(PARAM_CSV_CONTENT), rowObjects);
+
+        logger.debug("Finished generating SimulatorPojo from CSV content");
         return pojo;
     }
 

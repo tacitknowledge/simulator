@@ -99,6 +99,8 @@ public class YamlAdapter extends BaseAdapter implements Adapter<Object>
     protected SimulatorPojo createSimulatorPojo(String object)
         throws FormatAdapterException
     {
+        logger.debug("Attempting to generate SimulatorPojo from YAML content:\n" + object);
+
         SimulatorPojo pojo = new StructuredSimulatorPojo();
 
         YamlDecoder enc = new YamlDecoder(new StringReader(object));
@@ -109,6 +111,8 @@ public class YamlAdapter extends BaseAdapter implements Adapter<Object>
 
             if (this.isArray)
             {
+                logger.debug("Expecting YAML array in content. Processing as such.");
+
                 Map<String, Object> map = new HashMap<String, Object>();
                 map.put(getParamValue(PARAM_YAML_ARRAY_CONTENT), yaml);
                 pojo.getRoot().put(getParamValue(PARAM_YAML_CONTENT), map);
@@ -123,6 +127,8 @@ public class YamlAdapter extends BaseAdapter implements Adapter<Object>
             logger.error("Unexpected error trying to read YAML object: " + e.getMessage());
             throw new FormatAdapterException(e.getMessage(), e);
         }
+
+        logger.debug("Finished generating SimulatorPojo from YAML content");
         return pojo;
     }
 

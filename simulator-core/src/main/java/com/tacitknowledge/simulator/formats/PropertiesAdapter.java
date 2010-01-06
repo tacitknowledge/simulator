@@ -78,6 +78,8 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
     protected SimulatorPojo createSimulatorPojo(String object)
         throws FormatAdapterException
     {
+        logger.debug("Attempting to generate SimulatorPojo from Properties content:\n" + object);
+
         SimulatorPojo pojo = new StructuredSimulatorPojo();
 
         // --- First, split the incoming data into lines
@@ -113,6 +115,8 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
                 throw fae;
             }
         }
+
+        logger.debug("Finished generating SimulatorPojo from Properties content");
         return pojo;
     }
 

@@ -87,7 +87,7 @@ public class FileTransport extends BaseTransport implements Transport
             ).
             add(
                 name(PARAM_POLLING_INTERVAL).
-                    label("Milliseconds before the next poll")
+                    label("Milliseconds before the next poll (inbound only)")
             ).
             add(
                 name(PARAM_DELETE_FILE).
