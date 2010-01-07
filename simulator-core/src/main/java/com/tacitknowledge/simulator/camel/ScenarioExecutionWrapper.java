@@ -84,13 +84,14 @@ public class ScenarioExecutionWrapper
                 logger.info("active: " + active + " matches condition: " + matchesCondition);
                 if (active && matchesCondition)
                 {
+                    //TODO matching scenario event listener goes here
                     logger.info("Executing the transformation script.");
                     result = scenario.executeTransformation(scriptExecutionBeans);
+                    //TODO response built event listener goes here
                     break;
                 }
             }
-        }
-
+        }        
         return outAdapter.adaptTo(result);
     }
 

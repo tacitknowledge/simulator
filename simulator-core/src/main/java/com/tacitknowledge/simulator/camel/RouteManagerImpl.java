@@ -76,11 +76,12 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager
 
             definition = this.from(inboundTransportURI);
             definition.bean(new LoggingBean(true, conversation));
+            //TODO new message event listener goes here
             // --- Adapt input format, run scenarios and finally adapt into output format
             definition.bean(new ScenarioExecutionWrapper(conversation.getScenarios(), conversation
                 .getInboundAdapter(), conversation.getOutboundAdapter()));
             definition.bean(new LoggingBean(false, conversation));
-
+            //TODO response sent event listener goes here
             // --- Exit endpoint
             definition.to(outboundTransportURI);
             definition.setId(conversationId.toString());
