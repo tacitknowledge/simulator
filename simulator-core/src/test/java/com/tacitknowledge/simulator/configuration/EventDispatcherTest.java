@@ -1,11 +1,9 @@
 package com.tacitknowledge.simulator.configuration;
 
+import com.tacitknowledge.simulator.Conversation;
 import junit.framework.TestCase;
 
 import java.util.List;
-
-import com.tacitknowledge.simulator.Conversation;
-import com.tacitknowledge.simulator.configuration.impl.EventDispatcherImpl;
 
 /**
  * Test class for EventDispatcher
@@ -19,7 +17,19 @@ public class EventDispatcherTest extends TestCase {
 
     @Override
     protected void setUp() throws Exception {
-        eventDispatcher = new EventDispatcherImpl();
+        eventDispatcher = EventDispatcher.getInstance();
+    }
+
+    @Override
+     protected void tearDown() throws Exception {
+        eventDispatcher.removeAllSimulatorEventListeners();
+    }
+
+    /**
+     * Tests that calling getInstance always returns a not null object
+     */
+    public void testGetInstance() {
+        assertNotNull(eventDispatcher);
     }
 
     /**
@@ -40,6 +50,50 @@ public class EventDispatcherTest extends TestCase {
         };
         eventDispatcher.addSimulatorEventListener(listener);
         assertTrue(eventListeners.size() == 1);
+    }
+
+    /**
+     * Test dispatch event method
+     */
+    public void testDispatchEvent(){
+
+        final SampleClass sample = new SampleClass();
+
+        assertEquals("", sample.getName());
+
+        eventDispatcher.addSimulatorEventListener(new SimulatorEventListener(){
+
+
+            public void onNewMessage(String messageBody, Conversation conversation) {
+               sample.setName("Modified");
+            }
+
+            public void onMatchingScenario(String messageBody, Conversation conversation) {}
+
+            public void onResponseBuilt(String messageBody, Conversation conversation) {}
+
+            public void onResponseSent(String messageBody, Conversation conversation) {}
+        });
+
+        eventDispatcher.dispatchEvent(SimulatorEventType.NEW_MESSAGE, null, null);
+
+        assertEquals("Modified",sample.getName());
+    }
+
+    /**
+     * Inner class for testing purposes only
+     */
+    private static class SampleClass{
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        private String name = "";
+
     }
     
 }

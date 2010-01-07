@@ -198,6 +198,13 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         assertNotNull(scenario);
     }
 
+    @Test
+    public void testRegisterListeners() {
+        //TODO in progress
+        assertTrue(true);
+        
+    }
+
 
 }
 
