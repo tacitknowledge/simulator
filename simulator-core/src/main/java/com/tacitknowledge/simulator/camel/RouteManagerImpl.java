@@ -82,10 +82,13 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager
             definition.bean(new ScenarioExecutionWrapper(conversation.getScenarios(), conversation
                 .getInboundAdapter(), conversation.getOutboundAdapter()));
             definition.bean(new LoggingBean(false, conversation));
-            //TODO response sent event listener goes here
-            //definition.bean(new EventBean(SimulatorEventType.RESPONSE_SENT), conversation);
+
             // --- Exit endpoint
             definition.to(outboundTransportURI);
+
+            //TODO response sent event listener goes here
+            //definition.bean(new EventBean(SimulatorEventType.RESPONSE_SENT), conversation);
+
             definition.setId(conversationId.toString());
             convRoutes.put(conversationId, definition);
 
