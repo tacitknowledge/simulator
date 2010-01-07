@@ -229,6 +229,7 @@ public class ConversationManagerImpl implements ConversationManager
         return conversations.containsKey(conversationId);
     }
 
+
     /**
      * @param format @see ConversationManager#getAdapterParameters
      * @return @see ConversationManager#getAdapterParameters
@@ -280,5 +281,10 @@ public class ConversationManagerImpl implements ConversationManager
         return ScriptExecutionService.getAvailableLanguages();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public void registerListeners() {
 
+    }
 }

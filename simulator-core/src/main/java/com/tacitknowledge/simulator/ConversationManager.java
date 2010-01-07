@@ -119,4 +119,9 @@ public interface ConversationManager
      * @return
      */
     boolean conversationExists(int conversationId);
+
+    /**
+     * Register all listeners
+     */
+    void registerListeners();
 }

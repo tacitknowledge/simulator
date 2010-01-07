@@ -7,6 +7,7 @@ import com.tacitknowledge.simulator.ConversationScenario;
 import com.tacitknowledge.simulator.RouteManager;
 import com.tacitknowledge.simulator.SimulatorCamelTestSupportBase;
 import com.tacitknowledge.simulator.SimulatorException;
+import com.tacitknowledge.simulator.configuration.SimulatorEventListener;
 import com.tacitknowledge.simulator.camel.RouteManagerImpl;
 import com.tacitknowledge.simulator.formats.AdapterFactory;
 import com.tacitknowledge.simulator.formats.FormatConstants;
@@ -202,10 +203,51 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
     public void testRegisterListeners() {
         //TODO in progress
         assertTrue(true);
-        
+        ConversationManager manager = new ConversationManagerImpl(routeManager);
+        manager.registerListeners();
     }
 
+    /**
+     * SimulatorEventListener implementation for testing purposes
+     */
+    private final class TestEventListenerImpl1 implements SimulatorEventListener {
 
+        public void onNewMessage(String messageBody, Conversation conversation) {}
+
+        public void onMatchingScenario(String messageBody, Conversation conversation) {}
+
+        public void onResponseBuilt(String messageBody, Conversation conversation) {}
+
+        public void onResponseSent(String messageBody, Conversation conversation) {}
+    }
+
+    /**
+     * SimulatorEventListener implementation for testing purposes
+     */
+    private final class TestEventListenerImpl2 implements SimulatorEventListener {
+
+        public void onNewMessage(String messageBody, Conversation conversation) {}
+
+        public void onMatchingScenario(String messageBody, Conversation conversation) {}
+
+        public void onResponseBuilt(String messageBody, Conversation conversation) {}
+
+        public void onResponseSent(String messageBody, Conversation conversation) {}
+    }
+
+    /**
+     * SimulatorEventListener implementation for testing purposes
+     */
+    private final class TestEventListenerImpl3 implements SimulatorEventListener {
+
+        public void onNewMessage(String messageBody, Conversation conversation) {}
+
+        public void onMatchingScenario(String messageBody, Conversation conversation) {}
+
+        public void onResponseBuilt(String messageBody, Conversation conversation) {}
+
+        public void onResponseSent(String messageBody, Conversation conversation) {}
+    }
 }
 
 
