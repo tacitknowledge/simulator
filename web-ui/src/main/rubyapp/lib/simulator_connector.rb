@@ -113,4 +113,8 @@ class SimulatorConnector
     end
     return languages
   end
+
+  def register_listeners(file_path)
+    @conv_mgr.registerListeners(file_path)
+  end
 end

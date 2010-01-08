@@ -32,7 +32,6 @@ import java.lang.reflect.Constructor;
 public class ConversationManagerImpl implements ConversationManager
 {
 
-    public static final String LISTENER_IMPL_FILE_LOCATION_PARAM_NAME = "listener.file.location"; 
 
     /**
      * Logger for this class.
@@ -288,14 +287,6 @@ public class ConversationManagerImpl implements ConversationManager
         return ScriptExecutionService.getAvailableLanguages();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void registerListeners() {
-        //Get path to look for listener implementations
-        String filePath = System.getProperty(LISTENER_IMPL_FILE_LOCATION_PARAM_NAME);
-        registerListeners(filePath);
-    }
     /**
      * {@inheritDoc}
      */
