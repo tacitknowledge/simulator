@@ -38,6 +38,7 @@ public class EventBean {
     public String process(String body){
         try{
             EventDispatcher.getInstance().dispatchEvent(this.eventType, this.conversation, body);
+            logger.info("Event dispatched: " + this.eventType);
         }catch(Exception ex){
             if(logger.isDebugEnabled()){
                 logger.debug("Exception thrown dispatching event " + this.eventType + ". " + ex.getMessage());

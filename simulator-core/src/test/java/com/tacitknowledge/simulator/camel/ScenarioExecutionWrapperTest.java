@@ -3,10 +3,12 @@ package com.tacitknowledge.simulator.camel;
 import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.ConversationScenario;
 import com.tacitknowledge.simulator.TestHelper;
+import com.tacitknowledge.simulator.Conversation;
 import com.tacitknowledge.simulator.formats.JsonAdapter;
 import com.tacitknowledge.simulator.formats.PlainTextAdapter;
 import com.tacitknowledge.simulator.formats.XmlAdapter;
 import com.tacitknowledge.simulator.impl.ConversationScenarioImpl;
+import com.tacitknowledge.simulator.impl.ConversationImpl;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
@@ -14,6 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.Before;
 
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -28,13 +31,15 @@ import java.util.Map;
  */
 public class ScenarioExecutionWrapperTest
 {
+    private Conversation conversation;
 
     @Test
     public void testWithoutScenarios() throws Exception
     {
-        ArrayList<ConversationScenario> list = new ArrayList<ConversationScenario>();
-        list.add(new ConversationScenarioImpl(1, "javascript", "true", "text"));
-        ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(list, new PlainTextAdapter(), new PlainTextAdapter());
+        conversation = new ConversationImpl(1, "Conversation1", null, null, new PlainTextAdapter(), new PlainTextAdapter(), null);
+        conversation.addOrUpdateScenario(1, "javascript", "true", "text");
+
+        ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(conversation);
 
         String testString = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><xxxxxx/>";
         String s = wrapper.process(testString);
@@ -47,22 +52,19 @@ public class ScenarioExecutionWrapperTest
     {
 
         String criteria = "employees.employee[0].name=='John';";
-        String execution = "employees.employee[0].name='John12345';" +
-            "employees";
+        String execution = "employees.employee[0].name='John12345';employees";
 
-        ConversationScenario scenario = createScenario(0, criteria, execution, "javascript");
+        conversation = new ConversationImpl(1, "Conversation1", null, null, new XmlAdapter(), new XmlAdapter(), null);
+        conversation.addOrUpdateScenario(0, "javascript", criteria, execution);
 
-
-        List<ConversationScenario> scenarios = new ArrayList<ConversationScenario>();
-        scenarios.add(scenario);
-        ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(scenarios, new XmlAdapter(), new XmlAdapter());
+        ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(conversation);
 
         String s = wrapper.process(TestHelper.XML_DATA);
         Assert.assertTrue(s.contains("John12345"));
 
         //modify the script and see what happens
-        scenario.setScripts(criteria, "employees.employee[0].name='John1234544444444';" +
-            "employees", "javascript");
+        conversation.addOrUpdateScenario(0, "javascript", criteria, "employees.employee[0].name='John1234544444444';" +
+            "employees" );
 
         s = wrapper.process(TestHelper.XML_DATA);
 
@@ -72,8 +74,7 @@ public class ScenarioExecutionWrapperTest
     @Test
     public void testTreeScenarios() throws Exception
     {
-
-        List<ConversationScenario> scenarios = new ArrayList<ConversationScenario>();
+        conversation = new ConversationImpl(2, "Conversation2", null, null, new XmlAdapter(), new XmlAdapter(), null);
 
         String criteria1 = "employees.employee[0].name=='John12345';"; //false
         String execution1 = "employees.employee[0].name='Johnffff';employees";
@@ -84,11 +85,11 @@ public class ScenarioExecutionWrapperTest
         String criteria3 = "employees.employee[0].name=='Johnffff';";      //false
         String execution3 = "employees.employee[0].name='John12345';employees";
 
-        scenarios.add(createScenario(0, criteria1, execution1, "javascript"));
-        scenarios.add(createScenario(0, criteria2, execution2, "javascript"));
-        scenarios.add(createScenario(0, criteria3, execution3, "javascript"));
+        conversation.addOrUpdateScenario(0, "javascript", criteria1, execution1);
+        conversation.addOrUpdateScenario(1, "javascript", criteria2, execution2);
+        conversation.addOrUpdateScenario(2, "javascript", criteria3, execution3);
 
-        ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(scenarios, new XmlAdapter(), new XmlAdapter());
+        ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(conversation);
 
         String s = wrapper.process(TestHelper.XML_DATA);
         Assert.assertFalse(s.contains("Johnffff"));
@@ -102,19 +103,20 @@ public class ScenarioExecutionWrapperTest
     public void testDifferentAdapters() throws Exception
     {
 
-        List<ConversationScenario> scenarios = new ArrayList<ConversationScenario>();
 
         String criteria2 = "employees.employee[0].name=='John';";      //true
         String execution2 = "employees.employee[0].name='Johnaaaa';employees";  //this script should be executed
-
-        scenarios.add(createScenario(0, criteria2, execution2, "javascript"));
 
         JsonAdapter outAdapter = new JsonAdapter();
         Map<String, String> param = new HashMap<String, String>();
         param.put(JsonAdapter.PARAM_JSON_CONTENT, "employees");
         outAdapter.setParameters(param);
 
-        ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(scenarios, new XmlAdapter(), outAdapter);
+        conversation = new ConversationImpl(2, "Conversation2", null, null, new XmlAdapter(), outAdapter, null);
+
+        conversation.addOrUpdateScenario(0, "javascript", criteria2, execution2);
+
+        ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(conversation);
 
         String s = wrapper.process(TestHelper.XML_DATA);
         Assert.assertFalse(s.contains("Johnffff"));
@@ -137,10 +139,13 @@ public class ScenarioExecutionWrapperTest
     public void testRubyScenario() throws Exception
     {
 
-        ScenarioExecutionWrapper wrapper = createExecutionWrapper(
-            "require 'java'\n$employees.employee[0].name == 'John';",
-            "$employees.employee[0].name='John12345';" +
-                "$employees", new XmlAdapter(), new XmlAdapter());
+        conversation = new ConversationImpl(2, "Conversation2", null, null, new XmlAdapter(), new XmlAdapter(), null);
+
+        conversation.addOrUpdateScenario(0, "ruby", "require 'java'\n$employees.employee[0].name == 'John';", "$employees.employee[0].name='John12345';" +
+                "$employees" );
+
+        ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(conversation);
+
 
         String s = wrapper.process(TestHelper.XML_DATA);
         Assert.assertTrue(s.contains("John12345"));
@@ -149,11 +154,15 @@ public class ScenarioExecutionWrapperTest
     @Test
     public void testReturnDifferentObject() throws Exception
     {
+        conversation = new ConversationImpl(2, "Conversation2", null, null, new XmlAdapter(), new PlainTextAdapter(), null);
 
-        ScenarioExecutionWrapper wrapper = createExecutionWrapper("require 'java'\n$employees.employee[0].name == 'John';",
-            "$employees.employee[0].name='John12345';" +
-                "return 'Success'", new XmlAdapter(), new PlainTextAdapter());
+        conversation.addOrUpdateScenario(0, "ruby", "require 'java'\n$employees.employee[0].name == 'John';",
+            "$employees.employee[0].name='John12345'; return 'Success'");
+
+        ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(conversation);
+
         String s = wrapper.process(TestHelper.XML_DATA);
+
         Assert.assertTrue(s.contains("Success"));
     }
 
@@ -161,10 +170,14 @@ public class ScenarioExecutionWrapperTest
     @Test
     public void testReturnRubyEmptyHash() throws Exception
     {
+        conversation = new ConversationImpl(2, "Conversation2", null, null, new XmlAdapter(), new XmlAdapter(), null);
 
-        ScenarioExecutionWrapper wrapper = createExecutionWrapper("require 'java'\n$employees.employee[0].name == 'John';",
+        conversation.addOrUpdateScenario(0, "ruby", "require 'java'\n$employees.employee[0].name == 'John';",
             "$employees.employee[0].name='John12345';" +
-                "return {}", new XmlAdapter(), new XmlAdapter());
+                "return {}");
+
+
+        ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(conversation);
         String s = wrapper.process(TestHelper.XML_DATA);
         Assert.assertTrue(s.contains("rubyhash"));
     }
@@ -176,33 +189,23 @@ public class ScenarioExecutionWrapperTest
         params.put(XmlAdapter.PARAM_ROOT_TAG_NAME, "root");
         Adapter outAdapter = new XmlAdapter(params);
 
-        ScenarioExecutionWrapper wrapper = createExecutionWrapper("require 'java'\n$employees.employee[0].name == 'John';",
+        conversation = new ConversationImpl(2, "Conversation2", null, null, new XmlAdapter(), outAdapter, null);
+
+        conversation.addOrUpdateScenario(0, "ruby", "require 'java'\n$employees.employee[0].name == 'John';",
             "$employees.employee[0].name='John12345';" +
                 "return { :nilProperty => nil," +
                 ":numberProperty => 1234," +
                 ":arrayProperty => [ ]" +
                 "" +
                 "" +
-                "}", new XmlAdapter(), outAdapter);
+                "}");
+
+
+        ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(conversation);
+
         String s = wrapper.process(TestHelper.XML_DATA);
         Assert.assertTrue(s.contains("root"));
     }
-
-    private ScenarioExecutionWrapper createExecutionWrapper(String criteria, String execution, Adapter inAdapter, Adapter outAdapter)
-    {
-        ConversationScenario scenario = createScenario(0, criteria, execution, "ruby");
-        List<ConversationScenario> scenarios = new ArrayList<ConversationScenario>();
-        scenarios.add(scenario);
-        return new ScenarioExecutionWrapper(scenarios, inAdapter, outAdapter);
-    }
-
-    private ConversationScenario createScenario(int scenarioId, String criteria, String execution, String language)
-    {
-        ConversationScenario scenario = new ConversationScenarioImpl(scenarioId, language, criteria, execution);
-        scenario.setActive(true);
-        return scenario;
-    }
-
 
     @Test
     public void testReturnJavaScriptNativeObject() throws Exception
@@ -222,12 +225,11 @@ public class ScenarioExecutionWrapperTest
             "}\n" +
             "xxx";
 
-        ConversationScenario scenario = createScenario(0, criteria, execution, "javascript");
+        conversation = new ConversationImpl(2, "Conversation2", null, null, new XmlAdapter(), new XmlAdapter(), null);
 
+        conversation.addOrUpdateScenario(0, "javascript", criteria, execution);
 
-        List<ConversationScenario> scenarios = new ArrayList<ConversationScenario>();
-        scenarios.add(scenario);
-        ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(scenarios, new XmlAdapter(), new XmlAdapter());
+        ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(conversation);
 
         String s = wrapper.process(TestHelper.XML_DATA);
         System.out.println("s = " + s);

@@ -2,6 +2,9 @@ package com.tacitknowledge.simulator.camel;
 
 import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.ConversationScenario;
+import com.tacitknowledge.simulator.Conversation;
+import com.tacitknowledge.simulator.configuration.EventDispatcher;
+import com.tacitknowledge.simulator.configuration.SimulatorEventType;
 import org.apache.log4j.Logger;
 
 import java.util.Collection;
@@ -38,22 +41,27 @@ public class ScenarioExecutionWrapper
         = Logger.getLogger(ScenarioExecutionWrapper.class);
 
     /**
+     * The conversation related to this execution.
+     */
+    private Conversation conversation;
+
+    /**
      * Constructor for the ScenarioExecutionWrapper.
      *
-     * @param scenarios  list of the scenarios to run.
-     * @param inAdapter  @see #inAdapter
-     * @param outAdapter @see #outAdapter
+     * @param conv
      */
-    public ScenarioExecutionWrapper(Collection<ConversationScenario> scenarios,
-                                    Adapter inAdapter, Adapter outAdapter)
+    public ScenarioExecutionWrapper(Conversation conv)
     {
-        if (inAdapter == null || outAdapter == null || scenarios == null)
+        this.conversation = conv;
+
+        this.inAdapter = conv.getInboundAdapter();
+        this.outAdapter = conv.getOutboundAdapter();
+        this.scenarios = conv.getScenarios();;
+
+        if (this.inAdapter == null || this.outAdapter == null || this.scenarios == null)
         {
             logger.warn("Something is probably wrong: One of the adapters or scenarios list is null");
         }
-        this.inAdapter = inAdapter;
-        this.outAdapter = outAdapter;
-        this.scenarios = scenarios;
     }
 
     /**
@@ -84,10 +92,12 @@ public class ScenarioExecutionWrapper
                 logger.info("active: " + active + " matches condition: " + matchesCondition);
                 if (active && matchesCondition)
                 {
-                    //TODO matching scenario event listener goes here
+                    EventDispatcher.getInstance().dispatchEvent(SimulatorEventType.SCENARIO_MATCHED, this.conversation, body);
+
                     logger.info("Executing the transformation script.");
                     result = scenario.executeTransformation(scriptExecutionBeans);
-                    //TODO response built event listener goes here
+
+                    EventDispatcher.getInstance().dispatchEvent(SimulatorEventType.RESPONSE_BUILT, this.conversation, body);
                     break;
                 }
             }

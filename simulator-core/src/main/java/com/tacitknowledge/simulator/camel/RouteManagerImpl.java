@@ -3,6 +3,8 @@ package com.tacitknowledge.simulator.camel;
 import com.tacitknowledge.simulator.Conversation;
 import com.tacitknowledge.simulator.RouteManager;
 import com.tacitknowledge.simulator.SimulatorException;
+import com.tacitknowledge.simulator.configuration.beans.EventBean;
+import com.tacitknowledge.simulator.configuration.SimulatorEventType;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.model.RouteDefinition;
@@ -76,18 +78,14 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager
 
             definition = this.from(inboundTransportURI);
             definition.bean(new LoggingBean(true, conversation));
-            //TODO new message event listener goes here
-            //definition.bean(new EventBean(SimulatorEventType.NEW_MESSAGE), conversation);
+            definition.bean(new EventBean(SimulatorEventType.NEW_MESSAGE, conversation));
             // --- Adapt input format, run scenarios and finally adapt into output format
-            definition.bean(new ScenarioExecutionWrapper(conversation.getScenarios(), conversation
-                .getInboundAdapter(), conversation.getOutboundAdapter()));
+            definition.bean(new ScenarioExecutionWrapper(conversation));
             definition.bean(new LoggingBean(false, conversation));
 
             // --- Exit endpoint
             definition.to(outboundTransportURI);
-
-            //TODO response sent event listener goes here
-            //definition.bean(new EventBean(SimulatorEventType.RESPONSE_SENT), conversation);
+            definition.bean(new EventBean(SimulatorEventType.RESPONSE_SENT, conversation));
 
             definition.setId(conversationId.toString());
             convRoutes.put(conversationId, definition);
