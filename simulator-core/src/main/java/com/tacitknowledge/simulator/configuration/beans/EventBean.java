@@ -6,11 +6,9 @@ import com.tacitknowledge.simulator.Conversation;
 import org.apache.log4j.Logger;
 
 /**
- * Created by IntelliJ IDEA.
- * User: dvalencia
- * Date: Jan 7, 2010
- * Time: 5:35:01 PM
- * To change this template use File | Settings | File Templates.
+ * This class will be used as an endpoint in the camel route, to dispatch different events.
+ *
+ * @author Daniel Valencia (mailto:dvalencia@tacitknowledge.com)
  */
 public class EventBean {
     private Conversation conversation;
@@ -21,11 +19,22 @@ public class EventBean {
      */
     private static Logger logger = Logger.getLogger(EventBean.class);
 
+    /**
+     * Default Constructor.
+     * @param type the event type.
+     * @param conv the conversation related to this Event.
+     */
     public EventBean(SimulatorEventType type, Conversation conv) {
         this.eventType = type;
         this.conversation = conv;
     }
 
+    /**
+     * Method to dispatch an event.
+     * When this class is used as an endpoint, camel will call this method automatically.
+     * @param body the message body.
+     * @return the message body.
+     */
     public String process(String body){
         try{
             EventDispatcher.getInstance().dispatchEvent(this.eventType, this.conversation, body);
