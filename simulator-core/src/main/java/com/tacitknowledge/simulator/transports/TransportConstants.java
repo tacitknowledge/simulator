@@ -25,6 +25,11 @@ public class TransportConstants
     public static final String JMS = "JMS";
 
     /**
+     * Constant for SOAP transport
+     */
+    public static final String SOAP = "SOAP";
+
+    /**
      * Hidding the default constructor
      */
     private TransportConstants()

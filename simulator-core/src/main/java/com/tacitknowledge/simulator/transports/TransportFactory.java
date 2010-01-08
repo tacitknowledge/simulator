@@ -26,9 +26,10 @@ public class TransportFactory
     private static Map<String, Transport> transports = new HashMap<String, Transport>()
     {
         {
-            put(TransportConstants.FILE, new FileTransport(TransportConstants.FILE));
+            put(TransportConstants.FILE, new FileTransport());
             put(TransportConstants.FTP, new FtpTransport());
             put(TransportConstants.JMS, new JmsTransport());
+            put(TransportConstants.SOAP, new SoapTransport());
         }
     };
 
