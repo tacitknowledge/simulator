@@ -1,3 +1,3 @@
-com.tacitknowledge.simulator.impl.TestEventListenerImpl1
-com.tacitknowledge.simulator.impl.TestEventListenerImpl2
-com.tacitknowledge.simulator.impl.TestEventListenerImpl3
+com.tacitknowledge.simulator.impl.ConversationManagerImplTest$TestEventListenerImpl1
+com.tacitknowledge.simulator.impl.ConversationManagerImplTest$TestEventListenerImpl2
+com.tacitknowledge.simulator.impl.ConversationManagerImplTest$TestEventListenerImpl3

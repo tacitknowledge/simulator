@@ -8,10 +8,12 @@ import com.tacitknowledge.simulator.RouteManager;
 import com.tacitknowledge.simulator.SimulatorCamelTestSupportBase;
 import com.tacitknowledge.simulator.SimulatorException;
 import com.tacitknowledge.simulator.configuration.SimulatorEventListener;
+import com.tacitknowledge.simulator.configuration.EventDispatcher;
 import com.tacitknowledge.simulator.camel.RouteManagerImpl;
 import com.tacitknowledge.simulator.formats.AdapterFactory;
 import com.tacitknowledge.simulator.formats.FormatConstants;
 import org.junit.Test;
+import org.junit.Ignore;
 
 import java.util.List;
 
@@ -199,18 +201,40 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         assertNotNull(scenario);
     }
 
+    public static final String TEST_IMPL_1 = "com.tacitknowledge.simulator.impl.ConversationManagerImplTest$TestEventListenerImpl1";
+    public static final String TEST_IMPL_2 = "com.tacitknowledge.simulator.impl.ConversationManagerImplTest$TestEventListenerImpl2";
+    public static final String TEST_IMPL_3 = "com.tacitknowledge.simulator.impl.ConversationManagerImplTest$TestEventListenerImpl3";
+
+    
     @Test
     public void testRegisterListeners() {
-        //TODO in progress
-        assertTrue(true);
         ConversationManager manager = new ConversationManagerImpl(routeManager);
-        manager.registerListeners();
+        manager.registerListeners(System.getProperty("user.dir") + "/src/test/resources/listeners");
+        List<SimulatorEventListener> listeners = EventDispatcher.getInstance().getSimulatorEventListeners();
+        assertTrue(listeners.size() > 0);
+        //need to do this since equals method could be different among implementations
+        boolean impl1Found = false;
+        boolean impl2Found = false;
+        boolean impl3Found = false;
+        for(SimulatorEventListener listener : listeners) {
+            String className = listener.getClass().getName();
+            if(className.equals(TEST_IMPL_1)) {
+                impl1Found = true;
+            } else if(className.equals(TEST_IMPL_2)) {
+                impl2Found = true;
+            } else if(className.equals(TEST_IMPL_3)) {
+                impl3Found = true;
+            }
+        }
+        assertTrue(impl1Found && impl2Found && impl3Found);
     }
 
     /**
      * SimulatorEventListener implementation for testing purposes
      */
-    private final class TestEventListenerImpl1 implements SimulatorEventListener {
+    public static final class TestEventListenerImpl1 implements SimulatorEventListener {
+
+        public TestEventListenerImpl1(){}
 
         public void onNewMessage(String messageBody, Conversation conversation) {}
 
@@ -224,7 +248,7 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
     /**
      * SimulatorEventListener implementation for testing purposes
      */
-    private final class TestEventListenerImpl2 implements SimulatorEventListener {
+    public static final class TestEventListenerImpl2 implements SimulatorEventListener {
 
         public void onNewMessage(String messageBody, Conversation conversation) {}
 
@@ -238,7 +262,7 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
     /**
      * SimulatorEventListener implementation for testing purposes
      */
-    private final class TestEventListenerImpl3 implements SimulatorEventListener {
+    public static final class TestEventListenerImpl3 implements SimulatorEventListener {
 
         public void onNewMessage(String messageBody, Conversation conversation) {}
 

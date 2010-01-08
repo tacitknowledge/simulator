@@ -8,6 +8,8 @@ import com.tacitknowledge.simulator.ConversationScenario;
 import com.tacitknowledge.simulator.RouteManager;
 import com.tacitknowledge.simulator.SimulatorException;
 import com.tacitknowledge.simulator.Transport;
+import com.tacitknowledge.simulator.configuration.EventDispatcher;
+import com.tacitknowledge.simulator.configuration.SimulatorEventListener;
 import com.tacitknowledge.simulator.camel.RouteManagerImpl;
 import com.tacitknowledge.simulator.formats.AdapterFactory;
 import com.tacitknowledge.simulator.scripting.ScriptExecutionService;
@@ -19,6 +21,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.io.*;
+import java.lang.reflect.Constructor;
 
 /**
  * Conversation manager implementation.
@@ -27,6 +31,9 @@ import java.util.Map;
  */
 public class ConversationManagerImpl implements ConversationManager
 {
+
+    public static final String LISTENER_IMPL_FILE_LOCATION_PARAM_NAME = "listener.file.location"; 
+
     /**
      * Logger for this class.
      */
@@ -285,6 +292,58 @@ public class ConversationManagerImpl implements ConversationManager
      * {@inheritDoc}
      */
     public void registerListeners() {
+        //Get path to look for listener implementations
+        String filePath = System.getProperty(LISTENER_IMPL_FILE_LOCATION_PARAM_NAME);
+        registerListeners(filePath);
+    }
+    /**
+     * {@inheritDoc}
+     */
+    public void registerListeners(String filePath) {
+        if(filePath != null) {
+            File file = new File(filePath);
+            if(file.exists() && file.canRead()) {
+                BufferedReader reader = null;
+                try {
+                     reader = new BufferedReader(new FileReader(file));
+                    String line = null;
+                    while((line = reader.readLine()) != null) {
+                        line = line.trim();
+                        if(line.length() > 0 && !line.startsWith("#")) {
+                            registerListenerImplementation(line);
+                        }
+                    }
+                } catch(IOException ex) {
+                    logger.info("Exception while trying to read listener file.", ex);
+                } finally {
+                    if(null != reader) {
+                        try {
+                            reader.close();
+                        } catch (IOException e) {}
+                    }
+                }
+            } else {
+                logger.info("Listeners not registered. Listener file not accesible.");
+            }
+        } else {
+            logger.info("Listeners not registered. Listener file location is null.");
+        }
 
+    }
+
+    /**
+     * Register a SimulatorEventListener implementation in the EventDispatcher 
+     * @param className - Qualified Class Name
+     */
+    private void registerListenerImplementation(String className) {
+        Class listenerClass = null;
+        try {
+            listenerClass = Class.forName(className);
+            Object instanceObject = listenerClass.newInstance();
+            EventDispatcher.getInstance().addSimulatorEventListener((SimulatorEventListener)instanceObject);
+            logger.info("Registered class: " + listenerClass);
+        } catch (Exception e) {
+            logger.info("Unable to register listener class: " + className);
+        }
     }
 }

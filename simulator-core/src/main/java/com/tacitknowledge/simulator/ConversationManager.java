@@ -124,4 +124,9 @@ public interface ConversationManager
      * Register all listeners
      */
     void registerListeners();
+
+    /**
+     * Register all listeners specifying a location
+     */
+    void registerListeners(String fileLocation);
 }
