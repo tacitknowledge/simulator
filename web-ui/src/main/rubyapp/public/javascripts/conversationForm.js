@@ -36,12 +36,23 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
         }
     },
 
-    getFieldFromParamData: function(field_prefix, param_data) {
+    /*
+        Generates a field from the parameter ParameterDefinition
+     */
+    getFieldFromParamData: function(in_out, field_prefix, param_data) {
         var field_name = field_prefix + param_data[0];
         var field_label = param_data[1];
         var field_type = param_data[2];
         var is_required = param_data[3] == 'required';
-        var defaultValue = param_data[4];
+        var usage = param_data[4];
+        var defaultValue = param_data[5];
+
+        // --- Check usage restrictions (inOnly or outOInly)
+        if (usage == 'inOnly' && in_out == 'out' ||
+            usage == 'outOnly' && in_out == 'in') {
+            // --- return null, so the field is not added
+            return null;
+        }
 
         var field;
         if (field_type == 'boolean') {
@@ -67,7 +78,7 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
         return field;
     },
 
-    addParametersToFieldSet: function(fieldsetName, paramsArray, fieldPrefix) {
+    addParametersToFieldSet: function(in_out, fieldsetName, paramsArray, fieldPrefix) {
         var fieldset = Ext.getCmp(fieldsetName);
 
         // --- Remove all current parameters fields
@@ -78,14 +89,18 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                 var new_param = paramsArray[i];
 
                 // ---
-                fieldset.add(Ext.getCmp('conversation-form').getFieldFromParamData(fieldPrefix, new_param));
+                var newField =
+                        Ext.getCmp('conversation-form').getFieldFromParamData(in_out, fieldPrefix, new_param);
+                if (newField != null) {
+                    fieldset.add(newField);
+                }
             }
             fieldset.doLayout();
             fieldset.setVisible(true);
         }
     },
 
-    handleSelectForParameters: function(url, params, fieldSetName, fieldPrefix) {
+    handleSelectForParameters: function(in_out, url, params, fieldSetName, fieldPrefix) {
         Ext.Ajax.request({
             url : url,
             params : params,
@@ -93,7 +108,7 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
             success: function ( result, request ) {
                 var jsonResponse = Ext.util.JSON.decode(result.responseText);
 
-                Ext.getCmp('conversation-form').addParametersToFieldSet(fieldSetName, jsonResponse.data, fieldPrefix);
+                Ext.getCmp('conversation-form').addParametersToFieldSet(in_out, fieldSetName, jsonResponse.data, fieldPrefix);
             },
             failure: function ( result, request) {
                 Ext.MessageBox.alert('Failed', result.responseText);
@@ -133,7 +148,7 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
         var fieldPrefix = 'transport_' + in_out + '_';
         var fieldSetName = fieldPrefix + 'fieldset';
 
-        Ext.getCmp('conversation-form').handleSelectForParameters(url, params, fieldSetName, fieldPrefix);
+        Ext.getCmp('conversation-form').handleSelectForParameters(in_out, url, params, fieldSetName, fieldPrefix);
     },
 
     onSelectFormatHandler: function(in_out, format) {
@@ -142,7 +157,7 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
         var fieldPrefix = 'format_' + in_out + '_';
         var fieldSetName = fieldPrefix + 'fieldset';
 
-        Ext.getCmp('conversation-form').handleSelectForParameters(url, params, fieldSetName, fieldPrefix);
+        Ext.getCmp('conversation-form').handleSelectForParameters(in_out, url, params, fieldSetName, fieldPrefix);
     },
 
     initComponent: function() {
