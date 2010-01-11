@@ -25,9 +25,14 @@ public class TransportConstants
     public static final String JMS = "JMS";
 
     /**
-     * Constant for SOAP transport
+     * Constant for HTTP IN transport
      */
-    public static final String SOAP = "SOAP";
+    public static final String HTTP_IN = "HTTP IN";
+
+    /**
+     * Constant for HTTP OUT transport
+     */
+    public static final String HTTP_OUT = "HTTP OUT";
 
     /**
      * Hidding the default constructor

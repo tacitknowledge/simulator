@@ -29,7 +29,8 @@ public class TransportFactory
             put(TransportConstants.FILE, new FileTransport());
             put(TransportConstants.FTP, new FtpTransport());
             put(TransportConstants.JMS, new JmsTransport());
-            put(TransportConstants.SOAP, new SoapTransport());
+            put(TransportConstants.HTTP_IN, new HttpInTransport());
+            
         }
     };
 
