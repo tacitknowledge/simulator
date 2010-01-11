@@ -72,8 +72,8 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
             ).
             add(
                 name(PARAM_ROOT_TAG_NAME).
-                    label("XML root tag name " +
-                    "(outbound only)")
+                    label("XML root tag name").
+                    outOnly()
             );
 
     /**

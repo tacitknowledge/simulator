@@ -75,10 +75,14 @@ public class ParameterDefinitionBuilder
      * Simulator Parameter definition.
      * Used by Format Adapters and Transports for defining what parameters
      * can/should be set for each implementation.
-     * Can be created using the custom DSL defined in ParameterDefinitionBuilder only
+     * Can be created using the custom DSL defined in ParameterDefinitionBuilder only.
+     *
+     * The ParameterDefinition can be then "serialized" using the #getAsList method.
+     *
      *
      * @author galo
      * @see ParameterDefinitionBuilder
+     * @see #getAsList()
      */
     public static class ParameterDefinition
     {
@@ -91,6 +95,21 @@ public class ParameterDefinitionBuilder
          * Parameter type of boolean constant
          */
         public static final String TYPE_BOOLEAN = "boolean";
+
+        /**
+         * Parameter is used for IN & OUT configurations
+         */
+        public static final String USAGE_IN_OUT = "inOut";
+
+        /**
+         * Parameter is used for IN configurations only
+         */
+        public static final String USAGE_IN_ONLY = "inOnly";
+
+        /**
+         * PArameter is used for OUT configurations only
+         */
+        public static final String USAGE_OUT_ONLY = "outOnly";
 
         /**
          * Parameter name. REQUIRED
@@ -113,6 +132,13 @@ public class ParameterDefinitionBuilder
          * Defaults to false.
          */
         private boolean required = false;
+
+        /**
+         * Parameter usage.
+         * Determines if the parameter is used for IN, OUT or IN & OUT configurations.
+         * Defaults to IN & OUT
+         */
+        private String usage = USAGE_IN_OUT;
 
         /**
          * Default parameter value if none is provided.
@@ -184,6 +210,15 @@ public class ParameterDefinitionBuilder
         }
 
         /**
+         *
+         * @return usage
+         */
+        public String getUsage()
+        {
+            return usage;
+        }
+
+        /**
          * @return defaultValue
          */
         public String getDefaultValue()
@@ -221,6 +256,26 @@ public class ParameterDefinitionBuilder
         }
 
         /**
+         * Sets this parameter usage to IN_ONLY
+         * @return This instance
+         */
+        public ParameterDefinition inOnly()
+        {
+            this.usage = USAGE_IN_ONLY;
+            return this;
+        }
+
+        /**
+         * Sets this parameter usage to IN_ONLY
+         * @return This instance
+         */
+        public ParameterDefinition outOnly()
+        {
+            this.usage = USAGE_OUT_ONLY;
+            return this;
+        }
+
+        /**
          * Sets the parameter's default value
          *
          * @param defaultValue The default value
@@ -238,9 +293,11 @@ public class ParameterDefinitionBuilder
          * - 1 : Parameter description. Useful for GUI rendition
          * - 2 : Parameter type. Useful for GUI rendition.
          * - 3 : Required or Optional parameter. Useful for GUI validation.
-         * - 4 : Default value
+         * - 4 : Parameter usage. Useful for GUI rendition.
+         * - 5 : Default value
          *
          * @return Parameter definition as List
+         *
          */
         public List<String> getAsList()
         {
@@ -249,6 +306,7 @@ public class ParameterDefinitionBuilder
             list.add(label);
             list.add(type);
             list.add(Boolean.toString(required));
+            list.add(usage);
             list.add(defaultValue);
             return list;
         }

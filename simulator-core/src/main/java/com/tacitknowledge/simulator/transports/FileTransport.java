@@ -77,17 +77,20 @@ public class FileTransport extends BaseTransport implements Transport
             add(
                 name(PARAM_FILE_EXTENSION).
                     label("File Extension the transport will only poll from " +
-                    "(without dot, inbound only)")
+                    "(without dot").
+                    inOnly()
             ).
             add(
                 name(PARAM_REGEX_FILTER).
                     label("Regex filter " +
                     "(will only be applied if neither " +
-                    "file name nor extension filters are provided, inbound only)")
+                    "file name nor extension filters are provided)").
+                    inOnly()
             ).
             add(
                 name(PARAM_POLLING_INTERVAL).
-                    label("Milliseconds before the next poll (inbound only)")
+                    label("Milliseconds before the next poll").
+                    inOnly()
             ).
             add(
                 name(PARAM_DELETE_FILE).
