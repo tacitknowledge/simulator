@@ -121,7 +121,10 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
             var config = configValues[i];
             var fieldName = prefix + config.attribute_name;
 
-            Ext.getCmp(fieldName).setValue(config.attribute_value);
+            var field = Ext.getCmp(fieldName);
+            if (field) {
+                field.setValue(config.attribute_value);
+            }
         }
     },
 
@@ -136,7 +139,12 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                 var fieldSetName = prefix + "fieldset";
                 var paramsArray = configurations[configuration].parameters;
 
-                Ext.getCmp('conversation-form').addParametersToFieldSet(fieldSetName, paramsArray, prefix);
+                var in_out = "in";
+                if(prefix.match(/out/)) {
+                    in_out = "out";
+                }
+
+                Ext.getCmp('conversation-form').addParametersToFieldSet(in_out, fieldSetName, paramsArray, prefix);
                 Ext.getCmp('conversation-form').populateConfigurationValues(prefix, configurations[configuration].config_values);
             }
         }

@@ -1,6 +1,7 @@
 package com.tacitknowledge.simulator.filetest;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.command.ActiveMQTextMessage;
 
 import javax.jms.*;
 import java.io.InputStream;
@@ -35,10 +36,14 @@ public class TestJmsReceiver {
 
         if(messageListener == null){
             messageListener = new MessageListener(){
-                private int cont = 0;
-
                 public void onMessage(Message message) {
-                    System.out.println("Message Received: " + message + ". Count: " + cont);
+                    if(message instanceof ActiveMQTextMessage){
+                        try {
+                            System.out.println("Message Received: " + ((ActiveMQTextMessage)message).getText());
+                        } catch (JMSException e) {
+                            System.out.println("Error getting the message text.");
+                        }
+                    }
                 }
             };
         }

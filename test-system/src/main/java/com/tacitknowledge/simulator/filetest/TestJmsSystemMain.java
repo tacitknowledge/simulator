@@ -65,10 +65,12 @@ public class TestJmsSystemMain {
             producer = getMessageProducer(isDestinationTopic);
             TextMessage textMessage = session.createTextMessage(data);
 
+            int count = 1;
             while(numberOfMessages > 0){
                 producer.send(textMessage);
-                System.out.println("Message " + numberOfMessages + " Sent: " + textMessage);
+                System.out.println("Message " + count + " Sent: " + textMessage);
                 numberOfMessages--;
+                count++;
             }
 
             producer.close();            
