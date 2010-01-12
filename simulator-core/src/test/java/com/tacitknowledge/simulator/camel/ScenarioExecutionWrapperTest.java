@@ -17,6 +17,12 @@ import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.Before;
+import org.apache.camel.Exchange;
+import org.apache.camel.Message;
+import org.apache.camel.CamelContext;
+import org.apache.camel.impl.DefaultExchange;
+import org.apache.camel.impl.DefaultCamelContext;
+import org.apache.camel.impl.DefaultMessage;
 
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -42,7 +48,11 @@ public class ScenarioExecutionWrapperTest
         ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(conversation);
 
         String testString = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><xxxxxx/>";
-        String s = wrapper.process(testString);
+        Exchange exchange = new DefaultExchange(new DefaultCamelContext());
+        Message message = new DefaultMessage();
+        message.setBody(testString);
+        exchange.setIn(message);
+        String s = wrapper.process(exchange);
         Assert.assertNotNull(s);
         Assert.assertSame(testString, s);
     }
@@ -59,14 +69,23 @@ public class ScenarioExecutionWrapperTest
 
         ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(conversation);
 
-        String s = wrapper.process(TestHelper.XML_DATA);
+        CamelContext context = new DefaultCamelContext();
+        Exchange exchange = new DefaultExchange(context);
+        Message message = new DefaultMessage();
+        message.setBody(TestHelper.XML_DATA);
+        exchange.setIn(message);
+        String s = wrapper.process(exchange);
         Assert.assertTrue(s.contains("John12345"));
 
         //modify the script and see what happens
         conversation.addOrUpdateScenario(0, "javascript", criteria, "employees.employee[0].name='John1234544444444';" +
             "employees" );
 
-        s = wrapper.process(TestHelper.XML_DATA);
+        exchange = new DefaultExchange(context);
+        message = new DefaultMessage();
+        message.setBody(TestHelper.XML_DATA);
+        exchange.setIn(message);
+        s = wrapper.process(exchange);
 
         Assert.assertTrue(s.contains("John1234544444444"));
     }
@@ -91,7 +110,13 @@ public class ScenarioExecutionWrapperTest
 
         ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(conversation);
 
-        String s = wrapper.process(TestHelper.XML_DATA);
+        CamelContext context = new DefaultCamelContext();
+        Exchange exchange = new DefaultExchange(context);
+        Message message = new DefaultMessage();
+        message.setBody(TestHelper.XML_DATA);
+        exchange.setIn(message);
+
+        String s = wrapper.process(exchange);
         Assert.assertFalse(s.contains("Johnffff"));
         Assert.assertFalse(s.contains("John12345"));
         Assert.assertTrue(s.contains("Johnaaaa"));
@@ -118,7 +143,13 @@ public class ScenarioExecutionWrapperTest
 
         ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(conversation);
 
-        String s = wrapper.process(TestHelper.XML_DATA);
+        CamelContext context = new DefaultCamelContext();
+        Exchange exchange = new DefaultExchange(context);
+        Message message = new DefaultMessage();
+        message.setBody(TestHelper.XML_DATA);
+        exchange.setIn(message);
+
+        String s = wrapper.process(exchange);
         Assert.assertFalse(s.contains("Johnffff"));
         Assert.assertFalse(s.contains("John12345"));
         Assert.assertTrue(s.contains("Johnaaaa"));
@@ -146,8 +177,13 @@ public class ScenarioExecutionWrapperTest
 
         ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(conversation);
 
+        CamelContext context = new DefaultCamelContext();
+        Exchange exchange = new DefaultExchange(context);
+        Message message = new DefaultMessage();
+        message.setBody(TestHelper.XML_DATA);
+        exchange.setIn(message);
 
-        String s = wrapper.process(TestHelper.XML_DATA);
+        String s = wrapper.process(exchange);
         Assert.assertTrue(s.contains("John12345"));
     }
 
@@ -161,7 +197,13 @@ public class ScenarioExecutionWrapperTest
 
         ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(conversation);
 
-        String s = wrapper.process(TestHelper.XML_DATA);
+        CamelContext context = new DefaultCamelContext();
+        Exchange exchange = new DefaultExchange(context);
+        Message message = new DefaultMessage();
+        message.setBody(TestHelper.XML_DATA);
+        exchange.setIn(message);
+
+        String s = wrapper.process(exchange);
 
         Assert.assertTrue(s.contains("Success"));
     }
@@ -176,9 +218,14 @@ public class ScenarioExecutionWrapperTest
             "$employees.employee[0].name='John12345';" +
                 "return {}");
 
+        CamelContext context = new DefaultCamelContext();
+        Exchange exchange = new DefaultExchange(context);
+        Message message = new DefaultMessage();
+        message.setBody(TestHelper.XML_DATA);
+        exchange.setIn(message);
 
         ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(conversation);
-        String s = wrapper.process(TestHelper.XML_DATA);
+        String s = wrapper.process(exchange);
         Assert.assertTrue(s.contains("rubyhash"));
     }
 
@@ -203,7 +250,13 @@ public class ScenarioExecutionWrapperTest
 
         ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(conversation);
 
-        String s = wrapper.process(TestHelper.XML_DATA);
+        CamelContext context = new DefaultCamelContext();
+        Exchange exchange = new DefaultExchange(context);
+        Message message = new DefaultMessage();
+        message.setBody(TestHelper.XML_DATA);
+        exchange.setIn(message);
+
+        String s = wrapper.process(exchange);
         Assert.assertTrue(s.contains("root"));
     }
 
@@ -231,7 +284,13 @@ public class ScenarioExecutionWrapperTest
 
         ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(conversation);
 
-        String s = wrapper.process(TestHelper.XML_DATA);
+        CamelContext context = new DefaultCamelContext();
+        Exchange exchange = new DefaultExchange(context);
+        Message message = new DefaultMessage();
+        message.setBody(TestHelper.XML_DATA);
+        exchange.setIn(message);
+        
+        String s = wrapper.process(exchange);
         System.out.println("s = " + s);
 
         SAXBuilder builder = new SAXBuilder();

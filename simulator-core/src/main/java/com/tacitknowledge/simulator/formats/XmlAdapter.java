@@ -8,6 +8,7 @@ import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
 import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.name;
 import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
 import org.apache.log4j.Logger;
+import org.apache.camel.Exchange;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -103,9 +104,10 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
     }
 
 
-    protected SimulatorPojo createSimulatorPojo(String o)
+    protected SimulatorPojo createSimulatorPojo(Exchange exchange)
         throws FormatAdapterException
     {
+        String o = exchange.getIn().getBody(String.class);
         logger.debug("Attempting to generate SimulatorPojo from XML content:\n" + o);
 
         SimulatorPojo pojo = new StructuredSimulatorPojo();

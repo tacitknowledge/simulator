@@ -8,6 +8,7 @@ import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
 import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.name;
 import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
 import org.apache.log4j.Logger;
+import org.apache.camel.Exchange;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -100,13 +101,16 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
     /**
      * Creates a simuator pojo
      *
-     * @param o incoming data
+     * @param exchange incoming data
      * @return simulator pojo
      * @throws FormatAdapterException if format adapter error occurs
      */
-    protected SimulatorPojo createSimulatorPojo(final String o)
+    protected SimulatorPojo createSimulatorPojo(final Exchange exchange)
         throws FormatAdapterException
     {
+
+        String o = exchange.getIn().getBody(String.class);
+
         logger.debug("Attempting to generate SimulatorPojo from JSON content:\n" + o);
 
         SimulatorPojo pojo = new StructuredSimulatorPojo();

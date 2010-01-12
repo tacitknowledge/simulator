@@ -7,6 +7,13 @@ import junit.framework.TestCase;
 
 import java.util.Map;
 
+import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
+import org.apache.camel.Message;
+import org.apache.camel.impl.DefaultCamelContext;
+import org.apache.camel.impl.DefaultExchange;
+import org.apache.camel.impl.DefaultMessage;
+
 /**
  * Test class for PropertiesAdapter
  *
@@ -25,7 +32,12 @@ public class PropertiesAdapterTest extends TestCase
     {
         try
         {
-            SimulatorPojo pojo = adapter.createSimulatorPojo(TestHelper.PROPERTIES_DATA);
+            CamelContext context = new DefaultCamelContext();
+            Exchange exchange = new DefaultExchange(context);
+            Message message = new DefaultMessage();
+            message.setBody(TestHelper.PROPERTIES_DATA);
+            exchange.setIn(message);
+            SimulatorPojo pojo = adapter.createSimulatorPojo(exchange);
 
             assertNotNull(pojo.getRoot().get("employee"));
 
@@ -53,7 +65,12 @@ public class PropertiesAdapterTest extends TestCase
     {
         try
         {
-            SimulatorPojo pojo = adapter.createSimulatorPojo(TestHelper.PROPERTIES_DATA);
+            CamelContext context = new DefaultCamelContext();
+            Exchange exchange = new DefaultExchange(context);
+            Message message = new DefaultMessage();
+            message.setBody(TestHelper.PROPERTIES_DATA);
+            exchange.setIn(message);
+            SimulatorPojo pojo = adapter.createSimulatorPojo(exchange);
 
             assertNotNull(pojo.getRoot().get("employee"));
 

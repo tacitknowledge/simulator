@@ -6,6 +6,7 @@ import com.tacitknowledge.simulator.Conversation;
 import com.tacitknowledge.simulator.configuration.EventDispatcher;
 import com.tacitknowledge.simulator.configuration.SimulatorEventType;
 import org.apache.log4j.Logger;
+import org.apache.camel.Exchange;
 
 import java.util.Collection;
 import java.util.Map;
@@ -72,7 +73,7 @@ public class ScenarioExecutionWrapper
      * @return
      * @throws Exception in case of error.
      */
-    public String process(String body) throws Exception
+    public String process(Exchange body) throws Exception
     {
         /**
          * Beans needed for the script executions service to run the simulation against *
@@ -82,6 +83,8 @@ public class ScenarioExecutionWrapper
         Object result = null;
         //TODO add case when matching scenario is not found
         // here we are looking for first matching scenario and ignore all other scenarios
+
+        String messageBody = body.getIn().getBody(String.class);
         for (ConversationScenario scenario : scenarios)
         {
             synchronized (scenario)
@@ -92,12 +95,12 @@ public class ScenarioExecutionWrapper
                 logger.info("active: " + active + " matches condition: " + matchesCondition);
                 if (active && matchesCondition)
                 {
-                    EventDispatcher.getInstance().dispatchEvent(SimulatorEventType.SCENARIO_MATCHED, this.conversation, body);
+                    EventDispatcher.getInstance().dispatchEvent(SimulatorEventType.SCENARIO_MATCHED, this.conversation, messageBody);
 
                     logger.info("Executing the transformation script.");
                     result = scenario.executeTransformation(scriptExecutionBeans);
 
-                    EventDispatcher.getInstance().dispatchEvent(SimulatorEventType.RESPONSE_BUILT, this.conversation, body);
+                    EventDispatcher.getInstance().dispatchEvent(SimulatorEventType.RESPONSE_BUILT, this.conversation, messageBody);
                     break;
                 }
             }

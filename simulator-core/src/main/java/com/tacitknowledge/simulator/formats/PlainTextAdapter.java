@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.camel.Exchange;
+
 /**
  * Date: 24.11.2009
  * Time: 12:35:12
@@ -25,11 +27,12 @@ public class PlainTextAdapter extends BaseAdapter
      */
 
     @Override
-    public Map<String, Object> generateBeans(String o) throws FormatAdapterException
+    public Map<String, Object> generateBeans(Exchange o) throws FormatAdapterException
     {
 
+        String text = o.getIn().getBody(String.class);
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("text", o);
+        map.put("text", text);
         return map;
     }
 

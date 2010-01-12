@@ -4,6 +4,12 @@ import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.TestHelper;
 import junit.framework.TestCase;
+import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
+import org.apache.camel.Message;
+import org.apache.camel.impl.DefaultCamelContext;
+import org.apache.camel.impl.DefaultExchange;
+import org.apache.camel.impl.DefaultMessage;
 
 /**
  * Test class for XmlAdapter
@@ -19,8 +25,13 @@ public class XmlAdapterTest extends TestCase
         SimulatorPojo pojo;
         try
         {
+            CamelContext context = new DefaultCamelContext();
+            Exchange exchange = new DefaultExchange(context);
+            Message message = new DefaultMessage();
+            message.setBody(TestHelper.XML_DATA);
+            exchange.setIn(message);
             // --- Get a SimulatorPojo from our fake little XML
-            pojo = adapter.createSimulatorPojo(TestHelper.XML_DATA);
+            pojo = adapter.createSimulatorPojo(exchange);
 
             // --- Assert the pojo has a root
             assertNotNull(pojo.getRoot());
@@ -39,7 +50,13 @@ public class XmlAdapterTest extends TestCase
         // --- Lets use the same pojo generated in the generateBeans() method
         try
         {
-            SimulatorPojo pojo = adapter.createSimulatorPojo(TestHelper.XML_DATA);
+            CamelContext context = new DefaultCamelContext();
+            Exchange exchange = new DefaultExchange(context);
+            Message message = new DefaultMessage();
+            message.setBody(TestHelper.XML_DATA);
+            exchange.setIn(message);
+
+            SimulatorPojo pojo = adapter.createSimulatorPojo(exchange);
 
             String xml = adapter.getString(pojo);
 

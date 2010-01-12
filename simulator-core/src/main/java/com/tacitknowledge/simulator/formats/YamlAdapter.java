@@ -8,6 +8,7 @@ import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
 import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.name;
 import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
 import org.apache.log4j.Logger;
+import org.apache.camel.Exchange;
 import org.ho.yaml.YamlDecoder;
 import org.ho.yaml.YamlEncoder;
 
@@ -96,9 +97,10 @@ public class YamlAdapter extends BaseAdapter implements Adapter<Object>
         super(parameters);
     }
 
-    protected SimulatorPojo createSimulatorPojo(String object)
+    protected SimulatorPojo createSimulatorPojo(Exchange exchange)
         throws FormatAdapterException
     {
+        String object = exchange.getIn().getBody(String.class);
         logger.debug("Attempting to generate SimulatorPojo from YAML content:\n" + object);
 
         SimulatorPojo pojo = new StructuredSimulatorPojo();

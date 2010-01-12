@@ -1,5 +1,7 @@
 package com.tacitknowledge.simulator;
 
+import org.apache.camel.Exchange;
+
 import java.util.List;
 import java.util.Map;
 
@@ -45,7 +47,7 @@ public interface Adapter<E>
      * @throws FormatAdapterException in case the incoming data object is not in correct format
      *                                or missing required parameters. Also @see #BaseAdapter
      */
-    Map<String, Object> generateBeans(String body) throws FormatAdapterException;
+    Map<String, Object> generateBeans(Exchange body) throws FormatAdapterException;
 
     /**
      * Adapts the data from the simulation result SimulatorPojo into the desired format used

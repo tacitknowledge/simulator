@@ -8,6 +8,7 @@ import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
 import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.name;
 import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
 import org.apache.log4j.Logger;
+import org.apache.camel.Exchange;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -109,8 +110,10 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
         super(parameters);
     }
 
-    protected SimulatorPojo createSimulatorPojo(String o)
+    protected SimulatorPojo createSimulatorPojo(Exchange exchange)
     {
+        String o = exchange.getIn().getBody(String.class);
+
         logger.debug("Attempting to generate SimulatorPojo from CSV content:\n" + o);
 
         SimulatorPojo pojo = new StructuredSimulatorPojo();

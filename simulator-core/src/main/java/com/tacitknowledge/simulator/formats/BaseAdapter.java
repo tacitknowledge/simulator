@@ -18,6 +18,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.camel.Exchange;
+
 /**
  * Base class for Adapter implementations.
  *
@@ -71,14 +73,14 @@ public abstract class BaseAdapter implements Adapter<Object>
      */
     abstract void validateParameters() throws FormatAdapterException;
 
-    public Map<String, Object> generateBeans(String o) throws FormatAdapterException
+    public Map<String, Object> generateBeans(Exchange o) throws FormatAdapterException
     {
         validateParameters();
         SimulatorPojo pojo = createSimulatorPojo(o);
         return generateClasses(pojo);
     }
 
-    protected SimulatorPojo createSimulatorPojo(String o) throws FormatAdapterException
+    protected SimulatorPojo createSimulatorPojo(Exchange o) throws FormatAdapterException
     {
         throw new UnsupportedOperationException("override me");
     }

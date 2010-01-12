@@ -39,6 +39,11 @@ public class FormatConstants
     public static final String PROPERTIES = "PROPERTIES";
 
     /**
+     * Constant for REST format
+     */
+    public static final String REST = "REST";
+
+    /**
      * Hiding the default constructor
      */
     private FormatConstants()

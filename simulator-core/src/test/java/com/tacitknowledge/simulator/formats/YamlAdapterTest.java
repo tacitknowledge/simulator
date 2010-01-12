@@ -10,6 +10,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
+import org.apache.camel.Message;
+import org.apache.camel.impl.DefaultCamelContext;
+import org.apache.camel.impl.DefaultExchange;
+import org.apache.camel.impl.DefaultMessage;
+
 /**
  * Test class for YamlAdapter
  *
@@ -28,7 +35,13 @@ public class YamlAdapterTest extends TestCase
     {
         try
         {
-            adapter.generateBeans(TestHelper.YAML_DATA);
+            CamelContext context = new DefaultCamelContext();
+            Exchange exchange = new DefaultExchange(context);
+            Message message = new DefaultMessage();
+            message.setBody(TestHelper.YAML_DATA);
+            exchange.setIn(message);
+
+            adapter.generateBeans(exchange);
             fail("JSON Adapter should throw exception if the required parameters are not provided.");
         }
         catch (FormatAdapterException fae)
@@ -46,7 +59,13 @@ public class YamlAdapterTest extends TestCase
 
         try
         {
-            SimulatorPojo pojo = adapter.createSimulatorPojo(TestHelper.YAML_DATA);
+            CamelContext context = new DefaultCamelContext();
+            Exchange exchange = new DefaultExchange(context);
+            Message message = new DefaultMessage();
+            message.setBody(TestHelper.YAML_DATA);
+            exchange.setIn(message);
+
+            SimulatorPojo pojo = adapter.createSimulatorPojo(exchange);
 
             assertNotNull(pojo.getRoot().get("employee"));
 
@@ -74,7 +93,13 @@ public class YamlAdapterTest extends TestCase
         adapter.validateParameters();
         try
         {
-            SimulatorPojo pojo = adapter.createSimulatorPojo(TestHelper.YAML_SEQUENCE_DATA);
+            CamelContext context = new DefaultCamelContext();
+            Exchange exchange = new DefaultExchange(context);
+            Message message = new DefaultMessage();
+            message.setBody(TestHelper.YAML_SEQUENCE_DATA);
+            exchange.setIn(message);
+
+            SimulatorPojo pojo = adapter.createSimulatorPojo(exchange);
 
             assertNotNull(pojo.getRoot().get("persons"));
 

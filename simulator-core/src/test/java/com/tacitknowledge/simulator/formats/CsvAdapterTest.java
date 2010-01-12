@@ -11,6 +11,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
+import org.apache.camel.Message;
+import org.apache.camel.impl.DefaultCamelContext;
+import org.apache.camel.impl.DefaultExchange;
+import org.apache.camel.impl.DefaultMessage;
+
 /**
  * Test class for CvsAdapterTest
  *
@@ -36,7 +43,13 @@ public class
 
         adapter.setParameters(params);
 
-        SimulatorPojo pojo = adapter.createSimulatorPojo(TestHelper.CSV_DATA);
+        CamelContext context = new DefaultCamelContext();
+        Exchange exchange = new DefaultExchange(context);
+        Message message = new DefaultMessage();
+        message.setBody(TestHelper.CSV_DATA);
+        exchange.setIn(message);
+
+        SimulatorPojo pojo = adapter.createSimulatorPojo(exchange);
 
         Object o = pojo.getRoot().get("Words");
         // --- First, make sure we got the root Map with a Words key
@@ -63,7 +76,13 @@ public class
         adapter.setParameters(params);
         adapter.validateParameters();
 
-        SimulatorPojo pojo = adapter.createSimulatorPojo(TestHelper.CSV_DATA);
+        CamelContext context = new DefaultCamelContext();
+        Exchange exchange = new DefaultExchange(context);
+        Message message = new DefaultMessage();
+        message.setBody(TestHelper.CSV_DATA);
+        exchange.setIn(message);
+        
+        SimulatorPojo pojo = adapter.createSimulatorPojo(exchange);
 
         Object o = pojo.getRoot().get("Words");
         // --- First, make sure we got the root Map with a Words key
@@ -92,8 +111,14 @@ public class
             adapter.setParameters(params);
             adapter.validateParameters();
 
+            CamelContext context = new DefaultCamelContext();
+            Exchange exchange = new DefaultExchange(context);
+            Message message = new DefaultMessage();
+            message.setBody(TestHelper.CSV_DATA);
+            exchange.setIn(message);
+
             // --- First, get the pojo from the same adapter
-            SimulatorPojo pojo = adapter.createSimulatorPojo(TestHelper.CSV_DATA);
+            SimulatorPojo pojo = adapter.createSimulatorPojo(exchange);
 
             // --- Now, go the other way around
             Object o = adapter.getString(pojo);

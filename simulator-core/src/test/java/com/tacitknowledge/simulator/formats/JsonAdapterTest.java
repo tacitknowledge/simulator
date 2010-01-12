@@ -7,6 +7,12 @@ import junit.framework.TestCase;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
+import org.apache.camel.Message;
+import org.apache.camel.impl.DefaultCamelContext;
+import org.apache.camel.impl.DefaultExchange;
+import org.apache.camel.impl.DefaultMessage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,7 +37,12 @@ public class JsonAdapterTest extends TestCase
     {
         try
         {
-            adapter.generateBeans(TestHelper.JSON_DATA);
+            CamelContext context = new DefaultCamelContext();
+            Exchange exchange = new DefaultExchange(context);
+            Message message = new DefaultMessage();
+            message.setBody(TestHelper.JSON_DATA);
+            exchange.setIn(message);
+            adapter.generateBeans(exchange);
             fail("JSON Adapter should throw exception if the required parameters are not provided.");
         }
         catch (FormatAdapterException fae)
@@ -49,7 +60,13 @@ public class JsonAdapterTest extends TestCase
 
         try
         {
-            SimulatorPojo pojo = adapter.createSimulatorPojo(TestHelper.JSON_DATA);
+            CamelContext context = new DefaultCamelContext();
+            Exchange exchange = new DefaultExchange(context);
+            Message message = new DefaultMessage();
+            message.setBody(TestHelper.JSON_DATA);
+            exchange.setIn(message);
+
+            SimulatorPojo pojo = adapter.createSimulatorPojo(exchange);
 
             assertNotNull(pojo.getRoot().get("person"));
             Map<String, Object> person = (Map<String, Object>) pojo.getRoot().get("person");
@@ -89,8 +106,14 @@ public class JsonAdapterTest extends TestCase
 
         try
         {
+            CamelContext context = new DefaultCamelContext();
+            Exchange exchange = new DefaultExchange(context);
+            Message message = new DefaultMessage();
+            message.setBody(TestHelper.JSON_DATA);
+            exchange.setIn(message);
+
             // --- Use the same data to get a pojo first
-            SimulatorPojo pojo = adapter.createSimulatorPojo(TestHelper.JSON_DATA);
+            SimulatorPojo pojo = adapter.createSimulatorPojo(exchange);
 
             // --- Now, use the same pojo to generate a JSON string
             String jsonString = adapter.getString(pojo);
@@ -134,9 +157,16 @@ public class JsonAdapterTest extends TestCase
         params.put(JsonAdapter.PARAM_JSON_ARRAY_CONTENT, "anArray");
         adapter.setParameters(params);
         adapter.validateParameters();
+
+        CamelContext context = new DefaultCamelContext();
+            Exchange exchange = new DefaultExchange(context);
+            Message message = new DefaultMessage();
+            message.setBody(TestHelper.JSON_DATA_ARRAY);
+            exchange.setIn(message);
+
         // ---
         // --- Use JSON arrays data to get a pojo first
-        SimulatorPojo pojo = adapter.createSimulatorPojo(TestHelper.JSON_DATA_ARRAY);
+        SimulatorPojo pojo = adapter.createSimulatorPojo(exchange);
 
         // --- Now, use the same pojo to generate a JSON string
         String jsonString = adapter.getString(pojo);

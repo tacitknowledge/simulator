@@ -10,6 +10,13 @@ import junit.framework.TestCase;
 
 import java.util.Map;
 
+import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
+import org.apache.camel.Message;
+import org.apache.camel.impl.DefaultCamelContext;
+import org.apache.camel.impl.DefaultExchange;
+import org.apache.camel.impl.DefaultMessage;
+
 /**
  * This test will help us to validate we are able to read and execute the different scripting
  * languages
@@ -30,8 +37,15 @@ public class ScriptExecutionServiceTest extends TestCase
 
         // --- First, get the SimulatorPojo from the data
         XmlAdapter adapter = (XmlAdapter) AdapterFactory.getAdapter(FormatConstants.XML);
+
+        CamelContext context = new DefaultCamelContext();
+        Exchange exchange = new DefaultExchange(context);
+        Message message = new DefaultMessage();
+        message.setBody(TestHelper.XML_DATA);
+        exchange.setIn(message);
+
         // --- Get the data in a strcutured form as a SimulatorPojo
-        Map<String, Object> beans = adapter.generateBeans(TestHelper.XML_DATA);
+        Map<String, Object> beans = adapter.generateBeans(exchange);
 
         // --- Now, get a ScriptExecutionService and set the language (javascript)
         ScriptExecutionService execServ = new ScriptExecutionService();

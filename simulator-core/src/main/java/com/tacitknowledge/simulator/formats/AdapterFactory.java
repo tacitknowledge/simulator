@@ -26,6 +26,7 @@ public final class AdapterFactory
             put(FormatConstants.YAML, new YamlAdapter());
             put(FormatConstants.PROPERTIES, new PropertiesAdapter());
             put(FormatConstants.PLAIN_TEXT, new PlainTextAdapter());
+            put(FormatConstants.REST, new RestAdapter());
         }
     };
 
