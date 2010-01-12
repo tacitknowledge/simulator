@@ -29,9 +29,15 @@ public class TestJmsReceiver {
         Properties properties = new Properties();
         if (args.length == 0) {
             System.out.println("Properties file name is not specified.");
+            printHelp();
             System.exit(0);
         } else {
-            stream = new FileInputStream(args[0]);
+            if(args[0].equals("--help")){
+                printHelp();
+                System.exit(0);
+            }else{
+                stream = new FileInputStream(args[0]);
+            }
         }
 
         if(messageListener == null){
@@ -98,6 +104,16 @@ public class TestJmsReceiver {
                 }
             }
         }
+    }
+
+    private static void printHelp(){
+        System.out.println("Create a file with the following properties:");
+        System.out.println("");
+        System.out.println("brokerUrl          -> The url of the broker system (e.g. tcp://localhost:61616).");
+        System.out.println("destinationName    -> Name of the queue or topic.");
+        System.out.println("isDestinationTopic -> The destination is a topic or queue (defaults to false).");
+        System.out.println("");
+        System.out.println("Run this command again passing the absolute path to the file as parameter.");
     }
 
     private static MessageConsumer createMessageConsumer(Session session, Boolean isDestinationTopic, String destinationName) throws JMSException {

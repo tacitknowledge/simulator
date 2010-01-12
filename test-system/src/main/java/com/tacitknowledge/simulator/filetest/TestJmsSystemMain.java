@@ -85,6 +85,7 @@ public class TestJmsSystemMain {
     private static void printHelp(){
         System.out.println("Properties file name is not specified.");
         System.out.println("Create a file with the following properties:");
+        System.out.println("");        
         System.out.println("dataFile           -> File that contains the message data.");
         System.out.println("brokerUrl          -> The url of the broker system (e.g. tcp://localhost:61616).");
         System.out.println("destinationName    -> Name of the queue or topic.");
