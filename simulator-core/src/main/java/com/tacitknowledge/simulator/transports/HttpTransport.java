@@ -14,22 +14,14 @@ import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.p
 /**
  * @author galo
  */
-public class HttpInTransport extends BaseTransport implements Transport
+public class HttpTransport extends BaseTransport implements Transport
 {
-    /**
-     * Host name parameter. REQUIRED.
-     */
-    public static final String PARAM_HOSTNAME = "hostName";
-
-    /**
-     * Port parameter. OPTIONAL.
-     */
-    public static final String PARAM_PORT = "port";
-
     /**
      * Resource URI parameter. REQUIRED
      */
     public static final String PARAM_RESOURCE_URI = "resourceURI";
+
+    public static final String PARAM_HTTP_OUT = "httpOut";
 
     /**
      * Transport parameters definition.
@@ -37,8 +29,9 @@ public class HttpInTransport extends BaseTransport implements Transport
     private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
         parameters().
             add(
-                name(PARAM_HOSTNAME).
-                    label("Host Name (without the protocol definition 'http://'").
+                name(PARAM_HOST).
+                    label("Host Name (without the protocol definition 'http://' " +
+                            "nor ending slash .e.g.: myappserver.com))").
                     required().
                     inOnly()
             ).
@@ -49,9 +42,19 @@ public class HttpInTransport extends BaseTransport implements Transport
             ).
             add(
                 name(PARAM_RESOURCE_URI).
-                    label("Resource URI").
-                    required()
+                    label("Resource URI (include starting slash e.g.: /mytestapp").
+                    required().
+                    inOnly()
+            ).
+            add(
+                name(PARAM_HTTP_OUT).
+                    label("Is this an HTTP outbound transport?<br>" +
+                        "This transport should only be used if the inbound transport is HTTP").
+                    outOnly().
+                    defaultValue("true")
             );
+
+    private boolean isHttpOut = false;
 
 
     /**
@@ -60,9 +63,9 @@ public class HttpInTransport extends BaseTransport implements Transport
      *
      * @param
      */
-    public HttpInTransport()
+    public HttpTransport()
     {
-        super(TransportConstants.HTTP_IN);
+        super(TransportConstants.HTTP);
     }
 
     /**
@@ -70,9 +73,9 @@ public class HttpInTransport extends BaseTransport implements Transport
      *
      * @param parameters @see #parameters
      */
-    public HttpInTransport(Map<String, String> parameters)
+    public HttpTransport(Map<String, String> parameters)
     {
-        super(TransportConstants.HTTP_IN, parameters);
+        super(TransportConstants.HTTP, parameters);
     }
 
     /**
@@ -85,14 +88,18 @@ public class HttpInTransport extends BaseTransport implements Transport
     @Override
     void validateParameters() throws TransportException
     {
-        if (getParamValue(PARAM_HOSTNAME) == null)
+        if (getParamValue(PARAM_HTTP_OUT) != null)
         {
-            throw new TransportException("Host name parameter is required " +
-                    "(without ending slash .e.g.: myappserver.com)");
+            this.isHttpOut = Boolean.parseBoolean(getParamValue(PARAM_HTTP_OUT));
         }
-        if (getParamValue(PARAM_RESOURCE_URI) == null)
+
+        if (!this.isHttpOut && getParamValue(PARAM_HOST) == null)
         {
-            throw new TransportException("Resource URI parameter is required (e.g.: /orders/");
+            throw new TransportException("Host name parameter is required");
+        }
+        if (!this.isHttpOut && getParamValue(PARAM_RESOURCE_URI) == null)
+        {
+            throw new TransportException("Resource URI parameter is required");
         }
     }
 
@@ -125,9 +132,17 @@ public class HttpInTransport extends BaseTransport implements Transport
     {
         validateParameters();
 
+        // --- If this transport is an HTTP OUT, we just end the Camel route,
+        // so we return the result from the execution script as the HTTP response body
+        if (this.isHttpOut)
+        {
+            return "direct:end";
+        }
+
+        // --- 
         StringBuilder sb = new StringBuilder("jetty:http://");
 
-        sb.append(getParamValue(PARAM_HOSTNAME));
+        sb.append(getParamValue(PARAM_HOST));
 
         if (getParamValue(PARAM_PORT) != null)
         {

@@ -27,12 +27,7 @@ public class TransportConstants
     /**
      * Constant for HTTP IN transport
      */
-    public static final String HTTP_IN = "HTTP IN";
-
-    /**
-     * Constant for HTTP OUT transport
-     */
-    public static final String HTTP_OUT = "HTTP OUT";
+    public static final String HTTP = "HTTP";
 
     /**
      * Hidding the default constructor

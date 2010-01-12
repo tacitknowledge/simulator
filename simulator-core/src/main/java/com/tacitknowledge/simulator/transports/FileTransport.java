@@ -56,11 +56,6 @@ public class FileTransport extends BaseTransport implements Transport
     public static final String PARAM_DELETE_FILE = "deleteFile";
 
     /**
-     * Logger for this class.
-     */
-    private static Logger logger = Logger.getLogger(FileTransport.class);
-
-    /**
      * Transport parameters definition.
      */
     private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =

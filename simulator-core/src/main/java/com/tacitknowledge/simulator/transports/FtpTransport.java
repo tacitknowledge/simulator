@@ -29,17 +29,6 @@ public class FtpTransport extends FileTransport implements Transport
     public static final String PARAM_PORT = "port";
 
     /**
-     * Username parameter. Username to login as. OPTIONAL.
-     * If not provided, anonymous login will be attempted.
-     */
-    public static final String PARAM_USERNAME = "username";
-
-    /**
-     * Password parameter. Used to login to the remote file system. OPTIONAL.
-     */
-    public static final String PARAM_PASSWORD = "password";
-
-    /**
      * SFTP parameter. Determines if this transport is SFTP (true) or FTP (false). OPTIONAL.
      * Defaults to false (FTP)
      */

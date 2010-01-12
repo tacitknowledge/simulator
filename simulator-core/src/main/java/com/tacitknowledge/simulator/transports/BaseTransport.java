@@ -16,6 +16,27 @@ import java.util.Map;
  */
 public abstract class BaseTransport implements Transport
 {
+    // --- Common Transport parameters
+    /**
+     * Host name parameter.
+     */
+    public static final String PARAM_HOST = "host";
+
+    /**
+     * Port parameter.
+     */
+    public static final String PARAM_PORT = "port";
+
+    /**
+     * Username parameter. Username to login as.
+     */
+    public static final String PARAM_USERNAME = "username";
+
+    /**
+     * Password parameter. Used to login to the remote file system. OPTIONAL.
+     */
+    public static final String PARAM_PASSWORD = "password";
+
     /**
      * Ampersand constant
      */
