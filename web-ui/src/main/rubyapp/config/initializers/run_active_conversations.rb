@@ -7,6 +7,6 @@ if (!ENV["RAILS_ENV"].eql?("test"))
       SimulatorConnector.instance.activate(conversation);
     end
   rescue => e
-    puts e.message
+    #puts e.message
   end
 end
