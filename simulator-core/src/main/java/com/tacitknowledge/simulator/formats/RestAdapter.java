@@ -24,13 +24,10 @@ import javax.servlet.http.HttpServletRequest;
 
 public class RestAdapter extends BaseAdapter implements Adapter<Object> {
 
-    private static final String PARAM_RESOURCE = "resource";
+    public static final String PARAM_RESOURCE = "resource";
 
-    private static final String PARAM_HTTP_METHOD = "httpMethod";
+    public static final String PARAM_HTTP_METHOD = "httpMethod";
 
-    private static final String PARAM_ACTION = "action";
-
-    private static final String PARAM_REQUEST_URI = "requestURI";
     /**
      * Adapter parameters definition.
      */
@@ -89,22 +86,10 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object> {
         SimulatorPojo pojo = new StructuredSimulatorPojo();
 
         //set the resource name
-        pojo.getRoot().put(PARAM_RESOURCE, getParamValue(PARAM_RESOURCE));
+        pojo.getRoot().put(PARAM_RESOURCE, request.getRequestURI());
 
         //set http method
         pojo.getRoot().put(PARAM_HTTP_METHOD, request.getMethod());
-
-        //set request uri
-        //set http method
-        pojo.getRoot().put(PARAM_REQUEST_URI, request.getRequestURI());
-
-        //set action. Action is indicated by the second resource requested (if any).
-        //e.g. /systems/create/1 where 'create' is the action
-        String requestURI = request.getRequestURI();
-        String[] resources = requestURI.split("/");
-        if(resources.length > 2) {
-            pojo.getRoot().put(PARAM_ACTION, resources[1]);
-        }
 
         //set request params
         Map parameterMap = request.getParameterMap();
@@ -129,20 +114,23 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object> {
         StringBuffer buffer = new StringBuffer();
         buffer.append(pojo.get(PARAM_HTTP_METHOD))
                 .append(" - ")
-                .append(pojo.get(PARAM_REQUEST_URI));
+                .append(pojo.get(PARAM_RESOURCE));
         if(pojo.entrySet().size() > 2) {
             buffer.append("?");
             Iterator i = pojo.entrySet().iterator();
             while(i.hasNext()) {
                 Map.Entry entry = (Map.Entry)i.next();
                 if(!(entry.getKey().equals(PARAM_HTTP_METHOD)
-                        || entry.getKey().equals(PARAM_REQUEST_URI))) {
+                        || entry.getKey().equals(PARAM_RESOURCE))) {
                     buffer.append(entry.getKey())
                             .append("=")
-                            .append(entry.getValue());
+                            .append(entry.getValue())
+                            .append("&");
+
                 }
             }
         }
-        return buffer.toString();
+        String result = buffer.toString();
+        return result.substring(result.length() - 1).equals("&") ? result.substring(0, buffer.length() - 1) : result;
     }
 }
