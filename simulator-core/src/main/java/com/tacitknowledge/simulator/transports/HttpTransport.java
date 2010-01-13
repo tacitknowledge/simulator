@@ -50,6 +50,7 @@ public class HttpTransport extends BaseTransport implements Transport
                 name(PARAM_HTTP_OUT).
                     label("Is this an HTTP outbound transport?<br>" +
                         "This transport should only be used if the inbound transport is HTTP").
+                    type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN).
                     outOnly().
                     defaultValue("true")
             );
