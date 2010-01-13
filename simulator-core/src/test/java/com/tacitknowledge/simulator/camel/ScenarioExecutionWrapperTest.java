@@ -52,7 +52,8 @@ public class ScenarioExecutionWrapperTest
         Message message = new DefaultMessage();
         message.setBody(testString);
         exchange.setIn(message);
-        String s = wrapper.process(exchange);
+        wrapper.process(exchange);
+        String s = exchange.getOut().getBody(String.class);
         Assert.assertNotNull(s);
         Assert.assertSame(testString, s);
     }
@@ -74,7 +75,8 @@ public class ScenarioExecutionWrapperTest
         Message message = new DefaultMessage();
         message.setBody(TestHelper.XML_DATA);
         exchange.setIn(message);
-        String s = wrapper.process(exchange);
+        wrapper.process(exchange);
+        String s = exchange.getOut().getBody(String.class);
         Assert.assertTrue(s.contains("John12345"));
 
         //modify the script and see what happens
@@ -85,7 +87,8 @@ public class ScenarioExecutionWrapperTest
         message = new DefaultMessage();
         message.setBody(TestHelper.XML_DATA);
         exchange.setIn(message);
-        s = wrapper.process(exchange);
+        wrapper.process(exchange);
+        s = exchange.getOut().getBody(String.class);
 
         Assert.assertTrue(s.contains("John1234544444444"));
     }
@@ -116,7 +119,8 @@ public class ScenarioExecutionWrapperTest
         message.setBody(TestHelper.XML_DATA);
         exchange.setIn(message);
 
-        String s = wrapper.process(exchange);
+        wrapper.process(exchange);
+        String s = exchange.getOut().getBody(String.class);
         Assert.assertFalse(s.contains("Johnffff"));
         Assert.assertFalse(s.contains("John12345"));
         Assert.assertTrue(s.contains("Johnaaaa"));
@@ -149,7 +153,8 @@ public class ScenarioExecutionWrapperTest
         message.setBody(TestHelper.XML_DATA);
         exchange.setIn(message);
 
-        String s = wrapper.process(exchange);
+        wrapper.process(exchange);
+        String s = exchange.getOut().getBody(String.class);
         Assert.assertFalse(s.contains("Johnffff"));
         Assert.assertFalse(s.contains("John12345"));
         Assert.assertTrue(s.contains("Johnaaaa"));
@@ -183,7 +188,8 @@ public class ScenarioExecutionWrapperTest
         message.setBody(TestHelper.XML_DATA);
         exchange.setIn(message);
 
-        String s = wrapper.process(exchange);
+        wrapper.process(exchange);
+        String s = exchange.getOut().getBody(String.class);
         Assert.assertTrue(s.contains("John12345"));
     }
 
@@ -203,7 +209,8 @@ public class ScenarioExecutionWrapperTest
         message.setBody(TestHelper.XML_DATA);
         exchange.setIn(message);
 
-        String s = wrapper.process(exchange);
+        wrapper.process(exchange);
+        String s = exchange.getOut().getBody(String.class);
 
         Assert.assertTrue(s.contains("Success"));
     }
@@ -225,7 +232,8 @@ public class ScenarioExecutionWrapperTest
         exchange.setIn(message);
 
         ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(conversation);
-        String s = wrapper.process(exchange);
+        wrapper.process(exchange);
+        String s = exchange.getOut().getBody(String.class);
         Assert.assertTrue(s.contains("rubyhash"));
     }
 
@@ -256,7 +264,8 @@ public class ScenarioExecutionWrapperTest
         message.setBody(TestHelper.XML_DATA);
         exchange.setIn(message);
 
-        String s = wrapper.process(exchange);
+        wrapper.process(exchange);
+        String s = exchange.getOut().getBody(String.class);
         Assert.assertTrue(s.contains("root"));
     }
 
@@ -290,7 +299,8 @@ public class ScenarioExecutionWrapperTest
         message.setBody(TestHelper.XML_DATA);
         exchange.setIn(message);
         
-        String s = wrapper.process(exchange);
+        wrapper.process(exchange);
+        String s = exchange.getOut().getBody(String.class);
         System.out.println("s = " + s);
 
         SAXBuilder builder = new SAXBuilder();

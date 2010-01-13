@@ -57,7 +57,7 @@ public class ScenarioExecutionWrapper
 
         this.inAdapter = conv.getInboundAdapter();
         this.outAdapter = conv.getOutboundAdapter();
-        this.scenarios = conv.getScenarios();;
+        this.scenarios = conv.getScenarios();
 
         if (this.inAdapter == null || this.outAdapter == null || this.scenarios == null)
         {
@@ -69,22 +69,28 @@ public class ScenarioExecutionWrapper
      * Processes the body object received from the previous step of the route. Iterates through
      * all of the provided scenarios and return the processed result of the first matched scenario.
      *
-     * @param body body.getIn().getBody() contains data from inbound adapter
+     * @param exchange body.getIn().getBody() contains data from inbound adapter
      * @return
      * @throws Exception in case of error.
      */
-    public String process(Exchange body) throws Exception
+    public void process(Exchange exchange) throws Exception
     {
+         if(exchange != null){
+           logger.info("EXCHANGE: " + exchange);
+            //logger.info("EXCHANGE IN: " + exchange.getIn());
+            //logger.info("EXCHANGE OUT: " + exchange.getOut());
+       }else{
+           logger.info("Exchange is null");
+       }
         /**
          * Beans needed for the script executions service to run the simulation against *
          */
-        Map<String, Object> scriptExecutionBeans = inAdapter.generateBeans(body);
+        Map<String, Object> scriptExecutionBeans = inAdapter.generateBeans(exchange);
 
         Object result = null;
         //TODO add case when matching scenario is not found
         // here we are looking for first matching scenario and ignore all other scenarios
 
-        String messageBody = body.getIn().getBody(String.class);
         for (ConversationScenario scenario : scenarios)
         {
             synchronized (scenario)
@@ -95,17 +101,17 @@ public class ScenarioExecutionWrapper
                 logger.info("active: " + active + " matches condition: " + matchesCondition);
                 if (active && matchesCondition)
                 {
-                    EventDispatcher.getInstance().dispatchEvent(SimulatorEventType.SCENARIO_MATCHED, this.conversation, messageBody);
+                    EventDispatcher.getInstance().dispatchEvent(SimulatorEventType.SCENARIO_MATCHED, this.conversation, exchange);
 
                     logger.info("Executing the transformation script.");
                     result = scenario.executeTransformation(scriptExecutionBeans);
 
-                    EventDispatcher.getInstance().dispatchEvent(SimulatorEventType.RESPONSE_BUILT, this.conversation, messageBody);
+                    EventDispatcher.getInstance().dispatchEvent(SimulatorEventType.RESPONSE_BUILT, this.conversation, exchange);
                     break;
                 }
             }
-        }        
-        return outAdapter.adaptTo(result);
+        }
+        exchange.getOut().setBody(outAdapter.adaptTo(result));
     }
 
 

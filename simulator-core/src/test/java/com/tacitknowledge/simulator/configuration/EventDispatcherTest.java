@@ -5,6 +5,8 @@ import junit.framework.TestCase;
 
 import java.util.List;
 
+import org.apache.camel.Exchange;
+
 /**
  * Test class for EventDispatcher
  *
@@ -40,13 +42,22 @@ public class EventDispatcherTest extends TestCase {
         assertTrue(eventListeners.size() == 0);
         SimulatorEventListener listener = new SimulatorEventListener() {
 
-            public void onNewMessage(String messageBody, Conversation conversation) {}
 
-            public void onMatchingScenario(String messageBody, Conversation conversation) {}
+            public void onNewMessage(Exchange exchange, Conversation conversation) {
 
-            public void onResponseBuilt(String messageBody, Conversation conversation) {}
+            }
 
-            public void onResponseSent(String messageBody, Conversation conversation) {}
+            public void onMatchingScenario(Exchange exchange, Conversation conversation) {
+
+            }
+
+            public void onResponseBuilt(Exchange exchange, Conversation conversation) {
+
+            }
+
+            public void onResponseSent(Exchange exchange, Conversation conversation) {
+
+            }
         };
         eventDispatcher.addSimulatorEventListener(listener);
         assertTrue(eventListeners.size() == 1);
@@ -63,16 +74,21 @@ public class EventDispatcherTest extends TestCase {
 
         eventDispatcher.addSimulatorEventListener(new SimulatorEventListener(){
 
-
-            public void onNewMessage(String messageBody, Conversation conversation) {
-               sample.setName("Modified");
+            public void onNewMessage(Exchange exchange, Conversation conversation) {
+                sample.setName("Modified");
             }
 
-            public void onMatchingScenario(String messageBody, Conversation conversation) {}
+            public void onMatchingScenario(Exchange exchange, Conversation conversation) {
 
-            public void onResponseBuilt(String messageBody, Conversation conversation) {}
+            }
 
-            public void onResponseSent(String messageBody, Conversation conversation) {}
+            public void onResponseBuilt(Exchange exchange, Conversation conversation) {
+
+            }
+
+            public void onResponseSent(Exchange exchange, Conversation conversation) {
+               
+            }
         });
 
         eventDispatcher.dispatchEvent(SimulatorEventType.NEW_MESSAGE, null, null);

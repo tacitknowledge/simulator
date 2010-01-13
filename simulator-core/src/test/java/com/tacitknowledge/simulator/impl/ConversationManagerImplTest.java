@@ -14,6 +14,7 @@ import com.tacitknowledge.simulator.formats.AdapterFactory;
 import com.tacitknowledge.simulator.formats.FormatConstants;
 import org.junit.Test;
 import org.junit.Ignore;
+import org.apache.camel.Exchange;
 
 import java.util.List;
 
@@ -236,13 +237,18 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
 
         public TestEventListenerImpl1(){}
 
-        public void onNewMessage(String messageBody, Conversation conversation) {}
 
-        public void onMatchingScenario(String messageBody, Conversation conversation) {}
+        public void onNewMessage(Exchange exchange, Conversation conversation) {
+        }
 
-        public void onResponseBuilt(String messageBody, Conversation conversation) {}
+        public void onMatchingScenario(Exchange exchange, Conversation conversation) {
+        }
 
-        public void onResponseSent(String messageBody, Conversation conversation) {}
+        public void onResponseBuilt(Exchange exchange, Conversation conversation) {
+        }
+
+        public void onResponseSent(Exchange exchange, Conversation conversation) {
+        }
     }
 
     /**
@@ -250,13 +256,18 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
      */
     public static final class TestEventListenerImpl2 implements SimulatorEventListener {
 
-        public void onNewMessage(String messageBody, Conversation conversation) {}
 
-        public void onMatchingScenario(String messageBody, Conversation conversation) {}
+        public void onNewMessage(Exchange exchange, Conversation conversation) {
+        }
 
-        public void onResponseBuilt(String messageBody, Conversation conversation) {}
+        public void onMatchingScenario(Exchange exchange, Conversation conversation) {
+        }
 
-        public void onResponseSent(String messageBody, Conversation conversation) {}
+        public void onResponseBuilt(Exchange exchange, Conversation conversation) {
+        }
+
+        public void onResponseSent(Exchange exchange, Conversation conversation) {
+        }
     }
 
     /**
@@ -264,13 +275,18 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
      */
     public static final class TestEventListenerImpl3 implements SimulatorEventListener {
 
-        public void onNewMessage(String messageBody, Conversation conversation) {}
 
-        public void onMatchingScenario(String messageBody, Conversation conversation) {}
+        public void onNewMessage(Exchange exchange, Conversation conversation) {
+        }
 
-        public void onResponseBuilt(String messageBody, Conversation conversation) {}
+        public void onMatchingScenario(Exchange exchange, Conversation conversation) {
+        }
 
-        public void onResponseSent(String messageBody, Conversation conversation) {}
+        public void onResponseBuilt(Exchange exchange, Conversation conversation) {
+        }
+
+        public void onResponseSent(Exchange exchange, Conversation conversation) {
+        }
     }
 }
 

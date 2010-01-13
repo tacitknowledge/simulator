@@ -1,6 +1,7 @@
 package com.tacitknowledge.simulator.configuration;
 
 import com.tacitknowledge.simulator.Conversation;
+import org.apache.camel.Exchange;
 
 /**
  * SimulatorEventListener interface
@@ -14,29 +15,29 @@ public interface SimulatorEventListener {
 
     /**
      * Triggered when a new message arrives.
-     * @param messageBody - String representing a message
+     * @param exchange - String representing a message
      * @param conversation - Conversation object
      */
-    void onNewMessage(String messageBody, Conversation conversation);
+    void onNewMessage(Exchange exchange, Conversation conversation);
 
     /**
      * Triggered when an existing scenario matches with the input criteria.
-     * @param messageBody - String representing a message
+     * @param exchange - String representing a message
      * @param conversation - Conversation object
      */
-    void onMatchingScenario(String messageBody, Conversation conversation);
+    void onMatchingScenario(Exchange exchange, Conversation conversation);
 
     /**
      * Triggered when the output result is constructed
-     * @param messageBody - String representing a message
+     * @param exchange - String representing a message
      * @param conversation - Conversation object
      */
-    void onResponseBuilt(String messageBody, Conversation conversation);
+    void onResponseBuilt(Exchange exchange, Conversation conversation);
 
     /**
      * Triggered after the response has been sent.
-     * @param messageBody - String representing a message
+     * @param exchange - String representing a message
      * @param conversation - Conversation object
      */
-    void onResponseSent(String messageBody, Conversation conversation);
+    void onResponseSent(Exchange exchange, Conversation conversation);
 }

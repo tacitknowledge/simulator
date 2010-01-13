@@ -4,6 +4,7 @@ import com.tacitknowledge.simulator.configuration.SimulatorEventType;
 import com.tacitknowledge.simulator.configuration.EventDispatcher;
 import com.tacitknowledge.simulator.Conversation;
 import org.apache.log4j.Logger;
+import org.apache.camel.Exchange;
 
 /**
  * This class will be used as an endpoint in the camel route, to dispatch different events.
@@ -32,18 +33,17 @@ public class EventBean {
     /**
      * Method to dispatch an event.
      * When this class is used as an endpoint, camel will call this method automatically.
-     * @param body the message body.
+     * @param exchange the message body.
      * @return the message body.
      */
-    public String process(String body){
+    public void process(Exchange exchange){
         try{
-            EventDispatcher.getInstance().dispatchEvent(this.eventType, this.conversation, body);
+            EventDispatcher.getInstance().dispatchEvent(this.eventType, this.conversation, exchange);
             logger.info("Event dispatched: " + this.eventType);
         }catch(Exception ex){
             if(logger.isDebugEnabled()){
                 logger.debug("Exception thrown dispatching event " + this.eventType + ". " + ex.getMessage());
             }
         }
-        return body;
     }
 }

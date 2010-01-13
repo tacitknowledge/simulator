@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
+import org.apache.camel.Exchange;
 
 /**
  * EventDispatcher class
@@ -88,23 +89,23 @@ public class EventDispatcher {
      * Dispatches the event specified by eventType
      * @param eventType the type of event to dispatch
      * @param conversation the conversation related to this event
-     * @param messageBody a string containing the message body
+     * @param exchange a string containing the message body
      */
-    public void dispatchEvent(SimulatorEventType eventType, Conversation conversation, String messageBody) {
+    public void dispatchEvent(SimulatorEventType eventType, Conversation conversation, Exchange exchange) {
         for(SimulatorEventListener listener : this.eventListeners){
             try{
                 switch(eventType){
                     case NEW_MESSAGE:
-                        listener.onNewMessage(messageBody, conversation);
+                        listener.onNewMessage(exchange, conversation);
                         break;
                     case RESPONSE_BUILT:
-                        listener.onResponseBuilt(messageBody, conversation);
+                        listener.onResponseBuilt(exchange, conversation);
                         break;
                     case RESPONSE_SENT:
-                        listener.onResponseSent(messageBody, conversation);
+                        listener.onResponseSent(exchange, conversation);
                         break;
                     case SCENARIO_MATCHED:
-                        listener.onMatchingScenario(messageBody, conversation);
+                        listener.onMatchingScenario(exchange, conversation);
                         break;
                     default:
                         break;

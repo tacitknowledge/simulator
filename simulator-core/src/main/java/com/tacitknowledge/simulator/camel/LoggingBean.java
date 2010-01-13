@@ -5,6 +5,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.RollingFileAppender;
+import org.apache.camel.Exchange;
 
 import java.io.IOException;
 
@@ -54,10 +55,10 @@ public class LoggingBean
     /**
      * logs data and returns input as result
      *
-     * @param body
+     * @param exchange
      * @return
      */
-    public String process(String body)
+    public void process(Exchange exchange)
     {
         logger.info("-----------------------------------");
         if (input)
@@ -68,7 +69,7 @@ public class LoggingBean
         {
             logger.info("RESPONSE_MESSAGE");
         }
-        logger.info(body);
+        logger.info(exchange);
         if (!input)
         {
             //juts blank lines
@@ -78,6 +79,5 @@ public class LoggingBean
             logger.info("");
             logger.info("");
         }
-        return body;
     }
 }
