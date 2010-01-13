@@ -1,10 +1,6 @@
 package com.tacitknowledge.simulator;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +13,8 @@ import java.util.Map;
  */
 public abstract class TestHelper
 {
+    public static final String ORIGINAL_FILES_PATH = "src/main/resources/original_files";
+
     /**
      * Simple XML data for testing
      */
@@ -177,6 +175,42 @@ public abstract class TestHelper
             item.put(ITEM_FIELDS[i], values[i]);
         }
         return item;
+    }
+
+    public static String readFile(File file)
+            throws Exception
+    {
+        // --- Make sure file1 exists
+        if (!file.exists())
+        {
+            throw new Exception("Original file must exist: " + file.getAbsolutePath());
+        }
+
+        InputStream is = new FileInputStream(file);
+        if (is != null)
+        {
+            StringBuilder sb = new StringBuilder();
+            String line;
+
+            try
+            {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+                while ((line = reader.readLine()) != null)
+                {
+                    sb.append(line).append("\n");
+                }
+            }
+            finally
+            {
+                is.close();
+            }
+            System.out.println("SOAP contents:\n" + sb.toString());
+            return sb.toString();
+        }
+        else
+        {
+            return "";
+        }
     }
 
     public static void copyFile(File file1, File file2)
