@@ -46,14 +46,17 @@ public class ConversationManagerImpl implements ConversationManager
     /**
      * Currently configured conversations
      */
-    private Map<Integer, ConversationImpl> conversations = new HashMap<Integer, ConversationImpl>();
+    private Map<Integer, ConversationImpl> conversations;
 
 
-    private static final ConversationManager instance = new ConversationManagerImpl();
+    private static ConversationManager instance;
 
 
     public static ConversationManager getInstance()
     {
+        if(instance == null){
+            instance = new ConversationManagerImpl();
+        }
         return instance;
     }
 
@@ -65,15 +68,18 @@ public class ConversationManagerImpl implements ConversationManager
     public ConversationManagerImpl(RouteManager routeManager)
     {
         this.routeManager = routeManager;
+        this.conversations = new HashMap<Integer, ConversationImpl>();
+
     }
 
     /**
      * Constructor.
      * With this constructor, the manager will create its own RouteManager
      */
-    ConversationManagerImpl()
+    public ConversationManagerImpl()
     {
         this.routeManager = new RouteManagerImpl();
+        this.conversations = new HashMap<Integer, ConversationImpl>();
     }
 
     /**
