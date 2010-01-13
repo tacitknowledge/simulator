@@ -157,10 +157,8 @@ public abstract class TestHelper
         shipInfo.put("zipCode", "81073");
         order.put("shippingInfo", shipInfo);
 
-        root.put("order", order);
-
         SimulatorPojo pojo = new StructuredSimulatorPojo();
-        pojo.setRoot(root);
+        pojo.getRoot().put("order", order);
 
         return pojo;
     }
@@ -210,7 +208,6 @@ public abstract class TestHelper
             {
                 is.close();
             }
-            System.out.println("SOAP contents:\n" + sb.toString());
             return sb.toString();
         }
         else

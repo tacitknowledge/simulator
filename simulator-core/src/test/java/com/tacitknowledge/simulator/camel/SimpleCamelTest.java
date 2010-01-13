@@ -18,7 +18,6 @@ import java.util.Map;
  */
 public class SimpleCamelTest extends TestCase
 {
-    public static final String ORIG_PATH = "src/main/resources/original_files";
     public static final String INBOX = "src/main/resources/inbox";
     public static final String OUTBOX = "src/main/resources/outbox";
     public static final String FILE_NAME = "another.xml";
@@ -63,7 +62,7 @@ public class SimpleCamelTest extends TestCase
 
             context.addRoutes(builder);
 
-            File orig = new File(ORIG_PATH + "/" + FILE_NAME);
+            File orig = new File(TestHelper.ORIGINAL_FILES_PATH + "/" + FILE_NAME);
             assertTrue(orig.exists());
 
             // --- Don't assert on these, rather just delete them
