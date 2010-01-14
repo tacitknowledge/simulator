@@ -3,18 +3,16 @@ package com.tacitknowledge.simulator.transports;
 import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.TransportException;
 import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
-import org.apache.log4j.Logger;
+import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.name;
+import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
 
 import java.util.List;
 import java.util.Map;
 
-import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.name;
-import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
-
 /**
  * @author galo
  */
-public class HttpTransport extends BaseTransport implements Transport
+public abstract class HttpTransport extends BaseTransport implements Transport
 {
     /**
      * Resource URI parameter. REQUIRED
@@ -64,9 +62,9 @@ public class HttpTransport extends BaseTransport implements Transport
      *
      * @param
      */
-    public HttpTransport()
+    protected HttpTransport(String transport)
     {
-        super(TransportConstants.HTTP);
+        super(transport);
     }
 
     /**
@@ -74,9 +72,9 @@ public class HttpTransport extends BaseTransport implements Transport
      *
      * @param parameters @see #parameters
      */
-    public HttpTransport(Map<String, String> parameters)
+    protected HttpTransport(String transport, Map<String, String> parameters)
     {
-        super(TransportConstants.HTTP, parameters);
+        super(transport, parameters);
     }
 
     /**
@@ -151,6 +149,7 @@ public class HttpTransport extends BaseTransport implements Transport
         }
 
         sb.append(getParamValue(PARAM_RESOURCE_URI));
+        
 
         return sb.toString();
     }

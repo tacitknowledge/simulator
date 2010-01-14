@@ -25,9 +25,14 @@ public class TransportConstants
     public static final String JMS = "JMS";
 
     /**
-     * Constant for HTTP IN transport
+     * Constant for REST IN transport
      */
-    public static final String HTTP = "HTTP";
+    public static final String REST = "REST";
+
+    /**
+     * Constant for SOAP IN transport
+     */
+    public static final String SOAP = "SOAP";
 
     /**
      * Hidding the default constructor

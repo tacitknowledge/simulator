@@ -29,7 +29,7 @@ public class HttpTransportTest extends TestCase
 
     public void setUp()
     {
-        transport = new HttpTransport();
+        transport = new RestTransport();
         params = new HashMap<String, String>();
 
         builder = new RouteBuilder()
@@ -42,7 +42,7 @@ public class HttpTransportTest extends TestCase
 
     public void testGetUriWithoutParams()
     {
-        assertEquals("HTTP", transport.getType());
+        assertEquals(TransportConstants.REST, transport.getType());
 
         // --- Try to get the URI
         try
@@ -123,7 +123,7 @@ public class HttpTransportTest extends TestCase
         params.put(HttpTransport.PARAM_RESOURCE_URI, "/mytestapp");
         transport.setParameters(params);
 
-        Transport out_tr = TransportFactory.getTransport(TransportConstants.HTTP);
+        Transport out_tr = TransportFactory.getTransport(TransportConstants.REST);
         Map<String, String> pars = new HashMap<String, String>();
         pars.put(HttpTransport.PARAM_HTTP_OUT, "true");
         out_tr.setParameters(pars);

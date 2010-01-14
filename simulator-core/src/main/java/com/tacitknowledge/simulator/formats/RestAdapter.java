@@ -24,20 +24,13 @@ import javax.servlet.http.HttpServletRequest;
 
 public class RestAdapter extends BaseAdapter implements Adapter<Object> {
 
-    public static final String PARAM_RESOURCE = "resource";
-
-    public static final String PARAM_HTTP_METHOD = "httpMethod";
+    public static final String PARAM_PARAMETERS = "parameters";
 
     /**
      * Adapter parameters definition.
      */
     private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
-        parameters().
-            add(
-                name(PARAM_RESOURCE).
-                    label("Resource requested (e.g. employee(s), order(s), etc.)").
-                    required()
-            );
+        parameters();
 
     /**
      * Logger for this class.
@@ -63,9 +56,6 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object> {
      * @throws FormatAdapterException
      */
     public void validateParameters() throws FormatAdapterException {
-        if (getParamValue(PARAM_RESOURCE) == null) {
-            throw new FormatAdapterException("Resource Requested parameter is required.");
-        }
     }
 
     /**
@@ -85,21 +75,7 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object> {
         HttpServletRequest request = o.getIn().getBody(HttpServletRequest.class);
         SimulatorPojo pojo = new StructuredSimulatorPojo();
 
-        //set the resource name
-        pojo.getRoot().put(PARAM_RESOURCE, request.getRequestURI());
-
-        //set http method
-        pojo.getRoot().put(PARAM_HTTP_METHOD, request.getMethod());
-
-        //set request params
-        Map parameterMap = request.getParameterMap();
-        if(parameterMap != null && parameterMap.entrySet().size() > 0) {
-            Iterator i = parameterMap.entrySet().iterator();
-            while(i.hasNext()) {
-                Map.Entry entry = (Map.Entry)i.next();
-                pojo.getRoot().put(entry.getKey().toString(), entry.getValue());
-            }
-        }
+        //TODO in progress
 
         logger.debug("Finished generating SimulatorPojo from REST content");
         return pojo;
@@ -110,26 +86,11 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object> {
      */
     @Override
     protected String getString(SimulatorPojo scriptExecutionResult) throws FormatAdapterException {
-        Map<String, Object> pojo  = scriptExecutionResult.getRoot();
+        Map<String, Object> pojo  = (Map<String, Object>) scriptExecutionResult.getRoot().get("root");
         StringBuffer buffer = new StringBuffer();
-        buffer.append(pojo.get(PARAM_HTTP_METHOD))
-                .append(" - ")
-                .append(pojo.get(PARAM_RESOURCE));
-        if(pojo.entrySet().size() > 2) {
-            buffer.append("?");
-            Iterator i = pojo.entrySet().iterator();
-            while(i.hasNext()) {
-                Map.Entry entry = (Map.Entry)i.next();
-                if(!(entry.getKey().equals(PARAM_HTTP_METHOD)
-                        || entry.getKey().equals(PARAM_RESOURCE))) {
-                    buffer.append(entry.getKey())
-                            .append("=")
-                            .append(entry.getValue())
-                            .append("&");
 
-                }
-            }
-        }
+        //TODO in progress
+
         String result = buffer.toString();
         return result.substring(result.length() - 1).equals("&") ? result.substring(0, buffer.length() - 1) : result;
     }
