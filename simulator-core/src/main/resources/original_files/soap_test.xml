@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope"
+   xmlns:s="http://www.example.org/stock-service">
+        
+   <env:Body>
+     <s:GetStockQuote>
+          <s:TickerSymbol>IBM</s:TickerSymbol>
+     </s:GetStockQuote>
+   </env:Body>
+</env:Envelope>
