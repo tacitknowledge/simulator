@@ -149,7 +149,7 @@ public abstract class HttpTransport extends BaseTransport implements Transport
         }
 
         sb.append(getParamValue(PARAM_RESOURCE_URI));
-        
+        sb.append("?matchOnUriPrefix=true");
 
         return sb.toString();
     }
