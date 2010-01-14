@@ -88,10 +88,21 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
     private boolean validate = false;
 
     /**
+     * Determines if when reading from the source XML document, namespace should be included
+     * as part of the key names in the SimulatorPojo
+     */
+    private boolean useFullyQualifiedNodeNames = true;
+
+    /**
      * @inheritDoc
      */
     public XmlAdapter()
     {
+    }
+
+    protected XmlAdapter(boolean useFullyQualifiedNames)
+    {
+        this.useFullyQualifiedNodeNames = useFullyQualifiedNames;
     }
 
     /**
@@ -101,6 +112,12 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
     public XmlAdapter(Map<String, String> parameters)
     {
         super(parameters);
+    }
+
+    protected XmlAdapter(Map<String, String> parameters, boolean useFullyQualifiedNames)
+    {
+        super(parameters);
+        this.useFullyQualifiedNodeNames = useFullyQualifiedNames;
     }
 
 
@@ -127,10 +144,7 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
 
             // --- Well-formatted Xml should have a single root, right?
             Element docElem = doc.getDocumentElement();
-            Map<String, Object> root = new HashMap<String, Object>();
-            root.put(docElem.getTagName(), getStructuredChilds(docElem));
-
-            pojo.setRoot(root);
+            pojo.getRoot().put(docElem.getTagName(), getStructuredChilds(docElem));
         }
         catch (ParserConfigurationException e)
         {
@@ -234,7 +248,7 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
      * @param elem the element to structure the child nodes for
      * @return a Map of child nodes of the XML document
      */
-    private Map getStructuredChilds(Element elem)
+    protected Map getStructuredChilds(Element elem)
     {
         // --- The Map to be returned
         Map<String, Object> structuredChild = new HashMap<String, Object>();
@@ -253,7 +267,11 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
 
             // --- We make sure we get an Element so we can get the underlying node name
             Element child = (Element) nd;
-            String currNodeName = child.getTagName();
+            String currNodeName = child.getLocalName();
+            if (useFullyQualifiedNodeNames)
+            {
+                 currNodeName = child.getTagName();
+            }
 
             // --- Check if the structuredChild Map contains the current node name
             if (structuredChild.containsKey(currNodeName))
@@ -323,7 +341,7 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
      * @param childs   Map containing the childs to be contained within the generated Element
      * @return The generated XML Element with its inner children
      */
-    private Element getStructuredElement(String elemName, Map<String, Object> childs)
+    protected Element getStructuredElement(String elemName, Map<String, Object> childs)
     {
         Element element = doc.createElement(elemName);
 

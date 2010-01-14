@@ -15,11 +15,4 @@ public interface SimulatorPojo
      * @return the root node
      */
     Map<String, Object> getRoot();
-
-    /**
-     * Setter for the root node of the pojo
-     *
-     * @param root root node
-     */
-    void setRoot(Map<String, Object> root);
 }

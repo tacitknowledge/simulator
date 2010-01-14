@@ -43,6 +43,8 @@ public class FormatConstants
      */
     public static final String REST = "REST";
 
+    public static final String SOAP = "SOAP";
+
     /**
      * Hiding the default constructor
      */

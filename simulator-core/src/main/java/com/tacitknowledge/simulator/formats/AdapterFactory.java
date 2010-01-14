@@ -27,6 +27,7 @@ public final class AdapterFactory
             put(FormatConstants.PROPERTIES, new PropertiesAdapter());
             put(FormatConstants.PLAIN_TEXT, new PlainTextAdapter());
             put(FormatConstants.REST, new RestAdapter());
+            put(FormatConstants.SOAP, new SoapAdapter());
         }
     };
 

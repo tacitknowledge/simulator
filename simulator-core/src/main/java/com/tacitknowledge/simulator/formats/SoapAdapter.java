@@ -5,13 +5,18 @@ import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.StructuredSimulatorPojo;
 import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
-import org.apache.log4j.Logger;
 import org.apache.camel.Exchange;
+import org.apache.log4j.Logger;
+import org.xml.sax.InputSource;
 
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.SOAPBody;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPMessage;
+import javax.wsdl.Binding;
+import javax.wsdl.BindingOperation;
+import javax.wsdl.Definition;
+import javax.wsdl.WSDLException;
+import javax.wsdl.factory.WSDLFactory;
+import javax.wsdl.xml.WSDLReader;
+import javax.xml.namespace.QName;
+import javax.xml.soap.*;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,12 +25,18 @@ import java.util.List;
 import java.util.Map;
 
 import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
+import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.name;
 
 /**
  * @author galo
  */
-public class SoapAdapter extends BaseAdapter implements Adapter<Object>
+public class SoapAdapter extends XmlAdapter implements Adapter<Object>
 {
+    /**
+     * WSDL URL parameter. OPTIONAL.
+     */
+    public static final String PARAM_WSDL_URL = "wdslURL";
+
     /**
      * Logger for this class.
      */
@@ -34,13 +45,31 @@ public class SoapAdapter extends BaseAdapter implements Adapter<Object>
     /**
      * Adapter parameters definition.
      */
-    private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList = parameters();
+    private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
+            parameters().
+                    add(
+                            name(PARAM_WSDL_URL).
+                                    label("WSDL URL").
+                                    required()
+                    );
+
+    /**
+     * WSDL service definition.
+     * Will be generated from the provided WSDL.
+     */
+    private Definition definition;
+
+    /**
+     * Available operations defined in the provided WSDL.
+     */
+    private Map<String, BindingOperation> availableOps;
 
     /**
      * Constructor
      */
     public SoapAdapter()
     {
+        super(false);
     }
 
     /**
@@ -50,27 +79,28 @@ public class SoapAdapter extends BaseAdapter implements Adapter<Object>
      */
     public SoapAdapter(Map<String, String> parameters)
     {
-        super(parameters);
+        super(parameters, false);
     }
 
-    @Override
-    protected SimulatorPojo createSimulatorPojo(Exchange o)
+    protected SimulatorPojo createSimulatorPojo(String o)
         throws FormatAdapterException
     {
         logger.debug("Attempting to generate SimulatorPojo from SOAP content:\n" + o);
 
-        /*
         SimulatorPojo pojo = new StructuredSimulatorPojo();
 
         try
         {
-            MessageFactory factory = MessageFactory.newInstance();
+            MessageFactory factory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
 
             InputStream is = new ByteArrayInputStream(o.getBytes("UTF-8"));
             // TODO - SO WHAT ABOUT THE HEADERS?
             SOAPMessage message = factory.createMessage(null, is);
 
+            // --- So, now we got the SOAP message parsed.
             SOAPBody body = message.getSOAPBody();
+
+            pojo.getRoot().put("payload", getStructuredChilds(body));
         } catch(SOAPException se)
         {
             String errorMessage = "Unexpected SOAP exception";
@@ -87,9 +117,14 @@ public class SoapAdapter extends BaseAdapter implements Adapter<Object>
             logger.error(errorMessage, ioe);
             throw new FormatAdapterException(errorMessage, ioe);
         }
-        */
 
-        return null;
+        return pojo;
+    }
+
+    @Override
+    public SimulatorPojo createSimulatorPojo(Exchange o) throws FormatAdapterException
+    {
+        return createSimulatorPojo(o.getIn().getBody(String.class));
     }
 
     /**
@@ -102,21 +137,56 @@ public class SoapAdapter extends BaseAdapter implements Adapter<Object>
     @Override
     void validateParameters() throws FormatAdapterException
     {
-
+        if (getParamValue(PARAM_WSDL_URL) == null)
+        {
+            throw new FormatAdapterException("WSDL URL parameter is required");
+        }
     }
 
     /**
-     * Returns the List of parameters the implementing instance uses.
-     * Each list element is itself a List to describe the parameter as follows:
-     * - 0 : Parameter name
-     * - 1 : Parameter description. Useful for GUI rendition
-     * - 2 : Parameter type. Useful for GUI rendition.
-     * - 3 : Required or Optional parameter. Useful for GUI validation.
-     *
      * @return List of Paramaters for the implementing Adapter.
      */
     public List<List> getParametersList()
     {
         return getParametersDefinitionsAsList(parametersList);
+    }
+
+    private void getWSDLDefinition() throws FormatAdapterException {
+        try
+        {
+            WSDLFactory wsdlFactory = WSDLFactory.newInstance();
+            WSDLReader wsdlReader = wsdlFactory.newWSDLReader();
+
+            //wsdlReader.setFeature("javax.wsdl.verbose", false);
+            //wsdlReader.setFeature("javax.wsdl.importDocuments", true);
+
+            definition = wsdlReader.readWSDL(getParamValue(PARAM_WSDL_URL));
+            if (definition == null)
+            {
+                throw new FormatAdapterException(
+                        "Definition element is null for WSDL URL: " +
+                        getParamValue(PARAM_WSDL_URL));
+            }
+        }
+        catch(WSDLException we)
+        {
+            String errorMsg = "Unexpected WSDL error: " + we.getMessage();
+            logger.error(errorMsg, we);
+            throw new FormatAdapterException(errorMsg, we);
+        }
+    }
+
+    private void getAvailableOperations()
+    {
+        Map<QName, Binding> bindings = definition.getBindings();
+
+        for (Map.Entry<QName, Binding> entry : bindings.entrySet())
+        {
+            List<BindingOperation> operations = entry.getValue().getBindingOperations();
+            for (BindingOperation op : operations)
+            {
+                availableOps.put(op.getName(), op);
+            }
+        }
     }
 }

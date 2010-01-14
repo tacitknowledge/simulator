@@ -34,14 +34,4 @@ public class StructuredSimulatorPojo implements SimulatorPojo
     {
         root = new HashMap<String, Object>();
     }
-
-    /**
-     * Setter for @see #root
-     *
-     * @param root The structured data in a Map
-     */
-    public void setRoot(Map<String, Object> root)
-    {
-        this.root = root;
-    }
 }

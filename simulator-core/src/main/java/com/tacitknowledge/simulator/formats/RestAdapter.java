@@ -106,9 +106,7 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object> {
 //        attributes.put(REQUEST, populateRequestAttributes(request));
 //        attributes.put(RESPONSE, populateResponseAttributes());
 
-        Map root = new HashMap<String, Object>();
-        root.put(getParamValue(PARAM_OBJECT_NAME), attributes);
-        pojo.setRoot(root);
+        pojo.getRoot().put(getParamValue(PARAM_OBJECT_NAME), attributes);
 
         logger.debug("Finished generating SimulatorPojo from REST content");
         return pojo;
