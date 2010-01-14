@@ -58,5 +58,5 @@ public interface Adapter<E>
      * @throws FormatAdapterException If the pojo object is not properly structured
      *                                , an error occurs during convertion.
      */
-    String adaptTo(Object scriptExecutionResult) throws FormatAdapterException;
+    Object adaptTo(Object scriptExecutionResult, Exchange exchange) throws FormatAdapterException;
 }

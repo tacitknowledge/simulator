@@ -75,7 +75,7 @@ public class PropertiesAdapterTest extends TestCase
             assertNotNull(pojo.getRoot().get("employee"));
 
             // --- Now,. do the inverse
-            String props = adapter.getString(pojo);
+            String props = (String) adapter.getString(pojo, exchange);
 
             assertTrue(props.contains("employee.firstName=John"));
             assertTrue(props.contains("employee.title=Manager"));

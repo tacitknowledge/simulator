@@ -86,7 +86,7 @@ public abstract class BaseAdapter implements Adapter<Object>
     }
 
 
-    protected String getString(SimulatorPojo scriptExecutionResult) throws FormatAdapterException
+    protected Object getString(SimulatorPojo scriptExecutionResult, Exchange exchange) throws FormatAdapterException
     {
         throw new UnsupportedOperationException("override me");
     }
@@ -106,7 +106,7 @@ public abstract class BaseAdapter implements Adapter<Object>
     }
 
 
-    public String adaptTo(Object scriptExecutionResult) throws FormatAdapterException
+    public Object adaptTo(Object scriptExecutionResult, Exchange exchange) throws FormatAdapterException
     {
         validateParameters();
         SimulatorPojo getSimulatorPojo;
@@ -118,7 +118,7 @@ public abstract class BaseAdapter implements Adapter<Object>
         {
             throw new FormatAdapterException("Error trying to generate temporary classes", e);
         }
-        return getString(getSimulatorPojo);
+        return getString(getSimulatorPojo, exchange);
     }
 
     /**

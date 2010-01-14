@@ -6,6 +6,7 @@ import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.StructuredSimulatorPojo;
 import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
 import org.apache.log4j.Logger;
+import org.apache.camel.Exchange;
 
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPBody;
@@ -52,7 +53,8 @@ public class SoapAdapter extends BaseAdapter implements Adapter<Object>
         super(parameters);
     }
 
-    protected SimulatorPojo createSimulatorPojo(String o)
+    @Override
+    protected SimulatorPojo createSimulatorPojo(Exchange o)
         throws FormatAdapterException
     {
         logger.debug("Attempting to generate SimulatorPojo from SOAP content:\n" + o);

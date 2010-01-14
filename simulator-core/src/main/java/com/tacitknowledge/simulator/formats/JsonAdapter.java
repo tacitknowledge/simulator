@@ -105,6 +105,7 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
      * @return simulator pojo
      * @throws FormatAdapterException if format adapter error occurs
      */
+    @Override
     protected SimulatorPojo createSimulatorPojo(final Exchange exchange)
         throws FormatAdapterException
     {
@@ -162,7 +163,8 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
      * @return the string value
      * @throws FormatAdapterException if a format adapter error occurs
      */
-    protected String getString(final SimulatorPojo simulatorPojo) throws FormatAdapterException
+    @Override
+    protected Object getString(final SimulatorPojo simulatorPojo, Exchange exchange) throws FormatAdapterException
     {
         // --- The SimulatorPojo for JSONAdapter should contain only one key in its root
         if (simulatorPojo.getRoot().isEmpty() || simulatorPojo.getRoot().size() > 1)

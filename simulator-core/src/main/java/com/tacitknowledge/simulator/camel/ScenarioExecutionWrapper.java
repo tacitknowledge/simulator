@@ -111,7 +111,7 @@ public class ScenarioExecutionWrapper
                 }
             }
         }
-        exchange.getOut().setBody(outAdapter.adaptTo(result));
+        exchange.getOut().setBody(outAdapter.adaptTo(result, exchange));
     }
 
 

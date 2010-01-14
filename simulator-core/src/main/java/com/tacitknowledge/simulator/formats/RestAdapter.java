@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 import org.apache.camel.Exchange;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Implementation of the Adapter interface for the REST format
@@ -24,13 +25,30 @@ import javax.servlet.http.HttpServletRequest;
 
 public class RestAdapter extends BaseAdapter implements Adapter<Object> {
 
-    public static final String PARAM_PARAMETERS = "parameters";
+    public static final String PARAM_EXTRACTION_PATTERN = "extractionPattern";
 
+    private static final String PARAM_OBJECT_NAME = "objectName";
+
+    private static final String RESPONSE = "response";
+
+    private static final String REQUEST = "request";
+
+    private static final String RESOURCE = "resource";
     /**
      * Adapter parameters definition.
      */
     private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
-        parameters();
+        parameters()
+            .add(
+                name(PARAM_EXTRACTION_PATTERN).
+                    label("Pattern used to generate objects. (e.g. URL: '/system/1' with pattern:'/system/:system_id' will generate a " +
+                            "'system' object with an attribute call'system_id' equals to '1')").
+                    inOnly().required()
+             ).add(
+                name(PARAM_OBJECT_NAME).
+                    label("Object Name to access attributes from the execution script.").
+                    inOnly().required()
+            );
 
     /**
      * Logger for this class.
@@ -55,7 +73,16 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object> {
      * Validate that all parameters required exist
      * @throws FormatAdapterException
      */
+    @Override
     public void validateParameters() throws FormatAdapterException {
+        if (getParamValue(PARAM_EXTRACTION_PATTERN) != null)
+        {
+            throw new FormatAdapterException("Extraction Pattern parameter is required.");
+        }
+        if (getParamValue(PARAM_OBJECT_NAME) != null)
+        {
+            throw new FormatAdapterException("Object Name parameter is required.");
+        }
     }
 
     /**
@@ -75,7 +102,13 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object> {
         HttpServletRequest request = o.getIn().getBody(HttpServletRequest.class);
         SimulatorPojo pojo = new StructuredSimulatorPojo();
 
-        //TODO in progress
+        Map attributes = new HashMap<String, Object>();
+//        attributes.put(REQUEST, populateRequestAttributes(request));
+//        attributes.put(RESPONSE, populateResponseAttributes());
+
+        Map root = new HashMap<String, Object>();
+        root.put(getParamValue(PARAM_OBJECT_NAME), attributes);
+        pojo.setRoot(root);
 
         logger.debug("Finished generating SimulatorPojo from REST content");
         return pojo;
@@ -85,13 +118,18 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object> {
      * @inheritDoc
      */
     @Override
-    protected String getString(SimulatorPojo scriptExecutionResult) throws FormatAdapterException {
-        Map<String, Object> pojo  = (Map<String, Object>) scriptExecutionResult.getRoot().get("root");
+    protected Object getString(SimulatorPojo scriptExecutionResult, Exchange exchange) throws FormatAdapterException {
+        Map<String, Object> pojo  = (Map<String, Object>) scriptExecutionResult.getRoot().get(getParamValue(PARAM_OBJECT_NAME));
         StringBuffer buffer = new StringBuffer();
+        if(pojo != null) {
 
-        //TODO in progress
 
-        String result = buffer.toString();
-        return result.substring(result.length() - 1).equals("&") ? result.substring(0, buffer.length() - 1) : result;
+        }
+        HttpServletResponse response = exchange.getOut().getBody(HttpServletResponse.class);
+
+
+
+
+        return response;
     }
 }

@@ -76,6 +76,7 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
         super(parameters);
     }
 
+    @Override
     protected SimulatorPojo createSimulatorPojo(Exchange exchange)
         throws FormatAdapterException
     {
@@ -124,8 +125,8 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
         return pojo;
     }
 
-
-    protected String getString(SimulatorPojo simulatorPojo)
+    @Override
+    protected Object getString(SimulatorPojo simulatorPojo, Exchange exchange)
         throws FormatAdapterException
     {
 

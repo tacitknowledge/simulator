@@ -121,7 +121,7 @@ public class
             SimulatorPojo pojo = adapter.createSimulatorPojo(exchange);
 
             // --- Now, go the other way around
-            Object o = adapter.getString(pojo);
+            Object o = (String) adapter.getString(pojo, exchange);
             assertTrue(o instanceof String);
 
             String csvData = (String) o;

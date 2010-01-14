@@ -110,6 +110,7 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
         super(parameters);
     }
 
+    @Override
     protected SimulatorPojo createSimulatorPojo(Exchange exchange)
     {
         String o = exchange.getIn().getBody(String.class);
@@ -159,8 +160,8 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
         return pojo;
     }
 
-
-    protected String getString(SimulatorPojo simulatorPojo)
+    @Override
+    protected Object getString(SimulatorPojo simulatorPojo, Exchange exchange)
         throws FormatAdapterException
     {
 
@@ -205,6 +206,7 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
      * @throws FormatAdapterException if any required parameter is missing
      * @inheritDoc
      */
+    @Override
     void validateParameters() throws FormatAdapterException
     {
         // --- Check that if firstRowHeader is false, that rowContent has been provided

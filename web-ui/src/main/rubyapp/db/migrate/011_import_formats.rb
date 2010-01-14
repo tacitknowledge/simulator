@@ -10,6 +10,6 @@ class ImportFormats < ActiveRecord::Migration
   def self.down
 # we don't need to restore old fake formats.. just remove new
 
-    FormatType.delete_all
+    FormatType.delete_all("name = 'JSON' OR name = 'Properties' OR name = 'YAML'")
   end
 end

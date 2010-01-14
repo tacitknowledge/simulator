@@ -97,6 +97,7 @@ public class YamlAdapter extends BaseAdapter implements Adapter<Object>
         super(parameters);
     }
 
+    @Override
     protected SimulatorPojo createSimulatorPojo(Exchange exchange)
         throws FormatAdapterException
     {
@@ -135,7 +136,7 @@ public class YamlAdapter extends BaseAdapter implements Adapter<Object>
     }
 
     @Override
-    protected String getString(SimulatorPojo scriptExecutionResult) throws FormatAdapterException
+    protected Object getString(SimulatorPojo scriptExecutionResult, Exchange exchange) throws FormatAdapterException
     {
         //todo implement
         return null;
@@ -143,14 +144,17 @@ public class YamlAdapter extends BaseAdapter implements Adapter<Object>
 
 
     /**
-     * @param pojo @see Adapter#adaptTo
+     * @param obj @see Adapter#adaptTo
      * @return @see Adapter#adaptTo
      * @throws FormatAdapterException @see Adapter#adaptTo
      * @inheritDoc
      */
-    public String adaptTo(SimulatorPojo pojo) throws FormatAdapterException
+    @Override
+    public Object adaptTo(Object obj, Exchange exchange) throws FormatAdapterException
     {
         validateParameters();
+        SimulatorPojo pojo = (SimulatorPojo) obj;
+
 
         // --- Only one entry in the root should exist
         if (pojo.getRoot().isEmpty() || pojo.getRoot().size() > 1)

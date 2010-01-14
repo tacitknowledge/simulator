@@ -38,7 +38,7 @@ public class PlainTextAdapter extends BaseAdapter
 
 
     @Override
-    public String adaptTo(Object scriptExecutionResult) throws FormatAdapterException
+    public String adaptTo(Object scriptExecutionResult, Exchange exchange) throws FormatAdapterException
     {
         return scriptExecutionResult.toString();
     }

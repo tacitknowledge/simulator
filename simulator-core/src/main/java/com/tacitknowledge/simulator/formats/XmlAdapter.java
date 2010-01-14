@@ -104,6 +104,7 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
     }
 
 
+    @Override
     protected SimulatorPojo createSimulatorPojo(Exchange exchange)
         throws FormatAdapterException
     {
@@ -154,8 +155,8 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
         return pojo;
     }
 
-
-    protected String getString(SimulatorPojo simulatorPojo)
+    @Override
+    protected Object getString(SimulatorPojo simulatorPojo, Exchange exchange)
         throws FormatAdapterException
     {
         try
