@@ -1,5 +1,7 @@
 package com.tacitknowledge.simulator.transports;
 
+import com.tacitknowledge.simulator.Configurable;
+import com.tacitknowledge.simulator.ConfigurableException;
 import com.tacitknowledge.simulator.Transport;
 
 import java.util.List;
@@ -11,8 +13,13 @@ import java.util.Map;
  *
  * @author Nikita Belenkiy (nbelenkiy@tacitknowledge.com)
  */
-public class MockInTransport implements Transport
+public class MockInTransport extends BaseTransport implements Transport
 {
+    public MockInTransport()
+    {
+        super("mockInTransport");
+    }
+
     public String getType()
     {
         return "Mock In Transport";
@@ -29,6 +36,18 @@ public class MockInTransport implements Transport
     }
 
     public void setParameters(Map<String, String> parameters)
+    {
+
+    }
+
+    /**
+     * Validate that all the required parameters have been provided.
+     *
+     * @throws com.tacitknowledge.simulator.ConfigurableException
+     *          If any required parameter has not been set.
+     */
+    @Override
+    protected void validateParameters() throws ConfigurableException
     {
 
     }

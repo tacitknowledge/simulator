@@ -1,6 +1,7 @@
 package com.tacitknowledge.simulator.formats;
 
 import com.tacitknowledge.simulator.Adapter;
+import com.tacitknowledge.simulator.ConfigurableException;
 import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.StructuredSimulatorPojo;
@@ -92,11 +93,17 @@ public class YamlAdapter extends BaseAdapter implements Adapter<Object>
      * @param parameters @see Adapter#parameters
      * @inheritDoc
      */
-    public YamlAdapter(Map<String, String> parameters)
+    public YamlAdapter(int bound, Map<String, String> parameters)
     {
-        super(parameters);
+        super(bound, parameters);
     }
 
+    /**
+     * @inheritDoc
+     * @param exchange
+     * @return
+     * @throws FormatAdapterException
+     */
     @Override
     protected SimulatorPojo createSimulatorPojo(Exchange exchange)
         throws FormatAdapterException
@@ -106,11 +113,11 @@ public class YamlAdapter extends BaseAdapter implements Adapter<Object>
 
         SimulatorPojo pojo = new StructuredSimulatorPojo();
 
-        YamlDecoder enc = new YamlDecoder(new StringReader(object));
+        YamlDecoder dec = new YamlDecoder(new StringReader(object));
 
         try
         {
-            Object yaml = enc.readObject();
+            Object yaml = dec.readObject();
 
             if (this.isArray)
             {
@@ -135,27 +142,17 @@ public class YamlAdapter extends BaseAdapter implements Adapter<Object>
         return pojo;
     }
 
-    @Override
-    protected Object getString(SimulatorPojo scriptExecutionResult, Exchange exchange) throws FormatAdapterException
-    {
-        //todo implement
-        return null;
-    }
-
-
     /**
-     * @param obj @see Adapter#adaptTo
-     * @return @see Adapter#adaptTo
-     * @throws FormatAdapterException @see Adapter#adaptTo
      * @inheritDoc
+     * @param pojo The object returned by the scenario excecution script,
+     *      in its SimulatorPojo representation
+     * @param exchange The Camel exchange
+     * @return
+     * @throws FormatAdapterException
      */
     @Override
-    public Object adaptTo(Object obj, Exchange exchange) throws FormatAdapterException
+    protected Object getString(SimulatorPojo pojo, Exchange exchange) throws FormatAdapterException
     {
-        validateParameters();
-        SimulatorPojo pojo = (SimulatorPojo) obj;
-
-
         // --- Only one entry in the root should exist
         if (pojo.getRoot().isEmpty() || pojo.getRoot().size() > 1)
         {
@@ -174,11 +171,11 @@ public class YamlAdapter extends BaseAdapter implements Adapter<Object>
     }
 
     /**
-     * @throws FormatAdapterException if any required parameter is missing
+     * @throws ConfigurableException if any required parameter is missing
      * @inheritDoc
      */
     @Override
-    void validateParameters() throws FormatAdapterException
+    protected void validateParameters() throws ConfigurableException
     {
         if (getParamValue(PARAM_IS_ARRAY) != null)
         {
@@ -187,15 +184,31 @@ public class YamlAdapter extends BaseAdapter implements Adapter<Object>
 
         if (getParamValue(PARAM_YAML_CONTENT) == null)
         {
-            throw new FormatAdapterException("YAML content is required");
+            throw new ConfigurableException("YAML content is required");
         }
         if (this.isArray && getParamValue(PARAM_YAML_ARRAY_CONTENT) == null)
         {
-            throw new FormatAdapterException(
+            throw new ConfigurableException(
                 "YAML Array Content parameter is required if YAML content is an array");
         }
     }
 
+    /**
+     * Returns a List of parameters the implementing instance uses.
+     * Each list element is itself a List to describe the parameter as follows:
+     * <p/>
+     * - 0 : Parameter name
+     * - 1 : Parameter description. Useful for GUI rendition
+     * - 2 : Parameter type. Useful for GUI rendition.
+     * - 3 : Required or Optional parameter. Useful for GUI validation.
+     * - 4 : Parameter usage. Useful for GUI rendition.
+     * - 5 : Default value
+     *
+     * @return List of Parameters for the implementing Transport.
+     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder
+     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.ParameterDefinition
+     */
+    @Override
     public List<List> getParametersList()
     {
         return getParametersDefinitionsAsList(parametersList);

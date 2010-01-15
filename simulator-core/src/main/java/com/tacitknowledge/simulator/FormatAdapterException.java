@@ -5,7 +5,7 @@ package com.tacitknowledge.simulator;
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class FormatAdapterException extends Exception
+public class FormatAdapterException extends SimulatorException
 {
     /**
      * Constructor for the FormatAdapterException class

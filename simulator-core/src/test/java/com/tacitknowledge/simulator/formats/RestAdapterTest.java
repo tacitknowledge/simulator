@@ -21,7 +21,7 @@ public class RestAdapterTest {
 
     public void setUp()
     {
-        adapter = (RestAdapter) AdapterFactory.getAdapter(FormatConstants.REST);
+        adapter = (RestAdapter) AdapterFactory.getInstance().getAdapter(FormatConstants.REST);
     }
 
     public void testCreateSimulatorPojo() throws FormatAdapterException {

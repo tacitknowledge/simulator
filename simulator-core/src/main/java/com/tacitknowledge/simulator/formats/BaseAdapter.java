@@ -1,6 +1,9 @@
 package com.tacitknowledge.simulator.formats;
 
 import com.tacitknowledge.simulator.Adapter;
+import com.tacitknowledge.simulator.BaseConfigurable;
+import com.tacitknowledge.simulator.Configurable;
+import com.tacitknowledge.simulator.ConfigurableException;
 import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorException;
 import com.tacitknowledge.simulator.SimulatorPojo;
@@ -25,7 +28,7 @@ import org.apache.camel.Exchange;
  *
  * @author galo
  */
-public abstract class BaseAdapter implements Adapter<Object>
+public abstract class BaseAdapter extends BaseConfigurable implements Adapter<Object>
 {
     /**
      * Line separator constant. Available for all adapters
@@ -33,71 +36,70 @@ public abstract class BaseAdapter implements Adapter<Object>
     protected static final String LINE_SEP = System.getProperty("line.separator");
 
     /**
-     * The Adapter parameters. Each Adapter implementation should define its corresponding
-     * parameters.
-     */
-    private Map<String, String> parameters = new HashMap<String, String>();
-
-    /**
      * Constructor
      */
     public BaseAdapter()
     {
+        super();
     }
 
     /**
-     * Constructor
-     *
-     * @param parameters @see #parameters
+     * @inheritDoc
+     * @param parameters
      */
     public BaseAdapter(Map<String, String> parameters)
     {
-        this.parameters = parameters;
-    }
-
-
-    /**
-     * @param parameters The Adapter parameters Map
-     * @inheritDoc
-     */
-    public void setParameters(Map<String, String> parameters)
-    {
-        this.parameters = parameters;
+        super(parameters);
     }
 
     /**
-     * Sets and/or overrides instance variables from provided parameters and validates that
-     * the required parameters are present.
+     * This should be the second prefered constructor method from within JAVA.
      *
-     * @throws FormatAdapterException If any required parameter is missing or incorrect
+     * @param bound      Configurable bound
+     * @param parameters Parameter values
      */
-    abstract void validateParameters() throws FormatAdapterException;
+    protected BaseAdapter(int bound, Map<String, String> parameters)
+    {
+        super(bound, parameters);
+    }
 
-    public Map<String, Object> generateBeans(Exchange o) throws FormatAdapterException
+    /**
+     * 
+     * @param o The Camel exchange
+     * @return A Map of custom-generated beans generated from the input data
+     * @throws ConfigurableException
+     * @throws FormatAdapterException
+     */
+    public Map<String, Object> generateBeans(Exchange o)
+            throws ConfigurableException, FormatAdapterException
     {
         validateParameters();
         SimulatorPojo pojo = createSimulatorPojo(o);
         return generateClasses(pojo);
     }
 
+    /**
+     *
+     * @param o The Camel exchange
+     * @return The generated SimulatorPojo
+     * @throws FormatAdapterException
+     */
     protected SimulatorPojo createSimulatorPojo(Exchange o) throws FormatAdapterException
     {
-        throw new UnsupportedOperationException("override me");
-    }
-
-
-    protected Object getString(SimulatorPojo scriptExecutionResult, Exchange exchange) throws FormatAdapterException
-    {
-        throw new UnsupportedOperationException("override me");
+        throw new UnsupportedOperationException("Override me");
     }
 
     /**
-     * @param name The parameter name. Parameter names should be defined by each implementation.
-     * @return The parameter value or null if not defined.
+     *
+     * @param scriptExecutionResult The object returned by the scenario excecution script
+     * @param exchange The Camel exchange
+     * @return A String object in the requested format representing the script result
+     * @throws FormatAdapterException If any other error occurs
      */
-    protected String getParamValue(String name)
+    protected Object getString(SimulatorPojo scriptExecutionResult, Exchange exchange)
+            throws FormatAdapterException
     {
-        return parameters.get(name);
+        throw new UnsupportedOperationException("Override me");
     }
 
     private SimulatorPojo getSimulatorPojo(Object object) throws ObjectMapperException
@@ -105,10 +107,19 @@ public abstract class BaseAdapter implements Adapter<Object>
         return SimulatorPojoPopulatorImpl.getInstance().populateSimulatorPojoFromBean(object);
     }
 
-
-    public Object adaptTo(Object scriptExecutionResult, Exchange exchange) throws FormatAdapterException
+    /**
+     * @inheritDoc
+     * @param scriptExecutionResult
+     * @param exchange
+     * @return
+     * @throws ConfigurableException
+     * @throws FormatAdapterException
+     */
+    public Object adaptTo(Object scriptExecutionResult, Exchange exchange)
+            throws ConfigurableException, FormatAdapterException
     {
         validateParameters();
+        
         SimulatorPojo getSimulatorPojo;
         try
         {
@@ -162,22 +173,5 @@ public abstract class BaseAdapter implements Adapter<Object>
             throw new FormatAdapterException("", e);
         }
         return scriptExecutionBeans;
-    }
-
-    /**
-     * Returns a List of ParameterDefinitions in their List representation
-     *
-     * @param parametersList The parameter definitions list
-     * @return The list of lists
-     */
-    protected List<List> getParametersDefinitionsAsList(
-        List<ParameterDefinitionBuilder.ParameterDefinition> parametersList)
-    {
-        List<List> list = new ArrayList<List>();
-        for (ParameterDefinitionBuilder.ParameterDefinition param : parametersList)
-        {
-            list.add(param.getAsList());
-        }
-        return list;
     }
 }

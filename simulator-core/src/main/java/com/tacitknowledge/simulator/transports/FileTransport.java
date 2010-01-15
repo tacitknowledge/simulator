@@ -1,5 +1,7 @@
 package com.tacitknowledge.simulator.transports;
 
+import com.tacitknowledge.simulator.Configurable;
+import com.tacitknowledge.simulator.ConfigurableException;
 import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.TransportException;
 import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
@@ -117,25 +119,32 @@ public class FileTransport extends BaseTransport implements Transport
         super(type);
     }
 
-    /**
-     * Used only for inheriting Transports
-     *
-     * @param type       @see #type
-     * @param parameters @see #parameters
-     */
-    protected FileTransport(String type, Map<String, String> parameters)
+    public FileTransport(Map<String, String> parameters)
     {
-        super(type, parameters);
+        super(TransportConstants.FILE, parameters);
     }
 
     /**
      * Constructor
      *
+     * @param bound Configurable bound
      * @param parameters @see #parameters
      */
-    public FileTransport(Map<String, String> parameters)
+    public FileTransport(int bound, Map<String, String> parameters)
     {
-        super(TransportConstants.FILE, parameters);
+        super(bound, TransportConstants.FILE, parameters);
+    }
+
+    /**
+     * Used only for inheriting Transports
+     *
+     * @param bound      Configurable bound
+     * @param type       @see #type
+     * @param parameters @see #parameters
+     */
+    protected FileTransport(int bound, String type, Map<String, String> parameters)
+    {
+        super(bound, type, parameters);
     }
 
     /**
@@ -143,7 +152,7 @@ public class FileTransport extends BaseTransport implements Transport
      * @throws TransportException If a required parameter is missing or not properly formatted.
      * @inheritDoc
      */
-    public String toUriString() throws TransportException
+    public String toUriString() throws ConfigurableException, TransportException
     {
         validateParameters();
 
@@ -196,20 +205,11 @@ public class FileTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @return List of Parameters for File Transport.
-     * @inheritDoc
-     */
-    public List<List> getParametersList()
-    {
-        return getParametersDefinitionsAsList(parametersList);
-    }
-
-    /**
      * @throws TransportException If any required parameter is missing or incorrect
      * @inheritDoc
      */
     @Override
-    void validateParameters() throws TransportException
+    protected void validateParameters() throws ConfigurableException
     {
         if (getParamValue(PARAM_DELETE_FILE) != null)
         {
@@ -219,7 +219,7 @@ public class FileTransport extends BaseTransport implements Transport
         // ---
         if (getParamValue(PARAM_DIRECTORY_NAME) == null)
         {
-            throw new TransportException("Directory Name parameter is required");
+            throw new ConfigurableException("Directory Name parameter is required");
         }
     }
 
@@ -237,5 +237,26 @@ public class FileTransport extends BaseTransport implements Transport
     protected void setDeleteFile(boolean deleteFile)
     {
         this.deleteFile = deleteFile;
+    }
+
+    /**
+     * Returns a List of parameters the implementing instance uses.
+     * Each list element is itself a List to describe the parameter as follows:
+     * <p/>
+     * - 0 : Parameter name
+     * - 1 : Parameter description. Useful for GUI rendition
+     * - 2 : Parameter type. Useful for GUI rendition.
+     * - 3 : Required or Optional parameter. Useful for GUI validation.
+     * - 4 : Parameter usage. Useful for GUI rendition.
+     * - 5 : Default value
+     *
+     * @return List of Parameters for the implementing Transport.
+     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder
+     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.ParameterDefinition
+     */
+    @Override
+    public List<List> getParametersList()
+    {
+        return getParametersDefinitionsAsList(parametersList);
     }
 }

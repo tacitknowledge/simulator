@@ -69,15 +69,17 @@ public interface ConversationManager
      * @return The parameter descriptions list
      * @see Adapter#getParametersList()
      * @see com.tacitknowledge.simulator.formats.AdapterFactory#getAdapterParameters(String)
+     * @throws ConfigurableException If the parameters definition list is missing
      */
-    List<List> getAdapterParameters(String format);
+    List<List> getAdapterParameters(String format) throws ConfigurableException;
 
     /**
      * @param type The transport type
      * @return The parameters descriptions list
      * @see Transport#getParametersList()
+     * @throws ConfigurableException If the parameters definition list is missing
      */
-    List<List> getTransportParameters(String type);
+    List<List> getTransportParameters(String type) throws ConfigurableException;
 
     /**
      * This method creates an instance of the Class given in the name

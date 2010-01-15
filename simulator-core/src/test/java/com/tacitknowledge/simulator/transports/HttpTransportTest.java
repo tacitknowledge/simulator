@@ -1,5 +1,6 @@
 package com.tacitknowledge.simulator.transports;
 
+import com.tacitknowledge.simulator.Configurable;
 import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.TransportException;
 import junit.framework.TestCase;
@@ -50,7 +51,7 @@ public class HttpTransportTest extends TestCase
             transport.toUriString();
             fail("Transport should not work without required parameters");
         }
-        catch (TransportException e)
+        catch (Exception e)
         {
             // --- That's ok
         }
@@ -61,7 +62,7 @@ public class HttpTransportTest extends TestCase
         // --- Try to get this URI: jetty:http://localhost/mytestapp/myservices
         params.put(HttpTransport.PARAM_HOST, "localhost");
         params.put(HttpTransport.PARAM_RESOURCE_URI, "/mytestapp/myservices");
-        transport.setParameters(params);
+        transport.setBoundAndParameters(Configurable.BOUND_IN, params);
 
         try
         {
@@ -70,7 +71,7 @@ public class HttpTransportTest extends TestCase
             assertTrue("Returned uri isn't as expected: " + uri,
                 uri.indexOf("jetty:http://localhost/mytestapp/myservices") > -1);
         }
-        catch (TransportException e)
+        catch (Exception e)
         {
             fail("Shouldn't be getting an exception here: " + e.getMessage());
         }
@@ -91,7 +92,7 @@ public class HttpTransportTest extends TestCase
             assertTrue("Returned uri isn't as expected: " + uri,
                 uri.indexOf("jetty:http://localhost:8080/mytestapp/myservices") > -1);
         }
-        catch (TransportException e)
+        catch (Exception e)
         {
             fail("Shouldn't be getting an exception here: " + e.getMessage());
         }
@@ -110,7 +111,7 @@ public class HttpTransportTest extends TestCase
             assertEquals("Returned uri isn't as expected: " + uri,
                 "direct:end", uri);
         }
-        catch (TransportException e)
+        catch (Exception e)
         {
             fail("Shouldn't be getting an exception here: " + e.getMessage());
         }

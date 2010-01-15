@@ -1,6 +1,7 @@
 package com.tacitknowledge.simulator.camel;
 
 import com.tacitknowledge.simulator.Adapter;
+import com.tacitknowledge.simulator.Configurable;
 import com.tacitknowledge.simulator.ConversationScenario;
 import com.tacitknowledge.simulator.TestHelper;
 import com.tacitknowledge.simulator.Conversation;
@@ -136,10 +137,9 @@ public class ScenarioExecutionWrapperTest
         String criteria2 = "employees.employee[0].name=='John';";      //true
         String execution2 = "employees.employee[0].name='Johnaaaa';employees";  //this script should be executed
 
-        JsonAdapter outAdapter = new JsonAdapter();
         Map<String, String> param = new HashMap<String, String>();
         param.put(JsonAdapter.PARAM_JSON_CONTENT, "employees");
-        outAdapter.setParameters(param);
+        JsonAdapter outAdapter = new JsonAdapter(Configurable.BOUND_OUT, param);
 
         conversation = new ConversationImpl(2, "Conversation2", null, null, new XmlAdapter(), outAdapter, null);
 
@@ -242,7 +242,7 @@ public class ScenarioExecutionWrapperTest
     {
         Map<String, String> params = new HashMap<String, String>();
         params.put(XmlAdapter.PARAM_ROOT_TAG_NAME, "root");
-        Adapter outAdapter = new XmlAdapter(params);
+        Adapter outAdapter = new XmlAdapter(Configurable.BOUND_OUT, params);
 
         conversation = new ConversationImpl(2, "Conversation2", null, null, new XmlAdapter(), outAdapter, null);
 

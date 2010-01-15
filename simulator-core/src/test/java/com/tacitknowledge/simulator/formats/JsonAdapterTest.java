@@ -1,5 +1,6 @@
 package com.tacitknowledge.simulator.formats;
 
+import com.tacitknowledge.simulator.ConfigurableException;
 import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.TestHelper;
@@ -45,7 +46,7 @@ public class JsonAdapterTest extends TestCase
             adapter.generateBeans(exchange);
             fail("JSON Adapter should throw exception if the required parameters are not provided.");
         }
-        catch (FormatAdapterException fae)
+        catch (Exception fae)
         {
             // --- This is ok!
         }
@@ -147,7 +148,8 @@ public class JsonAdapterTest extends TestCase
         }
     }
 
-    public void testSuccessfulAdaptToWithOnlyArrays() throws FormatAdapterException, JSONException
+    public void testSuccessfulAdaptToWithOnlyArrays()
+            throws FormatAdapterException, JSONException, ConfigurableException
     {
         // ---
         // --- Provide required configuration

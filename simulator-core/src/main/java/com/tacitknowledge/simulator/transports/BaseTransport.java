@@ -1,12 +1,11 @@
 package com.tacitknowledge.simulator.transports;
 
+import com.tacitknowledge.simulator.BaseConfigurable;
+import com.tacitknowledge.simulator.Configurable;
+import com.tacitknowledge.simulator.ConfigurableException;
 import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.TransportException;
-import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -14,7 +13,7 @@ import java.util.Map;
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public abstract class BaseTransport implements Transport
+public abstract class BaseTransport extends BaseConfigurable implements Transport
 {
     // --- Common Transport parameters
     /**
@@ -43,12 +42,6 @@ public abstract class BaseTransport implements Transport
     protected static final String AMP = "&";
 
     /**
-     * The Transport parameters. Each Transport implementation should define its corresponding
-     * parameters.
-     */
-    private Map<String, String> parameters = new HashMap<String, String>();
-
-    /**
      * Transport type
      */
     private String type;
@@ -64,14 +57,14 @@ public abstract class BaseTransport implements Transport
     {
     }
 
-    /**
-     * Constructor. This constructor should be called from the implementing classes'
-     * default constructor.
-     *
-     * @param type Constructor type
-     */
     protected BaseTransport(String type)
     {
+        this.type = type;
+    }
+
+    protected BaseTransport(String type, Map<String, String> parameters)
+    {
+        super(parameters);
         this.type = type;
     }
 
@@ -81,11 +74,12 @@ public abstract class BaseTransport implements Transport
      * @param type       @see #type
      * @param parameters @see #parameters
      */
-    protected BaseTransport(String type, Map<String, String> parameters)
+    protected BaseTransport(int bound, String type, Map<String, String> parameters)
     {
+        super(bound, parameters);
         this.type = type;
-        this.parameters = parameters;
     }
+
 
     /**
      * Getter for @see #type
@@ -98,54 +92,33 @@ public abstract class BaseTransport implements Transport
     }
 
     /**
-     * @param parameters The Transport parameters Map
-     * @inheritDoc
+     * 
+     * @return The String representation of this Transport
      */
-    public void setParameters(Map<String, String> parameters)
-    {
-        this.parameters = parameters;
-    }
-
-    /**
-     * Sets and/or overrides instance variables from provided parameters and validates that
-     * the required parameters are present.
-     *
-     * @throws TransportException If any required parameter is missing or incorrect
-     */
-    abstract void validateParameters() throws TransportException;
-
-    /**
-     * @param name The parameter name. Parameter names should be defined by each implementation.
-     * @return The parameter value or null if not defined.
-     */
-    protected String getParamValue(String name)
-    {
-        return parameters.get(name);
-    }
-
-    /**
-     * Returns a List of ParameterDefinitions in their List representation
-     *
-     * @param parametersList The parameter definitions list
-     * @return The list of lists
-     */
-    protected List<List> getParametersDefinitionsAsList(
-        List<ParameterDefinitionBuilder.ParameterDefinition> parametersList)
-    {
-        List<List> list = new ArrayList<List>();
-        for (ParameterDefinitionBuilder.ParameterDefinition param : parametersList)
-        {
-            list.add(param.getAsList());
-        }
-        return list;
-    }
-
     @Override
     public String toString()
     {
         return "BaseTransport{" +
-            "parameters=" + parameters +
+            "parameters=" + getParameters() +
             ", type='" + type + '\'' +
             '}';
+    }
+
+    /**
+     * Returns a valid String URI representation of this transport for Camel route creation e.g.:
+     * file://path/to/file/directory , jms:queue/myqueue ,
+     *
+     * @return URI representation of the transport
+     * @throws com.tacitknowledge.simulator.ConfigurableException
+     *          If a required parameter is missing or not properly formatted.
+     * @throws com.tacitknowledge.simulator.TransportException
+     *          If any other error occurs
+     */
+    @Override
+    public String toUriString() throws ConfigurableException, TransportException
+    {
+        validateParameters();
+
+        return null;
     }
 }

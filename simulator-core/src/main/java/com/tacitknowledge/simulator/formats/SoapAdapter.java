@@ -1,6 +1,7 @@
 package com.tacitknowledge.simulator.formats;
 
 import com.tacitknowledge.simulator.Adapter;
+import com.tacitknowledge.simulator.ConfigurableException;
 import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.StructuredSimulatorPojo;
@@ -37,6 +38,8 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
      */
     public static final String PARAM_WSDL_URL = "wdslURL";
 
+    public static final String DEFAULT_PAYLOAD_KEY = "payload";
+
     /**
      * Logger for this class.
      */
@@ -52,6 +55,11 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
                                     label("WSDL URL").
                                     required()
                     );
+
+    /**
+     * Key for the root where to contain the SOAP message's payload
+     */
+    private String payloadKey = DEFAULT_PAYLOAD_KEY;
 
     /**
      * WSDL service definition.
@@ -75,13 +83,20 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
     /**
      * Constructor
      *
+     * @param bound Configurable bound
      * @param parameters @see #parameters
      */
-    public SoapAdapter(Map<String, String> parameters)
+    public SoapAdapter(int bound, Map<String, String> parameters)
     {
-        super(parameters, false);
+        super(bound, parameters, false);
     }
 
+    /**
+     * 
+     * @param o
+     * @return
+     * @throws FormatAdapterException
+     */
     protected SimulatorPojo createSimulatorPojo(String o)
         throws FormatAdapterException
     {
@@ -100,7 +115,11 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
             // --- So, now we got the SOAP message parsed.
             SOAPBody body = message.getSOAPBody();
 
-            pojo.getRoot().put("payload", getStructuredChilds(body));
+            pojo.getRoot().put(payloadKey, getStructuredChilds(body));
+
+            // --- Check that the passed methods/parameters are WSDL-valid
+
+
         } catch(SOAPException se)
         {
             String errorMessage = "Unexpected SOAP exception";
@@ -121,6 +140,12 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
         return pojo;
     }
 
+    /**
+     * @inheritDoc
+     * @param o
+     * @return
+     * @throws FormatAdapterException
+     */
     @Override
     public SimulatorPojo createSimulatorPojo(Exchange o) throws FormatAdapterException
     {
@@ -135,22 +160,18 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
      *          If any required parameter is missing or incorrect
      */
     @Override
-    void validateParameters() throws FormatAdapterException
+    protected void validateParameters() throws ConfigurableException
     {
         if (getParamValue(PARAM_WSDL_URL) == null)
         {
-            throw new FormatAdapterException("WSDL URL parameter is required");
+            throw new ConfigurableException("WSDL URL parameter is required");
         }
     }
 
     /**
-     * @return List of Paramaters for the implementing Adapter.
+     *
+     * @throws FormatAdapterException If the WSDL file was not in the provided WSDL URL
      */
-    public List<List> getParametersList()
-    {
-        return getParametersDefinitionsAsList(parametersList);
-    }
-
     private void getWSDLDefinition() throws FormatAdapterException {
         try
         {
@@ -176,6 +197,9 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
         }
     }
 
+    /**
+     *
+     */
     private void getAvailableOperations()
     {
         Map<QName, Binding> bindings = definition.getBindings();
@@ -185,8 +209,57 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
             List<BindingOperation> operations = entry.getValue().getBindingOperations();
             for (BindingOperation op : operations)
             {
-                availableOps.put(op.getName(), op);
+                this.availableOps.put(op.getName(), op);
             }
         }
+    }
+
+    /**
+     * 
+     * @param pojo
+     * @throws FormatAdapterException
+     */
+    private void validateOperationsndParameters(SimulatorPojo pojo) throws FormatAdapterException
+    {
+        // --- Review all Methods passed in the SOAP message
+        for (Map.Entry<String, Object> operations :
+                ((Map<String, Object>)pojo.getRoot().get(payloadKey)).entrySet())
+        {
+            String opName = operations.getKey();
+
+            if (availableOps.get(opName) == null)
+            {
+                // --- If the requested Operation is no available, throw an error
+                throw new FormatAdapterException(
+                        "The requested service operation is not available in the provided WSDL: " +
+                        opName);
+            }
+
+            BindingOperation op = availableOps.get(opName);
+
+            // --- Now check that the passed parameters belong to the operation
+            //for (Map.Entry<String, Object> param : op.getOperation().getInput())
+        }
+    }
+
+    /**
+     * Returns a List of parameters the implementing instance uses.
+     * Each list element is itself a List to describe the parameter as follows:
+     * <p/>
+     * - 0 : Parameter name
+     * - 1 : Parameter description. Useful for GUI rendition
+     * - 2 : Parameter type. Useful for GUI rendition.
+     * - 3 : Required or Optional parameter. Useful for GUI validation.
+     * - 4 : Parameter usage. Useful for GUI rendition.
+     * - 5 : Default value
+     *
+     * @return List of Parameters for the implementing Transport.
+     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder
+     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.ParameterDefinition
+     */
+    @Override
+    public List<List> getParametersList()
+    {
+        return getParametersDefinitionsAsList(parametersList);
     }
 }

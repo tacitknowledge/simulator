@@ -36,7 +36,7 @@ public class ScriptExecutionServiceTest extends TestCase
         ClassPool pool = ClassPool.getDefault();
 
         // --- First, get the SimulatorPojo from the data
-        XmlAdapter adapter = (XmlAdapter) AdapterFactory.getAdapter(FormatConstants.XML);
+        XmlAdapter adapter = (XmlAdapter) AdapterFactory.getInstance().getAdapter(FormatConstants.XML);
 
         CamelContext context = new DefaultCamelContext();
         Exchange exchange = new DefaultExchange(context);

@@ -34,7 +34,7 @@ public class FileTransportTest extends TestCase
             transport.toUriString();
             fail("Transport should not work without required parameters");
         }
-        catch (TransportException e)
+        catch (Exception e)
         {
             // --- That's ok
         }
@@ -58,7 +58,7 @@ public class FileTransportTest extends TestCase
                 "Returned uri isn't as expected: " + uri,
                 uri.indexOf("file://inbox?delete=true") > -1);
         }
-        catch (TransportException e)
+        catch (Exception e)
         {
             fail("Shouldn't be getting an exception here: " + e.getMessage());
         }
@@ -80,7 +80,7 @@ public class FileTransportTest extends TestCase
                 "Returned uri isn't as expected: " + uri,
                 uri.indexOf("file://inbox/csv?include=^.*\\.(csv|CSV)$") > -1);
         }
-        catch (TransportException e)
+        catch (Exception e)
         {
             fail("Shouldn't be getting an exception here: " + e.getMessage());
         }
@@ -102,7 +102,7 @@ public class FileTransportTest extends TestCase
                 "Returned uri isn't as expected: " + uri,
                 uri.indexOf("file://inbox/csv?include=(.*)(something)(.*)") > -1);
         }
-        catch (TransportException e)
+        catch (Exception e)
         {
             fail("Shouldn't be getting an exception here: " + e.getMessage());
         }
@@ -124,7 +124,7 @@ public class FileTransportTest extends TestCase
                 "Returned uri isn't as expected: " + uri,
                 uri.indexOf("file://inbox?initialDelay=10000&delay=10000") > -1);
         }
-        catch (TransportException e)
+        catch (Exception e)
         {
             fail("Shouldn't be getting an exception here: " + e.getMessage());
         }

@@ -1,6 +1,7 @@
 package com.tacitknowledge.simulator.formats;
 
 import com.tacitknowledge.simulator.Adapter;
+import com.tacitknowledge.simulator.ConfigurableException;
 import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.StructuredSimulatorPojo;
@@ -100,27 +101,52 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
     {
     }
 
+    /**
+     * @inheritDoc
+     * @param useFullyQualifiedNames
+     */
     protected XmlAdapter(boolean useFullyQualifiedNames)
     {
         this.useFullyQualifiedNodeNames = useFullyQualifiedNames;
     }
 
     /**
-     * @param parameters @see Adapter#parameters
      * @inheritDoc
+     * @param parameters
      */
     public XmlAdapter(Map<String, String> parameters)
     {
         super(parameters);
     }
 
-    protected XmlAdapter(Map<String, String> parameters, boolean useFullyQualifiedNames)
+    /**
+     * @param parameters @see Adapter#parameters
+     * @inheritDoc
+     */
+    public XmlAdapter(int bound, Map<String, String> parameters)
     {
-        super(parameters);
+        super(bound, parameters);
+    }
+
+    /**
+     * @inheritDoc
+     * @param bound
+     * @param parameters
+     * @param useFullyQualifiedNames
+     */
+    protected XmlAdapter(int bound, Map<String, String> parameters, boolean useFullyQualifiedNames)
+    {
+        this(bound, parameters);
         this.useFullyQualifiedNodeNames = useFullyQualifiedNames;
     }
 
 
+    /**
+     * @inheritDoc
+     * @param exchange
+     * @return
+     * @throws FormatAdapterException
+     */
     @Override
     protected SimulatorPojo createSimulatorPojo(Exchange exchange)
         throws FormatAdapterException
@@ -169,6 +195,13 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
         return pojo;
     }
 
+    /**
+     * @inheritDoc
+     * @param simulatorPojo
+     * @param exchange The Camel exchange
+     * @return
+     * @throws FormatAdapterException
+     */
     @Override
     protected Object getString(SimulatorPojo simulatorPojo, Exchange exchange)
         throws FormatAdapterException
@@ -474,7 +507,7 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
      * @inheritDoc
      */
     @Override
-    void validateParameters() throws FormatAdapterException
+    protected void validateParameters() throws ConfigurableException
     {
         if (getParamValue(PARAM_VALIDATE) != null)
         {
@@ -482,6 +515,22 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
         }
     }
 
+    /**
+     * Returns a List of parameters the implementing instance uses.
+     * Each list element is itself a List to describe the parameter as follows:
+     * <p/>
+     * - 0 : Parameter name
+     * - 1 : Parameter description. Useful for GUI rendition
+     * - 2 : Parameter type. Useful for GUI rendition.
+     * - 3 : Required or Optional parameter. Useful for GUI validation.
+     * - 4 : Parameter usage. Useful for GUI rendition.
+     * - 5 : Default value
+     *
+     * @return List of Parameters for the implementing Transport.
+     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder
+     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.ParameterDefinition
+     */
+    @Override
     public List<List> getParametersList()
     {
         return getParametersDefinitionsAsList(parametersList);

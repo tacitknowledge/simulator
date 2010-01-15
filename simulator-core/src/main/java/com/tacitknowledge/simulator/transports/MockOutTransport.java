@@ -1,5 +1,7 @@
 package com.tacitknowledge.simulator.transports;
 
+import com.tacitknowledge.simulator.Configurable;
+import com.tacitknowledge.simulator.ConfigurableException;
 import com.tacitknowledge.simulator.Transport;
 
 import java.util.List;
@@ -11,11 +13,11 @@ import java.util.Map;
  *
  * @author Nikita Belenkiy (nbelenkiy@tacitknowledge.com)
  */
-public class MockOutTransport implements Transport
+public class MockOutTransport extends BaseTransport implements Transport
 {
-    public String getType()
+    public MockOutTransport()
     {
-        return "Mock Out Transport";
+        super(Configurable.BOUND_OUT, "mockOutTransport", null);
     }
 
     public String toUriString()
@@ -28,7 +30,14 @@ public class MockOutTransport implements Transport
         return null;
     }
 
-    public void setParameters(Map<String, String> parameters)
+    /**
+     * Validate that all the required parameters have been provided.
+     *
+     * @throws com.tacitknowledge.simulator.ConfigurableException
+     *          If any required parameter has not been set.
+     */
+    @Override
+    protected void validateParameters() throws ConfigurableException
     {
 
     }

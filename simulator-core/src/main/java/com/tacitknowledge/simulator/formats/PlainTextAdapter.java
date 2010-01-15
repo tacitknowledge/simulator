@@ -1,5 +1,6 @@
 package com.tacitknowledge.simulator.formats;
 
+import com.tacitknowledge.simulator.ConfigurableException;
 import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
 
@@ -18,6 +19,12 @@ import org.apache.camel.Exchange;
  */
 public class PlainTextAdapter extends BaseAdapter
 {
+    /**
+     * Adapter parameters definition.
+     */
+    private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
+            new ArrayList<ParameterDefinitionBuilder.ParameterDefinition>();
+
     /**
      * Structured pojo root is 'text'
      *
@@ -46,17 +53,32 @@ public class PlainTextAdapter extends BaseAdapter
     /**
      * empty method.
      *
-     * @throws FormatAdapterException
+     * @throws ConfigurableException
      */
     @Override
-    void validateParameters() throws FormatAdapterException
+    protected void validateParameters() throws ConfigurableException
     {
 
     }
 
+    /**
+     * Returns a List of parameters the implementing instance uses.
+     * Each list element is itself a List to describe the parameter as follows:
+     * <p/>
+     * - 0 : Parameter name
+     * - 1 : Parameter description. Useful for GUI rendition
+     * - 2 : Parameter type. Useful for GUI rendition.
+     * - 3 : Required or Optional parameter. Useful for GUI validation.
+     * - 4 : Parameter usage. Useful for GUI rendition.
+     * - 5 : Default value
+     *
+     * @return List of Parameters for the implementing Transport.
+     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder
+     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.ParameterDefinition
+     */
+    @Override
     public List<List> getParametersList()
     {
-        return getParametersDefinitionsAsList(
-            new ArrayList<ParameterDefinitionBuilder.ParameterDefinition>());
+        return null;
     }
 }

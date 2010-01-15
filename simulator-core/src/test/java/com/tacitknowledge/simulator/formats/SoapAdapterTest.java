@@ -37,7 +37,8 @@ public class SoapAdapterTest extends TestCase
 
     public void testAdaptFromSoap()
     {
-        SoapAdapter adapter = (SoapAdapter) AdapterFactory.getAdapter(FormatConstants.SOAP);
+        SoapAdapter adapter =
+                (SoapAdapter) AdapterFactory.getInstance().getAdapter(FormatConstants.SOAP);
 
         SimulatorPojo pojo;
         try

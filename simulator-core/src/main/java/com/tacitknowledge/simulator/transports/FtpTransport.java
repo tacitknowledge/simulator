@@ -1,5 +1,6 @@
 package com.tacitknowledge.simulator.transports;
 
+import com.tacitknowledge.simulator.ConfigurableException;
 import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.TransportException;
 import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
@@ -127,18 +128,19 @@ public class FtpTransport extends FileTransport implements Transport
      * @param parameters @see #parameters
      * @inheritDoc
      */
-    public FtpTransport(Map<String, String> parameters)
+    public FtpTransport(int bound, Map<String, String> parameters)
     {
-        super(TransportConstants.FTP, parameters);
+        super(bound, TransportConstants.FTP, parameters);
     }
 
     /**
      * @return @see #Transport.toUriString()
-     * @throws TransportException If a required parameter is missing or not properly formatted.
+     * @throws ConfigurableException If a required parameter is missing or not properly formatted.
+     * @throws TransportException If any other error occurs.
      * @inheritDoc
      */
     @Override
-    public String toUriString() throws TransportException
+    public String toUriString() throws ConfigurableException, TransportException
     {
         validateParameters();
 
@@ -234,21 +236,11 @@ public class FtpTransport extends FileTransport implements Transport
     }
 
     /**
-     * @return List of Parameters for Ftp Transport.
-     * @inheritDoc
-     */
-    @Override
-    public List<List> getParametersList()
-    {
-        return getParametersDefinitionsAsList(parametersList);
-    }
-
-    /**
      * @throws TransportException If any required parameter is missing or incorrect
      * @inheritDoc
      */
     @Override
-    void validateParameters() throws TransportException
+    protected void validateParameters() throws ConfigurableException
     {
         // --- If passed, assign the boolean parameters to instance variables
         if (getParamValue(PARAM_SFTP) != null)
@@ -266,7 +258,28 @@ public class FtpTransport extends FileTransport implements Transport
 
         if (getParamValue(PARAM_HOST) == null)
         {
-            throw new TransportException("Host name parameter is required");
+            throw new ConfigurableException("Host name parameter is required");
         }
+    }
+
+    /**
+     * Returns a List of parameters the implementing instance uses.
+     * Each list element is itself a List to describe the parameter as follows:
+     * <p/>
+     * - 0 : Parameter name
+     * - 1 : Parameter description. Useful for GUI rendition
+     * - 2 : Parameter type. Useful for GUI rendition.
+     * - 3 : Required or Optional parameter. Useful for GUI validation.
+     * - 4 : Parameter usage. Useful for GUI rendition.
+     * - 5 : Default value
+     *
+     * @return List of Parameters for the implementing Transport.
+     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder
+     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.ParameterDefinition
+     */
+    @Override
+    public List<List> getParametersList()
+    {
+        return getParametersDefinitionsAsList(parametersList);
     }
 }

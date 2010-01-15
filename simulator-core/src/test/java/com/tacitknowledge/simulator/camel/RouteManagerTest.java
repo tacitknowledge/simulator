@@ -50,6 +50,25 @@ public class RouteManagerTest extends SimulatorCamelTestSupportBase
         {
 
         }
+
+        /**
+         * @param bound      Configurable bound
+         * @param parameters Configurable parameter values
+         */
+        @Override
+        public void setBoundAndParameters(int bound, Map<String, String> parameters)
+        {
+
+        }
+
+        /**
+         * @return The bounding (IN or OUT) of the configurable instance
+         */
+        @Override
+        public int getBound()
+        {
+            return 0;
+        }
     };
 
     /**
@@ -76,6 +95,25 @@ public class RouteManagerTest extends SimulatorCamelTestSupportBase
         public void setParameters(Map<String, String> parameters)
         {
 
+        }
+
+        /**
+         * @param bound      Configurable bound
+         * @param parameters Configurable parameter values
+         */
+        @Override
+        public void setBoundAndParameters(int bound, Map<String, String> parameters)
+        {
+
+        }
+
+        /**
+         * @return The bounding (IN or OUT) of the configurable instance
+         */
+        @Override
+        public int getBound()
+        {
+            return 0;
         }
     };
 

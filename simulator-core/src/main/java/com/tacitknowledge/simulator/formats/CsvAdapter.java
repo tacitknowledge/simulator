@@ -1,6 +1,7 @@
 package com.tacitknowledge.simulator.formats;
 
 import com.tacitknowledge.simulator.Adapter;
+import com.tacitknowledge.simulator.ConfigurableException;
 import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.StructuredSimulatorPojo;
@@ -105,11 +106,16 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
      * @param parameters @see Adapter#parameters
      * @inheritDoc
      */
-    public CsvAdapter(Map<String, String> parameters)
+    public CsvAdapter(int bound, Map<String, String> parameters)
     {
-        super(parameters);
+        super(bound, parameters);
     }
 
+    /**
+     * @inheritDoc
+     * @param exchange The Camel exchange
+     * @return The generated PopulatorPojo
+     */
     @Override
     protected SimulatorPojo createSimulatorPojo(Exchange exchange)
     {
@@ -160,6 +166,13 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
         return pojo;
     }
 
+    /**
+     * @inheritDoc
+     * @param simulatorPojo The SimulatorPojo containing the script result
+     * @param exchange The Camel exchange
+     * @return The String representation in CSV format of the SimulatorPojo data
+     * @throws FormatAdapterException
+     */
     @Override
     protected Object getString(SimulatorPojo simulatorPojo, Exchange exchange)
         throws FormatAdapterException
@@ -173,10 +186,6 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
             logger.error(errorMsg);
             throw new FormatAdapterException(errorMsg);
         }
-
-        // --- Before going further, set the instance variables
-        // from the received parameters and validate them
-        validateParameters();
 
         // --- Use the CsvContent parameter to get the only object, which should be a List
         List<Map<String, Object>> list =
@@ -207,7 +216,7 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
      * @inheritDoc
      */
     @Override
-    void validateParameters() throws FormatAdapterException
+    protected void validateParameters() throws ConfigurableException
     {
         // --- Check that if firstRowHeader is false, that rowContent has been provided
         this.firstRowHeader =
@@ -222,13 +231,13 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
         // ---
         if (getParamValue(PARAM_CSV_CONTENT) == null)
         {
-            throw new FormatAdapterException("CSV Content parameter is required.");
+            throw new ConfigurableException("CSV Content parameter is required.");
         }
         if (!firstRowHeader && getParamValue(PARAM_ROW_CONTENT) == null)
         {
             String errorMsg = "RowContent parameter is required if CSV has no headers.";
             logger.error(errorMsg);
-            throw new FormatAdapterException(errorMsg);
+            throw new ConfigurableException(errorMsg);
         }
     }
 
@@ -346,6 +355,22 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
         return sb.toString();
     }
 
+    /**
+     * Returns a List of parameters the implementing instance uses.
+     * Each list element is itself a List to describe the parameter as follows:
+     * <p/>
+     * - 0 : Parameter name
+     * - 1 : Parameter description. Useful for GUI rendition
+     * - 2 : Parameter type. Useful for GUI rendition.
+     * - 3 : Required or Optional parameter. Useful for GUI validation.
+     * - 4 : Parameter usage. Useful for GUI rendition.
+     * - 5 : Default value
+     *
+     * @return List of Parameters for the implementing Transport.
+     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder
+     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.ParameterDefinition
+     */
+    @Override
     public List<List> getParametersList()
     {
         return getParametersDefinitionsAsList(parametersList);

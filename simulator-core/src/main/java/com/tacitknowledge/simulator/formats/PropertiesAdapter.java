@@ -1,6 +1,7 @@
 package com.tacitknowledge.simulator.formats;
 
 import com.tacitknowledge.simulator.Adapter;
+import com.tacitknowledge.simulator.ConfigurableException;
 import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.StructuredSimulatorPojo;
@@ -68,19 +69,25 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
     }
 
     /**
+     * @param bound Configurable bound
      * @param parameters @see Adapter#parameters
      * @inheritDoc
      */
-    public PropertiesAdapter(Map<String, String> parameters)
+    public PropertiesAdapter(int bound, Map<String, String> parameters)
     {
-        super(parameters);
+        super(bound, parameters);
     }
 
+    /**
+     * @inheritDoc
+     * @param exchange
+     * @return
+     * @throws FormatAdapterException
+     */
     @Override
     protected SimulatorPojo createSimulatorPojo(Exchange exchange)
         throws FormatAdapterException
     {
-
         String object = exchange.getIn().getBody(String.class);
 
         logger.debug("Attempting to generate SimulatorPojo from Properties content:\n" + object);
@@ -125,11 +132,17 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
         return pojo;
     }
 
+    /**
+     * @inheritDoc
+     * @param simulatorPojo
+     * @param exchange The Camel exchange
+     * @return
+     * @throws FormatAdapterException
+     */
     @Override
     protected Object getString(SimulatorPojo simulatorPojo, Exchange exchange)
         throws FormatAdapterException
     {
-
         if (simulatorPojo.getRoot().isEmpty())
         {
             throw new FormatAdapterException("Simulator Pojo root is empty.");
@@ -139,11 +152,11 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
     }
 
     /**
-     * @throws FormatAdapterException if any required parameter is missing
+     * @throws ConfigurableException if any required parameter is missing
      * @inheritDoc
      */
     @Override
-    void validateParameters() throws FormatAdapterException
+    protected void validateParameters() throws ConfigurableException
     {
         if (getParamValue(PARAM_PROPERTY_SEPARATOR) != null)
         {
@@ -151,6 +164,13 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
         }
     }
 
+    /**
+     * 
+     * @param container
+     * @param path
+     * @param value
+     * @throws FormatAdapterException
+     */
     private void setPropertyToMap(Map<String, Object> container, List<String> path, String value)
         throws FormatAdapterException
     {
@@ -209,6 +229,12 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
         }
     }
 
+    /**
+     * 
+     * @param path
+     * @param map
+     * @return
+     */
     private String getPropertiesAsString(String path, Map<String, Object> map)
     {
         StringBuilder sb = new StringBuilder();
@@ -237,8 +263,25 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
         return sb.toString();
     }
 
+    /**
+     * Returns a List of parameters the implementing instance uses.
+     * Each list element is itself a List to describe the parameter as follows:
+     * <p/>
+     * - 0 : Parameter name
+     * - 1 : Parameter description. Useful for GUI rendition
+     * - 2 : Parameter type. Useful for GUI rendition.
+     * - 3 : Required or Optional parameter. Useful for GUI validation.
+     * - 4 : Parameter usage. Useful for GUI rendition.
+     * - 5 : Default value
+     *
+     * @return List of Parameters for the implementing Transport.
+     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder
+     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.ParameterDefinition
+     */
+    @Override
     public List<List> getParametersList()
     {
+
         return getParametersDefinitionsAsList(parametersList);
     }
 }

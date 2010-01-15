@@ -1,6 +1,7 @@
 package com.tacitknowledge.simulator.impl;
 
 import com.tacitknowledge.simulator.Adapter;
+import com.tacitknowledge.simulator.ConfigurableException;
 import com.tacitknowledge.simulator.Conversation;
 import com.tacitknowledge.simulator.ConversationManager;
 import com.tacitknowledge.simulator.ConversationNotFoundException;
@@ -247,9 +248,9 @@ public class ConversationManagerImpl implements ConversationManager
      * @return @see ConversationManager#getAdapterParameters
      * @inheritDoc
      */
-    public List<List> getAdapterParameters(String format)
+    public List<List> getAdapterParameters(String format) throws ConfigurableException
     {
-        return AdapterFactory.getAdapterParameters(format);
+        return AdapterFactory.getInstance().getAdapterParameters(format);
     }
 
     /**
@@ -257,7 +258,7 @@ public class ConversationManagerImpl implements ConversationManager
      * @return @see ConversationManager#getTransportParameters
      * @inheritDoc
      */
-    public List<List> getTransportParameters(String type)
+    public List<List> getTransportParameters(String type) throws ConfigurableException
     {
         return TransportFactory.getTransportParameters(type);
     }

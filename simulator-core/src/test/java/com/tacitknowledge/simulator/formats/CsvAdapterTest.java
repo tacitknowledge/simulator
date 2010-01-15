@@ -1,5 +1,6 @@
 package com.tacitknowledge.simulator.formats;
 
+import com.tacitknowledge.simulator.ConfigurableException;
 import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.TestHelper;
@@ -31,7 +32,7 @@ public class
 
     public void setUp()
     {
-        adapter = (CsvAdapter) AdapterFactory.getAdapter(FormatConstants.CSV);
+        adapter = (CsvAdapter) AdapterFactory.getInstance().getAdapter(FormatConstants.CSV);
     }
 
     public void testSuccessfulAdaptFromWithHeaders()
@@ -65,7 +66,8 @@ public class
         assertEquals("el", row.get("tercero"));
     }
 
-    public void testSuccessFullAdaptFromWithoutHeaders() throws FormatAdapterException
+    public void testSuccessFullAdaptFromWithoutHeaders()
+            throws FormatAdapterException, ConfigurableException
     {
         // --- Provide the required configuration
         Map<String, String> params = new HashMap<String, String>();
@@ -144,7 +146,7 @@ public class
             assertEquals(primeroIdx, row1.indexOf("yo"));
             assertEquals(primeroIdx, row2.indexOf("hoy"));
         }
-        catch (FormatAdapterException e)
+        catch (Exception e)
         {
             fail("Not expecting exception!");
         }

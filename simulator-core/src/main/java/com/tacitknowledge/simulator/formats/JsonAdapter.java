@@ -1,6 +1,7 @@
 package com.tacitknowledge.simulator.formats;
 
 import com.tacitknowledge.simulator.Adapter;
+import com.tacitknowledge.simulator.ConfigurableException;
 import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.StructuredSimulatorPojo;
@@ -90,12 +91,13 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
     /**
      * Constructor
      *
+     * @param bound Configurable bound
      * @param parameters @see Adapter#parameters
      * @inheritDoc
      */
-    public JsonAdapter(final Map<String, String> parameters)
+    public JsonAdapter(final int bound, final Map<String, String> parameters)
     {
-        super(parameters);
+        super(bound, parameters);
     }
 
     /**
@@ -164,7 +166,8 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
      * @throws FormatAdapterException if a format adapter error occurs
      */
     @Override
-    protected Object getString(final SimulatorPojo simulatorPojo, Exchange exchange) throws FormatAdapterException
+    protected Object getString(final SimulatorPojo simulatorPojo, Exchange exchange)
+            throws FormatAdapterException
     {
         // --- The SimulatorPojo for JSONAdapter should contain only one key in its root
         if (simulatorPojo.getRoot().isEmpty() || simulatorPojo.getRoot().size() > 1)
@@ -323,7 +326,7 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
      * @inheritDoc
      */
     @Override
-    void validateParameters() throws FormatAdapterException
+    protected void validateParameters() throws ConfigurableException
     {
         if (getParamValue(PARAM_IS_ARRAY) != null)
         {
@@ -332,21 +335,32 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
 
         if (getParamValue(PARAM_JSON_CONTENT) == null)
         {
-            throw new FormatAdapterException("JSON Content parameter is required.");
+            throw new ConfigurableException("JSON Content parameter is required.");
         }
         // --- If JSON content is array, PARAM_JSON_ARRAY_CONTENT is required
         if (this.isArray && getParamValue(PARAM_IS_ARRAY) == null)
         {
-            throw new FormatAdapterException(
+            throw new ConfigurableException(
                 "JSON Array Content parameter is required if JSON content is an array");
         }
     }
 
     /**
-     * Gets parameters list
+     * Returns a List of parameters the implementing instance uses.
+     * Each list element is itself a List to describe the parameter as follows:
+     * <p/>
+     * - 0 : Parameter name
+     * - 1 : Parameter description. Useful for GUI rendition
+     * - 2 : Parameter type. Useful for GUI rendition.
+     * - 3 : Required or Optional parameter. Useful for GUI validation.
+     * - 4 : Parameter usage. Useful for GUI rendition.
+     * - 5 : Default value
      *
-     * @return list of parameters
+     * @return List of Parameters for the implementing Transport.
+     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder
+     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.ParameterDefinition
      */
+    @Override
     public List<List> getParametersList()
     {
         return getParametersDefinitionsAsList(parametersList);

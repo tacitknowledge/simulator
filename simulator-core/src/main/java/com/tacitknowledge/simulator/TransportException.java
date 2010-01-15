@@ -5,7 +5,7 @@ package com.tacitknowledge.simulator;
  *
  * @author galo
  */
-public class TransportException extends Exception
+public class TransportException extends SimulatorException
 {
     /**
      * Constructor

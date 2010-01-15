@@ -28,7 +28,7 @@ public class YamlAdapterTest extends TestCase
 
     public void setUp()
     {
-        adapter = (YamlAdapter) AdapterFactory.getAdapter(FormatConstants.YAML);
+        adapter = (YamlAdapter) AdapterFactory.getInstance().getAdapter(FormatConstants.YAML);
     }
 
     public void testAdapterWithoutParameters()
@@ -44,7 +44,7 @@ public class YamlAdapterTest extends TestCase
             adapter.generateBeans(exchange);
             fail("JSON Adapter should throw exception if the required parameters are not provided.");
         }
-        catch (FormatAdapterException fae)
+        catch (Exception fae)
         {
             // --- This is ok!
         }
@@ -90,9 +90,11 @@ public class YamlAdapterTest extends TestCase
         params.put(YamlAdapter.PARAM_IS_ARRAY, "true");
         params.put(YamlAdapter.PARAM_YAML_ARRAY_CONTENT, "person");
         adapter.setParameters(params);
-        adapter.validateParameters();
+
         try
         {
+            adapter.validateParameters();
+            
             CamelContext context = new DefaultCamelContext();
             Exchange exchange = new DefaultExchange(context);
             Message message = new DefaultMessage();
@@ -119,7 +121,7 @@ public class YamlAdapterTest extends TestCase
             assertEquals(25, person3.get("age"));
 
         }
-        catch (FormatAdapterException fae)
+        catch (Exception fae)
         {
             fae.printStackTrace();
             fail("Not expecting exception!");

@@ -1,5 +1,7 @@
 package com.tacitknowledge.simulator.transports;
 
+import com.tacitknowledge.simulator.Configurable;
+import com.tacitknowledge.simulator.ConfigurableException;
 import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.TransportException;
 import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
@@ -19,12 +21,15 @@ public abstract class HttpTransport extends BaseTransport implements Transport
      */
     public static final String PARAM_RESOURCE_URI = "resourceURI";
 
+    /**
+     * HTTP out parameter.
+     */
     public static final String PARAM_HTTP_OUT = "httpOut";
 
     /**
      * Transport parameters definition.
      */
-    private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
+    protected List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
         parameters().
             add(
                 name(PARAM_HOST).
@@ -55,16 +60,14 @@ public abstract class HttpTransport extends BaseTransport implements Transport
 
     private boolean isHttpOut = false;
 
-
     /**
-     * Constructor. This constructor should be called from the implementing classes'
-     * default constructor.
-     *
-     * @param
+     * Constructor
+     * This constructor should only be called from the inheriting Transports.
+     * @param type
      */
-    protected HttpTransport(String transport)
+    protected HttpTransport(String type)
     {
-        super(transport);
+        super(type);    
     }
 
     /**
@@ -72,9 +75,9 @@ public abstract class HttpTransport extends BaseTransport implements Transport
      *
      * @param parameters @see #parameters
      */
-    protected HttpTransport(String transport, Map<String, String> parameters)
+    protected HttpTransport(int bound, String type, Map<String, String> parameters)
     {
-        super(transport, parameters);
+        super(bound, type, parameters);
     }
 
     /**
@@ -85,7 +88,7 @@ public abstract class HttpTransport extends BaseTransport implements Transport
      *          If any required parameter is missing or incorrect
      */
     @Override
-    void validateParameters() throws TransportException
+    protected void validateParameters() throws ConfigurableException
     {
         if (getParamValue(PARAM_HTTP_OUT) != null)
         {
@@ -94,28 +97,12 @@ public abstract class HttpTransport extends BaseTransport implements Transport
 
         if (!this.isHttpOut && getParamValue(PARAM_HOST) == null)
         {
-            throw new TransportException("Host name parameter is required");
+            throw new ConfigurableException("Host name parameter is required");
         }
         if (!this.isHttpOut && getParamValue(PARAM_RESOURCE_URI) == null)
         {
-            throw new TransportException("Resource URI parameter is required");
+            throw new ConfigurableException("Resource URI parameter is required");
         }
-    }
-
-    /**
-     * Returns a List of parameters the implementing instance uses.
-     * Each list element is itself a List to describe the parameter as follows:
-     * - 0 : Parameter name
-     * - 1 : Parameter description. Useful for GUI rendition
-     * - 2 : Parameter type (string, date, boolean). Useful for GUI rendition.
-     * - 3 : Required or Optional parameter. Useful for GUI validation.
-     *
-     * @return List of Parameters for the implementing Transport.
-     */
-    @Override
-    public List<List> getParametersList()
-    {
-        return getParametersDefinitionsAsList(parametersList);
     }
 
     /**
@@ -123,11 +110,12 @@ public abstract class HttpTransport extends BaseTransport implements Transport
      * file://path/to/file/directory , jms:queue/myqueue ,
      *
      * @return URI representation of the transport
+     * @throws TransportException If a required parameter is missing or not properly formatted.
      * @throws com.tacitknowledge.simulator.TransportException
-     *          If a required parameter is missing or not properly formatted.
+     *          If any other error occurs.
      */
     @Override
-    public String toUriString() throws TransportException
+    public String toUriString() throws ConfigurableException, TransportException
     {
         validateParameters();
 

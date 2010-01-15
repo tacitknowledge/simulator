@@ -1,5 +1,6 @@
 package com.tacitknowledge.simulator.transports;
 
+import com.tacitknowledge.simulator.ConfigurableException;
 import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.TransportException;
 import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
@@ -95,8 +96,8 @@ public class JmsTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @param parameters @see #parameters
      * @inheritDoc
+     * @param parameters
      */
     public JmsTransport(Map<String, String> parameters)
     {
@@ -104,11 +105,20 @@ public class JmsTransport extends BaseTransport implements Transport
     }
 
     /**
+     * @param parameters @see #parameters
+     * @inheritDoc
+     */
+    public JmsTransport(int bound, Map<String, String> parameters)
+    {
+        super(bound, TransportConstants.JMS, parameters);
+    }
+
+    /**
      * @return @see #Transport.toUriString()
      * @throws TransportException If a required parameter is missing or not properly formatted.
      * @inheritDoc
      */
-    public String toUriString() throws TransportException
+    public String toUriString() throws ConfigurableException, TransportException
     {
         validateParameters();
 
@@ -148,20 +158,11 @@ public class JmsTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @return List of Parameters for File Transport.
-     * @inheritDoc
-     */
-    public List<List> getParametersList()
-    {
-        return getParametersDefinitionsAsList(parametersList);
-    }
-
-    /**
-     * @throws TransportException If any required parameter is missing or incorrect
+     * @throws ConfigurableException If any required parameter is missing or incorrect
      * @inheritDoc
      */
     @Override
-    void validateParameters() throws TransportException
+    protected void validateParameters() throws ConfigurableException
     {
         if (getParamValue(PARAM_ACTIVE_MQ) != null)
         {
@@ -174,11 +175,33 @@ public class JmsTransport extends BaseTransport implements Transport
 
         if (getParamValue(PARAM_DESTINATION_NAME) == null)
         {
-            throw new TransportException("Destination name parameter is required");
+            throw new ConfigurableException("Destination name parameter is required");
         }
         if (getParamValue(PARAM_BROKER_URL) == null)
         {
-            throw new TransportException("Broker URL is required.");
+            throw new ConfigurableException("Broker URL is required.");
         }
+    }
+
+    /**
+     * Returns a List of parameters the implementing instance uses.
+     * Each list element is itself a List to describe the parameter as follows:
+     * <p/>
+     * - 0 : Parameter name
+     * - 1 : Parameter description. Useful for GUI rendition
+     * - 2 : Parameter type. Useful for GUI rendition.
+     * - 3 : Required or Optional parameter. Useful for GUI validation.
+     * - 4 : Parameter usage. Useful for GUI rendition.
+     * - 5 : Default value
+     *
+     * @return List of Parameters for the implementing Transport.
+     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder
+     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.ParameterDefinition
+     * @see com.tacitknowledge.simulator.BaseConfigurable#parametersList
+     */
+    @Override
+    public List<List> getParametersList()
+    {
+        return getParametersDefinitionsAsList(parametersList);
     }
 }

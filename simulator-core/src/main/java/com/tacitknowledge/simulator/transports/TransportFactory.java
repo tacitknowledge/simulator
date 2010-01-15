@@ -1,6 +1,8 @@
 package com.tacitknowledge.simulator.transports;
 
+import com.tacitknowledge.simulator.ConfigurableException;
 import com.tacitknowledge.simulator.Transport;
+import org.apache.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +16,11 @@ import java.util.Map;
 public class TransportFactory
 {
     /**
+     * Logger for this class.
+     */
+    private static Logger logger = Logger.getLogger(TransportFactory.class);
+
+    /**
      * @inheritDoc
      */
     private TransportFactory()
@@ -23,14 +30,14 @@ public class TransportFactory
     /**
      * Container for the transports
      */
-    private static Map<String, Transport> transports = new HashMap<String, Transport>()
+    private static Map<String, Class> transports = new HashMap<String, Class>()
     {
         {
-            put(TransportConstants.FILE, new FileTransport());
-            put(TransportConstants.FTP, new FtpTransport());
-            put(TransportConstants.JMS, new JmsTransport());
-            put(TransportConstants.REST, new RestTransport());
-            put(TransportConstants.SOAP, new RestTransport());
+            put(TransportConstants.FILE, FileTransport.class);
+            put(TransportConstants.FTP, FtpTransport.class);
+            put(TransportConstants.JMS, JmsTransport.class);
+            put(TransportConstants.REST, RestTransport.class);
+            put(TransportConstants.SOAP, RestTransport.class);
         }
     };
 
@@ -42,16 +49,27 @@ public class TransportFactory
      */
     public static Transport getTransport(String type)
     {
-        return transports.get(type);
+        Transport transport = null;
+        try
+        {
+            transport = (Transport) transports.get(type.toUpperCase()).newInstance();
+        }
+        catch(Exception e)
+        {
+            logger.error("Unexpected error trying to instantiate adapter " + type +
+                    ": " + e.getMessage());
+        }
+        return transport;
     }
 
-    public static List<List> getTransportParameters(String type)
+    public static List<List> getTransportParameters(String type) throws ConfigurableException
     {
         List<List> list = null;
         // --- Transports should have been set with all-capitals
-        if (transports.get(type.toUpperCase()) != null)
+        Transport transport = getTransport(type);
+        if (transport != null)
         {
-            list = transports.get(type.toUpperCase()).getParametersList();
+            list = transport.getParametersList();
         }
         return list;
     }
