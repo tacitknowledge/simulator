@@ -32,13 +32,6 @@ public abstract class HttpTransport extends BaseTransport implements Transport
     protected List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
         parameters().
             add(
-                name(PARAM_HOST).
-                    label("Host Name (without the protocol definition 'http://' " +
-                            "nor ending slash .e.g.: myappserver.com))").
-                    required().
-                    inOnly()
-            ).
-            add(
                 name(PARAM_PORT).
                     label("Port").
                     inOnly()
@@ -59,6 +52,10 @@ public abstract class HttpTransport extends BaseTransport implements Transport
             );
 
     private boolean isHttpOut = false;
+    /**
+     * We use 0.0.0.0 instead of localhost to receive requests from any host.
+     */
+    private static final String HOST = "0.0.0.0";
 
     /**
      * Constructor
@@ -95,10 +92,6 @@ public abstract class HttpTransport extends BaseTransport implements Transport
             this.isHttpOut = Boolean.parseBoolean(getParamValue(PARAM_HTTP_OUT));
         }
 
-        if (!this.isHttpOut && getParamValue(PARAM_HOST) == null)
-        {
-            throw new ConfigurableException("Host name parameter is required");
-        }
         if (!this.isHttpOut && getParamValue(PARAM_RESOURCE_URI) == null)
         {
             throw new ConfigurableException("Resource URI parameter is required");
@@ -129,7 +122,7 @@ public abstract class HttpTransport extends BaseTransport implements Transport
         // --- 
         StringBuilder sb = new StringBuilder("jetty:http://");
 
-        sb.append(getParamValue(PARAM_HOST));
+        sb.append(HOST);
 
         if (getParamValue(PARAM_PORT) != null)
         {

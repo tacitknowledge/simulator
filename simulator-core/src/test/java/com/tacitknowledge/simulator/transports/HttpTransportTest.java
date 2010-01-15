@@ -60,7 +60,6 @@ public class HttpTransportTest extends TestCase
     public void testGetSimplestInUri()
     {
         // --- Try to get this URI: jetty:http://localhost/mytestapp/myservices
-        params.put(HttpTransport.PARAM_HOST, "localhost");
         params.put(HttpTransport.PARAM_RESOURCE_URI, "/mytestapp/myservices");
         transport.setBoundAndParameters(Configurable.BOUND_IN, params);
 
@@ -69,7 +68,7 @@ public class HttpTransportTest extends TestCase
             String uri = transport.toUriString();
 
             assertTrue("Returned uri isn't as expected: " + uri,
-                uri.indexOf("jetty:http://localhost/mytestapp/myservices") > -1);
+                uri.indexOf("jetty:http://0.0.0.0/mytestapp/myservices") > -1);
         }
         catch (Exception e)
         {
@@ -80,7 +79,6 @@ public class HttpTransportTest extends TestCase
     public void testGetFullInUri()
     {
         // --- Try to get this URI: jetty:http://localhost:8080/mytestapp/myservices
-        params.put(HttpTransport.PARAM_HOST, "localhost");
         params.put(HttpTransport.PARAM_PORT, "8080");
         params.put(HttpTransport.PARAM_RESOURCE_URI, "/mytestapp/myservices");
         transport.setParameters(params);
@@ -90,7 +88,7 @@ public class HttpTransportTest extends TestCase
             String uri = transport.toUriString();
 
             assertTrue("Returned uri isn't as expected: " + uri,
-                uri.indexOf("jetty:http://localhost:8080/mytestapp/myservices") > -1);
+                uri.indexOf("jetty:http://0.0.0.0:8080/mytestapp/myservices") > -1);
         }
         catch (Exception e)
         {
@@ -119,7 +117,6 @@ public class HttpTransportTest extends TestCase
 
     public void testHttpInRoute()
     {
-        params.put(HttpTransport.PARAM_HOST, "localhost");
         params.put(HttpTransport.PARAM_PORT, "9696");
         params.put(HttpTransport.PARAM_RESOURCE_URI, "/mytestapp");
         transport.setParameters(params);
@@ -159,7 +156,7 @@ public class HttpTransportTest extends TestCase
 
             // --- Now send the HTTP request
             HttpClient client = new HttpClient();
-            PostMethod method = new PostMethod("http://localhost:9696/mytestapp");
+            PostMethod method = new PostMethod("http://0.0.0.0:9696/mytestapp");
 
 
             method.addParameter("system_id", "1");

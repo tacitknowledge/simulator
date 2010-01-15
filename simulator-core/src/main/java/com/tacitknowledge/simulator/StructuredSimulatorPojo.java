@@ -34,4 +34,18 @@ public class StructuredSimulatorPojo implements SimulatorPojo
     {
         root = new HashMap<String, Object>();
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        if(root != null){
+            for(Map.Entry<String, Object> entry : root.entrySet()){
+                sb.append("{").append(entry.getKey() + ": " + entry.getValue().toString() + "}");
+
+            }
+        }else{
+            sb.append("EMPTY POJO");
+        }
+        return sb.toString();
+    }
 }

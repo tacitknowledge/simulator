@@ -65,8 +65,7 @@ public class SimulatorPojoPopulatorImpl
         // --- Bean should only contain ONE entry
         if (bean == null)
         {
-            throw new ObjectMapperException(
-                "Bean is empty.");
+            return pojo;
         }
 
         Map<String, Object> stringObjectMap;

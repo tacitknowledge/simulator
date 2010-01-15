@@ -8,6 +8,7 @@ import com.tacitknowledge.simulator.configuration.SimulatorEventType;
 import org.apache.log4j.Logger;
 import org.apache.camel.Exchange;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.Map;
 
@@ -75,22 +76,13 @@ public class ScenarioExecutionWrapper
      */
     public void process(Exchange exchange) throws Exception
     {
-         if(exchange != null){
-           logger.info("EXCHANGE: " + exchange);
-            //logger.info("EXCHANGE IN: " + exchange.getIn());
-            //logger.info("EXCHANGE OUT: " + exchange.getOut());
-       }else{
-           logger.info("Exchange is null");
-       }
         /**
          * Beans needed for the script executions service to run the simulation against *
          */
         Map<String, Object> scriptExecutionBeans = inAdapter.generateBeans(exchange);
 
         Object result = null;
-        //TODO add case when matching scenario is not found
         // here we are looking for first matching scenario and ignore all other scenarios
-
         for (ConversationScenario scenario : scenarios)
         {
             synchronized (scenario)
@@ -105,7 +97,6 @@ public class ScenarioExecutionWrapper
 
                     logger.info("Executing the transformation script.");
                     result = scenario.executeTransformation(scriptExecutionBeans);
-
                     EventDispatcher.getInstance().dispatchEvent(SimulatorEventType.RESPONSE_BUILT, this.conversation, exchange);
                     break;
                 }
