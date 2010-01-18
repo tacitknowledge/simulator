@@ -27,27 +27,17 @@ import javax.servlet.http.HttpServletResponse;
 public class RestAdapter extends BaseAdapter implements Adapter<Object>
 {
 
-    private static final String PARAM_EXTRACTION_PATTERN = "extractionPattern";
-
-    private static final String PARAM_OBJECT_NAME = "objectName";
-
-    private static final String RESPONSE = "response";
-
-    private static final String REQUEST = "request";
-
-    private static final String BODY = "body";
-
-    private static final String CONTENT_TYPE = "contentType";
-
-    private static final String STATUS_CODE = "statusCode";
-
-    private static final String DEFAULT_STATUS_CODE = "200";
-
-    private static final String DEFAULT_EXTRACTION_PATTERN = "/";
-
-    private static final String HTML_CONTENT_TYPE = "text/html";
-
-    private static final String DEFAULT_OBJECT_NAME = "obj";
+    public static final String PARAM_EXTRACTION_PATTERN = "extractionPattern";
+    public static final String PARAM_OBJECT_NAME = "objectName";
+    public static final String RESPONSE = "response";
+    public static final String REQUEST = "request";
+    public static final String BODY = "body";
+    public static final String CONTENT_TYPE = "contentType";
+    public static final String STATUS_CODE = "statusCode";
+    public static final String DEFAULT_STATUS_CODE = "200";
+    public static final String DEFAULT_EXTRACTION_PATTERN = "/";
+    public static final String HTML_CONTENT_TYPE = "text/html";
+    public static final String DEFAULT_OBJECT_NAME = "obj";
 
     /**
      * Adapter parameters definition.

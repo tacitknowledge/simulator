@@ -77,11 +77,8 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager
             String outboundTransportURI = conversation.getOutboundTransport().toUriString();
 
             definition = this.from(inboundTransportURI);
-            definition.bean(new LoggingBean(true, conversation));
-            definition.bean(new EventBean(SimulatorEventType.NEW_MESSAGE, conversation));
             // --- Adapt input format, run scenarios and finally adapt into output format
             definition.bean(new ScenarioExecutionWrapper(conversation));
-            definition.bean(new LoggingBean(false, conversation));
 
             // --- Exit endpoint
             definition.to(outboundTransportURI);

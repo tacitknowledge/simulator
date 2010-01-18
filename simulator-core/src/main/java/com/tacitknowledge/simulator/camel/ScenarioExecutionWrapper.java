@@ -76,6 +76,7 @@ public class ScenarioExecutionWrapper
      */
     public void process(Exchange exchange) throws Exception
     {
+        EventDispatcher.getInstance().dispatchEvent(SimulatorEventType.NEW_MESSAGE, this.conversation, exchange);
         /**
          * Beans needed for the script executions service to run the simulation against *
          */
