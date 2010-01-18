@@ -19,7 +19,8 @@ import java.util.Map;
  */
 public abstract class TestHelper
 {
-    public static final String ORIGINAL_FILES_PATH = "src/main/resources/original_files";
+    public static final String RESOURCES_PATH = "src/main/resources/";
+    public static final String ORIGINAL_FILES_PATH = RESOURCES_PATH + "original_files/";
 
     /**
      * Simple XML data for testing
@@ -122,8 +123,6 @@ public abstract class TestHelper
      */
     public static SimulatorPojo createOrderSimulatorPojo()
     {
-        Map<String, Object> root = new HashMap<String, Object>();
-
         /*
             For this particular test, we're going to emulate an Order.
             The Order will have id, an order date, status, a list of items and shipping info.
@@ -181,6 +180,24 @@ public abstract class TestHelper
         return item;
     }
 
+    /**
+     *
+     * @param filePathName The path and name of the file to be read
+     * @return The file contents as a String
+     * @throws Exception If anything goes wrong
+     */
+    public static String readFile(String filePathName)
+            throws Exception
+    {
+        return readFile(new File(filePathName));
+    }
+
+    /**
+     *
+     * @param file The File to be read
+     * @return The file contents as a String
+     * @throws Exception If anything goes wrong
+     */
     public static String readFile(File file)
             throws Exception
     {

@@ -1,5 +1,7 @@
 package com.tacitknowledge.simulator.formats;
 
+import com.tacitknowledge.simulator.ConfigurableException;
+import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.TestHelper;
 import junit.framework.TestCase;
@@ -9,23 +11,8 @@ import org.apache.camel.Message;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.impl.DefaultExchange;
 import org.apache.camel.impl.DefaultMessage;
-import org.xml.sax.InputSource;
 
-import javax.wsdl.Binding;
-import javax.wsdl.BindingOperation;
-import javax.wsdl.Definition;
-import javax.wsdl.Part;
-import javax.wsdl.Service;
-import javax.wsdl.WSDLException;
-import javax.wsdl.extensions.ExtensibilityElement;
-import javax.wsdl.extensions.soap.SOAPBinding;
-import javax.wsdl.factory.WSDLFactory;
-import javax.wsdl.xml.WSDLReader;
-import javax.xml.namespace.QName;
-import java.io.File;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -33,31 +20,77 @@ import java.util.Map;
  */
 public class SoapAdapterTest extends TestCase
 {
+    public static final String WSDL_FILE = "HelloService.wsdl";
+
     public static final String SOAP_FILE = "soap_test.xml";
+    public static final String SOAP_FILE_WITH_WRONG_METHOD = "soap_test_wrong_method.xml";
+    public static final String SOAP_FILE_WITH_WRONG_PARAM = "soap_test_wrong_param.xml";
 
-    public void testAdaptFromSoap()
+    private Exchange exchange;
+    private Message message;
+
+    private SoapAdapter adapter;
+    private String testWSDLFileName = TestHelper.RESOURCES_PATH + WSDL_FILE;
+    private StringBuilder testFileName;
+
+    /**
+     * Sets up the fixture, for example, open a network connection.
+     * This method is called before a test is executed.
+     */
+    @Override
+    protected void setUp() throws Exception
     {
-        SoapAdapter adapter =
-                (SoapAdapter) AdapterFactory.getInstance().getAdapter(FormatConstants.SOAP);
+        super.setUp();
 
-        SimulatorPojo pojo;
+        CamelContext context = new DefaultCamelContext();
+        exchange = new DefaultExchange(context);
+        message = new DefaultMessage();
+
+        adapter = new SoapAdapter();
+        testFileName = new StringBuilder(TestHelper.ORIGINAL_FILES_PATH );
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put(SoapAdapter.PARAM_WSDL_URL, testWSDLFileName);
+        adapter.setParameters(params);
+        adapter.validateParameters();
+    }
+
+    public void testShouldFailWithWrongWsdlUri()
+    {
+        Map<String, String> pars = new HashMap<String, String>();
+        pars.put(SoapAdapter.PARAM_WSDL_URL, "noWSDLFileHere.wsdl");
+        adapter.setParameters(pars);
+
         try
         {
-            CamelContext context = new DefaultCamelContext();
-            Exchange exchange = new DefaultExchange(context);
-            Message message = new DefaultMessage();
-            message.setBody(
-                    TestHelper.readFile(
-                            new File(TestHelper.ORIGINAL_FILES_PATH + "/" + SOAP_FILE)));
+            adapter.validateParameters();
+            fail("Expecting exception from wrong WSDL location");
+        }
+        catch(ConfigurableException ce)
+        {
+            // --- This is OK
+        }
+    }
 
-            exchange.setIn(message);
+    public void testSuccessfulAdaptFrom()
+    {
+        try
+        {
+            setExchangeContentsFromFile(
+                    testFileName.append(SOAP_FILE).toString());
+
             // --- Get a SimulatorPojo from our fake little XML
-            pojo = adapter.createSimulatorPojo(exchange);
+            SimulatorPojo pojo = adapter.createSimulatorPojo(exchange);
 
             // --- Assert the pojo has a root
             assertNotNull(pojo.getRoot());
+            // --- Assert we got the SOAP payload
+            assertNotNull(pojo.getRoot().get(SoapAdapter.DEFAULT_PAYLOAD_KEY));
+            Map<String, Object> payload = (Map<String, Object>) pojo.getRoot().get(SoapAdapter.DEFAULT_PAYLOAD_KEY);
 
-            Map<String, Object> root = pojo.getRoot();
+            assertTrue("Expecting 'sayHello' method in payload", payload.containsKey("sayHello"));
+            Map<String, Object> sayHello = (Map<String, Object>) payload.get("sayHello");
+            assertTrue("Expecting 'firstName' param in 'sayHello' method", sayHello.containsKey("firstName"));
         }
         catch (Exception e)
         {
@@ -66,6 +99,51 @@ public class SoapAdapterTest extends TestCase
         }
     }
 
+    public void testAdaptFromWithWrongMethod()
+    {
+        testAdaptFromShouldFail(
+                testFileName.append(SOAP_FILE_WITH_WRONG_METHOD).toString()
+        );
+    }
+
+    public void testAdaptFromWithWrongParameter()
+    {
+        testAdaptFromShouldFail(
+                testFileName.append(SOAP_FILE_WITH_WRONG_PARAM).toString());
+    }
+
+    private void testAdaptFromShouldFail(String fileName)
+    {
+        try
+        {
+            setExchangeContentsFromFile(fileName);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            fail(e.getMessage());
+        }
+
+        try
+        {
+            adapter.createSimulatorPojo(exchange);
+            fail("Expecting FormatAdapterException from bad SOAP message");
+        }
+        catch (FormatAdapterException fae)
+        {
+            // --- This is OK
+        }
+    }
+
+    private void setExchangeContentsFromFile(String fileName)
+            throws Exception
+    {
+        message.setBody(
+                    TestHelper.readFile(fileName));        
+        exchange.setIn(message);
+    }
+
+    /*
     public void testGetServiceFromWSDL()
     {
         InputStream wsdlStream = getClass().getResourceAsStream("/HelloService.wsdl");
@@ -143,4 +221,5 @@ public class SoapAdapterTest extends TestCase
             fail(we.getMessage());
         }
     }
+    */
 }

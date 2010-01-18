@@ -70,7 +70,6 @@ public class AdapterFactory
         try
         {
             //adapter = ((Adapter<?>) adapters.get(format)).newInstance();
-
             adapter = (Adapter<?>) adapters.get(format.toUpperCase()).newInstance();
         }
         catch (Exception e)

@@ -1,6 +1,7 @@
 package com.tacitknowledge.simulator.formats;
 
 import com.tacitknowledge.simulator.Adapter;
+import com.tacitknowledge.simulator.Configurable;
 import com.tacitknowledge.simulator.ConfigurableException;
 import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
@@ -8,11 +9,11 @@ import com.tacitknowledge.simulator.StructuredSimulatorPojo;
 import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
 import org.apache.camel.Exchange;
 import org.apache.log4j.Logger;
-import org.xml.sax.InputSource;
 
 import javax.wsdl.Binding;
 import javax.wsdl.BindingOperation;
 import javax.wsdl.Definition;
+import javax.wsdl.Part;
 import javax.wsdl.WSDLException;
 import javax.wsdl.factory.WSDLFactory;
 import javax.wsdl.xml.WSDLReader;
@@ -22,6 +23,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -70,7 +72,7 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
     /**
      * Available operations defined in the provided WSDL.
      */
-    private Map<String, BindingOperation> availableOps;
+    private Map<String, BindingOperation> availableOps = new HashMap<String, BindingOperation>();
 
     /**
      * Constructor
@@ -93,9 +95,9 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
 
     /**
      * 
-     * @param o
-     * @return
-     * @throws FormatAdapterException
+     * @param o The String representation of the SOAP message
+     * @return The generated SimulatorPojo
+     * @throws FormatAdapterException If any error during the process occurs
      */
     protected SimulatorPojo createSimulatorPojo(String o)
         throws FormatAdapterException
@@ -118,21 +120,24 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
             pojo.getRoot().put(payloadKey, getStructuredChilds(body));
 
             // --- Check that the passed methods/parameters are WSDL-valid
+            validateOperationsAndParameters(pojo);
 
-
-        } catch(SOAPException se)
+        }
+        catch(SOAPException se)
         {
-            String errorMessage = "Unexpected SOAP exception";
+            String errorMessage = "Unexpected SOAP exception: " + se.getMessage();
             logger.error(errorMessage, se);
             throw new FormatAdapterException(errorMessage, se);
-        } catch(UnsupportedEncodingException uee)
+        }
+        catch(UnsupportedEncodingException uee)
         {
-            String errorMessage = "Unsupported encoding exception";
+            String errorMessage = "Unsupported encoding exception: " + uee.getMessage();
             logger.error(errorMessage, uee);
             throw new FormatAdapterException(errorMessage, uee);
-        } catch (IOException ioe)
+        }
+        catch (IOException ioe)
         {
-            String errorMessage = "Unexpected IO exception";
+            String errorMessage = "Unexpected IO exception: " + ioe.getMessage();
             logger.error(errorMessage, ioe);
             throw new FormatAdapterException(errorMessage, ioe);
         }
@@ -156,7 +161,7 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
      * Sets and/or overrides instance variables from provided parameters and validates that
      * the required parameters are present.
      *
-     * @throws com.tacitknowledge.simulator.FormatAdapterException
+     * @throws com.tacitknowledge.simulator.ConfigurableException
      *          If any required parameter is missing or incorrect
      */
     @Override
@@ -166,13 +171,15 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
         {
             throw new ConfigurableException("WSDL URL parameter is required");
         }
+
+        getWSDLDefinition();
     }
 
     /**
-     *
-     * @throws FormatAdapterException If the WSDL file was not in the provided WSDL URL
+     * Downloads and reads a WSDL from the provided URI
+     * @throws ConfigurableException If the WSDL file was not in the provided WSDL URL or is wrong
      */
-    private void getWSDLDefinition() throws FormatAdapterException {
+    private void getWSDLDefinition() throws ConfigurableException {
         try
         {
             WSDLFactory wsdlFactory = WSDLFactory.newInstance();
@@ -184,21 +191,23 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
             definition = wsdlReader.readWSDL(getParamValue(PARAM_WSDL_URL));
             if (definition == null)
             {
-                throw new FormatAdapterException(
+                throw new ConfigurableException(
                         "Definition element is null for WSDL URL: " +
                         getParamValue(PARAM_WSDL_URL));
             }
+
+            getAvailableOperations();
         }
         catch(WSDLException we)
         {
             String errorMsg = "Unexpected WSDL error: " + we.getMessage();
             logger.error(errorMsg, we);
-            throw new FormatAdapterException(errorMsg, we);
+            throw new ConfigurableException(errorMsg, we);
         }
     }
 
     /**
-     *
+     * Populates the list of available operations and their parts as defined in the provided WSDL
      */
     private void getAvailableOperations()
     {
@@ -216,18 +225,18 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
 
     /**
      * 
-     * @param pojo
-     * @throws FormatAdapterException
+     * @param pojo Generated SimulatorPojo
+     * @throws FormatAdapterException If any validation fails.
      */
-    private void validateOperationsndParameters(SimulatorPojo pojo) throws FormatAdapterException
+    private void validateOperationsAndParameters(SimulatorPojo pojo) throws FormatAdapterException
     {
         // --- Review all Methods passed in the SOAP message
-        for (Map.Entry<String, Object> operations :
-                ((Map<String, Object>)pojo.getRoot().get(payloadKey)).entrySet())
+        for (Map.Entry<String, Map> operationEntry :
+                ((Map<String, Map>)pojo.getRoot().get(payloadKey)).entrySet())
         {
-            String opName = operations.getKey();
-
-            if (availableOps.get(opName) == null)
+            String opName = operationEntry.getKey();
+            
+            if (!availableOps.containsKey(opName))
             {
                 // --- If the requested Operation is no available, throw an error
                 throw new FormatAdapterException(
@@ -235,10 +244,34 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
                         opName);
             }
 
-            BindingOperation op = availableOps.get(opName);
+            BindingOperation availableOp = availableOps.get(opName);
+            Map<String, Part> partsInAvailableOp =
+                    availableOp.getOperation().getInput().getMessage().getParts();
+            // --- If the operationEntry is output, get the parts from the output message
+            if (getBound() == Configurable.BOUND_OUT)
+            {
+                partsInAvailableOp =
+                        availableOp.getOperation().getOutput().getMessage().getParts();
+            }
 
-            // --- Now check that the passed parameters belong to the operation
-            //for (Map.Entry<String, Object> param : op.getOperation().getInput())
+            // --- Now check that the passed parameters belong to the operationEntry in the proper
+            // bound context
+            // --- Everything in the payload Map, should be a Map in turn :
+            //      {payload} >> {operationEntry} >> {part}
+            Map<String, Object> op = operationEntry.getValue();
+            for (Map.Entry<String, Object> part : op.entrySet())
+            {
+                // --- If the passed part if not part of the operationEntry, throw an error
+                if (!partsInAvailableOp.containsKey(part.getKey()))
+                {
+                    String errorMsg = "The parameter " + part.getKey() +
+                            " passed for method " + opName +
+                            " in the SOAP message is not defined in the provided WSDL.";
+
+                    logger.error(errorMsg);
+                    throw new FormatAdapterException(errorMsg);
+                }
+            }
         }
     }
 

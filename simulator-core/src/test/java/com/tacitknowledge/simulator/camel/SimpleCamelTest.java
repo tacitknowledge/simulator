@@ -62,7 +62,7 @@ public class SimpleCamelTest extends TestCase
 
             context.addRoutes(builder);
 
-            File orig = new File(TestHelper.ORIGINAL_FILES_PATH + "/" + FILE_NAME);
+            File orig = new File(TestHelper.ORIGINAL_FILES_PATH + FILE_NAME);
             assertTrue(orig.exists());
 
             // --- Don't assert on these, rather just delete them

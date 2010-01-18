@@ -3,8 +3,8 @@
    xmlns:tns="http://www.examples.com/wsdl/HelloService.wsdl">
         
    <env:Body>
-     <tns:sayHello>
+     <tns:sayHi>
           <tns:firstName>Dude</tns:firstName>
-     </tns:sayHello>
+     </tns:sayHi>
    </env:Body>
 </env:Envelope>
