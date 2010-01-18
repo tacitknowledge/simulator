@@ -19,6 +19,7 @@ class ScenariosController < ApplicationController
     scenario.execution_script = params[:execution_script]
     scenario.enabled = true
     if scenario.save
+      SimulatorConnector.instance.create_or_update_conversation_scenario(scenario)
       flash[:notice] = "Successfully created new Scenario '#{scenario.name}' with id #{scenario.id}"
       render :json => { :success => true, :data => scenario }
     else

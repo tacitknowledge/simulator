@@ -29,7 +29,7 @@ class SimulatorConnector
   end
 
 
-  def create_conversation (conversation)
+  def create_or_update_conversation (conversation)
 
     in_transport = @conv_mgr.getClassByName( conversation.in_transport.transport_type.class_name )
     set_parameters(in_transport, conversation.in_transport.configurations)
@@ -44,7 +44,7 @@ class SimulatorConnector
     out_adapter = @conv_mgr.getClassByName(conversation.out_format.format_type.class_name)
     set_parameters(out_adapter,conversation.out_format.configurations)
 
-    @conv_mgr.createConversation(conversation.id, conversation.name, in_transport, out_transport, in_adapter, out_adapter, conversation.default_response)
+    @conv_mgr.createOrUpdateConversation(conversation.id, conversation.name, in_transport, out_transport, in_adapter, out_adapter, conversation.default_response)
   end
 
 
@@ -61,7 +61,7 @@ class SimulatorConnector
     system = System.find(scenario.conversation.system_id)
     script_language = system.script_language
     @conv_mgr.createOrUpdateConversationScenario(scenario.conversation_id, scenario.id,  script_language, scenario.criteria_script, scenario.execution_script)
-  end
+  end                                                                                      
 
   def activate(conversation)
     #
@@ -72,7 +72,7 @@ class SimulatorConnector
       exists = @conv_mgr.conversationExists(conversation.id)
 # if conversation is not already in simulator then create it and activate. otherwise just activate     
       if (!exists)
-        jconvers=create_conversation(conversation)
+        jconvers=create_or_update_conversation(conversation)
         conversation.scenarios.each do |scenario|
           jconvers.addOrUpdateScenario( scenario.id, script_language, scenario.criteria_script, scenario.execution_script)
         end

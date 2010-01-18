@@ -3,7 +3,7 @@ if (!ENV["RAILS_ENV"].eql?("test"))
     all_conversations = Conversation.find :all
     #Add all conversations to the SimulatorConnector
     all_conversations.each do |conversation|
-        jconvers = SimulatorConnector.instance.create_conversation(conversation)
+        jconvers = SimulatorConnector.instance.create_or_update_conversation(conversation)
         conversation.scenarios.each do |scenario|
             system = System.find(scenario.conversation.system_id)
             script_language = system.script_language

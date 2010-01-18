@@ -77,6 +77,7 @@ class ConversationsController < ApplicationController
     conversation = populate_conversation(params)
 
     if conversation.save
+      SimulatorConnector.instance.create_or_update_conversation(conversation)
       flash[:notice] = "Successfully created new Conversation '#{conversation.name}' with id #{conversation.id}"
       render :json => { :success => true, :data => conversation }
     else
@@ -94,13 +95,19 @@ class ConversationsController < ApplicationController
     if(SimulatorConnector.instance.is_active(conversation))
       puts 'removing conversation'
       was_active=true
-      SimulatorConnector.instance.delete_conversation(conversation)
+      SimulatorConnector.instance.deactivate(conversation)
     else
       puts 'not deactivating'
     end
     conversation = update_conversation(params, conversation)
 #   restart conversation using new configuration
     if conversation.save
+      SimulatorConnector.instance.create_or_update_conversation(conversation)
+      conversation.scenarios.each do |scenario|
+            system = System.find(scenario.conversation.system_id)
+            script_language = system.script_language
+            jconvers.addOrUpdateScenario( scenario.id, script_language, scenario.criteria_script, scenario.execution_script)
+        end
       if(was_active)
         SimulatorConnector.instance.activate(conversation)
         puts 'activating'

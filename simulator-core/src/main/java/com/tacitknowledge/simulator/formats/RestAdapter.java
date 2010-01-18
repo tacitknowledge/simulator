@@ -152,22 +152,23 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object>
         Map<String, Object> requestMap = new HashMap<String, Object>();
 
         Map<String, Object> paramMap = new HashMap<String,Object>();
+        if (request != null) {
 
-        Enumeration enumer  = request.getParameterNames();
-        while(enumer.hasMoreElements()){
-            String element = (String)enumer.nextElement();
-            paramMap.put(element, request.getParameter(element));
+            requestMap.put(METHOD, request.getMethod());
+
+            Enumeration enumer  = request.getParameterNames();
+            while(enumer.hasMoreElements()){
+                String element = (String)enumer.nextElement();
+                paramMap.put(element, request.getParameter(element));
+            }
+
+            Map<String, Object> values = extractValuesFromUri(request.getRequestURI(), extractionPattern);
+
+            if(null != values && !values.isEmpty()) {
+                paramMap.putAll(values);
+            }
         }
-
-        Map<String, Object> values = extractValuesFromUri(request.getRequestURI(), extractionPattern);
-
-        if(null != values && !values.isEmpty()) {
-            paramMap.putAll(values);
-        }
-
         requestMap.put(PARAMS, paramMap);
-
-        requestMap.put(METHOD, request.getMethod());
 
         return requestMap;
     }
@@ -221,7 +222,7 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object>
             String str = patternArr[i];
             if(str.startsWith(":")){
                 try{
-                    parameterMap.put(str.substring(1), new Object[][]{urlArr}[i]);
+                    parameterMap.put(str.substring(1), urlArr[i]);
                 }catch(ArrayIndexOutOfBoundsException e){
                     //This is fine, since it means that the url is shorter that the pattern.
                     //We just swallow the exception and continue.

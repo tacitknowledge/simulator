@@ -11,7 +11,8 @@ import java.util.List;
 public interface ConversationManager
 {
     /**
-     * Constructor. Creates a new Conversation from the provided transports and formats
+     * Constructor. Creates a new Conversation from the provided transports and formats. If the id
+     * field is set and a conversation with that id exists, attributes are updated
      *
      * @param id                the id of the conversation
      * @param name
@@ -22,7 +23,7 @@ public interface ConversationManager
      * @param defaultResponse   @return the created conversation object
      * @throws SimulatorException in case of an error
      */
-    Conversation createConversation(Integer id, String name, Transport inboundTransport,
+    Conversation createOrUpdateConversation(Integer id, String name, Transport inboundTransport,
                                     Transport outboundTransport, Adapter inAdapter,
                                     Adapter outAdapter, String defaultResponse) throws SimulatorException;
 

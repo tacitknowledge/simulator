@@ -87,10 +87,16 @@ public class ConversationManagerImpl implements ConversationManager
     /**
      * {@inheritDoc}
      */
-    public Conversation createConversation(Integer id, String name, Transport inboundTransport,
+    public Conversation createOrUpdateConversation(Integer id, String name, Transport inboundTransport,
                                            Transport outboundTransport, Adapter inAdapter, Adapter outAdapter, String defaultResponse)
         throws SimulatorException
     {
+        Conversation conversationObj = conversations.get(id);
+        if (conversationObj != null)
+        {
+            logger.info("Removing existing conversation from cache: Id = " + id);
+            conversations.remove(conversationObj);   
+        }
         ConversationImpl conversation = ConversationFactory.createConversation(id, name, inboundTransport,
             outboundTransport, inAdapter, outAdapter, defaultResponse);
         assert conversations.get(id) == null;
@@ -181,7 +187,7 @@ public class ConversationManagerImpl implements ConversationManager
         {
             Conversation conversation = getConversationById(conversationId);
             routeManager.deactivate(conversation);
-            conversations.remove(conversationId);
+            //conversations.remove(conversationId);
             logger.debug("Deactivated conversation " + conversation);
         }
         catch (ConversationNotFoundException cne)

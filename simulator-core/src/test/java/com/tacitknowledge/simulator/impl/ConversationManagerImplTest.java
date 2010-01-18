@@ -43,7 +43,7 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         RouteManager routeManager = new RouteManagerImpl();
         ConversationManager manager = new ConversationManagerImpl(routeManager);
 
-        Conversation conversation = manager.createConversation(null,
+        Conversation conversation = manager.createOrUpdateConversation(null,
             "testCreateConversation",
             inTransport,
             outTransport,
@@ -63,7 +63,7 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         Conversation conversation = null;
         try
         {
-            conversation = manager.createConversation(null,
+            conversation = manager.createOrUpdateConversation(null,
                 "testCreateConversationWithWrongFormat",
                 inTransport,
                 outTransport,
@@ -94,7 +94,7 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         ConversationManager manager = new ConversationManagerImpl(routeManager);
 
         Conversation conversation = null;
-        conversation = manager.createConversation(1,
+        conversation = manager.createOrUpdateConversation(1,
             "testIsActive",
             inTransport,
             outTransport,
@@ -114,7 +114,7 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         RouteManager routeManager = new RouteManagerImpl();
         ConversationManager manager = new ConversationManagerImpl(routeManager);
 
-        Conversation conversation = manager.createConversation(1,
+        Conversation conversation = manager.createOrUpdateConversation(1,
             "testCreateOrUpdateScenarioConversationDoesntExits",
             inTransport,
             outTransport,
@@ -131,7 +131,7 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         RouteManager routeManager = new RouteManagerImpl();
         ConversationManager manager = new ConversationManagerImpl(routeManager);
 
-        Conversation conversation = manager.createConversation(1, "testCreateScenario", inTransport, outTransport,
+        Conversation conversation = manager.createOrUpdateConversation(1, "testCreateScenario", inTransport, outTransport,
                 AdapterFactory.getInstance().getAdapter(FormatConstants.PLAIN_TEXT),
                 AdapterFactory.getInstance().getAdapter(FormatConstants.PLAIN_TEXT),
                 "defaultScenario");
@@ -157,7 +157,7 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         RouteManager routeManager = new RouteManagerImpl();
         ConversationManager manager = new ConversationManagerImpl(routeManager);
 
-        Conversation conversation = manager.createConversation(1, "testDeleteConversation", inTransport, outTransport,
+        Conversation conversation = manager.createOrUpdateConversation(1, "testDeleteConversation", inTransport, outTransport,
                 AdapterFactory.getInstance().getAdapter(FormatConstants.PLAIN_TEXT),
                 AdapterFactory.getInstance().getAdapter(FormatConstants.PLAIN_TEXT),
                 "");
@@ -183,7 +183,7 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         RouteManager routeManager = new RouteManagerImpl();
         ConversationManager manager = new ConversationManagerImpl(routeManager);
         assertFalse(manager.conversationExists(1));
-        Conversation conversation = manager.createConversation(1, "testConversationExists",
+        Conversation conversation = manager.createOrUpdateConversation(1, "testConversationExists",
                 inTransport, outTransport,
                 AdapterFactory.getInstance().getAdapter(FormatConstants.PLAIN_TEXT),
                 AdapterFactory.getInstance().getAdapter(FormatConstants.PLAIN_TEXT),
@@ -192,7 +192,7 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         manager.activate(1);
         assertTrue(manager.conversationExists(1));
         manager.deactivate(1);
-        assertFalse(manager.conversationExists(1));
+        assertTrue(manager.conversationExists(1));
     }
 
     @Test
@@ -200,7 +200,7 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
     {
         ConversationManager manager = new ConversationManagerImpl(routeManager);
 
-        Conversation conversation = manager.createConversation(1, "testDefaultScenarioWasExecuted",
+        Conversation conversation = manager.createOrUpdateConversation(1, "testDefaultScenarioWasExecuted",
                 inTransport, outTransport,
                 AdapterFactory.getInstance().getAdapter(FormatConstants.PLAIN_TEXT),
                 AdapterFactory.getInstance().getAdapter(FormatConstants.PLAIN_TEXT),
