@@ -17,13 +17,15 @@ import com.tacitknowledge.simulator.scripting.ScriptExecutionService;
 import com.tacitknowledge.simulator.transports.TransportFactory;
 import org.apache.log4j.Logger;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.io.*;
-import java.lang.reflect.Constructor;
 
 /**
  * Conversation manager implementation.
@@ -55,7 +57,7 @@ public class ConversationManagerImpl implements ConversationManager
 
     public static ConversationManager getInstance()
     {
-        if(instance == null){
+        if(instance == null) {
             instance = new ConversationManagerImpl();
         }
         return instance;
@@ -70,7 +72,6 @@ public class ConversationManagerImpl implements ConversationManager
     {
         this.routeManager = routeManager;
         this.conversations = new HashMap<Integer, ConversationImpl>();
-
     }
 
     /**
@@ -122,14 +123,18 @@ public class ConversationManagerImpl implements ConversationManager
 
     /**
      * @param conversationId the id of the conversation to be created
-     * @param scenarioId
+     * @param scenarioId     Scenario ID
      * @param language       The scripting language for the scenario. This would be System wide.
      * @param criteria       The criteria script
      * @param transformation The transformation script
      * @return new scenario object. null if conversation does not exist
      */
-    public ConversationScenario createOrUpdateConversationScenario(int conversationId, int scenarioId, String language, String criteria,
-                                                                   String transformation)
+    public ConversationScenario createOrUpdateConversationScenario(
+            int conversationId,
+            int scenarioId,
+            String language,
+            String criteria,
+            String transformation)
     {
         Conversation conversation = conversations.get(conversationId);
         ConversationScenario conversationScenario = null;
@@ -148,8 +153,8 @@ public class ConversationManagerImpl implements ConversationManager
      * @throws SimulatorException            exception.
      * @inheritDoc
      */
-    public void activate(int conversationId) throws ConversationNotFoundException,
-        SimulatorException
+    public void activate(int conversationId)
+            throws ConversationNotFoundException, SimulatorException
     {
         Conversation conversation = getConversationById(conversationId);
         try
@@ -159,10 +164,11 @@ public class ConversationManagerImpl implements ConversationManager
         }
         catch (Exception e)
         {
-            logger.error("Conversation with id : "
-                + conversationId + " couldn't be activated.", e);
+            String errorMsg = "Conversation with id : "
+                + conversationId + " couldn't be activated: " + e.getMessage() ;
 
-            throw new SimulatorException("Conversation activation exception", e);
+            logger.error(errorMsg);
+            throw new SimulatorException(errorMsg, e);
         }
     }
 
@@ -171,18 +177,16 @@ public class ConversationManagerImpl implements ConversationManager
      */
     public void deactivate(int conversationId) throws SimulatorException
     {
-
         try
         {
             Conversation conversation = getConversationById(conversationId);
             routeManager.deactivate(conversation);
             conversations.remove(conversationId);
             logger.debug("Deactivated conversation " + conversation);
-
         }
         catch (ConversationNotFoundException cne)
         {
-            //do nothing
+            // Exception was already logged
         }
         catch (Exception e)
         {
@@ -211,7 +215,11 @@ public class ConversationManagerImpl implements ConversationManager
         }
         catch (Exception e)
         {
-            throw new SimulatorException("", e);
+            String errorMsg = "Conversation with id " + conversationId +
+                    " couldn't be deleted: " + e.getMessage();
+
+            logger.error(errorMsg, e);
+            throw new SimulatorException(errorMsg, e);
         }
     }
 
@@ -268,7 +276,8 @@ public class ConversationManagerImpl implements ConversationManager
      * @return instance of the class
      * @inheritDoc
      */
-    public Object getClassByName(String name) throws ClassNotFoundException, IllegalAccessException, InstantiationException
+    public Object getClassByName(String name)
+            throws ClassNotFoundException, IllegalAccessException, InstantiationException
     {
         return Class.forName(name).newInstance();
     }
@@ -304,7 +313,7 @@ public class ConversationManagerImpl implements ConversationManager
                 BufferedReader reader = null;
                 try {
                      reader = new BufferedReader(new FileReader(file));
-                    String line = null;
+                    String line;
                     while((line = reader.readLine()) != null) {
                         line = line.trim();
                         if(line.length() > 0 && !line.startsWith("#")) {
@@ -314,10 +323,12 @@ public class ConversationManagerImpl implements ConversationManager
                 } catch(IOException ex) {
                     logger.info("Exception while trying to read listener file.", ex);
                 } finally {
-                    if(null != reader) {
+                    if (null != reader) {
                         try {
                             reader.close();
-                        } catch (IOException e) {}
+                        } catch (IOException e) {
+                            logger.info("Unexpected IO exception: " + e.getMessage());
+                        }
                     }
                 }
             } else {
@@ -334,14 +345,15 @@ public class ConversationManagerImpl implements ConversationManager
      * @param className - Qualified Class Name
      */
     private void registerListenerImplementation(String className) {
-        Class listenerClass = null;
+        Class listenerClass;
         try {
             listenerClass = Class.forName(className);
             Object instanceObject = listenerClass.newInstance();
             EventDispatcher.getInstance().addSimulatorEventListener((SimulatorEventListener)instanceObject);
             logger.info("Registered class: " + listenerClass);
         } catch (Exception e) {
-            logger.info("Unable to register listener class: " + className);
+            logger.info("Unable to register listener class: " + className +
+                    " due to:" + e.getMessage());
         }
     }
 }
