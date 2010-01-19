@@ -183,7 +183,8 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
             {
                 Map<String, Object> itemChildren = (Map<String, Object>) payloadItem.getValue();
 
-                SOAPBodyElement elem = body.addBodyElement(getQName(payloadItem.getKey()));
+                SOAPBodyElement elem = body.addBodyElement(
+                        getQName(payloadItem.getKey() + "Response"));
 
                 // --- Now add to the element all of the item's children
                 for (Map.Entry<String, Object> child : itemChildren.entrySet())
@@ -195,7 +196,7 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
                     {
                         elem.addChildElement(
                                 getSOAPElementFromMap(
-                                        childName + "Response",
+                                        childName,
                                         (Map<String, Object>) childValue));
                     }
                     else if (childValue instanceof String)
