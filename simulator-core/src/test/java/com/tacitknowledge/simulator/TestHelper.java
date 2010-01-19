@@ -255,4 +255,11 @@ public abstract class TestHelper
         out.close();
         System.out.println("File copied to " + file2.getAbsolutePath());
     }
+
+    public static Map<String, Object> getMapOneEntry(String entryName, Object entryValue)
+    {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put(entryName, entryValue);
+        return map;
+    }
 }

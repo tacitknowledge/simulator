@@ -197,26 +197,26 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
 
     /**
      * @inheritDoc
-     * @param simulatorPojo
+     * @param pojo
      * @param exchange The Camel exchange
      * @return
      * @throws FormatAdapterException
      */
     @Override
-    protected Object getString(SimulatorPojo simulatorPojo, Exchange exchange)
+    protected Object getString(SimulatorPojo pojo, Exchange exchange)
         throws FormatAdapterException
     {
         try
         {
             // --- The SimulatorPojo for XmlAdapter should contain only one key in its root
-            if (simulatorPojo.getRoot().isEmpty() || simulatorPojo.getRoot().size() > 1)
+            if (pojo.getRoot().isEmpty() || pojo.getRoot().size() > 1)
             {
                 logger.error("Incorrect SimulatorPojo's root size. Expecting 1, but found"
-                    + simulatorPojo.getRoot().size());
+                    + pojo.getRoot().size());
                 throw new
                     FormatAdapterException(
                     "Incorrect SimulatorPojo's root size. Expecting 1, but found"
-                        + simulatorPojo.getRoot().size());
+                        + pojo.getRoot().size());
             }
 
             // --- Get a DOM DocumentFactoryBuilder and the corresponding builder
@@ -227,7 +227,7 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
 
             // --- Generate the XML document - In XmlAdapter,
             // the only element in root is guaranteed to be a Map
-            for (Map.Entry<String, Object> entry : simulatorPojo.getRoot().entrySet())
+            for (Map.Entry<String, Object> entry : pojo.getRoot().entrySet())
             {
                 String rootTagName = entry.getKey();
                 // --- Override the default root name is one was provided

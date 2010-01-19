@@ -67,13 +67,14 @@ public abstract class BaseAdapter extends BaseConfigurable implements Adapter<Ob
      * 
      * @param o The Camel exchange
      * @return A Map of custom-generated beans generated from the input data
-     * @throws ConfigurableException
-     * @throws FormatAdapterException
+     * @throws ConfigurableException If any required parameter is missing.
+     * @throws FormatAdapterException If any other error occurs.
      */
     public Map<String, Object> generateBeans(Exchange o)
             throws ConfigurableException, FormatAdapterException
     {
         validateParameters();
+
         SimulatorPojo pojo = createSimulatorPojo(o);
         return generateClasses(pojo);
     }
@@ -84,10 +85,7 @@ public abstract class BaseAdapter extends BaseConfigurable implements Adapter<Ob
      * @return The generated SimulatorPojo
      * @throws FormatAdapterException
      */
-    protected SimulatorPojo createSimulatorPojo(Exchange o) throws FormatAdapterException
-    {
-        throw new UnsupportedOperationException("Override me");
-    }
+    protected abstract SimulatorPojo createSimulatorPojo(Exchange o) throws FormatAdapterException;
 
     /**
      *
@@ -96,11 +94,8 @@ public abstract class BaseAdapter extends BaseConfigurable implements Adapter<Ob
      * @return A String object in the requested format representing the script result
      * @throws FormatAdapterException If any other error occurs
      */
-    protected Object getString(SimulatorPojo scriptExecutionResult, Exchange exchange)
-            throws FormatAdapterException
-    {
-        throw new UnsupportedOperationException("Override me");
-    }
+    protected abstract Object getString(SimulatorPojo scriptExecutionResult, Exchange exchange)
+            throws FormatAdapterException;
 
     private SimulatorPojo getSimulatorPojo(Object object) throws ObjectMapperException
     {
@@ -112,8 +107,8 @@ public abstract class BaseAdapter extends BaseConfigurable implements Adapter<Ob
      * @param scriptExecutionResult
      * @param exchange
      * @return
-     * @throws ConfigurableException
-     * @throws FormatAdapterException
+     * @throws ConfigurableException If any required parameter is missing.
+     * @throws FormatAdapterException If any other error occurs.
      */
     public Object adaptTo(Object scriptExecutionResult, Exchange exchange)
             throws ConfigurableException, FormatAdapterException

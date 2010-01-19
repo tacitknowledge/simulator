@@ -18,10 +18,20 @@ import javax.wsdl.WSDLException;
 import javax.wsdl.factory.WSDLFactory;
 import javax.wsdl.xml.WSDLReader;
 import javax.xml.namespace.QName;
-import javax.xml.soap.*;
+import javax.xml.soap.MessageFactory;
+import javax.xml.soap.SOAPBody;
+import javax.xml.soap.SOAPBodyElement;
+import javax.xml.soap.SOAPConstants;
+import javax.xml.soap.SOAPElement;
+import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPFactory;
+import javax.xml.soap.SOAPMessage;
+
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
@@ -47,6 +57,9 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
      */
     private static Logger logger = Logger.getLogger(SoapAdapter.class);
 
+    private SOAPFactory soapFactory;
+    private MessageFactory messageFactory;
+
     /**
      * Adapter parameters definition.
      */
@@ -68,6 +81,9 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
      * Will be generated from the provided WSDL.
      */
     private Definition definition;
+
+    private String payloadNS;
+    private String payloadNSUri;
 
     /**
      * Available operations defined in the provided WSDL.
@@ -94,65 +110,13 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
     }
 
     /**
-     * 
-     * @param o The String representation of the SOAP message
-     * @return The generated SimulatorPojo
-     * @throws FormatAdapterException If any error during the process occurs
-     */
-    protected SimulatorPojo createSimulatorPojo(String o)
-        throws FormatAdapterException
-    {
-        logger.debug("Attempting to generate SimulatorPojo from SOAP content:\n" + o);
-
-        SimulatorPojo pojo = new StructuredSimulatorPojo();
-
-        try
-        {
-            MessageFactory factory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
-
-            InputStream is = new ByteArrayInputStream(o.getBytes("UTF-8"));
-            // TODO - SO WHAT ABOUT THE HEADERS?
-            SOAPMessage message = factory.createMessage(null, is);
-
-            // --- So, now we got the SOAP message parsed.
-            SOAPBody body = message.getSOAPBody();
-
-            pojo.getRoot().put(payloadKey, getStructuredChilds(body));
-
-            // --- Check that the passed methods/parameters are WSDL-valid
-            validateOperationsAndParameters(pojo);
-
-        }
-        catch(SOAPException se)
-        {
-            String errorMessage = "Unexpected SOAP exception: " + se.getMessage();
-            logger.error(errorMessage, se);
-            throw new FormatAdapterException(errorMessage, se);
-        }
-        catch(UnsupportedEncodingException uee)
-        {
-            String errorMessage = "Unsupported encoding exception: " + uee.getMessage();
-            logger.error(errorMessage, uee);
-            throw new FormatAdapterException(errorMessage, uee);
-        }
-        catch (IOException ioe)
-        {
-            String errorMessage = "Unexpected IO exception: " + ioe.getMessage();
-            logger.error(errorMessage, ioe);
-            throw new FormatAdapterException(errorMessage, ioe);
-        }
-
-        return pojo;
-    }
-
-    /**
      * @inheritDoc
      * @param o
      * @return
      * @throws FormatAdapterException
      */
     @Override
-    public SimulatorPojo createSimulatorPojo(Exchange o) throws FormatAdapterException
+    protected SimulatorPojo createSimulatorPojo(Exchange o) throws FormatAdapterException
     {
         return createSimulatorPojo(o.getIn().getBody(String.class));
     }
@@ -175,6 +139,185 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
         getWSDLDefinition();
     }
 
+
+    /**
+     * @param pojo The populated SimulatorPojo with the script execution results
+     * @param exchange      The Camel exchange
+     * @return
+     * @throws com.tacitknowledge.simulator.FormatAdapterException
+     *
+     * @inheritDoc
+     */
+    @Override
+    protected Object getString(SimulatorPojo pojo, Exchange exchange)
+            throws FormatAdapterException
+    {
+        logger.debug("Attempting to generate SOAP message from SimulatorPojo:\n" + pojo);
+
+        // --- First, check we got a "payload"
+        if (!pojo.getRoot().containsKey(DEFAULT_PAYLOAD_KEY))
+        {
+            throw new FormatAdapterException("Expecting a PAYLOAD key in SimulatorPojo's root.");
+        }
+
+        // --- Grab the PAYLOAD results Map
+        Map<String, Map> payload = (Map<String, Map>) pojo.getRoot().get(DEFAULT_PAYLOAD_KEY);
+
+        // --- Validate the result method and parameters
+        validateOperationsAndParameters(payload);
+
+        // --- Will need it to get the SOAPMessage as a String
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+        // --- If we're OK, assemble the SOAP message
+        try
+        {
+            soapFactory = SOAPFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
+            messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
+
+            SOAPMessage message = messageFactory.createMessage();
+            SOAPBody body = message.getSOAPBody();
+
+            // --- Add the payload's content to the SOAP body
+            for (Map.Entry<String, Map> payloadItem : payload.entrySet())
+            {
+                Map<String, Object> itemChildren = (Map<String, Object>) payloadItem.getValue();
+
+                SOAPBodyElement elem = body.addBodyElement(getQName(payloadItem.getKey()));
+
+                // --- Now add to the element all of the item's children
+                for (Map.Entry<String, Object> child : itemChildren.entrySet())
+                {
+                    String childName = child.getKey();
+                    Object childValue = child.getValue();
+                    
+                    if (childValue instanceof Map)
+                    {
+                        elem.addChildElement(
+                                getSOAPElementFromMap(
+                                        childName + "Response",
+                                        (Map<String, Object>) childValue));
+                    }
+                    else if (childValue instanceof String)
+                    {
+                        elem.addChildElement(
+                                getSOAPElementFromString(childName, childValue.toString())
+                        );
+                    }
+                }
+            }
+
+            StringWriter writer = new StringWriter();
+            message.writeTo(outputStream);
+        }
+        catch(SOAPException se)
+        {
+            String errorMsg = "Unexpected SOAP exception trying to generate SOAP message: " +
+                    se.getMessage();
+            logger.error(errorMsg, se);
+            throw new FormatAdapterException(errorMsg, se);
+        }
+        catch(IOException ioe)
+        {
+            String errorMsg = "Unexpected IO Exception trying to get SOAP message as String: " +
+                    ioe.getMessage();
+            logger.error(errorMsg, ioe);
+            throw new FormatAdapterException(errorMsg, ioe);
+        }
+
+        logger.debug("Finished generating SOAP content from SimulatorPojo");
+        return outputStream.toString();
+    }
+
+    private SOAPElement getSOAPElementFromMap(String elemName, Map<String, Object> items)
+            throws SOAPException
+    {
+        SOAPElement elem = soapFactory.createElement(getQName(elemName));
+
+        for (Map.Entry<String, Object> item : items.entrySet())
+        {
+            String itemName = item.getKey();
+            Object itemValue = item.getValue();
+
+            if (item.getValue() instanceof Map)
+            {
+                // --- Go down
+                elem.addChildElement(
+                        getSOAPElementFromMap(
+                                itemName,
+                                (Map<String, Object>) itemValue));
+            }
+            else if (item.getValue() instanceof String)
+            {
+                elem.addChildElement(
+                        getSOAPElementFromString(itemName, itemValue.toString()));
+            }
+        }
+
+        return elem;
+    }
+
+    private SOAPElement getSOAPElementFromString(String elemName, String text)
+            throws SOAPException
+    {
+        SOAPElement elem = soapFactory.createElement(getQName(elemName));
+        elem.addTextNode(text);
+
+        return elem;
+    }
+
+    /**
+     *
+     * @param o The String representation of the SOAP message
+     * @return The generated SimulatorPojo
+     * @throws FormatAdapterException If any error during the process occurs
+     */
+    private SimulatorPojo createSimulatorPojo(String o)
+        throws FormatAdapterException
+    {
+        logger.debug("Attempting to generate SimulatorPojo from SOAP content:\n" + o);
+
+        SimulatorPojo pojo = new StructuredSimulatorPojo();
+
+        try
+        {
+            messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
+
+            InputStream is = new ByteArrayInputStream(o.getBytes("UTF-8"));
+            // TODO - SO WHAT ABOUT THE HEADERS?
+            SOAPMessage message = messageFactory.createMessage(null, is);
+
+            // --- So, now we got the SOAP message parsed.
+            SOAPBody body = message.getSOAPBody();
+
+            pojo.getRoot().put(payloadKey, getStructuredChilds(body));
+
+            // --- Check that the passed methods/parameters are WSDL-valid
+            validateOperationsAndParameters((Map<String, Map>) pojo.getRoot().get(DEFAULT_PAYLOAD_KEY));
+        }
+        catch(SOAPException se)
+        {
+            String errorMessage = "Unexpected SOAP exception trying to generate SimulatorPojo: " + se.getMessage();
+            logger.error(errorMessage, se);
+            throw new FormatAdapterException(errorMessage, se);
+        }
+        catch(UnsupportedEncodingException uee)
+        {
+            String errorMessage = "Unsupported encoding exception: " + uee.getMessage();
+            logger.error(errorMessage, uee);
+            throw new FormatAdapterException(errorMessage, uee);
+        }
+        catch (IOException ioe)
+        {
+            String errorMessage = "Unexpected IO exception: " + ioe.getMessage();
+            logger.error(errorMessage, ioe);
+            throw new FormatAdapterException(errorMessage, ioe);
+        }
+
+        logger.debug("Finished generating SimulatorPojo from SOAP content");
+        return pojo;
+    }
+
     /**
      * Downloads and reads a WSDL from the provided URI
      * @throws ConfigurableException If the WSDL file was not in the provided WSDL URL or is wrong
@@ -194,6 +337,18 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
                 throw new ConfigurableException(
                         "Definition element is null for WSDL URL: " +
                         getParamValue(PARAM_WSDL_URL));
+            }
+
+            String targetNS = definition.getTargetNamespace();
+            Map<String, String> namespaces = definition.getNamespaces();
+
+            for (Map.Entry<String, String> ns : namespaces.entrySet())
+            {
+                if (ns.getValue().equals(targetNS))
+                {
+                    payloadNS = ns.getKey();
+                    payloadNSUri = ns.getValue();
+                }
             }
 
             getAvailableOperations();
@@ -225,14 +380,14 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
 
     /**
      * 
-     * @param pojo Generated SimulatorPojo
+     * @param payload Map containing SOAP message's payload
      * @throws FormatAdapterException If any validation fails.
      */
-    private void validateOperationsAndParameters(SimulatorPojo pojo) throws FormatAdapterException
+    private void validateOperationsAndParameters(Map<String, Map> payload) throws FormatAdapterException
     {
         // --- Review all Methods passed in the SOAP message
         for (Map.Entry<String, Map> operationEntry :
-                ((Map<String, Map>)pojo.getRoot().get(payloadKey)).entrySet())
+                payload.entrySet())
         {
             String opName = operationEntry.getKey();
             
@@ -258,7 +413,7 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
             // bound context
             // --- Everything in the payload Map, should be a Map in turn :
             //      {payload} >> {operationEntry} >> {part}
-            Map<String, Object> op = operationEntry.getValue();
+            Map<String, Object> op = (Map<String, Object>) operationEntry.getValue();
             for (Map.Entry<String, Object> part : op.entrySet())
             {
                 // --- If the passed part if not part of the operationEntry, throw an error
@@ -294,5 +449,15 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
     public List<List> getParametersList()
     {
         return getParametersDefinitionsAsList(parametersList);
+    }
+
+    private QName getQName(String localPart)
+    {
+        QName qname = new QName(localPart);
+        if (this.payloadNS != null)
+        {
+            qname = new QName(this.payloadNSUri, payloadNS + ":" + localPart);
+        }
+        return qname;
     }
 }

@@ -1,8 +1,10 @@
 package com.tacitknowledge.simulator.formats;
 
+import com.tacitknowledge.simulator.Configurable;
 import com.tacitknowledge.simulator.ConfigurableException;
 import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
+import com.tacitknowledge.simulator.StructuredSimulatorPojo;
 import com.tacitknowledge.simulator.TestHelper;
 import junit.framework.TestCase;
 import org.apache.camel.CamelContext;
@@ -72,7 +74,7 @@ public class SoapAdapterTest extends TestCase
         }
     }
 
-    public void testSuccessfulAdaptFrom()
+    public void testSuccessfulCreateSimulatorPojo()
     {
         try
         {
@@ -99,20 +101,82 @@ public class SoapAdapterTest extends TestCase
         }
     }
 
-    public void testAdaptFromWithWrongMethod()
+    public void testCreateSimulatorPojoWithWrongMethod()
     {
-        testAdaptFromShouldFail(
+        testCreateSimulatorPojoShouldFail(
                 testFileName.append(SOAP_FILE_WITH_WRONG_METHOD).toString()
         );
     }
 
-    public void testAdaptFromWithWrongParameter()
+    public void testCreateSimulatorPojoWithWrongParameter()
     {
-        testAdaptFromShouldFail(
+        testCreateSimulatorPojoShouldFail(
                 testFileName.append(SOAP_FILE_WITH_WRONG_PARAM).toString());
     }
 
-    private void testAdaptFromShouldFail(String fileName)
+    public void testSuccessfulGetString()
+    {
+        setupOutboundParam();
+
+        SimulatorPojo pojo = new StructuredSimulatorPojo();
+        pojo.getRoot().put(
+                SoapAdapter.DEFAULT_PAYLOAD_KEY,
+                TestHelper.getMapOneEntry(
+                    "sayHello",
+                    TestHelper.getMapOneEntry(
+                            "greeting",
+                            "Hello there, Dude!"))
+                );
+
+        // --- Now invoke the getString method
+        try
+        {
+            String soapMessage = adapter.getString(pojo, exchange).toString();
+
+            System.out.println(soapMessage);
+        }
+        catch(FormatAdapterException fae)
+        {
+            fae.printStackTrace();
+            fail("Not expecting exception, yet got: " + fae.getMessage());
+        }
+    }
+
+    public void testGetStringWithWrongMethod()
+    {
+        setupOutboundParam();
+
+        SimulatorPojo pojo = new StructuredSimulatorPojo();
+        pojo.getRoot().put(
+                SoapAdapter.DEFAULT_PAYLOAD_KEY,
+                TestHelper.getMapOneEntry(
+                    "sayHi",
+                    TestHelper.getMapOneEntry(
+                            "greeting",
+                            "Hello there, Dude!"))
+                );
+
+        testGetStringShouldFail(pojo);
+    }
+
+    public void testGetStringWithWrongParameter()
+    {
+        setupOutboundParam();
+
+        SimulatorPojo pojo = new StructuredSimulatorPojo();
+        pojo.getRoot().put(
+                SoapAdapter.DEFAULT_PAYLOAD_KEY,
+                TestHelper.getMapOneEntry(
+                    "sayHello",
+                    TestHelper.getMapOneEntry(
+                            "regards",
+                            "Hello there, Dude!"))
+                );
+
+        testGetStringShouldFail(pojo);
+    }
+
+    private void testCreateSimulatorPojoShouldFail(String fileName)
     {
         try
         {
@@ -135,6 +199,18 @@ public class SoapAdapterTest extends TestCase
         }
     }
 
+    private void testGetStringShouldFail(SimulatorPojo pojo)
+    {
+        try
+        {
+            adapter.getString(pojo, exchange);
+        }
+        catch(FormatAdapterException fae)
+        {
+            // --- This is OK
+        }
+    }
+
     private void setExchangeContentsFromFile(String fileName)
             throws Exception
     {
@@ -143,83 +219,11 @@ public class SoapAdapterTest extends TestCase
         exchange.setIn(message);
     }
 
-    /*
-    public void testGetServiceFromWSDL()
+    private void setupOutboundParam()
     {
-        InputStream wsdlStream = getClass().getResourceAsStream("/HelloService.wsdl");
-
-        assertNotNull(wsdlStream);
-
-        try
-        {
-            WSDLFactory wsdlFactory = WSDLFactory.newInstance();
-            WSDLReader wsdlReader = wsdlFactory.newWSDLReader();
-
-            wsdlReader.setFeature("javax.wsdl.verbose", false);
-            wsdlReader.setFeature("javax.wsdl.importDocuments", true);
-
-            Definition definition = wsdlReader.readWSDL(null, new InputSource(wsdlStream));
-            if (definition == null)
-            {
-                System.err.println("definition element is null");
-                System.exit(1);
-                fail("Definition element is null");
-            }
-
-            // find service
-            Map servicesMap = definition.getServices();
-            assertNotNull(servicesMap);
-
-            // --- Make sure we got the "Hello_Service" service
-            Service service = (Service) servicesMap.get(
-                            new QName(definition.getTargetNamespace(), "Hello_Service"));
-            assertNotNull(service);
-
-            Map<QName, Binding> bindings = definition.getBindings();
-
-            // --- Available operations
-            List<String> availableOps = new ArrayList<String>();
-            for (Map.Entry<QName, Binding> entry : bindings.entrySet())
-            {
-                System.out.println("BINDING: " + entry.getValue().getQName());
-
-                for (ExtensibilityElement ee :
-                        (List<ExtensibilityElement>) entry.getValue().getExtensibilityElements())
-                {
-                    if (ee instanceof SOAPBinding)
-                    {
-                        System.out.println("SOAP binding: " + ((SOAPBinding) ee).getTransportURI());
-                    }
-                }
-
-                List<BindingOperation> operations = entry.getValue().getBindingOperations();
-
-                for (BindingOperation op : operations)
-                {
-                    System.out.println("* Available Operation name: " + op.getName());
-
-                    // --- Show the expected input and output
-                    System.out.println("   - Operation Input:");
-                    Map<String, Part> parts = op.getOperation().getInput().getMessage().getParts();
-                    for (Map.Entry<String, Part> partEntry : parts.entrySet())
-                    {
-                        System.out.println("      Parameter: " + partEntry.getValue().getName());
-                    }
-
-                    System.out.println("   - Operation Output:");
-                    parts = op.getOperation().getOutput().getMessage().getParts();
-                    for (Map.Entry<String, Part> partEntry : parts.entrySet())
-                    {
-                        System.out.println("      Parameter: " + partEntry.getValue().getName());
-                    }
-                }
-            }
-        }
-        catch (WSDLException we)
-        {
-            we.printStackTrace();
-            fail(we.getMessage());
-        }
+        // --- Flag the adapter as outbound
+        Map<String, String> pars = new HashMap<String, String>();
+        pars.put(SoapAdapter.PARAM_WSDL_URL, testWSDLFileName);
+        adapter.setBoundAndParameters(Configurable.BOUND_OUT, pars);
     }
-    */
 }

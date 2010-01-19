@@ -2,6 +2,7 @@ package com.tacitknowledge.simulator.formats;
 
 import com.tacitknowledge.simulator.ConfigurableException;
 import com.tacitknowledge.simulator.FormatAdapterException;
+import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
 
 import java.util.ArrayList;
@@ -29,14 +30,13 @@ public class PlainTextAdapter extends BaseAdapter
      * Structured pojo root is 'text'
      *
      * @param o text String
-     * @return
+     * @return The generated custom beans map
      * @throws FormatAdapterException
      */
 
     @Override
     public Map<String, Object> generateBeans(Exchange o) throws FormatAdapterException
     {
-
         String text = o.getIn().getBody(String.class);
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("text", text);
@@ -59,6 +59,31 @@ public class PlainTextAdapter extends BaseAdapter
     protected void validateParameters() throws ConfigurableException
     {
 
+    }
+
+    /**
+     * @param o The Camel exchange
+     * @return The generated SimulatorPojo
+     * @throws com.tacitknowledge.simulator.FormatAdapterException
+     *
+     */
+    @Override
+    protected SimulatorPojo createSimulatorPojo(Exchange o) throws FormatAdapterException
+    {
+        return null;
+    }
+
+    /**
+     * @param scriptExecutionResult The object returned by the scenario excecution script
+     * @param exchange              The Camel exchange
+     * @return A String object in the requested format representing the script result
+     * @throws com.tacitknowledge.simulator.FormatAdapterException
+     *          If any other error occurs
+     */
+    @Override
+    protected Object getString(SimulatorPojo scriptExecutionResult, Exchange exchange)
+    {
+        return null;
     }
 
     /**
