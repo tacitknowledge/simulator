@@ -102,7 +102,7 @@ class ConversationsController < ApplicationController
     conversation = update_conversation(params, conversation)
 #   restart conversation using new configuration
     if conversation.save
-      SimulatorConnector.instance.create_or_update_conversation(conversation)
+      jconvers = SimulatorConnector.instance.create_or_update_conversation(conversation)
       conversation.scenarios.each do |scenario|
             system = System.find(scenario.conversation.system_id)
             script_language = system.script_language
