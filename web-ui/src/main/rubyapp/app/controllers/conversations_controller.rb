@@ -151,10 +151,28 @@ class ConversationsController < ApplicationController
           @transport_types = TransportType.find(:all, :conditions => "name <> 'REST' AND name <> 'SOAP'")
       end
     else
-      @transport_types = TransportType.find(:all)  
+      @transport_types = TransportType.find(:all)
     end
 
     render :json => { :success=>true, :data => @transport_types}
+  end
+
+  def get_inbound_transport_type_by_conversation_id
+    @transport_type = '';
+    begin
+    conversationId = params[:conversationId]
+    if conversationId
+      conversation = Conversation.find(conversationId)
+      if conversation
+        transport_type = TransportType.find(conversation.in_transport.transport_type_id, :select =>'name')
+        if transport_type
+          @transport_type = transport_type.name
+        end
+      end
+    end
+    rescue    
+    end
+    render :json => { :success=>true, :data => @transport_type}
   end
 
   def format_types
