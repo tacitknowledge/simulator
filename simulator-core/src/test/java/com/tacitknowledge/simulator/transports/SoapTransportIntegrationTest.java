@@ -33,7 +33,7 @@ public class SoapTransportIntegrationTest {
 
     private static final String SOAP_FILE = "soap_test.xml";
 
-    private String testWSDLFileName = TestHelper.RESOURCES_PATH + "/HelloService.wsdl";
+    private String testWSDLFileName = TestHelper.RESOURCES_PATH + "HelloService.wsdl";
 
     String destination = "http://0.0.0.0:7000/soapService";
     private static final String RESPONSE_GREETING = "HELLLLLLLOOWWWWWW";
