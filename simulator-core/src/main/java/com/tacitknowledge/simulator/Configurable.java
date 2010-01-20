@@ -17,12 +17,12 @@ public interface Configurable
     /**
      * Constant for defining an inbound configurable
      */
-    public static final int BOUND_IN = 0;
+    int BOUND_IN = 0;
 
     /**
      * Constant for defining an outbound configurable
      */
-    public static final int BOUND_OUT = 1;
+    int BOUND_OUT = 1;
 
     /**
      * Returns a List of parameters the implementing instance uses.
@@ -39,23 +39,24 @@ public interface Configurable
      *
      *
      * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder
-     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.ParameterDefinition
+     * @see com.tacitknowledge.simulator
+     *              .configuration.ParameterDefinitionBuilder.ParameterDefinition
      * @see com.tacitknowledge.simulator.BaseConfigurable#parametersList
      */
-    public List<List> getParametersList();
+    List<List> getParametersList();
 
     /**
      *
      * @param parameters Configurable parameter values
      */
-    public void setParameters(Map<String, String> parameters);
+    void setParameters(Map<String, String> parameters);
 
     /**
      *
      * @param bound Configurable bound
      * @param parameters Configurable parameter values
      */
-    public void setBoundAndParameters(int bound, Map<String, String> parameters);
+    void setBoundAndParameters(int bound, Map<String, String> parameters);
 
     /**
      * @return The bounding (IN or OUT) of the configurable instance

@@ -14,9 +14,14 @@ import java.io.IOException;
  */
 public class LoggingBean
 {
-
+    /**
+     * Logger attribute
+     */
     private Logger logger;
 
+    /**
+     * Flag to determine if the message is for unpit or output
+     */
     private boolean input;
 
     static
@@ -25,7 +30,13 @@ public class LoggingBean
         logger.removeAllAppenders();
     }
 
-    public LoggingBean(boolean input, Conversation conversation) throws IOException
+    /**
+     * Default Constructor
+     * @param input - true if message is for input, false if it is for output
+     * @param conversation - Conversation object
+     * @throws IOException - If not able to create new log file
+     */
+    public LoggingBean(final boolean input, final Conversation conversation) throws IOException
     {
         this.input = input;
         logger = Logger.getLogger("com.tacitknowledge.conversations." + conversation.getId());
@@ -36,14 +47,20 @@ public class LoggingBean
         }
     }
 
-    private void configureLogger(Conversation conversation)
+    /**
+     * Create an new log file for a conversation
+     * @param conversation - Conversation object
+     * @throws IOException -  If a log file cannot be created
+     */
+    private void configureLogger(final Conversation conversation)
         throws IOException
     {
         //remove parent appenders
         logger.setLevel(org.apache.log4j.Level.ALL);
 
         //create a new appender for each conversation
-        RollingFileAppender newAppender = new RollingFileAppender(new PatternLayout("%d{MMM dd HH:mm:ss} [%t] %-5p %c %x - %m%n"),
+        RollingFileAppender newAppender = new RollingFileAppender(
+                new PatternLayout("%d{MMM dd HH:mm:ss} [%t] %-5p %c %x - %m%n"),
             "Conversation " + conversation.getId() + ".log", true);
         newAppender.setName("Conversation " + conversation.getId());
         newAppender.setBufferSize(1024 * 3);
@@ -55,10 +72,9 @@ public class LoggingBean
     /**
      * logs data and returns input as result
      *
-     * @param exchange
-     * @return
+     * @param exchange - Exchange object
      */
-    public void process(Exchange exchange)
+    public void process(final Exchange exchange)
     {
         logger.info("-----------------------------------");
         if (input)

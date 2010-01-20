@@ -13,15 +13,33 @@ import java.net.HttpURLConnection;
  * Class that will create an Http Server.
  * Used for REST and SOAP transport testing
  */
-public class TestHttpSystemMain {
+public final class TestHttpSystemMain
+{
 
-    public static void main(String[] args) throws IOException {
+    /**
+     * Default Constructor
+     */
+    private TestHttpSystemMain()
+    {
+
+    }
+
+    /**
+     * Creates an instance of an HTTP server to test HTTP transport
+     * @param args - command prompt arguments
+     * @throws IOException - If server cannot be created
+     */
+    public static void main(final String[] args) throws IOException
+    {
         InetSocketAddress addr = new InetSocketAddress(9000);
 
-        HttpHandler handler = new HttpHandler(){
+        HttpHandler handler = new HttpHandler()
+        {
 
-            public void handle(HttpExchange httpExchange) throws IOException {
-                byte[] response = "<?xml version=\"1.0\"?>\n<resource id=\"1234\" name=\"test\" />\n".getBytes();
+            public void handle(final HttpExchange httpExchange) throws IOException
+            {
+                byte[] response = ("<?xml version=\"1.0\"?>\n"
+                        + "<resource id=\"1234\" name=\"test\" />\n").getBytes();
                 httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK,
                         response.length);
                 httpExchange.getResponseBody().write(response);
@@ -35,8 +53,9 @@ public class TestHttpSystemMain {
         server.start();
         InputStreamReader reader = new InputStreamReader(System.in);
         char input;
-        while((input = (char)reader.read()) != 'q'){
-
+        while ((input = (char) reader.read()) != 'q')
+        {
+            //no need to have a body
         }
         server.stop(0);
     }

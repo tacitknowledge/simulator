@@ -12,7 +12,7 @@ public class TransportException extends SimulatorException
      *
      * @param s the exception message
      */
-    public TransportException(String s)
+    public TransportException(final String s)
     {
         super(s);
     }
@@ -21,7 +21,7 @@ public class TransportException extends SimulatorException
      * @param s         exception message
      * @param throwable the original exception
      */
-    public TransportException(String s, Throwable throwable)
+    public TransportException(final String s, final Throwable throwable)
     {
         super(s, throwable);
     }

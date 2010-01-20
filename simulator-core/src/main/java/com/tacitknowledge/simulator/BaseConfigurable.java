@@ -44,7 +44,7 @@ public abstract class BaseConfigurable implements Configurable
      * This should be the prefered constructor method from within JAVA.
      * @param parameters Parameter values
      */
-    protected BaseConfigurable(Map<String, String> parameters)
+    protected BaseConfigurable(final Map<String, String> parameters)
     {
         this.bound = Configurable.BOUND_IN;
         this.parameters = parameters;
@@ -55,7 +55,7 @@ public abstract class BaseConfigurable implements Configurable
      * @param bound Configurable bound
      * @param parameters Parameter values
      */
-    protected BaseConfigurable(int bound, Map<String, String> parameters)
+    protected BaseConfigurable(final int bound, final Map<String, String> parameters)
     {
         this.bound = bound;
         this.parameters = parameters;

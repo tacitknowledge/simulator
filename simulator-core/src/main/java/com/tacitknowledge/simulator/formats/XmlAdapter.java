@@ -103,38 +103,40 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
 
     /**
      * @inheritDoc
-     * @param useFullyQualifiedNames
+     * @param useFullyQualifiedNames - true if fully qualified names is required
      */
-    protected XmlAdapter(boolean useFullyQualifiedNames)
+    protected XmlAdapter(final boolean useFullyQualifiedNames)
     {
         this.useFullyQualifiedNodeNames = useFullyQualifiedNames;
     }
 
     /**
      * @inheritDoc
-     * @param parameters
+     * @param parameters - XML format parameters
      */
-    public XmlAdapter(Map<String, String> parameters)
+    public XmlAdapter(final Map<String, String> parameters)
     {
         super(parameters);
     }
 
     /**
      * @param parameters @see Adapter#parameters
-     * @inheritDoc
+     *
+     * {@inheritDoc}
      */
-    public XmlAdapter(int bound, Map<String, String> parameters)
+    public XmlAdapter(final int bound, final Map<String, String> parameters)
     {
         super(bound, parameters);
     }
 
     /**
      * @inheritDoc
-     * @param bound
-     * @param parameters
-     * @param useFullyQualifiedNames
+     * @param bound - Set the bounds
+     * @param parameters - Set parameters
+     * @param useFullyQualifiedNames - true if fully qualified names is required
      */
-    protected XmlAdapter(int bound, Map<String, String> parameters, boolean useFullyQualifiedNames)
+    protected XmlAdapter(final int bound, final Map<String, String> parameters,
+                         final boolean useFullyQualifiedNames)
     {
         this(bound, parameters);
         this.useFullyQualifiedNodeNames = useFullyQualifiedNames;
@@ -143,9 +145,9 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
 
     /**
      * @inheritDoc
-     * @param exchange
-     * @return
-     * @throws FormatAdapterException
+     * @param exchange - Exchange object
+     * @return SimulatorPojo object
+     * @throws FormatAdapterException - if an error occurs
      */
     @Override
     protected SimulatorPojo createSimulatorPojo(Exchange exchange)
@@ -197,13 +199,13 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
 
     /**
      * @inheritDoc
-     * @param pojo
+     * @param pojo - SimulatorPojo instance
      * @param exchange The Camel exchange
-     * @return
-     * @throws FormatAdapterException
+     * @return - Object representing the message response
+     * @throws FormatAdapterException if an error occurs
      */
     @Override
-    protected Object getString(SimulatorPojo pojo, Exchange exchange)
+    protected Object getString(final SimulatorPojo pojo, final Exchange exchange)
         throws FormatAdapterException
     {
         try
@@ -281,18 +283,15 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
      * @param elem the element to structure the child nodes for
      * @return a Map of child nodes of the XML document
      */
-    protected Map getStructuredChilds(Element elem)
-    {
+    protected Map getStructuredChilds(final Element elem) {
         // --- The Map to be returned
         Map<String, Object> structuredChild = new HashMap<String, Object>();
 
         // --- Get first child
         Node nd = elem.getFirstChild();
         // --- Iterate throu all the elem childs
-        while (nd != null)
-        {
-            if (!(nd instanceof Element))
-            {
+        while (nd != null) {
+            if (!(nd instanceof Element)) {
                 // --- If nd is not an Element, we skip it and go to the next child
                 nd = nd.getNextSibling();
                 continue;
@@ -301,26 +300,21 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
             // --- We make sure we get an Element so we can get the underlying node name
             Element child = (Element) nd;
             String currNodeName = child.getLocalName();
-            if (useFullyQualifiedNodeNames)
-            {
-                 currNodeName = child.getTagName();
+            if (useFullyQualifiedNodeNames) {
+                currNodeName = child.getTagName();
             }
 
             // --- Check if the structuredChild Map contains the current node name
-            if (structuredChild.containsKey(currNodeName))
-            {
+            if (structuredChild.containsKey(currNodeName)) {
                 // --- Get the original attribute,
                 // if this attribute name is already registered, it means this should be a List
                 Object tmp = structuredChild.get(currNodeName);
                 // --- Check if it's already a List
                 List currList;
-                if (tmp instanceof List)
-                {
+                if (tmp instanceof List) {
                     // --- If it is, just keep the reference
                     currList = (List) tmp;
-                }
-                else
-                {
+                } else {
                     // --- If it isn't, create a new list...
                     currList = new ArrayList();
                     // --- ...insert the previous attribute value to the list
@@ -331,31 +325,23 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
 
                 Map childValue = getStructuredChilds(child);
                 // --- If there was only one text child, use its value
-                if (childValue == null || childValue.isEmpty())
-                {
+                if (childValue == null || childValue.isEmpty()) {
                     // --- Add the String value
                     currList.add(child.getFirstChild().getNodeValue());
-                }
-                else
-                {
+                } else {
                     // --- Add the current node as a structured child
                     currList.add(getStructuredChilds(child));
                 }
-            }
-            else
-            {
+            } else {
                 // --- If the currNodeName hasn't been registered,
                 // try to get its structured childs
                 Map childValue = getStructuredChilds(child);
-                if (childValue == null || childValue.isEmpty())
-                {
+                if (childValue == null || childValue.isEmpty()) {
                     // --- If the childValue is null or empty, means the
                     // underlying child is a Text node.
                     // Just assign the child's text value as it is.
                     structuredChild.put(currNodeName, child.getFirstChild().getNodeValue());
-                }
-                else
-                {
+                } else {
                     // --- otherwise, assign the obtained structured Map
                     structuredChild.put(currNodeName, childValue);
                 }
@@ -528,7 +514,8 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
      *
      * @return List of Parameters for the implementing Transport.
      * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder
-     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.ParameterDefinition
+     * @see com.tacitknowledge.simulator
+     *          .configuration.ParameterDefinitionBuilder.ParameterDefinition
      */
     @Override
     public List<List> getParametersList()

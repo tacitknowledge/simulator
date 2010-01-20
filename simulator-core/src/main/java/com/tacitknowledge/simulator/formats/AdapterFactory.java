@@ -1,12 +1,10 @@
 package com.tacitknowledge.simulator.formats;
 
 import com.tacitknowledge.simulator.Adapter;
-import com.tacitknowledge.simulator.ConfigurableException;
 import com.tacitknowledge.simulator.ConfigurableFactoryImpl;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -17,7 +15,7 @@ import java.util.Map;
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class AdapterFactory extends ConfigurableFactoryImpl
+public final class AdapterFactory extends ConfigurableFactoryImpl
 {
     /**
      * Singleton instance
@@ -32,7 +30,7 @@ public class AdapterFactory extends ConfigurableFactoryImpl
     /**
      * Container for the adapters.
      */
-    private static final Map<String, Class> adapters = new HashMap<String, Class>()
+    private static final Map<String, Class> ADAPTERS = new HashMap<String, Class>()
     {
         {
             put(FormatConstants.JSON, JsonAdapter.class);
@@ -51,7 +49,7 @@ public class AdapterFactory extends ConfigurableFactoryImpl
      */
     private AdapterFactory()
     {
-        super(adapters);
+        super(ADAPTERS);
     }
 
     /**

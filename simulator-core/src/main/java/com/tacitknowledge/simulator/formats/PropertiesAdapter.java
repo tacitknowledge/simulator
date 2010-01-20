@@ -41,6 +41,11 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
     public static final String PARAM_PROPERTY_SEPARATOR = "propertySeparator";
 
     /**
+     * Logger for this class.
+     */
+    private static Logger logger = Logger.getLogger(PropertiesAdapter.class);
+
+    /**
      * Adapter parameters definition.
      */
     private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
@@ -50,11 +55,6 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
                     label("Property level separator (defaults to dot \".\")").
                     defaultValue(".")
             );
-
-    /**
-     * Logger for this class.
-     */
-    private static Logger logger = Logger.getLogger(PropertiesAdapter.class);
 
     /**
      * @see #PARAM_PROPERTY_SEPARATOR
@@ -73,19 +73,19 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
      * @param parameters @see Adapter#parameters
      * @inheritDoc
      */
-    public PropertiesAdapter(int bound, Map<String, String> parameters)
+    public PropertiesAdapter(final int bound, final Map<String, String> parameters)
     {
         super(bound, parameters);
     }
 
     /**
      * @inheritDoc
-     * @param exchange
-     * @return
-     * @throws FormatAdapterException
+     * @param exchange - Exchange object
+     * @return SimulatorPojo
+     * @throws FormatAdapterException - if generated pojo cannot be transformed
      */
     @Override
-    protected SimulatorPojo createSimulatorPojo(Exchange exchange)
+    protected SimulatorPojo createSimulatorPojo(final Exchange exchange)
         throws FormatAdapterException
     {
         String object = exchange.getIn().getBody(String.class);
@@ -134,13 +134,13 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
 
     /**
      * @inheritDoc
-     * @param simulatorPojo
+     * @param simulatorPojo - SimulatorPojo instance
      * @param exchange The Camel exchange
-     * @return
-     * @throws FormatAdapterException
+     * @return representation of properties as string
+     * @throws FormatAdapterException - If an exception occurs when converting a pojo into a string
      */
     @Override
-    protected Object getString(SimulatorPojo simulatorPojo, Exchange exchange)
+    protected Object getString(final SimulatorPojo simulatorPojo, Exchange exchange)
         throws FormatAdapterException
     {
         if (simulatorPojo.getRoot().isEmpty())
@@ -276,7 +276,8 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
      *
      * @return List of Parameters for the implementing Transport.
      * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder
-     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.ParameterDefinition
+     * @see com.tacitknowledge.simulator
+     *      .configuration.ParameterDefinitionBuilder.ParameterDefinition
      */
     @Override
     public List<List> getParametersList()

@@ -12,7 +12,7 @@ public class ConversationNotFoundException extends Exception
      *
      * @param s exception message
      */
-    public ConversationNotFoundException(String s)
+    public ConversationNotFoundException(final String s)
     {
         super(s);
     }
