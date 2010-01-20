@@ -40,8 +40,8 @@ public class SoapTransportIntegrationTest {
 
     @Before
     public void setup(){
-        inTransport = TransportFactory.getTransport(TransportConstants.SOAP);
-        outTransport = TransportFactory.getTransport(TransportConstants.SOAP);
+        inTransport = TransportFactory.getInstance().getTransport(TransportConstants.SOAP);
+        outTransport = TransportFactory.getInstance().getTransport(TransportConstants.SOAP);
         inAdapter = new SoapAdapter();
         outAdapter = new SoapAdapter();
         routeManager = new RouteManagerImpl();
