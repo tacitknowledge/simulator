@@ -116,7 +116,7 @@ public class SoapAdapterTest extends TestCase
 
     public void testSuccessfulGetString()
     {
-        setupOutboundParam();
+        setupOutboundSoapAdapter();
 
         SimulatorPojo pojo = new StructuredSimulatorPojo();
         pojo.getRoot().put(
@@ -144,7 +144,7 @@ public class SoapAdapterTest extends TestCase
 
     public void testGetStringWithWrongMethod()
     {
-        setupOutboundParam();
+        setupOutboundSoapAdapter();
 
         SimulatorPojo pojo = new StructuredSimulatorPojo();
         pojo.getRoot().put(
@@ -161,7 +161,7 @@ public class SoapAdapterTest extends TestCase
 
     public void testGetStringWithWrongParameter()
     {
-        setupOutboundParam();
+        setupOutboundSoapAdapter();
 
         SimulatorPojo pojo = new StructuredSimulatorPojo();
         pojo.getRoot().put(
@@ -219,7 +219,7 @@ public class SoapAdapterTest extends TestCase
         exchange.setIn(message);
     }
 
-    private void setupOutboundParam()
+    private void setupOutboundSoapAdapter()
     {
         // --- Flag the adapter as outbound
         Map<String, String> pars = new HashMap<String, String>();

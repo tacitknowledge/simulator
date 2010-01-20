@@ -8,6 +8,13 @@ import junit.framework.TestCase;
  */
 public class AdapterFactoryTest extends TestCase
 {
+    public void testShouldGetNullWithWrongAdapterType()
+    {
+        assertNull(
+                AdapterFactory.getInstance().getAdapter("SOMEADAPTER")
+        );
+    }
+
     public void testGetJsonAdapter()
     {
         assertTrue(

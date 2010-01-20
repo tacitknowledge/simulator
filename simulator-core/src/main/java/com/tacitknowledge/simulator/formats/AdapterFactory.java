@@ -2,6 +2,7 @@ package com.tacitknowledge.simulator.formats;
 
 import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.ConfigurableException;
+import com.tacitknowledge.simulator.ConfigurableFactoryImpl;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
@@ -11,9 +12,12 @@ import java.util.Map;
 /**
  * Factory implementation for the format adapters
  *
+ * @see com.tacitknowledge.simulator.Adapter
+ * @see com.tacitknowledge.simulator.Configurable
+ *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class AdapterFactory
+public class AdapterFactory extends ConfigurableFactoryImpl
 {
     /**
      * Singleton instance
@@ -28,7 +32,7 @@ public class AdapterFactory
     /**
      * Container for the adapters.
      */
-    private Map<String, Class> adapters = new HashMap<String, Class>()
+    private static final Map<String, Class> adapters = new HashMap<String, Class>()
     {
         {
             put(FormatConstants.JSON, JsonAdapter.class);
@@ -47,8 +51,13 @@ public class AdapterFactory
      */
     private AdapterFactory()
     {
+        super(adapters);
     }
 
+    /**
+     *
+     * @return The singleton instance
+     */
     public static AdapterFactory getInstance()
     {
         if (instance == null)
@@ -66,38 +75,6 @@ public class AdapterFactory
      */
     public Adapter<?> getAdapter(final String format)
     {
-        Adapter<?> adapter = null;
-        try
-        {
-            //adapter = ((Adapter<?>) adapters.get(format)).newInstance();
-            adapter = (Adapter<?>) adapters.get(format.toUpperCase()).newInstance();
-        }
-        catch (Exception e)
-        {
-            logger.error("Unexpected error trying to instantiate adapter " + format +
-                    ": " + e.getMessage());
-        }
-        return adapter;
+        return (Adapter<?>) getConfigurable(format);
     }
-
-    /**
-     * @param format The format the adapter is needed for
-     * @return The parameter descriptions list
-     * @see com.tacitknowledge.simulator.Adapter#getParametersList()
-     *
-     * @throws ConfigurableException If the parameters definition list is empty 
-     */
-    public List<List> getAdapterParameters(final String format) throws ConfigurableException
-    {
-        List<List> list = null;
-        // --- Formats should have been set with all-capitals
-        Adapter<?> adapter = getAdapter(format);
-        if (adapter != null)
-        {
-            list = adapter.getParametersList();
-        }
-
-        return list;
-    }
-
 }

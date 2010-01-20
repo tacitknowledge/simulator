@@ -264,7 +264,7 @@ public class ConversationManagerImpl implements ConversationManager
      */
     public List<List> getAdapterParameters(String format) throws ConfigurableException
     {
-        return AdapterFactory.getInstance().getAdapterParameters(format);
+        return AdapterFactory.getInstance().getParametersDefinition(format);
     }
 
     /**
@@ -274,7 +274,7 @@ public class ConversationManagerImpl implements ConversationManager
      */
     public List<List> getTransportParameters(String type) throws ConfigurableException
     {
-        return TransportFactory.getTransportParameters(type);
+        return TransportFactory.getInstance().getParametersDefinition(type);
     }
 
     /**
