@@ -140,14 +140,37 @@ class ConversationsController < ApplicationController
 
 
   def transport_types
-    @transport_types = TransportType.find(:all)
+    type = params[:type]
+    if type
+      case type
+        when 'REST'
+          @transport_types = TransportType.find(:all, :conditions => "name = 'REST'")
+        when 'SOAP'
+          @transport_types = TransportType.find(:all, :conditions => "name = 'SOAP'")
+        else
+          @transport_types = TransportType.find(:all, :conditions => "name <> 'REST' AND name <> 'SOAP'")
+      end
+    else
+      @transport_types = TransportType.find(:all)  
+    end
 
     render :json => { :success=>true, :data => @transport_types}
   end
 
   def format_types
-    @format_types = FormatType.find(:all)
-
+    type = params[:type]
+    if type
+      case type
+        when 'REST'
+          @format_types = FormatType.find(:all, :conditions => "name = 'REST'")
+        when 'SOAP'
+          @format_types = FormatType.find(:all, :conditions => "name = 'SOAP'")
+        else
+          @format_types = FormatType.find(:all, :conditions => "name <> 'REST' AND name <> 'SOAP'")
+      end
+    else
+      @format_types = FormatType.find(:all)  
+    end
     render :json => { :success=>true, :data => @format_types}
   end
 

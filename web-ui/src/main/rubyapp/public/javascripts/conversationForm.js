@@ -5,6 +5,14 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
      */
     conversationId:'',
 
+    inTransportStore : null,
+
+    outTransportStore : null,
+
+    inFormatStore: null,
+
+    outFormatStore : null,
+
     onSaveHandler:function(id) {
         var doRedirect = false;
         //todo remove duplicates from here and the system form
@@ -155,36 +163,42 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
         }
     },
 
-    onSelectTransportHandler: function(in_out, type, inboundFormat) {
-        var url = '../../conversations/transport_parameters';
+    onSelectTransportHandler: function(in_out, type) {
+
         var params = { 'type' : type };
+        if(in_out == 'in') {
+
+            this.inFormatStore.baseParams = params;
+            this.inFormatStore.load();
+            this.outFormatStore.baseParams = params;
+            this.outFormatStore.load();
+            this.outTransportStore.baseParams = params;
+            this.outTransportStore.load();
+
+            var inboundTransportField = Ext.getCmp('inbound_transport');
+            var values = inboundTransportField.store.data.items;
+            var previousSelection = '';
+                for each(var value in  values) {
+                    if (value.data.id == inboundTransportField.startValue) {
+                        previousSelection = value.data.name;
+                        break;
+                    }
+                }
+
+            if( type == 'REST' || type == 'SOAP' || (previousSelection == 'REST' || previousSelection == 'SOAP') ) {
+                TK.enableAndFireSelectEvent('inbound_format', '','','in');
+                TK.enableAndFireSelectEvent('outbound_format', '','','in');
+                TK.enableAndFireSelectEvent('outbound_transport', '','','out');
+            }
+        }
+
+
+        var url = '../../conversations/transport_parameters';
         var fieldPrefix = 'transport_' + in_out + '_';
         var fieldSetName = fieldPrefix + 'fieldset';
 
         Ext.getCmp('conversation-form').handleSelectForParameters(in_out, url, params, fieldSetName, fieldPrefix);
-        var inFormat = Ext.getCmp(inboundFormat);
-        inboundFormatField = Ext.getCmp(inboundFormat);
-        if (inboundFormatField != null) {
-            if (type == 'REST') {
-                var newValue;
-                var format_id = 0;
-                values = inboundFormatField.store.data.items;
-                for each(var value in  values) {
-                    if (value.data.name == 'REST') {
-                        format_id = value.data.id;
-                        newValue = value;
-                        break;
-                    }
-                }
-                inboundFormatField.setValue(format_id);
-                inboundFormatField.disable();
-                inboundFormatField.fireEvent("select", "in", newValue);
-            } else {
-                inboundFormatField.setValue("");
-                inboundFormatField.enable();
-                inboundFormatField.fireEvent("select", "in", "");
-            }
-        }
+
     },
 
     onSelectFormatHandler: function(in_out, format) {
@@ -226,22 +240,42 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
             fields: ['enabled','id', 'name', 'criteria_script', 'execution_script'],
             url : 'scenarios.json'
         });
-        var formatsStore = new Ext.data.JsonStore({
+
+        this.inFormatStore = new Ext.data.JsonStore({
+            root: 'data',
+            idProperty: 'id',
+            url: '../../../../conversations/format_types',
+            fields: ['id', 'name']
+
+        });
+        this.inFormatStore.load();
+
+
+        this.outFormatStore = new Ext.data.JsonStore({
             root: 'data',
             idProperty: 'id',
             url: '../../../../conversations/format_types',
             fields: ['id', 'name']
         });
+        this.outFormatStore.load();
 
-        formatsStore.load();
 
-        var transportsStore = new Ext.data.JsonStore({
+        this.inTransportStore = new Ext.data.JsonStore({
             root: 'data',
             idProperty: 'id',
             url: '../../../../conversations/transport_types',
             fields: ['id', 'name']
         });
-        transportsStore.load();
+        this.inTransportStore.load();
+
+        this.outTransportStore = new Ext.data.JsonStore({
+            root: 'data',
+            idProperty: 'id',
+            url: '../../../../conversations/transport_types',
+            fields: ['id', 'name']
+        });
+        this.outTransportStore.load();
+
         var enabledColumn = new Ext.grid.CheckColumn({
             header: 'Enabled?',
             dataIndex: 'enabled',
@@ -293,7 +327,7 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                             id:'inbound_transport',
                             scope: this,
                             fieldLabel: 'Transport',
-                            store: transportsStore,
+                            store: this.inTransportStore,
                             autoDestroy: true,
                             hiddenName: 'inbound_transport_type_id',
                             valueField: 'id',
@@ -305,7 +339,7 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                             editable: false,
                             listeners: {
                                 select: function(combo, newValue, oldValue) {
-                                    this.scope.onSelectTransportHandler('in', newValue.data.name, 'inbound_format');
+                                    this.scope.onSelectTransportHandler('in', newValue.data.name, oldValue);
                                 }
                             }
                         }),
@@ -328,7 +362,7 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                             scope: this,
                             fieldLabel: 'Format',
                             hiddenName: 'inbound_format_type_id',
-                            store: formatsStore,
+                            store: this.inFormatStore,
                             valueField: 'id',
                             displayField:'name',
                             typeAhead: true,
@@ -367,7 +401,7 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                             scope: this,
                             fieldLabel: 'Transport',
                             hiddenName: 'outbound_transport_type_id',
-                            store: transportsStore,
+                            store: this.outTransportStore,
                             valueField: 'id',
                             displayField:'name',
                             typeAhead: true,
@@ -378,7 +412,8 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                             editable: false,
                             listeners: {
                                 select: function(combo, newValue, oldValue) {
-                                    this.scope.onSelectTransportHandler('out', newValue.data.name);
+                                    aValue = newValue.data == undefined ? "" : newValue.data.name;
+                                    this.scope.onSelectTransportHandler('out', aValue);
                                 }
                             }
                         }),
@@ -401,7 +436,7 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                             scope: this,
                             fieldLabel: 'Format',
                             hiddenName: 'outbound_format_type_id',
-                            store:formatsStore,
+                            store:this.outFormatStore,
                             valueField : 'id',
                             displayField : 'name',
                             typeAhead : true,
@@ -412,7 +447,8 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                             editable: false,
                             listeners: {
                                 select: function(combo, newValue, oldValue) {
-                                    this.scope.onSelectFormatHandler('out', newValue.data.name);
+                                    aValue = newValue.data == undefined ? "" : newValue.data.name;
+                                    this.scope.onSelectFormatHandler('out', aValue);
                                 }
                             }
                         }),
@@ -523,3 +559,11 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
         TK.ConversationForm.superclass.constructor.call(this, Ext.apply(initialConfig, config));
     }
 });
+
+TK.enableAndFireSelectEvent = function (fieldName, newValue, newValueObject, inOut) {
+    var field = Ext.getCmp(fieldName);
+    if (field != null) {
+        field.setValue(newValue);
+        field.fireEvent("select", inOut, newValueObject);
+    }
+}
