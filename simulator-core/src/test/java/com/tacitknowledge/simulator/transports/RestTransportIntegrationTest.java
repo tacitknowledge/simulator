@@ -22,7 +22,7 @@ import java.util.Map;
 /**
  * @author Daniel Valencia (mailto:dvalencia@tacitknowledge.com)
  */
-public class RestTransportTest {
+public class RestTransportIntegrationTest {
     CamelContext context;
     Transport inTransport;
     Transport outTransport;
