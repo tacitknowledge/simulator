@@ -1,9 +1,6 @@
 package com.tacitknowledge.simulator.transports;
 
 import org.apache.camel.CamelContext;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.methods.GetMethod;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.Ignore;
@@ -13,14 +10,11 @@ import com.tacitknowledge.simulator.*;
 import com.tacitknowledge.simulator.impl.ConversationImpl;
 import com.tacitknowledge.simulator.camel.RouteManagerImpl;
 import com.tacitknowledge.simulator.formats.SoapAdapter;
-import com.tacitknowledge.simulator.formats.RestAdapter;
 
 import javax.xml.soap.*;
-import javax.xml.transform.stream.StreamSource;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.io.StringReader;
 import java.io.InputStream;
 import java.io.ByteArrayInputStream;
 
@@ -39,7 +33,7 @@ public class SoapTransportIntegrationTest {
 
     private static final String SOAP_FILE = "soap_test.xml";
 
-    private String testWSDLFileName = TestHelper.RESOURCES_PATH + "HelloService.wsdl";
+    private String testWSDLFileName = TestHelper.RESOURCES_PATH + "/HelloService.wsdl";
 
     String destination = "http://0.0.0.0:7000/soapService";
     private static final String RESPONSE_GREETING = "HELLLLLLLOOWWWWWW";

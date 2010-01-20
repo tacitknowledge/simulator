@@ -19,7 +19,7 @@ import java.util.Map;
  */
 public abstract class TestHelper
 {
-    public static final String RESOURCES_PATH = "src/main/resources/";
+    public static final String RESOURCES_PATH = "src/test/resources/";
     public static final String ORIGINAL_FILES_PATH = RESOURCES_PATH + "original_files/";
 
     /**
