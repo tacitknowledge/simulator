@@ -46,8 +46,9 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object>
         parameters()
             .add(
                 name(PARAM_EXTRACTION_PATTERN).
-                    label("Pattern used to generate objects. (e.g. URL: '" + DEFAULT_EXTRACTION_PATTERN + "system/1' with pattern:'/system/:system_id' will generate a " +
-                            "'system' object with an attribute call'system_id' equals to '1')").
+                    label("Pattern used to extract values from the url. (e.g. URL: '/system/1/' with pattern:'/system/:system_id' will generate an " +
+                            "attribute called 'system_id' equals to '1', and you can access it from your scenario scripts like this => " +
+                            "obj.request.params[:system_id] )").
                     inOnly().required()
              ).add(
                 name(PARAM_OBJECT_NAME).

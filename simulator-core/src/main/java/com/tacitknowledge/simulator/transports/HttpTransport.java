@@ -38,7 +38,7 @@ public abstract class HttpTransport extends BaseTransport implements Transport
             ).
             add(
                 name(PARAM_RESOURCE_URI).
-                    label("Resource URI (include starting slash e.g.: /mytestapp").
+                    label("Context root (include starting slash e.g.: /mytestapp").
                     required().
                     inOnly()
             ).
