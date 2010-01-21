@@ -23,7 +23,7 @@ public class ParametersListBuilder extends ArrayList
      * @param paramDef The ParameterDefinition to be added to the list
      * @return This instance
      */
-    public ParametersListBuilder add(ParameterDefinitionBuilder.ParameterDefinition paramDef)
+    public ParametersListBuilder add(final ParameterDefinitionBuilder.ParameterDefinition paramDef)
     {
         super.add(paramDef);
         return this;

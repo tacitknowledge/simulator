@@ -12,7 +12,7 @@ public class SimulatorException extends Exception
      *
      * @param s exception message
      */
-    public SimulatorException(String s)
+    public SimulatorException(final String s)
     {
         super(s);
     }
@@ -23,7 +23,7 @@ public class SimulatorException extends Exception
      * @param s         exception message
      * @param throwable the original exception
      */
-    public SimulatorException(String s, Throwable throwable)
+    public SimulatorException(final String s, final Throwable throwable)
     {
         super(s, throwable);
     }

@@ -73,15 +73,15 @@ public class FileTransport extends BaseTransport implements Transport
             ).
             add(
                 name(PARAM_FILE_EXTENSION).
-                    label("File Extension the transport will only poll from " +
-                    "(without dot").
+                    label("File Extension the transport will only poll from "
+                    + "(without dot").
                     inOnly()
             ).
             add(
                 name(PARAM_REGEX_FILTER).
-                    label("Regex filter " +
-                    "(will only be applied if neither " +
-                    "file name nor extension filters are provided)").
+                    label("Regex filter "
+                    + "(will only be applied if neither "
+                    + "file name nor extension filters are provided)").
                     inOnly()
             ).
             add(
@@ -114,12 +114,16 @@ public class FileTransport extends BaseTransport implements Transport
      *
      * @param type @see #type
      */
-    protected FileTransport(String type)
+    protected FileTransport(final String type)
     {
         super(type);
     }
 
-    public FileTransport(Map<String, String> parameters)
+    /**
+     * Contructor that initialize the File Transport with parameters
+     * @param parameters - transport parameters
+     */
+    public FileTransport(final Map<String, String> parameters)
     {
         super(TransportConstants.FILE, parameters);
     }
@@ -130,7 +134,7 @@ public class FileTransport extends BaseTransport implements Transport
      * @param bound Configurable bound
      * @param parameters @see #parameters
      */
-    public FileTransport(int bound, Map<String, String> parameters)
+    public FileTransport(final int bound, final Map<String, String> parameters)
     {
         super(bound, TransportConstants.FILE, parameters);
     }
@@ -142,7 +146,8 @@ public class FileTransport extends BaseTransport implements Transport
      * @param type       @see #type
      * @param parameters @see #parameters
      */
-    protected FileTransport(int bound, String type, Map<String, String> parameters)
+    protected FileTransport(final int bound, final String type,
+                            final Map<String, String> parameters)
     {
         super(bound, type, parameters);
     }
@@ -165,8 +170,10 @@ public class FileTransport extends BaseTransport implements Transport
         StringBuilder options = new StringBuilder();
         if (getParamValue(PARAM_POLLING_INTERVAL) != null)
         {
-            options.append("initialDelay=").append(getParamValue(PARAM_POLLING_INTERVAL)).append(AMP);
-            options.append("delay=").append(getParamValue(PARAM_POLLING_INTERVAL)).append(AMP);
+            options.append("initialDelay=").append(
+                    getParamValue(PARAM_POLLING_INTERVAL)).append(AMP);
+            options.append("delay=").append(
+                    getParamValue(PARAM_POLLING_INTERVAL)).append(AMP);
         }
 
         if (this.deleteFile)
@@ -252,7 +259,8 @@ public class FileTransport extends BaseTransport implements Transport
      *
      * @return List of Parameters for the implementing Transport.
      * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder
-     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.ParameterDefinition
+     * @see com.tacitknowledge.simulator.configuration
+     *              .ParameterDefinitionBuilder.ParameterDefinition
      */
     @Override
     public List<List> getParametersList()

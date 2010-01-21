@@ -17,18 +17,21 @@ import java.util.Map;
 public class JavaScriptObjectMapper implements ObjectMapper
 {
 
+    /**
+     * Java object mapper
+     */
     private JavaObjectMapper javaMapper = new JavaObjectMapper();
 
     /**
      * {@inheritDoc}
      */
-    public Map<String, Object> getMapFromObject(Object o) throws ObjectMapperException
+    public Map<String, Object> getMapFromObject(final Object thisObject) throws ObjectMapperException
     {
 
         Map<String, Object> map = new HashMap<String, Object>();
-        if (o instanceof NativeObject)
+        if (thisObject instanceof NativeObject)
         {
-            NativeObject nativeObject = (NativeObject) o;
+            NativeObject nativeObject = (NativeObject) thisObject;
             Object[] objects = nativeObject.getAllIds();
             for (Object object : objects)
             {
@@ -54,20 +57,20 @@ public class JavaScriptObjectMapper implements ObjectMapper
                 map.put(fieldName, mapValue);
             }
         }
-        else if (o instanceof NativeArray)
+        else if (thisObject instanceof NativeArray)
         {
             // --- If it's an Array, get a List from it
-            List<Object> fromArray = getListFromArray((NativeArray) o);
+            List<Object> fromArray = getListFromArray((NativeArray) thisObject);
             map.put(null, fromArray);
 
         }
-        else if (o instanceof Undefined)
+        else if (thisObject instanceof Undefined)
         {
             //todo what to do?
         }
         else
         {
-            javaMapper.getMapFromObject(o);
+            javaMapper.getMapFromObject(thisObject);
         }
         return map;
     }
@@ -80,7 +83,7 @@ public class JavaScriptObjectMapper implements ObjectMapper
      * @return The list populated with eithert Strings or the Map representation of its items
      * @throws ObjectMapperException If anything goes wrong
      */
-    private List<Object> getListFromArray(NativeArray array) throws ObjectMapperException
+    private List<Object> getListFromArray(final NativeArray array) throws ObjectMapperException
     {
 
         List<Object> list = new ArrayList<Object>();

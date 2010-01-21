@@ -7,7 +7,7 @@ package com.tacitknowledge.simulator.formats;
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class FormatConstants
+public final class FormatConstants
 {
     /**
      * Constant for JSON format
@@ -43,6 +43,9 @@ public class FormatConstants
      */
     public static final String REST = "REST";
 
+    /**
+     * Constant for SOAP format
+     */
     public static final String SOAP = "SOAP";
 
     /**

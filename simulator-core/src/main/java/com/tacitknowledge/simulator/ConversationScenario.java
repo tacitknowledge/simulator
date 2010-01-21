@@ -37,12 +37,13 @@ public interface ConversationScenario
     /**
      * Starts this scenario execution with the provided entry data
      *
-     * @param scriptExecutionBeans
+     * @param scriptExecutionBeans - Script execution parameters
      * @return the transformed SimulatorPojo object
      * @throws ScriptException    in case there is an exception running the script
      * @throws SimulatorException is case something else bad happens
      */
-    Object executeTransformation(Map<String, Object> scriptExecutionBeans) throws ScriptException, SimulatorException;
+    Object executeTransformation(Map<String, Object> scriptExecutionBeans)
+            throws ScriptException, SimulatorException;
 
     /**
      * Veryfies if the entry data matches the criteria

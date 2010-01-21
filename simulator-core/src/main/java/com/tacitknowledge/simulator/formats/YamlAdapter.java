@@ -55,22 +55,23 @@ public class YamlAdapter extends BaseAdapter implements Adapter<Object>
      * Adapter parameters definition.
      */
     private static List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
-        parameters().
-            add(
-                name(PARAM_YAML_CONTENT).
-                    label("YAML Contents (e.g. employees, orders, etc.)").
-                    required()
-            ).
-            add(
-                name(PARAM_IS_ARRAY).
-                    label("Is YAML content an array?").
-                    type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN)
-            ).
-            add(
-                name(PARAM_YAML_ARRAY_CONTENT).
-                    label("YAML Array content (What each array element represents. " +
-                    "e.g.: employee, order. Required if content is array)")
-            );
+            parameters().
+                    add(
+                            name(PARAM_YAML_CONTENT).
+                                    label("YAML Contents (e.g. employees, orders, etc.)").
+                                    required()
+                    ).
+                    add(
+                            name(PARAM_IS_ARRAY).
+                                    label("Is YAML content an array?").
+                                    type(ParameterDefinitionBuilder
+                                            .ParameterDefinition.TYPE_BOOLEAN)
+                    ).
+                    add(
+                            name(PARAM_YAML_ARRAY_CONTENT).
+                                    label("YAML Array content (What each array element represents. "
+                                    + "e.g.: employee, order. Required if content is array)")
+                    );
 
     /**
      * Logger for this class.
@@ -90,22 +91,23 @@ public class YamlAdapter extends BaseAdapter implements Adapter<Object>
     }
 
     /**
+     * @param bound - in or out format
      * @param parameters @see Adapter#parameters
      * @inheritDoc
      */
-    public YamlAdapter(int bound, Map<String, String> parameters)
+    public YamlAdapter(final int bound, final Map<String, String> parameters)
     {
         super(bound, parameters);
     }
 
     /**
      * @inheritDoc
-     * @param exchange
-     * @return
-     * @throws FormatAdapterException
+     * @param exchange - Exchange message
+     * @return SimulatorPojo object
+     * @throws FormatAdapterException - if an error occurs
      */
     @Override
-    protected SimulatorPojo createSimulatorPojo(Exchange exchange)
+    protected SimulatorPojo createSimulatorPojo(final Exchange exchange)
         throws FormatAdapterException
     {
         String object = exchange.getIn().getBody(String.class);
@@ -147,11 +149,12 @@ public class YamlAdapter extends BaseAdapter implements Adapter<Object>
      * @param pojo The object returned by the scenario excecution script,
      *      in its SimulatorPojo representation
      * @param exchange The Camel exchange
-     * @return
-     * @throws FormatAdapterException
+     * @return output in string format
+     * @throws FormatAdapterException if an error occurs
      */
     @Override
-    protected Object getString(SimulatorPojo pojo, Exchange exchange) throws FormatAdapterException
+    protected Object getString(final SimulatorPojo pojo, final Exchange exchange)
+                                                            throws FormatAdapterException
     {
         // --- Only one entry in the root should exist
         if (pojo.getRoot().isEmpty() || pojo.getRoot().size() > 1)
@@ -206,7 +209,8 @@ public class YamlAdapter extends BaseAdapter implements Adapter<Object>
      *
      * @return List of Parameters for the implementing Transport.
      * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder
-     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.ParameterDefinition
+     * @see com.tacitknowledge.simulator.configuration
+     *              .ParameterDefinitionBuilder.ParameterDefinition
      */
     @Override
     public List<List> getParametersList()

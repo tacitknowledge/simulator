@@ -14,11 +14,27 @@ import java.io.File;
  *
  * @author Nikita Belenkiy (nbelenkiy@tacitknowledge.com)
  */
-public class TestFtpSystemMain {
+public final class TestFtpSystemMain
+{
 
-    public static void main(String[] args) throws FtpException {
+    /**
+     * Default private constructor
+     */
+    private TestFtpSystemMain()
+    {
+
+    }
+
+    /**
+     * Emulates an FTP server
+     * @param args - provided arguments
+     * @throws FtpException - if an error occurs
+     */
+    public static void main(final String[] args) throws FtpException
+    {
         FtpServerFactory serverFactory = new FtpServerFactory();
-        serverFactory.setUserManager(new PropertiesUserManager(new Md5PasswordEncryptor(),new File("user.properties"),"admin"));
+        serverFactory.setUserManager(new PropertiesUserManager(new Md5PasswordEncryptor(),
+                new File("user.properties"), "admin"));
         ListenerFactory factory = new ListenerFactory();
         factory.setPort(2221);
         serverFactory.addListener("default", factory.createListener());

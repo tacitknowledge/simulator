@@ -30,6 +30,12 @@ public class PojoClassGenerator
     private static final String TMP_CLASS_PACKAGE = "simulator.pojo.tmp.";
 
     /**
+     * Logger for this class.
+     */
+    private static Logger logger = Logger.getLogger(PojoClassGenerator.class);
+
+
+    /**
      * The full package name in which the generated-classes are contained.
      * Defaults to #TMP_CLASS_PACKAGE
      */
@@ -46,17 +52,13 @@ public class PojoClassGenerator
     //private List<CtClass> generatedClasses;
     private Map<String, CtClass> generatedClasses;
 
-    /**
-     * Logger for this class.
-     */
-    private static Logger logger = Logger.getLogger(PojoClassGenerator.class);
 
     /**
      * Constructor
      *
      * @param pool The ClassPool to be used.
      */
-    public PojoClassGenerator(ClassPool pool)
+    public PojoClassGenerator(final ClassPool pool)
     {
         this.pool = pool;
         this.generatedClasses = new HashMap<String, CtClass>();
@@ -69,7 +71,7 @@ public class PojoClassGenerator
      * @param packageName The full package name in which the generated-classes are contained.
      *                    String should end with a dot. e.g.: "simulator.tmp."
      */
-    public PojoClassGenerator(ClassPool pool, String packageName)
+    public PojoClassGenerator(final ClassPool pool, final String packageName)
     {
         this(pool);
         this.generatedClassesPackage = packageName;
@@ -99,7 +101,7 @@ public class PojoClassGenerator
      * @throws SimulatorException     If the value coming from the incoming does not comply
      *                                with the criteria.
      */
-    public Map<String, Object> generateBeansMap(SimulatorPojo pojo)
+    public Map<String, Object> generateBeansMap(final SimulatorPojo pojo)
         throws CannotCompileException, NotFoundException, ScriptException, SimulatorException
     {
         // --- The SimulatorPojo's root must contain only one entry

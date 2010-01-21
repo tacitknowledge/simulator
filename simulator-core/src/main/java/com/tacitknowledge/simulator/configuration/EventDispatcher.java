@@ -1,12 +1,11 @@
 package com.tacitknowledge.simulator.configuration;
 
 import com.tacitknowledge.simulator.Conversation;
-
-import java.util.List;
-import java.util.ArrayList;
-
-import org.apache.log4j.Logger;
 import org.apache.camel.Exchange;
+import org.apache.log4j.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * EventDispatcher class
@@ -15,7 +14,8 @@ import org.apache.camel.Exchange;
  * @author Raul Huerta (rhuerta@tacitknowledge.com)
  */
 
-public class EventDispatcher {
+public final class EventDispatcher
+{
 
     /**
      * Because it's a singleton
@@ -25,16 +25,7 @@ public class EventDispatcher {
     /**
      * Logger for the EventDispatcherImpl class.
      */
-    private static Logger logger
-        = Logger.getLogger(EventDispatcher.class);
-
-    /**
-     * Default Constructor
-     */
-    private EventDispatcher() {
-        this.eventListeners = new ArrayList<SimulatorEventListener>();
-        this.eventListenerClassNames = new ArrayList<String>();
-    }
+    private static Logger logger = Logger.getLogger(EventDispatcher.class);
 
     /**
      * Contains all registered event listeners
@@ -47,23 +38,39 @@ public class EventDispatcher {
     private List<String> eventListenerClassNames;
 
     /**
+     * Default Constructor
+     */
+    private EventDispatcher()
+    {
+        this.eventListeners = new ArrayList<SimulatorEventListener>();
+        this.eventListenerClassNames = new ArrayList<String>();
+    }
+
+
+    /**
      * Singleton of this class
+     *
      * @return EventDispatcher
      */
-    public static EventDispatcher getInstance(){
-        if(instance == null){
-           instance = new EventDispatcher();
+    public static EventDispatcher getInstance()
+    {
+        if (instance == null)
+        {
+            instance = new EventDispatcher();
         }
         return instance;
     }
 
     /**
      * Add an event listener to a dispatcher
+     *
      * @param listener - SimulatorEventListener implementation to be added
      */
-    public void addSimulatorEventListener(SimulatorEventListener listener) {
+    public void addSimulatorEventListener(final SimulatorEventListener listener)
+    {
         String className = listener.getClass().getName();
-        if(!this.eventListenerClassNames.contains(className)) {
+        if (!this.eventListenerClassNames.contains(className))
+        {
             this.eventListeners.add(listener);
             this.eventListenerClassNames.add(className);
         }
@@ -71,30 +78,39 @@ public class EventDispatcher {
 
     /**
      * Returns all SimulatorEventListener objects added
+     *
      * @return - List of SimulatorEventListener objects
      */
-    public List<SimulatorEventListener> getSimulatorEventListeners() {
+    public List<SimulatorEventListener> getSimulatorEventListeners()
+    {
         return this.eventListeners;
     }
 
     /**
      * Clean up all event listeners
      */
-    public void removeAllSimulatorEventListeners() {
+    public void removeAllSimulatorEventListeners()
+    {
         this.eventListeners = new ArrayList<SimulatorEventListener>();
         this.eventListenerClassNames = new ArrayList<String>();
     }
 
     /**
      * Dispatches the event specified by eventType
-     * @param eventType the type of event to dispatch
+     *
+     * @param eventType    the type of event to dispatch
      * @param conversation the conversation related to this event
-     * @param exchange a string containing the message body
+     * @param exchange     a string containing the message body
      */
-    public void dispatchEvent(SimulatorEventType eventType, Conversation conversation, Exchange exchange) {
-        for(SimulatorEventListener listener : this.eventListeners){
-            try{
-                switch(eventType){
+    public void dispatchEvent(final SimulatorEventType eventType,
+                              final Conversation conversation, final Exchange exchange)
+    {
+        for (SimulatorEventListener listener : this.eventListeners)
+        {
+            try
+            {
+                switch (eventType)
+                {
                     case NEW_MESSAGE:
                         listener.onNewMessage(exchange, conversation);
                         break;
@@ -110,9 +126,13 @@ public class EventDispatcher {
                     default:
                         break;
                 }
-            }catch (Exception ex){
-                if(logger.isDebugEnabled()){
-                    logger.debug("Exception thrown executing listener " + listener.getClass() + ". " + ex.getMessage());
+            }
+            catch (Exception ex)
+            {
+                if (logger.isDebugEnabled())
+                {
+                    logger.debug("Exception thrown executing listener "
+                            + listener.getClass() + ". " + ex.getMessage());
                 }
             }
         }

@@ -15,27 +15,46 @@ import java.util.Map;
  */
 public class MockInTransport extends BaseTransport implements Transport
 {
+    /**
+     * Default Constructor
+     */
     public MockInTransport()
     {
         super("mockInTransport");
     }
 
+    /**
+     * Get transport type
+     * @return - String type
+     */
     public String getType()
     {
         return "Mock In Transport";
     }
 
+    /**
+     * Default url route for this transport
+     * @return uri string
+     */
     public String toUriString()
     {
         return "direct:start";
     }
 
+    /**
+     * Retrieves parameter list
+     * @return - List of parameters
+     */
     public List<List> getParametersList()
     {
         return null;
     }
 
-    public void setParameters(Map<String, String> parameters)
+    /**
+     * Set parameters for this transport
+     * @param parameters Configurable parameter values
+     */
+    public void setParameters(final Map<String, String> parameters)
     {
 
     }

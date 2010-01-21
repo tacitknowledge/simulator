@@ -15,16 +15,27 @@ import java.util.Map;
  */
 public class MockOutTransport extends BaseTransport implements Transport
 {
+    /**
+     * Default Constructor
+     */
     public MockOutTransport()
     {
         super(Configurable.BOUND_OUT, "mockOutTransport", null);
     }
 
+    /**
+     * Returns the uri in string format
+     * @return uri representation
+     */
     public String toUriString()
     {
         return "mock:result";
     }
 
+    /**
+     * List of parameters for this transport
+     * @return List of parameters
+     */
     public List<List> getParametersList()
     {
         return null;

@@ -12,7 +12,7 @@ public class FormatAdapterException extends SimulatorException
      *
      * @param s exception message
      */
-    public FormatAdapterException(String s)
+    public FormatAdapterException(final String s)
     {
         super(s);
     }
@@ -23,7 +23,7 @@ public class FormatAdapterException extends SimulatorException
      * @param s         exception message
      * @param throwable the original exception
      */
-    public FormatAdapterException(String s, Throwable throwable)
+    public FormatAdapterException(final String s, final Throwable throwable)
     {
         super(s, throwable);
     }

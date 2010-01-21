@@ -5,24 +5,29 @@ import java.util.Map;
 
 /**
  * Marker class to be used for soap transport
+ *
  * @author Raul Huerta (rhuerta@acitknowledge.com)
  */
-public class SoapTransport extends HttpTransport {
+public class SoapTransport extends HttpTransport
+{
     //Marker class for SOAP
 
     /**
      * Default Cosntructor
      */
-    public SoapTransport() {
+    public SoapTransport()
+    {
         super(TransportConstants.SOAP);
     }
 
     /**
      * Constructor to initialize parameters
-     * @param bound Configurable bound
+     *
+     * @param bound      Configurable bound
      * @param parameters - Map of String, String values
      */
-    public SoapTransport(int bound, Map<String, String> parameters) {
+    public SoapTransport(final int bound, final Map<String, String> parameters)
+    {
         super(bound, TransportConstants.SOAP, parameters);
     }
 
@@ -39,7 +44,8 @@ public class SoapTransport extends HttpTransport {
      *
      * @return List of Parameters for the implementing Transport.
      * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder
-     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.ParameterDefinition
+     * @see com.tacitknowledge.simulator.configuration
+     *                      .ParameterDefinitionBuilder.ParameterDefinition
      * @see com.tacitknowledge.simulator.BaseConfigurable#parametersList
      */
     @Override

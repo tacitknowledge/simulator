@@ -12,29 +12,71 @@ import java.util.Properties;
 
 /**
  * This class sends a jms text message using properties file passed as parameter
- * 
+ *
  * @author Nikita Belenkiy (nbelenkiy@tacitknowledge.com)
  */
-public class TestJmsSystemMain {
+public final class TestJmsSystemMain
+{
 
-    static ActiveMQConnectionFactory connectionFactory;
-    static Connection connection;
-    static Session session;
-    static MessageProducer producer;
-    static Destination destination;
-    static String destinationName;
+    /**
+     * Connection Factory
+     */
+    private static ActiveMQConnectionFactory connectionFactory;
+    /**
+     * Connection
+     */
+    private static Connection connection;
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    /**
+     * Session
+     */
+    private static Session session;
+    /**
+     * Message Producer
+     */
+    private static MessageProducer producer;
+    /**
+     * Destination
+     */
+    private static Destination destination;
+    /**
+     * Destination name
+     */
+    private static String destinationName;
+
+    /**
+     * Default Constructor
+     */
+    private TestJmsSystemMain()
+    {
+
+    }
+
+    /**
+     * Test for JMS
+     *
+     * @param args arguments
+     * @throws IOException          if an error occurs
+     * @throws InterruptedException if an error occurs
+     */
+    public static void main(final String[] args) throws IOException, InterruptedException
+    {
         InputStream stream = null;
         Properties properties = new Properties();
-        if (args.length == 0) {
+        if (args.length == 0)
+        {
             printHelp();
             System.exit(0);
-        } else {
-            if(args[0].equals("--help")){
+        }
+        else
+        {
+            if (args[0].equals("--help"))
+            {
                 printHelp();
                 System.exit(0);
-            }else{                
+            }
+            else
+            {
                 stream = new FileInputStream(args[0]);
             }
         }
@@ -48,12 +90,19 @@ public class TestJmsSystemMain {
         String numberOfMessagesStr = properties.getProperty("numberOfMessages");
         Integer numberOfMessages = 1;
 
-        try{
+        try
+        {
             numberOfMessages = Integer.parseInt(numberOfMessagesStr);
-        }catch(NumberFormatException ex){}
+        }
+        catch (NumberFormatException ex)
+        {
+            //Swallow exception
+        }
 
-        Boolean isDestinationTopic = Boolean.parseBoolean(properties.getProperty("isDestinationTopic"));
-        try {
+        Boolean isDestinationTopic = Boolean.parseBoolean(
+                                    properties.getProperty("isDestinationTopic"));
+        try
+        {
             connectionFactory = new ActiveMQConnectionFactory(properties.getProperty("brokerUrl"));
 
             connection = getConnection(isDestinationTopic, connectionFactory);
@@ -66,49 +115,85 @@ public class TestJmsSystemMain {
             TextMessage textMessage = session.createTextMessage(data);
 
             int count = 1;
-            while(numberOfMessages > 0){
+            while (numberOfMessages > 0)
+            {
                 producer.send(textMessage);
                 System.out.println("Message " + count + " Sent: " + textMessage);
                 numberOfMessages--;
                 count++;
             }
 
-            producer.close();            
+            producer.close();
             session.close();
             connection.close();
 
-        } catch (JMSException e) {
+        }
+        catch (JMSException e)
+        {
             e.printStackTrace();
         }
     }
 
-    private static void printHelp(){
+    /**
+     * Generates help
+     */
+    private static void printHelp()
+    {
         System.out.println("Properties file name is not specified.");
         System.out.println("Create a file with the following properties:");
-        System.out.println("");        
-        System.out.println("dataFile           -> File that contains the message data.");
-        System.out.println("brokerUrl          -> The url of the broker system (e.g. tcp://localhost:61616).");
-        System.out.println("destinationName    -> Name of the queue or topic.");
-        System.out.println("isDestinationTopic -> The destination is a topic or queue (defaults to false).");
-        System.out.println("numberOfMessages   -> Number of times to send the message (defaults to 1).");
         System.out.println("");
-        System.out.println("Run this command again passing the absolute path to the file as parameter.");
+        System.out.println("dataFile           -> File that contains the message data.");
+        System.out.println("brokerUrl          "
+                + "-> The url of the broker system (e.g. tcp://localhost:61616).");
+        System.out.println("destinationName    "
+                + "-> Name of the queue or topic.");
+        System.out.println("isDestinationTopic "
+                + "-> The destination is a topic or queue (defaults to false).");
+        System.out.println("numberOfMessages   "
+                + "-> Number of times to send the message (defaults to 1).");
+        System.out.println("");
+        System.out.println("Run this command again "
+                + "passing the absolute path to the file as parameter.");
     }
 
-    public static Connection getConnection(Boolean isDestinationTopic, ActiveMQConnectionFactory factory) throws JMSException {
+    /**
+     * Creates a new connection
+     * @param isDestinationTopic - Destination or Topic
+     * @param factory - ActiveMQConnectionFactory
+     * @return New Connection
+     * @throws JMSException if an error occurs
+     */
+    public static Connection getConnection(final Boolean isDestinationTopic,
+                                           final ActiveMQConnectionFactory factory)
+                                            throws JMSException
+    {
         Connection conn;
-        if(isDestinationTopic){
+        if (isDestinationTopic)
+        {
             conn = factory.createTopicConnection();
-        } else {
+        }
+        else
+        {
             conn = factory.createQueueConnection();
         }
         return conn;
     }
 
-    private static MessageProducer getMessageProducer(Boolean isDestinationTopic) throws JMSException {
-        if(isDestinationTopic){
+    /**
+     * Create an message producer
+     * @param isDestinationTopic true if it is a topic
+     * @return MessageProducer object
+     * @throws JMSException if an error occurs
+     */
+    private static MessageProducer getMessageProducer(final Boolean isDestinationTopic)
+                                            throws JMSException
+    {
+        if (isDestinationTopic)
+        {
             destination = session.createTopic(destinationName);
-        }else{
+        }
+        else
+        {
             destination = session.createQueue(destinationName);
         }
         System.out.println("Destination created. " + destination);

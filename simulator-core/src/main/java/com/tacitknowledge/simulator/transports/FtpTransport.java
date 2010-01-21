@@ -55,12 +55,12 @@ public class FtpTransport extends FileTransport implements Transport
                             name(PARAM_SFTP).
                                     label("Is this an SFTP transport? (defaults to FTP)").
                                     type(ParameterDefinitionBuilder
-                                        .ParameterDefinition.TYPE_BOOLEAN)
+                                    .ParameterDefinition.TYPE_BOOLEAN)
                     ).
                     add(
                             name(PARAM_PORT).
                                     label("Port (defaults to 21 for FTP and "
-                                        + "22 for SFTP if not provided)")
+                                    + "22 for SFTP if not provided)")
                     ).
                     add(
                             name(PARAM_DIRECTORY_NAME).
@@ -107,7 +107,7 @@ public class FtpTransport extends FileTransport implements Transport
                             name(PARAM_BINARY).
                                     label("Is file transfer binary? (defaults to NO)").
                                     type(ParameterDefinitionBuilder
-                                        .ParameterDefinition.TYPE_BOOLEAN)
+                                    .ParameterDefinition.TYPE_BOOLEAN)
                     );
 
     /**
@@ -130,7 +130,7 @@ public class FtpTransport extends FileTransport implements Transport
 
     /**
      * @param parameters @see #parameters
-     * {@inheritDoc}
+     *                   {@inheritDoc}
      */
     public FtpTransport(final int bound, final Map<String, String> parameters)
     {
@@ -140,7 +140,7 @@ public class FtpTransport extends FileTransport implements Transport
     /**
      * @return @see #Transport.toUriString()
      * @throws ConfigurableException If a required parameter is missing or not properly formatted.
-     * @throws TransportException If any other error occurs.
+     * @throws TransportException    If any other error occurs.
      * @inheritDoc
      */
     @Override
@@ -220,10 +220,10 @@ public class FtpTransport extends FileTransport implements Transport
         {
             // --- File extension is used as a RegEx filter for transport routing
             options.append("include=^.*\\.(").
-                append(getParamValue(PARAM_FILE_EXTENSION).toLowerCase()).
-                append("|").
-                append(getParamValue(PARAM_FILE_EXTENSION).toUpperCase()).
-                append(")$");
+                    append(getParamValue(PARAM_FILE_EXTENSION).toLowerCase()).
+                    append("|").
+                    append(getParamValue(PARAM_FILE_EXTENSION).toUpperCase()).
+                    append(")$");
         }
         else if (getParamValue(PARAM_REGEX_FILTER) != null)
         {
@@ -282,7 +282,7 @@ public class FtpTransport extends FileTransport implements Transport
      * @return List of Parameters for the implementing Transport.
      * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder
      * @see com.tacitknowledge.simulator.configuration
-     *          .ParameterDefinitionBuilder.ParameterDefinition
+     *      .ParameterDefinitionBuilder.ParameterDefinition
      */
     @Override
     public List<List> getParametersList()

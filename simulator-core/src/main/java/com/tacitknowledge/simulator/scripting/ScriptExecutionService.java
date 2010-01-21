@@ -15,15 +15,17 @@ import java.util.Map.Entry;
  */
 public class ScriptExecutionService
 {
-    /**
-     * The name of the scripting language to use
-     */
-    private String language = null;
 
     /**
      * Logger for this class.
      */
     private static Logger logger = Logger.getLogger(ScriptExecutionService.class);
+
+
+   /**
+     * The name of the scripting language to use
+     */
+    private String language = null;
 
     /**
      * Executes the specified script.
@@ -33,7 +35,8 @@ public class ScriptExecutionService
      * @param globals    a map of objects to expose as global variables in the script
      * @throws ScriptException if an unexpected error occurs
      */
-    public void exec(String script, String scriptName, Map globals) throws ScriptException
+    public void exec(final String script, final String scriptName,
+                        final Map globals) throws ScriptException
     {
         try
         {

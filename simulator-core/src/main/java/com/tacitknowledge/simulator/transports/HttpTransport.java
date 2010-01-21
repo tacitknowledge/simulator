@@ -27,6 +27,11 @@ public abstract class HttpTransport extends BaseTransport implements Transport
     public static final String PARAM_HTTP_OUT = "httpOut";
 
     /**
+     * We use 0.0.0.0 instead of localhost to receive requests from any host.
+     */
+    private static final String HOST = "0.0.0.0";
+
+    /**
      * Transport parameters definition.
      */
     protected List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
@@ -44,25 +49,24 @@ public abstract class HttpTransport extends BaseTransport implements Transport
             ).
             add(
                 name(PARAM_HTTP_OUT).
-                    label("Is this an HTTP outbound transport?<br>" +
-                        "This transport should only be used if the inbound transport is HTTP").
+                    label("Is this an HTTP outbound transport?<br>"
+                        + "This transport should only be used if the inbound transport is HTTP").
                     type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN).
                     outOnly().
                     defaultValue("true")
             );
 
-    private boolean isHttpOut = false;
     /**
-     * We use 0.0.0.0 instead of localhost to receive requests from any host.
+     * Checks if http transport is used for output
      */
-    private static final String HOST = "0.0.0.0";
+    private boolean isHttpOut = false;
 
     /**
      * Constructor
      * This constructor should only be called from the inheriting Transports.
-     * @param type
+     * @param type - Transport type
      */
-    protected HttpTransport(String type)
+    protected HttpTransport(final String type)
     {
         super(type);    
     }
@@ -70,9 +74,12 @@ public abstract class HttpTransport extends BaseTransport implements Transport
     /**
      * Constructor.
      *
+     * @param bound - specifies if transport is for in or out
+     * @param type - transport type
      * @param parameters @see #parameters
      */
-    protected HttpTransport(int bound, String type, Map<String, String> parameters)
+    protected HttpTransport(final int bound, final String type,
+                            final Map<String, String> parameters)
     {
         super(bound, type, parameters);
     }

@@ -21,7 +21,7 @@ public class ConversationFactory
      * Creates a new Conversation from the given transports and adapters.
      *
      * @param id                the id of the conversation.
-     * @param name
+     * @param name              conversation name
      * @param inboundTransport  inbound transport
      * @param outboundTransport outbound transport
      * @param inboundAdapter    inbound adapter
@@ -29,8 +29,12 @@ public class ConversationFactory
      * @param defaultResponse   @return conversation object
      * @throws SimulatorException in case of an error
      */
-    public static ConversationImpl createConversation(Integer id, String name, Transport inboundTransport,
-                                                      Transport outboundTransport, Adapter inboundAdapter, Adapter outboundAdapter, String defaultResponse)
+    public static ConversationImpl createConversation(final Integer id, final String name,
+                                                      final Transport inboundTransport,
+                                                      final Transport outboundTransport,
+                                                      final Adapter inboundAdapter,
+                                                      final Adapter outboundAdapter,
+                                                      final String defaultResponse)
         throws SimulatorException
     {
 

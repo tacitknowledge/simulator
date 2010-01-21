@@ -50,6 +50,11 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
     public static final String PARAM_JSON_ARRAY_CONTENT = "jsonArrayContent";
 
     /**
+     * Logger for this class.
+     */
+    private static Logger logger = Logger.getLogger(JsonAdapter.class);
+
+    /**
      * Adapter parameters definition.
      */
     private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
@@ -71,10 +76,6 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
                     "e.g.: employee, order. Required if content is array)")
             );
 
-    /**
-     * Logger for this class.
-     */
-    private static Logger logger = Logger.getLogger(JsonAdapter.class);
 
     /**
      * @see #PARAM_IS_ARRAY
@@ -358,7 +359,8 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
      *
      * @return List of Parameters for the implementing Transport.
      * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder
-     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.ParameterDefinition
+     * @see com.tacitknowledge.simulator.configuration
+     *          .ParameterDefinitionBuilder.ParameterDefinition
      */
     @Override
     public List<List> getParametersList()

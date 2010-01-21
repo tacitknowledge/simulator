@@ -29,17 +29,26 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager
     private static Logger logger = Logger.getLogger(RouteManagerImpl.class);
 
     /**
+     * true if context has been started by camel
+     */
+    private boolean contextStarted = false;
+
+    /**
      * Container for the routes inside the current camel context. Used for activation and
      * deactivation of the routes.
      */
     private Map<Integer, RouteDefinition> convRoutes = new HashMap<Integer, RouteDefinition>();
+
+
     /**
      * container for active routes ids.
      */
-    Set<Integer> activeRoutes = new HashSet<Integer>();
+    private Set<Integer> activeRoutes = new HashSet<Integer>();
 
-    boolean contextStarted = false;
 
+    /**
+     * Default Constructor
+     */
     public RouteManagerImpl()
     {
         super(new DefaultCamelContext());
@@ -56,7 +65,7 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager
     /**
      * {@inheritDoc}
      */
-    public void activate(Conversation conversation) throws Exception
+    public void activate(final Conversation conversation) throws Exception
     {
         Integer conversationId = conversation.getId();
 
@@ -107,7 +116,7 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager
     /**
      * {@inheritDoc}
      */
-    public void deactivate(Conversation conversation) throws Exception
+    public void deactivate(final Conversation conversation) throws Exception
     {
         logger.info("Deactivating conversation: " + conversation);
         int i = conversation.getId();
@@ -128,7 +137,7 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager
     /**
      * {@inheritDoc}
      */
-    public boolean isActive(Conversation conversation) throws SimulatorException
+    public boolean isActive(final Conversation conversation) throws SimulatorException
     {
         return activeRoutes.contains(conversation.getId());
     }
@@ -136,7 +145,7 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager
     /**
      * {@inheritDoc}
      */
-    public void delete(Conversation conversation) throws Exception
+    public void delete(final Conversation conversation) throws Exception
     {
         deactivate(conversation);
         convRoutes.remove(conversation.getId());

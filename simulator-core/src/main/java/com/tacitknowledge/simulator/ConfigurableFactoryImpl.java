@@ -21,7 +21,11 @@ public class ConfigurableFactoryImpl implements ConfigurableFactory
      */
     private Map<String, Class> configurables = new HashMap<String, Class>();
 
-    protected ConfigurableFactoryImpl(Map<String, Class> configs)
+    /**
+     * Default constructor
+     * @param configs - configuration properties
+     */
+    protected ConfigurableFactoryImpl(final Map<String, Class> configs)
     {
         this.configurables = configs;
     }
@@ -32,7 +36,7 @@ public class ConfigurableFactoryImpl implements ConfigurableFactory
      * @param name The Configurable name.
      * @return Configurable implementation or null if the Configurable name is not supported.
      */
-    public Configurable getConfigurable(String name)
+    public Configurable getConfigurable(final String name)
     {
         Configurable configurable = null;
 
@@ -47,10 +51,10 @@ public class ConfigurableFactoryImpl implements ConfigurableFactory
             {
                 configurable = (Configurable) configurableClass.newInstance();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                logger.error("Unexpected error trying to instantiate configurable " +
-                        configurableClass.getName() + ": " + e.getMessage());
+                logger.error("Unexpected error trying to instantiate configurable "
+                        + configurableClass.getName() + ": " + e.getMessage());
             }
         }
         return configurable;
@@ -63,7 +67,7 @@ public class ConfigurableFactoryImpl implements ConfigurableFactory
      *          If the parameters definition list is empty
      */
     @Override
-    public List<List> getParametersDefinition(String name) throws ConfigurableException
+    public List<List> getParametersDefinition(final String name) throws ConfigurableException
     {
         List<List> list = null;
         // --- Configurable types should have been set with all-capitals

@@ -57,12 +57,21 @@ public abstract class BaseTransport extends BaseConfigurable implements Transpor
     {
     }
 
-    protected BaseTransport(String type)
+    /**
+     * Default Constructor
+     * @param type type
+     */
+    protected BaseTransport(final String type)
     {
         this.type = type;
     }
 
-    protected BaseTransport(String type, Map<String, String> parameters)
+    /**
+     * Constructor
+     * @param type TYpe
+     * @param parameters base parameters
+     */
+    protected BaseTransport(final String type, final Map<String, String> parameters)
     {
         super(parameters);
         this.type = type;
@@ -74,7 +83,7 @@ public abstract class BaseTransport extends BaseConfigurable implements Transpor
      * @param type       @see #type
      * @param parameters @see #parameters
      */
-    protected BaseTransport(int bound, String type, Map<String, String> parameters)
+    protected BaseTransport(final int bound, final String type, final Map<String, String> parameters)
     {
         super(bound, parameters);
         this.type = type;
@@ -98,10 +107,10 @@ public abstract class BaseTransport extends BaseConfigurable implements Transpor
     @Override
     public String toString()
     {
-        return "BaseTransport{" +
-            "parameters=" + getParameters() +
-            ", type='" + type + '\'' +
-            '}';
+        return "BaseTransport{"
+            + "parameters=" + getParameters()
+            + ", type='" + type + '\''
+            + '}';
     }
 
     /**

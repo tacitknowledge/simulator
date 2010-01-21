@@ -150,7 +150,7 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
      * @throws FormatAdapterException - if an error occurs
      */
     @Override
-    protected SimulatorPojo createSimulatorPojo(Exchange exchange)
+    protected SimulatorPojo createSimulatorPojo(final Exchange exchange)
         throws FormatAdapterException
     {
         String o = exchange.getIn().getBody(String.class);

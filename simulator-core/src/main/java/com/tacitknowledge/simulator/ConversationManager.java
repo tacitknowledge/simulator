@@ -15,7 +15,7 @@ public interface ConversationManager
      * field is set and a conversation with that id exists, attributes are updated
      *
      * @param id                the id of the conversation
-     * @param name
+     * @param name Name
      * @param inboundTransport  the inbound transport of the conversation
      * @param outboundTransport the inbound transport of the conversation
      * @param inAdapter         the outbound adapter of the conversation
@@ -25,7 +25,8 @@ public interface ConversationManager
      */
     Conversation createOrUpdateConversation(Integer id, String name, Transport inboundTransport,
                                     Transport outboundTransport, Adapter inAdapter,
-                                    Adapter outAdapter, String defaultResponse) throws SimulatorException;
+                                    Adapter outAdapter, String defaultResponse)
+            throws SimulatorException;
 
     /**
      * Creates a new scenario for an existing conversation
@@ -37,7 +38,8 @@ public interface ConversationManager
      * @param transformation The transformation script
      * @return
      */
-    ConversationScenario createOrUpdateConversationScenario(int conversationId, int scenarioId, String language, String criteria,
+    ConversationScenario createOrUpdateConversationScenario(int conversationId, int scenarioId,
+                                                            String language, String criteria,
                                                             String transformation);
 
     /**
@@ -69,7 +71,6 @@ public interface ConversationManager
      * @param format The format the adapter is needed for
      * @return The parameter descriptions list
      * @see Adapter#getParametersList()
-     * @see com.tacitknowledge.simulator.formats.AdapterFactory#getAdapterParameters(String)
      * @throws ConfigurableException If the parameters definition list is missing
      */
     List<List> getAdapterParameters(String format) throws ConfigurableException;
@@ -91,7 +92,8 @@ public interface ConversationManager
      * @throws IllegalAccessException
      * @throws InstantiationException
      */
-    Object getClassByName(String name) throws ClassNotFoundException, IllegalAccessException, InstantiationException;
+    Object getClassByName(String name) throws ClassNotFoundException,
+            IllegalAccessException, InstantiationException;
 
     /**
      * Method to determine if a conversation is active or not

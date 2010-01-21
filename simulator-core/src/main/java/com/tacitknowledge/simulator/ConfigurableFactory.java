@@ -13,7 +13,7 @@ public interface ConfigurableFactory
      * @param name The Configurable name.
      * @return Configurable implementation or null if the Configurable name is not supported.
      */
-    public Configurable getConfigurable(final String name);
+    Configurable getConfigurable(final String name);
 
     /**
      *
@@ -21,6 +21,5 @@ public interface ConfigurableFactory
      * @return The parameter descriptions list
      * @throws ConfigurableException If the parameters definition list is empty
      */
-    public List<List> getParametersDefinition(final String name)
-            throws ConfigurableException;
+    List<List> getParametersDefinition(final String name) throws ConfigurableException;
 }

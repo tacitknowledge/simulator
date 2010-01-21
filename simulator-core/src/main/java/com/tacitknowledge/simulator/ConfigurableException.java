@@ -5,12 +5,21 @@ package com.tacitknowledge.simulator;
  */
 public class ConfigurableException extends SimulatorException
 {
-    public ConfigurableException(String s)
+    /**
+     * Default constructor
+     * @param s String
+     */
+    public ConfigurableException(final String s)
     {
         super(s);
     }
 
-    public ConfigurableException(String s, Throwable throwable)
+    /**
+     * Consrtuctor
+     * @param s a String
+     * @param throwable if something goes wrong
+     */
+    public ConfigurableException(final String s, final Throwable throwable)
     {
         super(s, throwable);
     }

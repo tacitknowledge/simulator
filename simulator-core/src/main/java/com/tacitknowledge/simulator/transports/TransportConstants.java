@@ -7,7 +7,7 @@ package com.tacitknowledge.simulator.transports;
  *
  * @author galo (jgalindo@tacitknowledge.com)
  */
-public class TransportConstants
+public final class TransportConstants
 {
     /**
      * Constant for FILE transport

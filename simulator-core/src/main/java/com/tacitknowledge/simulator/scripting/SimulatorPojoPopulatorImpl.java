@@ -23,7 +23,7 @@ public class SimulatorPojoPopulatorImpl
     /**
      * Singleton instance
      */
-    private static SimulatorPojoPopulatorImpl _instance;
+    private static SimulatorPojoPopulatorImpl aINSTANCE;
 
     /**
      * Hide default constructor
@@ -37,11 +37,11 @@ public class SimulatorPojoPopulatorImpl
      */
     public static SimulatorPojoPopulatorImpl getInstance()
     {
-        if (_instance == null)
+        if (aINSTANCE == null)
         {
-            _instance = new SimulatorPojoPopulatorImpl();
+            aINSTANCE = new SimulatorPojoPopulatorImpl();
         }
-        return _instance;
+        return aINSTANCE;
     }
 
     /**
@@ -53,7 +53,7 @@ public class SimulatorPojoPopulatorImpl
      * @return A SimulatorPojo instance populated from the map and its included attributes
      * @throws SimulatorException If anything goes wrong during analyzing the object fields
      */
-    public SimulatorPojo populateSimulatorPojoFromBean(Object bean)
+    public SimulatorPojo populateSimulatorPojoFromBean(final Object bean)
         throws ObjectMapperException
     {
         logger.debug("Attempting to create SimulatorPojo from bean " + bean);

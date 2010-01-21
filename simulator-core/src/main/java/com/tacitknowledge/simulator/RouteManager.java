@@ -33,13 +33,15 @@ public interface RouteManager
     void deactivate(Conversation conversation) throws Exception;
 
     /**
-     * @param conversation
-     * @return
+     * @param conversation - Conversation object
+     * @return true if conversation is active
+     * @throws SimulatorException if an error occurs
      */
     boolean isActive(Conversation conversation) throws SimulatorException;
 
     /**
-     * @param conversation
+     * @param conversation Conversation object
+     * @throws Exception if an error occurs
      */
     void delete(Conversation conversation) throws Exception;
 
