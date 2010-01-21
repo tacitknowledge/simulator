@@ -129,11 +129,7 @@ public final class EventDispatcher
             }
             catch (Exception ex)
             {
-                if (logger.isDebugEnabled())
-                {
-                    logger.debug("Exception thrown executing listener "
-                            + listener.getClass() + ". " + ex.getMessage());
-                }
+                logger.error("Exception thrown executing listener " + listener.getClass() , ex);
             }
         }
     }

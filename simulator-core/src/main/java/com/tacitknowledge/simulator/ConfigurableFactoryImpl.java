@@ -54,7 +54,7 @@ public class ConfigurableFactoryImpl implements ConfigurableFactory
             catch (Exception e)
             {
                 logger.error("Unexpected error trying to instantiate configurable "
-                        + configurableClass.getName() + ": " + e.getMessage());
+                        + configurableClass.getName(), e);
             }
         }
         return configurable;

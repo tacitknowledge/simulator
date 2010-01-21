@@ -18,7 +18,7 @@ public abstract class BaseConfigurable implements Configurable
      *
      * @see com.tacitknowledge.simulator.Configurable
      */
-    private int bound = 0;
+    private int bound = BOUND_IN;
 
     /**
      * Configurable parameters definition.
