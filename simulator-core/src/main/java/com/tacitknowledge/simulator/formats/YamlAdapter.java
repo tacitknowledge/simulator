@@ -55,23 +55,20 @@ public class YamlAdapter extends BaseAdapter implements Adapter<Object>
      * Adapter parameters definition.
      */
     private static List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
-            parameters().
-                    add(
+            parameters()
+                    .add(
                             name(PARAM_YAML_CONTENT).
                                     label("YAML Contents (e.g. employees, orders, etc.)").
-                                    required()
-                    ).
-                    add(
+                                    required())
+                    .add(
                             name(PARAM_IS_ARRAY).
                                     label("Is YAML content an array?").
                                     type(ParameterDefinitionBuilder
-                                            .ParameterDefinition.TYPE_BOOLEAN)
-                    ).
-                    add(
+                                            .ParameterDefinition.TYPE_BOOLEAN))
+                    .add(
                             name(PARAM_YAML_ARRAY_CONTENT).
                                     label("YAML Array content (What each array element represents. "
-                                    + "e.g.: employee, order. Required if content is array)")
-                    );
+                                    + "e.g.: employee, order. Required if content is array)"));
 
     /**
      * Logger for this class.
@@ -212,7 +209,6 @@ public class YamlAdapter extends BaseAdapter implements Adapter<Object>
      * @see com.tacitknowledge.simulator.configuration
      *              .ParameterDefinitionBuilder.ParameterDefinition
      */
-    @Override
     public List<List> getParametersList()
     {
         return getParametersDefinitionsAsList(parametersList);

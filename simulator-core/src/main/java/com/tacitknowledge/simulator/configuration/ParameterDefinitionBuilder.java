@@ -20,7 +20,7 @@ import java.util.List;
  * @author galo
  * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.ParameterDefinition
  */
-public class ParameterDefinitionBuilder
+public final class ParameterDefinitionBuilder
 {
     /**
      * ParameterDefinition to be built
@@ -42,7 +42,7 @@ public class ParameterDefinitionBuilder
      * @param name The parameter name
      * @return This instance
      */
-    public static ParameterDefinitionBuilder name(String name)
+    public static ParameterDefinitionBuilder name(final String name)
     {
         ParameterDefinitionBuilder builder = new ParameterDefinitionBuilder();
         builder.paramName(name);
@@ -52,9 +52,9 @@ public class ParameterDefinitionBuilder
     /**
      * Private method to set the ParameterDefinition name
      *
-     * @param name
+     * @param name Parameter name
      */
-    private void paramName(String name)
+    private void paramName(final String name)
     {
         paramDef.name = name;
     }
@@ -65,7 +65,7 @@ public class ParameterDefinitionBuilder
      * @param label The parameter field label
      * @return This instance
      */
-    public ParameterDefinition label(String label)
+    public ParameterDefinition label(final String label)
     {
         paramDef.setLabel(label);
         return paramDef;
@@ -84,7 +84,7 @@ public class ParameterDefinitionBuilder
      * @see ParameterDefinitionBuilder
      * @see #getAsList()
      */
-    public static class ParameterDefinition
+    public static final class ParameterDefinition
     {
         /**
          * Parameter type of String constant
@@ -166,7 +166,7 @@ public class ParameterDefinitionBuilder
         /**
          * @param name The parameter name.
          */
-        private void setName(String name)
+        private void setName(final String name)
         {
             this.name = name;
         }
@@ -182,7 +182,7 @@ public class ParameterDefinitionBuilder
         /**
          * @param label The parameter field label
          */
-        private void setLabel(String label)
+        private void setLabel(final String label)
         {
             this.label = label;
         }
@@ -234,12 +234,12 @@ public class ParameterDefinitionBuilder
          * - ParameterDefinition.TYPE_BOOLEAN
          * If this attribute is not set, the type will be String by default.
          *
-         * @param type The parameter type.
+         * @param aType The parameter type.
          * @return This instance
          */
-        public ParameterDefinition type(String type)
+        public ParameterDefinition type(final String aType)
         {
-            this.type = type;
+            this.type = aType;
             return this;
         }
 
@@ -247,7 +247,7 @@ public class ParameterDefinitionBuilder
          * Flags the parameter as required.
          * If this method is not called, the parameter is NOT required.
          *
-         * @return
+         * @return ParameterDefinition object
          */
         public ParameterDefinition required()
         {
@@ -278,12 +278,12 @@ public class ParameterDefinitionBuilder
         /**
          * Sets the parameter's default value
          *
-         * @param defaultValue The default value
+         * @param aDefaultValue The default value
          * @return This instance
          */
-        public ParameterDefinition defaultValue(String defaultValue)
+        public ParameterDefinition defaultValue(final String aDefaultValue)
         {
-            this.defaultValue = defaultValue;
+            this.defaultValue = aDefaultValue;
             return this;
         }
 

@@ -3,10 +3,16 @@ package com.tacitknowledge.simulator.filetest;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQTextMessage;
 
-import javax.jms.*;
-import java.io.InputStream;
+import javax.jms.Connection;
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.MessageConsumer;
+import javax.jms.MessageListener;
+import javax.jms.Session;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Properties;
 
@@ -89,7 +95,7 @@ public final class TestJmsReceiver
 
         String destinationName = properties.getProperty("destinationName");
         Boolean isDestinationTopic = Boolean.parseBoolean(
-                                properties.getProperty("isDestinationTopic"));
+                properties.getProperty("isDestinationTopic"));
 
         ActiveMQConnectionFactory connectionFactory =
                 new ActiveMQConnectionFactory(properties.getProperty("brokerUrl"));
@@ -104,7 +110,7 @@ public final class TestJmsReceiver
             System.out.println("Session created. " + session);
 
             MessageConsumer consumer =
-                            createMessageConsumer(session, isDestinationTopic, destinationName);
+                    createMessageConsumer(session, isDestinationTopic, destinationName);
 
             consumer.setMessageListener(messageListener);
             System.out.println("Message Listener created: " + messageListener);
@@ -169,15 +175,17 @@ public final class TestJmsReceiver
 
     /**
      * Create a message consumer
-     * @param session  - JMS session
+     *
+     * @param session            - JMS session
      * @param isDestinationTopic - true if it is listening to topics
-     * @param destinationName - queu or topic name
+     * @param destinationName    - queu or topic name
      * @return Message Consumer
      * @throws JMSException if something goes wrong
      */
     private static MessageConsumer createMessageConsumer(final Session session,
-                            final Boolean isDestinationTopic,
-                                final String destinationName) throws JMSException
+                                                         final Boolean isDestinationTopic,
+                                                         final String destinationName) throws
+                                                         JMSException
     {
         Destination destination;
         if (isDestinationTopic)

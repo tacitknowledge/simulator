@@ -45,70 +45,58 @@ public class FtpTransport extends FileTransport implements Transport
      * Transport parameters definition.
      */
     private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
-            parameters().
-                    add(
+            parameters()
+                    .add(
                             name(PARAM_HOST).
                                     label("Host Name").
-                                    required()
-                    ).
-                    add(
+                                    required())
+                    .add(
                             name(PARAM_SFTP).
                                     label("Is this an SFTP transport? (defaults to FTP)").
                                     type(ParameterDefinitionBuilder
-                                    .ParameterDefinition.TYPE_BOOLEAN)
-                    ).
-                    add(
+                                    .ParameterDefinition.TYPE_BOOLEAN))
+                    .add(
                             name(PARAM_PORT).
                                     label("Port (defaults to 21 for FTP and "
-                                    + "22 for SFTP if not provided)")
-                    ).
-                    add(
+                                    + "22 for SFTP if not provided)"))
+                    .add(
                             name(PARAM_DIRECTORY_NAME).
-                                    label("Directory Name")
-                    ).
-                    add(
+                                    label("Directory Name"))
+                    .add(
                             name(PARAM_USERNAME).
-                                    label("User Name")
-                    ).
-                    add(
+                                    label("User Name"))
+                    .add(
                             name(PARAM_PASSWORD).
-                                    label("Password")
-                    ).
-                    add(
+                                    label("Password"))
+                    .add(
                             name(PARAM_FILE_NAME).
-                                    label("File Name")
-                    ).
-                    add(
+                                    label("File Name"))
+                    .add(
                             name(PARAM_FILE_EXTENSION).
                                     label("File Extension the transport will only poll from "
                                             + "(without dot)").
-                                    inOnly()
-                    ).
-                    add(
+                                    inOnly())
+                    .add(
                             name(PARAM_REGEX_FILTER).
                                     label("Regex filter "
                                             + "(will only be applied if neither "
                                             + "file name nor extension filters are provided)").
-                                    inOnly()
-                    ).
-                    add(
+                                    inOnly())
+                    .add(
                             name(PARAM_DELETE_FILE).
                                     label("Delete file after simulation?").
                                     type(ParameterDefinitionBuilder
                                             .ParameterDefinition.TYPE_BOOLEAN).
-                                    inOnly()
-                    ).
-                    add(
+                                    inOnly())
+                    .add(
                             name(PARAM_POLLING_INTERVAL).
                                     label("Milliseconds before the next poll").
-                                    inOnly()
-                    ).
-                    add(
+                                    inOnly())
+                    .add(
                             name(PARAM_BINARY).
                                     label("Is file transfer binary? (defaults to NO)").
                                     type(ParameterDefinitionBuilder
-                                    .ParameterDefinition.TYPE_BOOLEAN)
-                    );
+                                    .ParameterDefinition.TYPE_BOOLEAN));
 
     /**
      * Flag to determine if this transport is FTP or SFTP. Defaults to FTP

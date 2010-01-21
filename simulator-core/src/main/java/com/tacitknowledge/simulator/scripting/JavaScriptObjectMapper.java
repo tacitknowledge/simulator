@@ -25,7 +25,8 @@ public class JavaScriptObjectMapper implements ObjectMapper
     /**
      * {@inheritDoc}
      */
-    public Map<String, Object> getMapFromObject(final Object thisObject) throws ObjectMapperException
+    public Map<String, Object> getMapFromObject(final Object thisObject) throws
+            ObjectMapperException
     {
 
         Map<String, Object> map = new HashMap<String, Object>();

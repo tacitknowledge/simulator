@@ -97,18 +97,19 @@ public class JmsTransport extends BaseTransport implements Transport
 
     /**
      * @inheritDoc
-     * @param parameters
+     * @param parameters parameters
      */
-    public JmsTransport(Map<String, String> parameters)
+    public JmsTransport(final Map<String, String> parameters)
     {
         super(TransportConstants.JMS, parameters);
     }
 
     /**
      * @param parameters @see #parameters
+     * @param bound in or out
      * @inheritDoc
      */
-    public JmsTransport(int bound, Map<String, String> parameters)
+    public JmsTransport(final int bound, final Map<String, String> parameters)
     {
         super(bound, TransportConstants.JMS, parameters);
     }
@@ -196,10 +197,10 @@ public class JmsTransport extends BaseTransport implements Transport
      *
      * @return List of Parameters for the implementing Transport.
      * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder
-     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.ParameterDefinition
+     * @see com.tacitknowledge.simulator.configuration
+     *          .ParameterDefinitionBuilder.ParameterDefinition
      * @see com.tacitknowledge.simulator.BaseConfigurable#parametersList
      */
-    @Override
     public List<List> getParametersList()
     {
         return getParametersDefinitionsAsList(parametersList);

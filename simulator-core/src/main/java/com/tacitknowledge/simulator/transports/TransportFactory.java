@@ -1,23 +1,20 @@
 package com.tacitknowledge.simulator.transports;
 
-import com.tacitknowledge.simulator.ConfigurableException;
 import com.tacitknowledge.simulator.ConfigurableFactoryImpl;
 import com.tacitknowledge.simulator.Transport;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
  * Factory implementation for Transport implementations
  *
+ * @author galo (jgalindo@tacitknowledge.com)
  * @see com.tacitknowledge.simulator.Transport
  * @see com.tacitknowledge.simulator.Configurable
- *
- * @author galo (jgalindo@tacitknowledge.com)
  */
-public class TransportFactory extends ConfigurableFactoryImpl
+public final class TransportFactory extends ConfigurableFactoryImpl
 {
     /**
      * Logger for this class.
@@ -33,7 +30,7 @@ public class TransportFactory extends ConfigurableFactoryImpl
     /**
      * Container for the transports
      */
-    private static final Map<String, Class> transports = new HashMap<String, Class>()
+    private static final Map<String, Class> TRANSPORTS = new HashMap<String, Class>()
     {
         {
             put(TransportConstants.FILE, FileTransport.class);
@@ -49,11 +46,10 @@ public class TransportFactory extends ConfigurableFactoryImpl
      */
     private TransportFactory()
     {
-        super(transports);
+        super(TRANSPORTS);
     }
 
     /**
-     *
      * @return The singleton instance
      */
     public static TransportFactory getInstance()
@@ -71,7 +67,7 @@ public class TransportFactory extends ConfigurableFactoryImpl
      * @param type The transport type. @see com.tacitknowledge.simulator.TransportConstants
      * @return Transport for the specified type or null if the transport is not supported.
      */
-    public Transport getTransport(String type)
+    public Transport getTransport(final String type)
     {
         return (Transport) getConfigurable(type);
     }

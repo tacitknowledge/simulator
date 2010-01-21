@@ -81,9 +81,11 @@ public abstract class BaseTransport extends BaseConfigurable implements Transpor
      * Constructor.
      *
      * @param type       @see #type
+     * @param bound in or out
      * @param parameters @see #parameters
      */
-    protected BaseTransport(final int bound, final String type, final Map<String, String> parameters)
+    protected BaseTransport(final int bound, final String type,
+                            final Map<String, String> parameters)
     {
         super(bound, parameters);
         this.type = type;
@@ -123,7 +125,6 @@ public abstract class BaseTransport extends BaseConfigurable implements Transpor
      * @throws com.tacitknowledge.simulator.TransportException
      *          If any other error occurs
      */
-    @Override
     public String toUriString() throws ConfigurableException, TransportException
     {
         validateParameters();

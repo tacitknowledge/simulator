@@ -1,6 +1,5 @@
 package com.tacitknowledge.simulator.transports;
 
-import com.tacitknowledge.simulator.Configurable;
 import com.tacitknowledge.simulator.ConfigurableException;
 import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.TransportException;
@@ -34,27 +33,27 @@ public abstract class HttpTransport extends BaseTransport implements Transport
     /**
      * Transport parameters definition.
      */
-    protected List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
-        parameters().
-            add(
-                name(PARAM_PORT).
-                    label("Port").
-                    inOnly()
-            ).
-            add(
-                name(PARAM_RESOURCE_URI).
-                    label("Context root (include starting slash e.g.: /mytestapp").
-                    required().
-                    inOnly()
-            ).
-            add(
-                name(PARAM_HTTP_OUT).
-                    label("Is this an HTTP outbound transport?<br>"
-                        + "This transport should only be used if the inbound transport is HTTP").
-                    type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN).
-                    outOnly().
-                    defaultValue("true")
-            );
+    private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
+            parameters()
+
+                    .add(
+                            name(PARAM_PORT).
+                                    label("Port").
+                                    inOnly())
+                    .add(
+                            name(PARAM_RESOURCE_URI).
+                                    label("Context root (include starting slash e.g.: /mytestapp").
+                                    required().
+                                    inOnly())
+                    .add(
+                            name(PARAM_HTTP_OUT).
+                                    label("Is this an HTTP outbound transport?<br>"
+                                            + "This transport should only be used "
+                                            + "if the inbound transport is HTTP").
+                                    type(ParameterDefinitionBuilder
+                                            .ParameterDefinition.TYPE_BOOLEAN).
+                                    outOnly().
+                                    defaultValue("true"));
 
     /**
      * Checks if http transport is used for output
@@ -64,24 +63,35 @@ public abstract class HttpTransport extends BaseTransport implements Transport
     /**
      * Constructor
      * This constructor should only be called from the inheriting Transports.
+     *
      * @param type - Transport type
      */
     protected HttpTransport(final String type)
     {
-        super(type);    
+        super(type);
     }
 
     /**
      * Constructor.
      *
-     * @param bound - specifies if transport is for in or out
-     * @param type - transport type
+     * @param bound      - specifies if transport is for in or out
+     * @param type       - transport type
      * @param parameters @see #parameters
      */
     protected HttpTransport(final int bound, final String type,
                             final Map<String, String> parameters)
     {
         super(bound, type, parameters);
+    }
+
+    /**
+     * Return http parameters
+     *
+     * @return List of parameters
+     */
+    protected List<ParameterDefinitionBuilder.ParameterDefinition> getHttpParameters()
+    {
+        return parametersList;
     }
 
     /**
@@ -112,7 +122,7 @@ public abstract class HttpTransport extends BaseTransport implements Transport
      * @return URI representation of the transport
      * @throws TransportException If a required parameter is missing or not properly formatted.
      * @throws com.tacitknowledge.simulator.TransportException
-     *          If any other error occurs.
+     *                            If any other error occurs.
      */
     @Override
     public String toUriString() throws ConfigurableException, TransportException

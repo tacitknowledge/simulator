@@ -11,7 +11,8 @@ import org.apache.camel.Exchange;
  * @author Daniel Valencia (dvalencia@tacitknowledge.com)
  * @author Raul Huerta (rhuerta@tacitknowledge.com)
  */
-public interface SimulatorEventListener {
+public interface SimulatorEventListener
+{
 
     /**
      * Triggered when a new message arrives.

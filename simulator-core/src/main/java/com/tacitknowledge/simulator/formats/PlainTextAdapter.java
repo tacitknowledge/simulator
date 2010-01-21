@@ -29,15 +29,15 @@ public class PlainTextAdapter extends BaseAdapter
     /**
      * Structured pojo root is 'text'
      *
-     * @param o text String
+     * @param exchange text String
      * @return The generated custom beans map
-     * @throws FormatAdapterException
+     * @throws FormatAdapterException if an error occurs
      */
 
     @Override
-    public Map<String, Object> generateBeans(Exchange o) throws FormatAdapterException
+    public Map<String, Object> generateBeans(final Exchange exchange) throws FormatAdapterException
     {
-        String text = o.getIn().getBody(String.class);
+        String text = exchange.getIn().getBody(String.class);
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("text", text);
         return map;
@@ -45,7 +45,8 @@ public class PlainTextAdapter extends BaseAdapter
 
 
     @Override
-    public String adaptTo(Object scriptExecutionResult, Exchange exchange) throws FormatAdapterException
+    public String adaptTo(final Object scriptExecutionResult, final Exchange exchange) throws
+            FormatAdapterException
     {
         return scriptExecutionResult.toString();
     }
@@ -99,9 +100,9 @@ public class PlainTextAdapter extends BaseAdapter
      *
      * @return List of Parameters for the implementing Transport.
      * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder
-     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.ParameterDefinition
+     * @see com.tacitknowledge.simulator.configuration
+     *          .ParameterDefinitionBuilder.ParameterDefinition
      */
-    @Override
     public List<List> getParametersList()
     {
         return null;

@@ -5,26 +5,31 @@ import java.util.Map;
 
 /**
  * Marker class to be used for rest transport
+ *
  * @author Raul Huerta (rhuerta@acitknowledge.com)
  */
-public class RestTransport extends HttpTransport {
+public class RestTransport extends HttpTransport
+{
     //Marker class for REST
 
 
     /**
      * Default Cosntructor
      */
-    public RestTransport() {
+    public RestTransport()
+    {
         super(TransportConstants.REST);
     }
 
 
     /**
      * Constructor to initialize parameters
-     * @param bound Configurable bound
+     *
+     * @param bound      Configurable bound
      * @param parameters - Map of String, String values
      */
-    public RestTransport(int bound, Map<String, String> parameters) {
+    public RestTransport(final int bound, final Map<String, String> parameters)
+    {
         super(bound, TransportConstants.REST, parameters);
     }
 
@@ -41,12 +46,12 @@ public class RestTransport extends HttpTransport {
      *
      * @return List of Parameters for the implementing Transport.
      * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder
-     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.ParameterDefinition
+     * @see com.tacitknowledge.simulator.configuration
+     *      .ParameterDefinitionBuilder.ParameterDefinition
      * @see com.tacitknowledge.simulator.BaseConfigurable#parametersList
      */
-    @Override
     public List<List> getParametersList()
     {
-        return getParametersDefinitionsAsList(parametersList);
+        return getParametersDefinitionsAsList(getHttpParameters());
     }
 }

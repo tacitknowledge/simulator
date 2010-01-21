@@ -24,9 +24,9 @@ public interface ConversationManager
      * @throws SimulatorException in case of an error
      */
     Conversation createOrUpdateConversation(Integer id, String name, Transport inboundTransport,
-                                    Transport outboundTransport, Adapter inAdapter,
-                                    Adapter outAdapter, String defaultResponse)
-            throws SimulatorException;
+                                            Transport outboundTransport, Adapter inAdapter,
+                                            Adapter outAdapter, String defaultResponse) throws
+            SimulatorException;
 
     /**
      * Creates a new scenario for an existing conversation

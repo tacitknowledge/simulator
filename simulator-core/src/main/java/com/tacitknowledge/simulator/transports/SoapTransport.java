@@ -48,9 +48,8 @@ public class SoapTransport extends HttpTransport
      *                      .ParameterDefinitionBuilder.ParameterDefinition
      * @see com.tacitknowledge.simulator.BaseConfigurable#parametersList
      */
-    @Override
     public List<List> getParametersList()
     {
-        return getParametersDefinitionsAsList(parametersList);
+        return getParametersDefinitionsAsList(getHttpParameters());
     }
 }

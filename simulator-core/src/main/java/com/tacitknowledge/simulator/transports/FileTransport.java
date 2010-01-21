@@ -61,39 +61,34 @@ public class FileTransport extends BaseTransport implements Transport
      * Transport parameters definition.
      */
     private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
-        parameters().
-            add(
-                name(PARAM_DIRECTORY_NAME).
-                    label("Directory Name").
-                    required()
-            ).
-            add(
-                name(PARAM_FILE_NAME).
-                    label("File Name")
-            ).
-            add(
-                name(PARAM_FILE_EXTENSION).
-                    label("File Extension the transport will only poll from "
-                    + "(without dot").
-                    inOnly()
-            ).
-            add(
-                name(PARAM_REGEX_FILTER).
-                    label("Regex filter "
-                    + "(will only be applied if neither "
-                    + "file name nor extension filters are provided)").
-                    inOnly()
-            ).
-            add(
-                name(PARAM_POLLING_INTERVAL).
-                    label("Milliseconds before the next poll").
-                    inOnly()
-            ).
-            add(
-                name(PARAM_DELETE_FILE).
-                    label("Delete file after simulation?").
-                    type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN)
-            );
+            parameters().
+                    add(
+                            name(PARAM_DIRECTORY_NAME).
+                                    label("Directory Name").
+                                    required())
+                    .add(
+                            name(PARAM_FILE_NAME).
+                                    label("File Name"))
+                    .add(
+                            name(PARAM_FILE_EXTENSION).
+                                    label("File Extension the transport will only poll from "
+                                            + "(without dot").
+                                    inOnly())
+                    .add(
+                            name(PARAM_REGEX_FILTER).
+                                    label("Regex filter "
+                                            + "(will only be applied if neither "
+                                            + "file name nor extension filters are provided)").
+                                    inOnly())
+                    .add(
+                            name(PARAM_POLLING_INTERVAL).
+                                    label("Milliseconds before the next poll").
+                                    inOnly())
+                    .add(
+                            name(PARAM_DELETE_FILE).
+                                    label("Delete file after simulation?").
+                                    type(
+                                    ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN));
 
     /**
      * If true, the processed file will be deleted.
@@ -262,7 +257,6 @@ public class FileTransport extends BaseTransport implements Transport
      * @see com.tacitknowledge.simulator.configuration
      *              .ParameterDefinitionBuilder.ParameterDefinition
      */
-    @Override
     public List<List> getParametersList()
     {
         return getParametersDefinitionsAsList(parametersList);

@@ -12,8 +12,9 @@ import java.io.InputStream;
  *
  * @author Oscar Gonzalez (oscar@tacitknowledge.com)
  */
-public class TestFileSystemMain
+public final class TestFileSystemMain
 {
+
     /**
      * Name of the source file to be read
      */
@@ -22,20 +23,38 @@ public class TestFileSystemMain
     /**
      * Source directory where the file to be read lives
      */
-    public static final String SOURCE_DIR = "/Users/nikitabelenkiy/Simulator2/trunk/simulator/web-ui/src/main/rubyapp/12345/";
+    public static final String SOURCE_DIR =
+            "/Users/nikitabelenkiy/Simulator2/trunk/simulator/web-ui/src/main/rubyapp/12345/";
 
-    /** Target file for the results */
+    /**
+     * Target file for the results
+     */
     public static final String TARGET_FILE = "zzz.xml";
 
 
-    /** target directory to copy the files to */
-    public static final String TARGET_DIR = "/Users/nikitabelenkiy/Simulator2/trunk/simulator/web-ui/src/main/rubyapp/123456";
+    /**
+     * target directory to copy the files to
+     */
+    public static final String TARGET_DIR =
+            "/Users/nikitabelenkiy/Simulator2/trunk/simulator/web-ui/src/main/rubyapp/123456";
 
-    /** Size of the buffer to read */
+    /**
+     * Size of the buffer to read
+     */
     public static final int BUFFER = 1024;
 
-    /** Time to wait between file checks     */
+    /**
+     * Time to wait between file checks
+     */
     public static final int WAITING_TIME_FOR_FILE = 2000;
+
+    /**
+     * Default Constructor
+     */
+    private TestFileSystemMain()
+    {
+
+    }
 
     /**
      * This method will test that simulator succesfully copied a file to the destination folder
@@ -44,16 +63,15 @@ public class TestFileSystemMain
      * @throws IOException          if we couldn't read the files
      * @throws InterruptedException if there was a concurrency problem
      */
-    public static void main(String[] args) throws IOException, InterruptedException
+    public static void main(final String[] args) throws IOException, InterruptedException
     {
 
-        InputStream inputStream
-                = TestFileSystemMain.class.getClassLoader().getResourceAsStream(SOURCE_FILE);
+        InputStream inputStream = TestFileSystemMain.class.getClassLoader()
+                .getResourceAsStream(SOURCE_FILE);
         String s = SOURCE_DIR + File.separator + SOURCE_FILE;
         File file = new File(s);
-        FileOutputStream fos
-                = new FileOutputStream(s);
-        System.out.println("creating file "+file.getAbsolutePath());
+        FileOutputStream fos = new FileOutputStream(s);
+        System.out.println("creating file " + file.getAbsolutePath());
 
         byte[] buffer = new byte[BUFFER];
         int bytesRead = 0;
@@ -67,7 +85,7 @@ public class TestFileSystemMain
 
         File targetFile = new File(TARGET_DIR + File.separator + TARGET_FILE);
         System.out.println("Created");
-        System.out.println("Waiting for result file "+targetFile.getAbsolutePath());
+        System.out.println("Waiting for result file " + targetFile.getAbsolutePath());
 
         // Wait until the simulator copies the file to the destination forlder
         while (!targetFile.exists())

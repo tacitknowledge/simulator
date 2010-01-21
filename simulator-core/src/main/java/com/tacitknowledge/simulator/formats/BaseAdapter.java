@@ -2,12 +2,10 @@ package com.tacitknowledge.simulator.formats;
 
 import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.BaseConfigurable;
-import com.tacitknowledge.simulator.Configurable;
 import com.tacitknowledge.simulator.ConfigurableException;
 import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorException;
 import com.tacitknowledge.simulator.SimulatorPojo;
-import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
 import com.tacitknowledge.simulator.scripting.ObjectMapperException;
 import com.tacitknowledge.simulator.scripting.PojoClassGenerator;
 import com.tacitknowledge.simulator.scripting.ScriptException;
@@ -15,13 +13,9 @@ import com.tacitknowledge.simulator.scripting.SimulatorPojoPopulatorImpl;
 import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.NotFoundException;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.camel.Exchange;
+
+import java.util.Map;
 
 /**
  * Base class for Adapter implementations.
@@ -44,10 +38,10 @@ public abstract class BaseAdapter extends BaseConfigurable implements Adapter<Ob
     }
 
     /**
+     * @param parameters - parameters
      * @inheritDoc
-     * @param parameters
      */
-    public BaseAdapter(Map<String, String> parameters)
+    public BaseAdapter(final Map<String, String> parameters)
     {
         super(parameters);
     }
@@ -58,29 +52,27 @@ public abstract class BaseAdapter extends BaseConfigurable implements Adapter<Ob
      * @param bound      Configurable bound
      * @param parameters Parameter values
      */
-    protected BaseAdapter(int bound, Map<String, String> parameters)
+    protected BaseAdapter(final int bound, final Map<String, String> parameters)
     {
         super(bound, parameters);
     }
 
     /**
-     * 
-     * @param o The Camel exchange
+     * @param exchange The Camel exchange
      * @return A Map of custom-generated beans generated from the input data
-     * @throws ConfigurableException If any required parameter is missing.
+     * @throws ConfigurableException  If any required parameter is missing.
      * @throws FormatAdapterException If any other error occurs.
      */
-    public Map<String, Object> generateBeans(Exchange o)
+    public Map<String, Object> generateBeans(final Exchange exchange)
             throws ConfigurableException, FormatAdapterException
     {
         validateParameters();
 
-        SimulatorPojo pojo = createSimulatorPojo(o);
+        SimulatorPojo pojo = createSimulatorPojo(exchange);
         return generateClasses(pojo);
     }
 
     /**
-     *
      * @param o The Camel exchange
      * @return The generated SimulatorPojo
      * @throws FormatAdapterException
@@ -88,9 +80,8 @@ public abstract class BaseAdapter extends BaseConfigurable implements Adapter<Ob
     protected abstract SimulatorPojo createSimulatorPojo(Exchange o) throws FormatAdapterException;
 
     /**
-     *
      * @param scriptExecutionResult The object returned by the scenario excecution script
-     * @param exchange The Camel exchange
+     * @param exchange              The Camel exchange
      * @return A String object in the requested format representing the script result
      * @throws FormatAdapterException If any other error occurs
      */
@@ -103,18 +94,18 @@ public abstract class BaseAdapter extends BaseConfigurable implements Adapter<Ob
     }
 
     /**
-     * @inheritDoc
      * @param scriptExecutionResult
      * @param exchange
      * @return
-     * @throws ConfigurableException If any required parameter is missing.
+     * @throws ConfigurableException  If any required parameter is missing.
      * @throws FormatAdapterException If any other error occurs.
+     * @inheritDoc
      */
     public Object adaptTo(Object scriptExecutionResult, Exchange exchange)
             throws ConfigurableException, FormatAdapterException
     {
         validateParameters();
-        
+
         SimulatorPojo getSimulatorPojo;
         try
         {
@@ -150,7 +141,7 @@ public abstract class BaseAdapter extends BaseConfigurable implements Adapter<Ob
         catch (CannotCompileException e)
         {
             String errorMessage = "A compilation error has occured when "
-                + "generating classes for SimulatorPojo";
+                    + "generating classes for SimulatorPojo";
             throw new FormatAdapterException(errorMessage, e);
         }
         catch (NotFoundException e)

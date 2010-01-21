@@ -50,6 +50,9 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
      */
     public static final String PARAM_WSDL_URL = "wdslURL";
 
+    /**
+     * Payload key
+     */
     public static final String DEFAULT_PAYLOAD_KEY = "payload";
 
     /**
@@ -57,19 +60,20 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
      */
     private static Logger logger = Logger.getLogger(SoapAdapter.class);
 
+    /**
+     * Soap Factory object
+     */
     private SOAPFactory soapFactory;
+    /**
+     * Message factory object
+     */
     private MessageFactory messageFactory;
 
     /**
      * Adapter parameters definition.
      */
-    private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
-            parameters().
-                    add(
-                            name(PARAM_WSDL_URL).
-                                    label("WSDL URL").
-                                    required()
-                    );
+    private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList = parameters()
+            .add(name(PARAM_WSDL_URL).label("WSDL URL").required());
 
     /**
      * Key for the root where to contain the SOAP message's payload
@@ -81,8 +85,13 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
      * Will be generated from the provided WSDL.
      */
     private Definition definition;
-
+    /**
+     *  Payload NS
+     */
     private String payloadNS;
+    /**
+     *  Payload NSUri
+     */
     private String payloadNSUri;
 
     /**
@@ -104,21 +113,22 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
      * @param bound Configurable bound
      * @param parameters @see #parameters
      */
-    public SoapAdapter(int bound, Map<String, String> parameters)
+    public SoapAdapter(final int bound, final Map<String, String> parameters)
     {
         super(bound, parameters, false);
     }
 
     /**
      * @inheritDoc
-     * @param o
-     * @return
-     * @throws FormatAdapterException
+     * @param exchange Exchange message
+     * @return SimulatorPojo object
+     * @throws FormatAdapterException if an error occurs
      */
     @Override
-    protected SimulatorPojo createSimulatorPojo(Exchange o) throws FormatAdapterException
+    protected SimulatorPojo createSimulatorPojo(final Exchange exchange)
+            throws FormatAdapterException
     {
-        return createSimulatorPojo(o.getIn().getBody(String.class));
+        return createSimulatorPojo(exchange.getIn().getBody(String.class));
     }
 
     /**
@@ -294,11 +304,13 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
             pojo.getRoot().put(payloadKey, getStructuredChilds(body));
 
             // --- Check that the passed methods/parameters are WSDL-valid
-            validateOperationsAndParameters((Map<String, Map>) pojo.getRoot().get(DEFAULT_PAYLOAD_KEY));
+            validateOperationsAndParameters((Map<String, Map>) pojo.getRoot()
+                    .get(DEFAULT_PAYLOAD_KEY));
         }
         catch(SOAPException se)
         {
-            String errorMessage = "Unexpected SOAP exception trying to generate SimulatorPojo: " + se.getMessage();
+            String errorMessage = "Unexpected SOAP exception trying to generate SimulatorPojo: "
+                    + se.getMessage();
             logger.error(errorMessage, se);
             throw new FormatAdapterException(errorMessage, se);
         }
@@ -384,7 +396,8 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
      * @param payload Map containing SOAP message's payload
      * @throws FormatAdapterException If any validation fails.
      */
-    private void validateOperationsAndParameters(Map<String, Map> payload) throws FormatAdapterException
+    private void validateOperationsAndParameters(Map<String, Map> payload)
+            throws FormatAdapterException
     {
         // --- Review all Methods passed in the SOAP message
         for (Map.Entry<String, Map> operationEntry :
@@ -444,7 +457,8 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
      *
      * @return List of Parameters for the implementing Transport.
      * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder
-     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.ParameterDefinition
+     * @see com.tacitknowledge.simulator.configuration
+     *      .ParameterDefinitionBuilder.ParameterDefinition
      */
     @Override
     public List<List> getParametersList()

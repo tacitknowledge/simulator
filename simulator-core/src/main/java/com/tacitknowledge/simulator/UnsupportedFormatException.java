@@ -12,7 +12,7 @@ public class UnsupportedFormatException extends Exception
      *
      * @param s exception message
      */
-    public UnsupportedFormatException(String s)
+    public UnsupportedFormatException(final String s)
     {
         super(s);
     }
@@ -23,7 +23,7 @@ public class UnsupportedFormatException extends Exception
      * @param s         exception message
      * @param throwable the original exception
      */
-    public UnsupportedFormatException(String s, Throwable throwable)
+    public UnsupportedFormatException(final String s, final Throwable throwable)
     {
         super(s, throwable);
     }

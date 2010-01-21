@@ -64,7 +64,6 @@ public abstract class BaseConfigurable implements Configurable
     /**
      * @return The bounding (IN or OUT) of the configurable instance
      */
-    @Override
     public int getBound()
     {
         return this.bound;

@@ -5,12 +5,21 @@ package com.tacitknowledge.simulator.scripting;
  */
 public class ObjectMapperException extends Exception
 {
-    public ObjectMapperException(String s)
+    /**
+     * Default Constructor
+     * @param s String
+     */
+    public ObjectMapperException(final String s)
     {
         super(s);
     }
 
-    public ObjectMapperException(String s, Throwable throwable)
+    /**
+     * Constructor
+     * @param s Sring
+     * @param throwable Exception
+     */
+    public ObjectMapperException(final String s, final Throwable throwable)
     {
         super(s, throwable);
     }

@@ -117,8 +117,8 @@ public class ConversationScenarioImpl implements ConversationScenario
      * @param scriptExecutionBeans
      * @throws ScriptException
      */
-    public Object executeTransformation(final Map<String, Object> scriptExecutionBeans)
-            throws ScriptException, SimulatorException
+    public Object executeTransformation(final Map<String, Object> scriptExecutionBeans) throws
+            ScriptException, SimulatorException
     {
         return execServ.eval(transformationScript, "Transformation Script", scriptExecutionBeans);
     }
@@ -130,8 +130,8 @@ public class ConversationScenarioImpl implements ConversationScenario
      * @param scriptExecutionBeans
      * @throws ScriptException
      */
-    public boolean matchesCondition(final Map<String, Object> scriptExecutionBeans)
-            throws ScriptException
+    public boolean matchesCondition(final Map<String, Object> scriptExecutionBeans) throws
+            ScriptException
     {
 
         Object result = execServ.eval(criteriaScript, "Criteria Script", scriptExecutionBeans);

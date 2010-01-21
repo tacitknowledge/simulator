@@ -3,7 +3,12 @@ package com.tacitknowledge.simulator.filetest;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.commons.io.FileUtils;
 
-import javax.jms.*;
+import javax.jms.Connection;
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.MessageProducer;
+import javax.jms.Session;
+import javax.jms.TextMessage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -164,8 +169,8 @@ public final class TestJmsSystemMain
      * @throws JMSException if an error occurs
      */
     public static Connection getConnection(final Boolean isDestinationTopic,
-                                           final ActiveMQConnectionFactory factory)
-                                            throws JMSException
+                                           final ActiveMQConnectionFactory factory) throws
+            JMSException
     {
         Connection conn;
         if (isDestinationTopic)
@@ -185,8 +190,8 @@ public final class TestJmsSystemMain
      * @return MessageProducer object
      * @throws JMSException if an error occurs
      */
-    private static MessageProducer getMessageProducer(final Boolean isDestinationTopic)
-                                            throws JMSException
+    private static MessageProducer getMessageProducer(final Boolean isDestinationTopic) throws
+            JMSException
     {
         if (isDestinationTopic)
         {

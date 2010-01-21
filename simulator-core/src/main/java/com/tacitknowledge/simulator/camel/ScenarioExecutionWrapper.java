@@ -1,14 +1,13 @@
 package com.tacitknowledge.simulator.camel;
 
 import com.tacitknowledge.simulator.Adapter;
-import com.tacitknowledge.simulator.ConversationScenario;
 import com.tacitknowledge.simulator.Conversation;
+import com.tacitknowledge.simulator.ConversationScenario;
 import com.tacitknowledge.simulator.configuration.EventDispatcher;
 import com.tacitknowledge.simulator.configuration.SimulatorEventType;
-import org.apache.log4j.Logger;
 import org.apache.camel.Exchange;
+import org.apache.log4j.Logger;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.Map;
 
@@ -20,6 +19,11 @@ import java.util.Map;
  */
 public class ScenarioExecutionWrapper
 {
+    /**
+     * Logger for the ScenarioExecutionWrapper class.
+     */
+    private static Logger logger  = Logger.getLogger(ScenarioExecutionWrapper.class);
+    
     /**
      * inAdapter adapter which will take the information from the exchange
      * and adapt it to SimulatorPojo for scenario execution. *
@@ -37,12 +41,6 @@ public class ScenarioExecutionWrapper
     private Collection<ConversationScenario> scenarios;
 
     /**
-     * Logger for the ScenarioExecutionWrapper class.
-     */
-    private static Logger logger
-        = Logger.getLogger(ScenarioExecutionWrapper.class);
-
-    /**
      * The conversation related to this execution.
      */
     private Conversation conversation;
@@ -50,9 +48,9 @@ public class ScenarioExecutionWrapper
     /**
      * Constructor for the ScenarioExecutionWrapper.
      *
-     * @param conv
+     * @param conv Conversation
      */
-    public ScenarioExecutionWrapper(Conversation conv)
+    public ScenarioExecutionWrapper(final Conversation conv)
     {
         this.conversation = conv;
 
@@ -62,7 +60,8 @@ public class ScenarioExecutionWrapper
 
         if (this.inAdapter == null || this.outAdapter == null || this.scenarios == null)
         {
-            logger.warn("Something is probably wrong: One of the adapters or scenarios list is null");
+            logger.warn("Something is probably wrong: One of the adapters or scenarios "
+                    + "list is null");
         }
     }
 
@@ -74,9 +73,10 @@ public class ScenarioExecutionWrapper
      * @return
      * @throws Exception in case of error.
      */
-    public void process(Exchange exchange) throws Exception
+    public void process(final Exchange exchange) throws Exception
     {
-        EventDispatcher.getInstance().dispatchEvent(SimulatorEventType.NEW_MESSAGE, this.conversation, exchange);
+        EventDispatcher.getInstance().dispatchEvent(SimulatorEventType.NEW_MESSAGE,
+                this.conversation, exchange);
         /**
          * Beans needed for the script executions service to run the simulation against *
          */
@@ -94,11 +94,13 @@ public class ScenarioExecutionWrapper
                 logger.info("active: " + active + " matches condition: " + matchesCondition);
                 if (active && matchesCondition)
                 {
-                    EventDispatcher.getInstance().dispatchEvent(SimulatorEventType.SCENARIO_MATCHED, this.conversation, exchange);
+                    EventDispatcher.getInstance().dispatchEvent(SimulatorEventType.SCENARIO_MATCHED,
+                            this.conversation, exchange);
 
                     logger.info("Executing the transformation script.");
                     result = scenario.executeTransformation(scriptExecutionBeans);
-                    EventDispatcher.getInstance().dispatchEvent(SimulatorEventType.RESPONSE_BUILT, this.conversation, exchange);
+                    EventDispatcher.getInstance().dispatchEvent(SimulatorEventType.RESPONSE_BUILT,
+                            this.conversation, exchange);
                     break;
                 }
             }

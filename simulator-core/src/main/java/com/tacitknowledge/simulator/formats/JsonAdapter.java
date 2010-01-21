@@ -58,23 +58,21 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
      * Adapter parameters definition.
      */
     private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
-        parameters().
-            add(
-                name(PARAM_JSON_CONTENT).
-                    label("JSON Contents (e.g. employee(s), order(s), etc.)").
-                    required()
-            ).
-            add(
-                name(PARAM_IS_ARRAY).
-                    label("Is JSON content an array? e.g. [ ... ]").
-                    type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN)
-            ).
-            add(
-                name(PARAM_JSON_ARRAY_CONTENT).
-                    label("JSON Array content (What each array element represents. "
-                    +
-                    "e.g.: employee, order. Required if content is array)")
-            );
+            parameters()
+                    .add(
+                            name(PARAM_JSON_CONTENT).
+                                    label("JSON Contents (e.g. employee(s), order(s), etc.)").
+                                    required())
+                    .add(
+                            name(PARAM_IS_ARRAY).
+                                    label("Is JSON content an array? e.g. [ ... ]").
+                                    type(
+                                    ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN))
+                    .add(
+                            name(PARAM_JSON_ARRAY_CONTENT).
+                                    label("JSON Array content (What each array element represents. "
+                                    +
+                                    "e.g.: employee, order. Required if content is array)"));
 
 
     /**
@@ -362,7 +360,6 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
      * @see com.tacitknowledge.simulator.configuration
      *          .ParameterDefinitionBuilder.ParameterDefinition
      */
-    @Override
     public List<List> getParametersList()
     {
         return getParametersDefinitionsAsList(parametersList);
