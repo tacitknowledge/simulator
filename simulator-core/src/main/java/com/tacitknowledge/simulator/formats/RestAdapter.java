@@ -10,13 +10,16 @@ import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
 import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.name;
 import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
 
-import java.util.*;
 
 import org.apache.log4j.Logger;
 import org.apache.camel.Exchange;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Enumeration;
 
 /**
  * Implementation of the Adapter interface for the REST format
@@ -27,17 +30,63 @@ import javax.servlet.http.HttpServletResponse;
 public class RestAdapter extends BaseAdapter implements Adapter<Object>
 {
 
+    /**
+     * property extraction pattern
+     */
     public static final String PARAM_EXTRACTION_PATTERN = "extractionPattern";
+    /**
+     * property object name
+     */
     public static final String PARAM_OBJECT_NAME = "objectName";
+    /**
+     * response property
+     */
     public static final String RESPONSE = "response";
+    /**
+     * request property
+     */
     public static final String REQUEST = "request";
+    /**
+     * body of the request.
+     */
     public static final String BODY = "body";
+    /**
+     * content type for the response.
+     */
     public static final String CONTENT_TYPE = "contentType";
+    /**
+     * response code.
+     */
     public static final String STATUS_CODE = "statusCode";
+    /**
+     * this is the default value for the status code.
+     */
     public static final String DEFAULT_STATUS_CODE = "200";
+    /**
+     * used for spliting the url.
+     */
     public static final String DEFAULT_EXTRACTION_PATTERN = "/";
+    /**
+     * default content type.
+     */
     public static final String HTML_CONTENT_TYPE = "text/html";
+    /**
+     * default object name available in the scenario scripts.
+     */
     public static final String DEFAULT_OBJECT_NAME = "obj";
+    /**
+     * Logger for this class.
+     */
+    private static Logger logger = Logger.getLogger(RestAdapter.class);
+    /**
+     * params property of the request
+     */
+    private static final String PARAMS = "params";
+    /**
+     * method property of the request
+     */
+    private static final String METHOD = "method";
+
 
     /**
      * Adapter parameters definition.
@@ -46,22 +95,18 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object>
             parameters()
                     .add(
                             name(PARAM_EXTRACTION_PATTERN).
-                                    label("Pattern used to extract values from the url. (e.g. URL: '/system/1/' with pattern:'/system/:system_id' will generate an " +
-                                            "attribute called 'system_id' equals to '1', and you can access it from your scenario scripts like this => " +
-                                            "obj.request.params[:system_id] )").
+                                    label("Pattern used to extract values from the url. (e.g. "
+                                          + "URL: '/system/1/' with pattern:'/system/:system_id' "
+                                          + "will generate an attribute called 'system_id' equals "
+                                          + "to '1'. You can access it from your scenario scripts "
+                                          + "like this => obj.request.params[:system_id] )").
+                                    inOnly().required())
+                    .add(
+                            name(PARAM_OBJECT_NAME).
+                                    label("Object Name to access attributes from the execution "
+                                         + "script. Defaults to 'obj'").
                                     inOnly().required()
-                    ).add(
-                    name(PARAM_OBJECT_NAME).
-                            label("Object Name to access attributes from the execution script. Defaults to 'obj'").
-                            inOnly().required()
             );
-
-    /**
-     * Logger for this class.
-     */
-    private static Logger logger = Logger.getLogger(RestAdapter.class);
-    private static final String PARAMS = "params";
-    private static final String METHOD = "method";
 
     /**
      * @inheritDoc
@@ -72,16 +117,19 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object>
     }
 
     /**
-     * @inheritDoc
+     * Constructor
+     * @param bound specifies if adapter is inbound or outbound
+     * @param parameters base parameters for this adapter
      */
-    public RestAdapter(int bound, Map<String, String> parameters)
+    public RestAdapter(final int bound, final Map<String, String> parameters)
     {
         super(bound, parameters);
     }
 
     /**
-     * @throws ConfigurableException
      * @inheritDoc
+     * @throws ConfigurableException If any required parameter has not been set.
+     *
      */
     @Override
     public void validateParameters() throws ConfigurableException
@@ -114,11 +162,15 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object>
         SimulatorPojo pojo = new StructuredSimulatorPojo();
 
         Map attributes = new HashMap<String, Object>();
-        String parameterExtractionPattern = getParamValue(PARAM_EXTRACTION_PATTERN) == null ? DEFAULT_EXTRACTION_PATTERN : getParamValue(PARAM_EXTRACTION_PATTERN);
+        String parameterExtractionPattern = getParamValue(PARAM_EXTRACTION_PATTERN) == null ?
+                                            DEFAULT_EXTRACTION_PATTERN :
+                                            getParamValue(PARAM_EXTRACTION_PATTERN);
         attributes.put(REQUEST, populateRequestAttributes(request, parameterExtractionPattern));
         attributes.put(RESPONSE, populateResponseAttributes());
 
-        String parameterObjectName = getParamValue(PARAM_OBJECT_NAME) == null ? DEFAULT_OBJECT_NAME : getParamValue(PARAM_OBJECT_NAME);
+        String parameterObjectName = getParamValue(PARAM_OBJECT_NAME) == null ?
+                                     DEFAULT_OBJECT_NAME :
+                                     getParamValue(PARAM_OBJECT_NAME);
         pojo.getRoot().put(parameterObjectName, attributes);
 
         logger.debug("Finished generating SimulatorPojo from REST content");
@@ -141,13 +193,15 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object>
     }
 
     /**
-     * Populate a map with values coming from the HTTP request plus the ones coming from the REST request.
+     * Populate a map with values coming from the HTTP request plus the ones coming from the
+     * REST request.
      *
      * @param request           - HttpServlet Request
      * @param extractionPattern - Pattern used to parse REST URL
      * @return Map of String, Object entries
      */
-    private Map<String, Object> populateRequestAttributes(HttpServletRequest request, String extractionPattern)
+    private Map<String, Object> populateRequestAttributes(HttpServletRequest request,
+                                                          String extractionPattern)
     {
         Map<String, Object> requestMap = new HashMap<String, Object>();
 
@@ -164,7 +218,8 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object>
                 paramMap.put(element, request.getParameter(element));
             }
 
-            Map<String, Object> values = extractValuesFromUri(request.getRequestURI(), extractionPattern);
+            Map<String, Object> values =
+                    extractValuesFromUri(request.getRequestURI(), extractionPattern);
 
             if (null != values && !values.isEmpty())
             {
@@ -180,7 +235,8 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object>
      * @inheritDoc
      */
     @Override
-    protected Object getString(SimulatorPojo scriptExecutionResult, Exchange exchange) throws FormatAdapterException
+    protected Object getString(SimulatorPojo scriptExecutionResult, Exchange exchange)
+            throws FormatAdapterException
     {
 
         HttpServletResponse response = null;
