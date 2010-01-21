@@ -78,6 +78,30 @@ public class RestAdapterTest {
         //Testing the default values for content type and status code
         assertEquals("text/html", responseMap.get("contentType"));
         assertEquals("200", responseMap.get("statusCode"));
+
+
+        //Test now with a url that comes with format
+        stub(request.getRequestURI()).toReturn("/system/99/conversation/2435.xml");
+        stub(request.getMethod()).toReturn("POST");
+        exchange = new DefaultExchange(context);
+        message = new DefaultMessage();
+        message.setBody(request);
+        exchange.setIn(message);
+
+        pojo = adapter.createSimulatorPojo(exchange);
+
+        map = pojo.getRoot();
+
+        obj = (Map<String, Object>) map.get("obj");
+
+        requestMap = (Map<String, Object>) obj.get("request");
+
+        requestParams = (Map<String, Object>) requestMap.get("params");
+
+        assertEquals("99", requestParams.get("system_id"));
+        assertEquals("2435", requestParams.get("conv_id"));
+        assertEquals("POST", requestMap.get("method"));
+
     }
 
 }

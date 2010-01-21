@@ -43,17 +43,17 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object>
      * Adapter parameters definition.
      */
     private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
-        parameters()
-            .add(
-                name(PARAM_EXTRACTION_PATTERN).
-                    label("Pattern used to extract values from the url. (e.g. URL: '/system/1/' with pattern:'/system/:system_id' will generate an " +
-                            "attribute called 'system_id' equals to '1', and you can access it from your scenario scripts like this => " +
-                            "obj.request.params[:system_id] )").
-                    inOnly().required()
-             ).add(
-                name(PARAM_OBJECT_NAME).
-                    label("Object Name to access attributes from the execution script. Defaults to 'obj'").
-                    inOnly().required()
+            parameters()
+                    .add(
+                            name(PARAM_EXTRACTION_PATTERN).
+                                    label("Pattern used to extract values from the url. (e.g. URL: '/system/1/' with pattern:'/system/:system_id' will generate an " +
+                                            "attribute called 'system_id' equals to '1', and you can access it from your scenario scripts like this => " +
+                                            "obj.request.params[:system_id] )").
+                                    inOnly().required()
+                    ).add(
+                    name(PARAM_OBJECT_NAME).
+                            label("Object Name to access attributes from the execution script. Defaults to 'obj'").
+                            inOnly().required()
             );
 
     /**
@@ -66,7 +66,8 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object>
     /**
      * @inheritDoc
      */
-    public RestAdapter() {
+    public RestAdapter()
+    {
         super();
     }
 
@@ -83,15 +84,18 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object>
      * @inheritDoc
      */
     @Override
-    public void validateParameters() throws ConfigurableException {
+    public void validateParameters() throws ConfigurableException
+    {
 
     }
 
     /**
      * Get all parameters for this adapter
+     *
      * @return List of Lists
      */
-    public List<List> getParametersList() {
+    public List<List> getParametersList()
+    {
         return getParametersDefinitionsAsList(parametersList);
     }
 
@@ -100,7 +104,8 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object>
      * {@inheritDoc}
      */
     @Override
-     protected SimulatorPojo createSimulatorPojo(Exchange o) throws FormatAdapterException {
+    protected SimulatorPojo createSimulatorPojo(Exchange o) throws FormatAdapterException
+    {
 
         logger.debug("Attempting to generate SimulatorPojo from REST content:\n" + o);
 
@@ -123,9 +128,11 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object>
 
     /**
      * Populate a map with default response values for status code, content type and response body.
+     *
      * @return Map of String, Object entries
      */
-    private Map<String, Object> populateResponseAttributes() {
+    private Map<String, Object> populateResponseAttributes()
+    {
         Map<String, Object> responseMap = new HashMap<String, Object>();
         responseMap.put(STATUS_CODE, DEFAULT_STATUS_CODE);
         responseMap.put(CONTENT_TYPE, HTML_CONTENT_TYPE);
@@ -135,27 +142,32 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object>
 
     /**
      * Populate a map with values coming from the HTTP request plus the ones coming from the REST request.
-     * @param request - HttpServlet Request
+     *
+     * @param request           - HttpServlet Request
      * @param extractionPattern - Pattern used to parse REST URL
      * @return Map of String, Object entries
      */
-    private Map<String, Object> populateRequestAttributes(HttpServletRequest request, String extractionPattern) {
+    private Map<String, Object> populateRequestAttributes(HttpServletRequest request, String extractionPattern)
+    {
         Map<String, Object> requestMap = new HashMap<String, Object>();
 
-        Map<String, Object> paramMap = new HashMap<String,Object>();
-        if (request != null) {
+        Map<String, Object> paramMap = new HashMap<String, Object>();
+        if (request != null)
+        {
 
             requestMap.put(METHOD, request.getMethod());
 
-            Enumeration enumer  = request.getParameterNames();
-            while(enumer.hasMoreElements()){
-                String element = (String)enumer.nextElement();
+            Enumeration enumer = request.getParameterNames();
+            while (enumer.hasMoreElements())
+            {
+                String element = (String) enumer.nextElement();
                 paramMap.put(element, request.getParameter(element));
             }
 
             Map<String, Object> values = extractValuesFromUri(request.getRequestURI(), extractionPattern);
 
-            if(null != values && !values.isEmpty()) {
+            if (null != values && !values.isEmpty())
+            {
                 paramMap.putAll(values);
             }
         }
@@ -168,21 +180,25 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object>
      * @inheritDoc
      */
     @Override
-    protected Object getString(SimulatorPojo scriptExecutionResult, Exchange exchange) throws FormatAdapterException {
+    protected Object getString(SimulatorPojo scriptExecutionResult, Exchange exchange) throws FormatAdapterException
+    {
 
         HttpServletResponse response = null;
         String body = "";
         //get the first entry
         Map<String, Object> pojo = null;
-        if(scriptExecutionResult.getRoot() != null){
-            for(Map.Entry<String, Object> entry : scriptExecutionResult.getRoot().entrySet()){
+        if (scriptExecutionResult.getRoot() != null)
+        {
+            for (Map.Entry<String, Object> entry : scriptExecutionResult.getRoot().entrySet())
+            {
                 pojo = (Map<String, Object>) entry.getValue();
                 break;
             }
         }
 
-        if(pojo != null && pojo.size() > 0) {
-            Map<String,Object> responseMap = (Map<String, Object>) pojo.get(RESPONSE);
+        if (pojo != null && pojo.size() > 0)
+        {
+            Map<String, Object> responseMap = (Map<String, Object>) pojo.get(RESPONSE);
             body = (String) responseMap.get(BODY);
             String contentType = (String) responseMap.get(CONTENT_TYPE);
             String statusCode = (String) responseMap.get(STATUS_CODE);
@@ -197,24 +213,35 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object>
 
     /**
      * Extracts information from the URL given a REST pattern
-     * @param url URL
+     *
+     * @param url     URL
      * @param pattern pattern to use
      * @return Map with parameters read from the URL
      */
-    private Map<String, Object> extractValuesFromUri(String url, String pattern) {
-
-
+    private Map<String, Object> extractValuesFromUri(String url, String pattern)
+    {
         String[] patternArr = pattern.split(DEFAULT_EXTRACTION_PATTERN);
         Object[] urlArr = url.split(DEFAULT_EXTRACTION_PATTERN);
         Map<String, Object> parameterMap = new HashMap<String, Object>();
 
         int patternArrLength = patternArr.length;
-        for(int i = 0; i < patternArrLength ; i ++){
+        for (int i = 0; i < patternArrLength; i++)
+        {
             String str = patternArr[i];
-            if(str.startsWith(":")){
-                try{
-                    parameterMap.put(str.substring(1), urlArr[i]);
-                }catch(ArrayIndexOutOfBoundsException e){
+            if (str.startsWith(":"))
+            {
+                try
+                {
+                    String value = (String) urlArr[i];
+                    if (value.contains("."))
+                    {
+                        String[] arr = value.split("\\.");
+                        value = arr[0];
+                    }
+                    parameterMap.put(str.substring(1), value);
+                }
+                catch (ArrayIndexOutOfBoundsException e)
+                {
                     //This is fine, since it means that the url is shorter that the pattern.
                     //We just swallow the exception and continue.
                 }
