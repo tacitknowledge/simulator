@@ -232,7 +232,7 @@ class ConversationsControllerTest < ActionController::TestCase
 
     assert(json['data'].length > 0)
 
-    # Parameter defintions should be arrays with 5 strings
+    # Parameter defintions should be arrays with 6 strings
     param1 = json['data'][0]
     assert(param1.length == 6)
   end
@@ -245,7 +245,7 @@ class ConversationsControllerTest < ActionController::TestCase
 
     assert(json['data'].length > 0)
 
-    # Parameter defintions should be arrays with 5 strings
+    # Parameter defintions should be arrays with 6 strings
     param1 = json['data'][0]
     assert(param1.length == 6)
   end
@@ -265,9 +265,9 @@ class ConversationsControllerTest < ActionController::TestCase
         :format_in_csvContent => 'employees',
         :format_out_validate => 'true'
 
-   assert_response :success
-   json = JSON.parse(@response.body)
-   json_conv = json['data']
+    assert_response :success
+    json = JSON.parse(@response.body)
+    json_conv = json['data']
 
     # Assert we got a disabled new conversation
     assert json['success'] == true
