@@ -25,13 +25,13 @@ import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFactory;
+import javax.xml.soap.SOAPFault;
 import javax.xml.soap.SOAPMessage;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
@@ -51,9 +51,29 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
     public static final String PARAM_WSDL_URL = "wdslURL";
 
     /**
-     * Payload key
+     * Default key to identify PAYLOAD Map withing SimulatorPojo's root
      */
     public static final String DEFAULT_PAYLOAD_KEY = "payload";
+
+    /**
+     * sOAP Fault key
+     */
+    public static final String FAULT = "fault";
+
+    /**
+     * SOAP FaultCode key
+     */
+    public static final String FAULT_CODE = "faultCode";
+
+    /**
+     * SOAP FaultString key
+     */
+    public static final String FAULT_STRING = "faultString";
+
+    /**
+     * SOAP FaultActor key
+     */
+    public static final String FAULT_ACTOR = "faultActor;";
 
     /**
      * Logger for this class.
@@ -93,6 +113,11 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
      *  Payload NSUri
      */
     private String payloadNSUri;
+
+    /**
+     * SOAP message body
+     */
+    private SOAPMessage soapMessage;
 
     /**
      * Available operations defined in the provided WSDL.
@@ -159,7 +184,7 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
      * @inheritDoc
      */
     @Override
-    protected Object getString(SimulatorPojo pojo, Exchange exchange)
+    protected String getString(SimulatorPojo pojo, Exchange exchange)
             throws FormatAdapterException
     {
         logger.debug("Attempting to generate SOAP message from SimulatorPojo:\n" + pojo);
@@ -173,9 +198,6 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
         // --- Grab the PAYLOAD results Map
         Map<String, Map> payload = (Map<String, Map>) pojo.getRoot().get(DEFAULT_PAYLOAD_KEY);
 
-        // --- Validate the result method and parameters
-        validateOperationsAndParameters(payload);
-
         // --- Will need it to get the SOAPMessage as a String
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
@@ -185,41 +207,73 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
             soapFactory = SOAPFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
             messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
 
-            SOAPMessage message = messageFactory.createMessage();
-            SOAPBody body = message.getSOAPBody();
+            soapMessage = messageFactory.createMessage();
+            SOAPBody soapBody = soapMessage.getSOAPBody();
 
-            // --- Add the payload's content to the SOAP body
-            for (Map.Entry<String, Map> payloadItem : payload.entrySet())
+            // --- First things first. Check if we got a fault code & string...
+            Map<String, String> fault = (Map<String, String>) payload.get(FAULT);
+            if (fault != null &&
+                    !fault.get(FAULT_CODE).isEmpty() &&
+                    !fault.get(FAULT_STRING).isEmpty())
             {
-                Map<String, Object> itemChildren = (Map<String, Object>) payloadItem.getValue();
-
-                SOAPBodyElement elem = body.addBodyElement(
-                        getQName(payloadItem.getKey() + "Response"));
-
-                // --- Now add to the element all of the item's children
-                for (Map.Entry<String, Object> child : itemChildren.entrySet())
+                // --- If we do, we'll return a SOAP FAULT instead of a regular payload
+                addFaultToResponse(
+                        fault.get(FAULT_CODE),
+                        fault.get(FAULT_STRING),
+                        fault.get(FAULT_ACTOR));
+            }
+            else
+            {
+                // --- Validate the result method and parameters
+                if (validateOperationsAndParameters(payload))
                 {
-                    String childName = child.getKey();
-                    Object childValue = child.getValue();
-                    
-                    if (childValue instanceof Map)
+                    // --- If validation was successful,
+                    // add the payload's content to the SOAP body
+                    for (Map.Entry<String, Map> payloadItem : payload.entrySet())
                     {
-                        elem.addChildElement(
-                                getSOAPElementFromMap(
-                                        childName,
-                                        (Map<String, Object>) childValue));
-                    }
-                    else if (childValue instanceof String)
-                    {
-                        elem.addChildElement(
-                                getSOAPElementFromString(childName, childValue.toString())
-                        );
+                        String methodName = payloadItem.getKey();
+                        Map<String, Object> itemChildren =
+                                (Map<String, Object>) payloadItem.getValue();
+
+                        BindingOperation availableOp = availableOps.get(methodName);
+                        Map<String, Part> outputParts =
+                                (Map<String, Part>)
+                                        availableOp.getOperation().getOutput().
+                                                getMessage().getParts();
+
+                        SOAPBodyElement elem = soapBody.addBodyElement(
+                                getQName(methodName + "Response"));
+
+                        // --- Now add to the element the response parameters
+                        for (Map.Entry<String, Object> child : itemChildren.entrySet())
+                        {
+                            String childName = child.getKey();
+                            Object childValue = child.getValue();
+
+                            // --- Add only the response parts defined in the WSDL
+                            if (outputParts.containsKey(childName))
+                            {
+                                if (childValue instanceof Map)
+                                {
+                                    elem.addChildElement(
+                                            getSOAPElementFromMap(
+                                                    childName,
+                                                    (Map<String, Object>) childValue));
+                                }
+                                else if (childValue instanceof String)
+                                {
+                                    elem.addChildElement(
+                                            getSOAPElementFromString(
+                                                    childName,
+                                                    childValue.toString())
+                                    );
+                                }
+                            }
+                        }
                     }
                 }
             }
-
-            StringWriter writer = new StringWriter();
-            message.writeTo(outputStream);
+            soapMessage.writeTo(outputStream);
         }
         catch(SOAPException se)
         {
@@ -301,16 +355,16 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
             // --- So, now we got the SOAP message parsed.
             SOAPBody body = message.getSOAPBody();
 
-            pojo.getRoot().put(payloadKey, getStructuredChilds(body));
+            Map<String, Map> payload = (Map<String, Map>) getStructuredChilds(body);
 
             // --- Check that the passed methods/parameters are WSDL-valid
-            validateOperationsAndParameters((Map<String, Map>) pojo.getRoot()
-                    .get(DEFAULT_PAYLOAD_KEY));
+            validateOperationsAndParameters(payload);
+
+            pojo.getRoot().put(payloadKey, addResponseParametersAndFault(payload));
         }
         catch(SOAPException se)
         {
-            String errorMessage = "Unexpected SOAP exception trying to generate SimulatorPojo: "
-                    + se.getMessage();
+            String errorMessage = "Unexpected SOAP exception trying to generate SimulatorPojo: " + se.getMessage();
             logger.error(errorMessage, se);
             throw new FormatAdapterException(errorMessage, se);
         }
@@ -395,15 +449,17 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
      * 
      * @param payload Map containing SOAP message's payload
      * @throws FormatAdapterException If any validation fails.
+     * @throws SOAPException If any SOAP generation error occurs
      */
-    private void validateOperationsAndParameters(Map<String, Map> payload)
-            throws FormatAdapterException
+    private boolean validateOperationsAndParameters(Map<String, Map> payload)
+            throws FormatAdapterException, SOAPException
     {
         // --- Review all Methods passed in the SOAP message
         for (Map.Entry<String, Map> operationEntry :
                 payload.entrySet())
         {
             String opName = operationEntry.getKey();
+            Map<String, Object> opParameters = operationEntry.getValue();
             
             if (!availableOps.containsKey(opName))
             {
@@ -427,21 +483,29 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
             // bound context
             // --- Everything in the payload Map, should be a Map in turn :
             //      {payload} >> {operationEntry} >> {part}
-            Map<String, Object> op = (Map<String, Object>) operationEntry.getValue();
-            for (Map.Entry<String, Object> part : op.entrySet())
+            for (Part partInOp : partsInAvailableOp.values())
             {
-                // --- If the passed part if not part of the operationEntry, throw an error
-                if (!partsInAvailableOp.containsKey(part.getKey()))
+                if (!opParameters.containsKey(partInOp.getName()))
                 {
-                    String errorMsg = "The parameter " + part.getKey() +
-                            " passed for method " + opName +
-                            " in the SOAP message is not defined in the provided WSDL.";
-
+                    String bound = getBound() == Configurable.BOUND_IN ? "inbound" : "outbound";
+                    // --- If the defined method part is not in the message, throw an error
+                    String errorMsg = "Missing required "+ bound +
+                            " parameter (" + partInOp.getName() +
+                            ") for method " + opName + " as defined in the provided WSDL";
                     logger.error(errorMsg);
+
+                    // --- If this is an outbound adapter, return a FAULT message in case of
+                    // missing params/parts
+                    if (getBound() == Configurable.BOUND_OUT)
+                    {
+                        addFaultToResponse("Sender", errorMsg, null);
+                        return false;
+                    }
                     throw new FormatAdapterException(errorMsg);
                 }
             }
         }
+        return true;
     }
 
     /**
@@ -474,5 +538,46 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
             qname = new QName(this.payloadNSUri, payloadNS + ":" + localPart);
         }
         return qname;
+    }
+
+    private Map<String, Map> addResponseParametersAndFault(Map<String, Map> payload)
+    {
+        // --- Set the response parameters to the invoked method in the payload
+        for (Map.Entry<String, Map> methodEntry : payload.entrySet())
+        {
+            Map<String, Object> methodParams = methodEntry.getValue();
+
+            BindingOperation availableOp = availableOps.get(methodEntry.getKey());
+
+            // --- Get the response parameters and add them to the current method
+            Map<String, Part> parts =
+                    availableOp.getOperation().getOutput().getMessage().getParts();
+
+            for (Part part : parts.values())
+            {
+                methodParams.put(part.getName(), "");
+            }
+        }
+
+        // --- Add the fault object to the POJO
+        Map<String, String> fault = new HashMap<String, String>();
+        fault.put(FAULT_CODE, "");
+        fault.put(FAULT_STRING, "");
+        fault.put(FAULT_ACTOR, "");
+        payload.put(FAULT, fault);
+
+        return payload;
+    }
+
+    private void addFaultToResponse(String code, String string, String actor)
+            throws SOAPException
+    {
+        SOAPFault fault = soapMessage.getSOAPBody().addFault();
+        fault.setFaultCode(new QName(SOAPConstants.URI_NS_SOAP_1_2_ENVELOPE, code));
+        fault.setFaultString(string);
+        if (actor != null && !actor.isEmpty())
+        {
+            fault.setFaultActor(actor);
+        }
     }
 }

@@ -205,7 +205,7 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
      * @throws FormatAdapterException if an error occurs
      */
     @Override
-    protected Object getString(final SimulatorPojo pojo, final Exchange exchange)
+    protected String getString(final SimulatorPojo pojo, final Exchange exchange)
         throws FormatAdapterException
     {
         try

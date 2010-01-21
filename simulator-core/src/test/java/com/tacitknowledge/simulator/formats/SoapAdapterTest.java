@@ -93,6 +93,9 @@ public class SoapAdapterTest extends TestCase
             assertTrue("Expecting 'sayHello' method in payload", payload.containsKey("sayHello"));
             Map<String, Object> sayHello = (Map<String, Object>) payload.get("sayHello");
             assertTrue("Expecting 'firstName' param in 'sayHello' method", sayHello.containsKey("firstName"));
+
+            // --- We also expect to get the fault object
+            assertNotNull(payload.get(SoapAdapter.FAULT));
         }
         catch (Exception e)
         {
@@ -131,9 +134,38 @@ public class SoapAdapterTest extends TestCase
         // --- Now invoke the getString method
         try
         {
-            String soapMessage = adapter.getString(pojo, exchange).toString();
+            String soapMessage = adapter.getString(pojo, exchange);
 
             System.out.println(soapMessage);
+        }
+        catch(FormatAdapterException fae)
+        {
+            fae.printStackTrace();
+            fail("Not expecting exception, yet got: " + fae.getMessage());
+        }
+    }
+
+    public void testGetSoapFaultResponse()
+    {
+        setupOutboundSoapAdapter();
+
+        SimulatorPojo pojo = new StructuredSimulatorPojo();
+        pojo.getRoot().put(
+                SoapAdapter.DEFAULT_PAYLOAD_KEY,
+                TestHelper.getMapOneEntry(
+                    "sayHello",
+                    TestHelper.getMapOneEntry(
+                            "missing",
+                            "Missed you!"))
+                );
+
+        // --- Now invoke the getString method
+        try
+        {
+            String soapMessage = adapter.getString(pojo, exchange);
+
+            System.out.println(soapMessage);
+            assertTrue("Expecting env:Fault tag", soapMessage.indexOf("<env:Fault>") > -1);
         }
         catch(FormatAdapterException fae)
         {

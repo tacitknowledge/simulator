@@ -85,7 +85,7 @@ public abstract class BaseAdapter extends BaseConfigurable implements Adapter<Ob
      * @return A String object in the requested format representing the script result
      * @throws FormatAdapterException If any other error occurs
      */
-    protected abstract Object getString(SimulatorPojo scriptExecutionResult, Exchange exchange)
+    protected abstract String getString(SimulatorPojo scriptExecutionResult, Exchange exchange)
             throws FormatAdapterException;
 
     private SimulatorPojo getSimulatorPojo(Object object) throws ObjectMapperException

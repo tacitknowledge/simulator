@@ -140,7 +140,7 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
      * @throws FormatAdapterException - If an exception occurs when converting a pojo into a string
      */
     @Override
-    protected Object getString(final SimulatorPojo simulatorPojo, Exchange exchange)
+    protected String getString(final SimulatorPojo simulatorPojo, Exchange exchange)
         throws FormatAdapterException
     {
         if (simulatorPojo.getRoot().isEmpty())

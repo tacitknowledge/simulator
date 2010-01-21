@@ -82,7 +82,7 @@ public class PlainTextAdapter extends BaseAdapter
      *          If any other error occurs
      */
     @Override
-    protected Object getString(SimulatorPojo scriptExecutionResult, Exchange exchange)
+    protected String getString(SimulatorPojo scriptExecutionResult, Exchange exchange)
     {
         return null;
     }

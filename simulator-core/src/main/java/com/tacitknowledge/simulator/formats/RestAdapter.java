@@ -235,9 +235,7 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object>
      * @inheritDoc
      */
     @Override
-    protected Object getString(SimulatorPojo scriptExecutionResult, Exchange exchange)
-            throws FormatAdapterException
-    {
+    protected String getString(SimulatorPojo scriptExecutionResult, Exchange exchange) throws FormatAdapterException {
 
         HttpServletResponse response = null;
         String body = "";

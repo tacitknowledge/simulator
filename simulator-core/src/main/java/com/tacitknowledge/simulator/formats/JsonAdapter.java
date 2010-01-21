@@ -165,9 +165,11 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
      * @throws FormatAdapterException if a format adapter error occurs
      */
     @Override
-    protected Object getString(final SimulatorPojo simulatorPojo, Exchange exchange)
+    protected String getString(final SimulatorPojo simulatorPojo, Exchange exchange)
             throws FormatAdapterException
     {
+        String jsonString;
+
         // --- The SimulatorPojo for JSONAdapter should contain only one key in its root
         if (simulatorPojo.getRoot().isEmpty() || simulatorPojo.getRoot().size() > 1)
         {
@@ -192,15 +194,15 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
             // (key should be #PARAM_JSON_ARRAY_CONTENT)
             List items = (List) map.get(getParamValue(PARAM_JSON_ARRAY_CONTENT));
             JSONArray jsonArray = new JSONArray(items);
-            jsonString1 = jsonArray.toString();
+            jsonString = jsonArray.toString();
         }
         else
         {
             // ...otherwise, go with the default JSONObject
             JSONObject jsonObject = new JSONObject(map);
-            jsonString1 = jsonObject.toString();
+            jsonString = jsonObject.toString();
         }
-        String jsonString = jsonString1;
+
         return jsonString;
     }
 
