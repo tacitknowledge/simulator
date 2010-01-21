@@ -201,7 +201,7 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object>
      * @param pattern pattern to use
      * @return Map with parameters read from the URL
      */
-    protected Map<String, Object> extractValuesFromUri(String url, String pattern) {
+    private Map<String, Object> extractValuesFromUri(String url, String pattern) {
 
 
         String[] patternArr = pattern.split(DEFAULT_EXTRACTION_PATTERN);

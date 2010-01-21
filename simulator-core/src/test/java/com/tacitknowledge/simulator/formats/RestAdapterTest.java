@@ -1,12 +1,24 @@
 package com.tacitknowledge.simulator.formats;
 
 import com.tacitknowledge.simulator.FormatAdapterException;
+import com.tacitknowledge.simulator.SimulatorPojo;
+import junit.framework.TestCase;
+import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
+import org.apache.camel.Message;
+import org.apache.camel.impl.DefaultCamelContext;
+import org.apache.camel.impl.DefaultExchange;
+import org.apache.camel.impl.DefaultMessage;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.stub;
 import org.junit.Test;
-import static org.junit.Assert.assertNotNull;
+import org.junit.Before;
 import static org.junit.Assert.assertEquals;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Enumeration;
 
 import static junit.framework.Assert.assertNull;
 
@@ -19,67 +31,53 @@ public class RestAdapterTest {
 
     private RestAdapter adapter;
 
+    @Before
     public void setUp()
     {
         adapter = (RestAdapter) AdapterFactory.getInstance().getAdapter(FormatConstants.REST);
     }
 
-    public void testCreateSimulatorPojo() throws FormatAdapterException {
-        //TODO in progress
-    }
-
     @Test
-    public void testUrlPatternExtract(){
-        String url = "/something/2/another/4";
-        String pattern = "/something/:something_id/another/:another_id";
+    public void testCreateSimulatorPojo() throws FormatAdapterException {
+        Map<String, String> params = new HashMap<String, String>();
+        params.put(RestAdapter.PARAM_EXTRACTION_PATTERN, "/system/:system_id/conversation/:conv_id");
 
-        Map<String, Object> parameterMap = extractValuesFromUrl(url, pattern);
-        assertNotNull("property something_id does not exist", parameterMap.get("something_id"));
-        assertEquals("2", parameterMap.get("something_id"));
-        assertNotNull("property another_id does not exist", parameterMap.get("another_id"));
-        assertEquals("4", parameterMap.get("another_id"));
+        adapter.setParameters(params);
 
-        String url2 = "/something/1";
-        String pattern2 = "/something/:something_id/another/:another_id";
+        //Mocking HTTP Request
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        stub(request.getRequestURI()).toReturn("/system/1/conversation/23");
+        stub(request.getMethod()).toReturn("GET");
+        Enumeration enumer = mock(Enumeration.class);
+        stub(enumer.hasMoreElements()).toReturn(false);
+        stub(request.getParameterNames()).toReturn(enumer);
 
-        parameterMap = extractValuesFromUrl(url2, pattern2);
-        assertNotNull("parametermap must not be null", parameterMap);
-        assertNotNull("property something_id does not exist", parameterMap.get("something_id"));
-        assertEquals("1", parameterMap.get("something_id"));
-        assertNull("property another_id should not exist", parameterMap.get("another_id"));
+        CamelContext context = new DefaultCamelContext();
+        Exchange exchange = new DefaultExchange(context);
+        Message message = new DefaultMessage();
+        message.setBody(request);
+        exchange.setIn(message);
 
-        String url3 = "/something/198/anothething/yeah";
-        String pattern3 = "/something/:something_id";
+        SimulatorPojo pojo = adapter.createSimulatorPojo(exchange);
 
-        parameterMap = extractValuesFromUrl(url3, pattern3);
-        assertNotNull("parametermap must not be null", parameterMap);
-        assertNotNull("property something_id does not exist", parameterMap.get("something_id"));
-        assertEquals("198", parameterMap.get("something_id"));
-        assertEquals(1, parameterMap.size());
+        Map<String, Object> map = pojo.getRoot();
 
-    }
+        Map<String, Object> obj = (Map<String, Object>) map.get("obj");
 
+        Map<String, Object> requestMap = (Map<String, Object>) obj.get("request");
 
+        Map<String, Object> responseMap = (Map<String, Object>) obj.get("response");
 
-    private Map<String, Object> extractValuesFromUrl(String url, String pattern) {
-        String[] patternArr = pattern.split("/");
-        String[] urlArr = url.split("/");
-        Map<String, Object> parameterMap = new HashMap<String, Object>();
+        Map<String, Object> requestParams = (Map<String, Object>) requestMap.get("params");
 
-        int patternArrLength = patternArr.length;
-        for(int i = 0; i < patternArrLength ; i ++){
-            String str = patternArr[i];
-            if(str.startsWith(":")){
-                try{
-                    parameterMap.put(str.substring(1), urlArr[i]);
-                }catch(ArrayIndexOutOfBoundsException e){
-                    //This is fine, since it means that the url is shorter that the pattern.
-                    //We just swallow the exception and continue.
-                }
-            }
-        }
+        //Testing values extracted from the url
+        assertEquals("1", requestParams.get("system_id"));
+        assertEquals("23", requestParams.get("conv_id"));
+        assertEquals("GET", requestMap.get("method"));
 
-        return parameterMap;  //To change body of created methods use File | Settings | File Templates.
+        //Testing the default values for content type and status code
+        assertEquals("text/html", responseMap.get("contentType"));
+        assertEquals("200", responseMap.get("statusCode"));
     }
 
 }
