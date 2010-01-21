@@ -6,11 +6,12 @@ import com.tacitknowledge.simulator.Conversation;
 import com.tacitknowledge.simulator.RouteManager;
 import com.tacitknowledge.simulator.TestHelper;
 import com.tacitknowledge.simulator.Transport;
-
-import junit.framework.TestCase;
+import org.apache.camel.CamelContext;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.Ignore;
+
+import static org.junit.Assert.assertEquals;
 
 import com.tacitknowledge.simulator.impl.ConversationImpl;
 import com.tacitknowledge.simulator.camel.RouteManagerImpl;
@@ -31,16 +32,16 @@ import java.io.ByteArrayInputStream;
 
 /**
  * @author Daniel Valencia (mailto:dvalencia@tacitknowledge.com)
- *         <p/>
- *         This class is used to test the Soap Transport in the context of our simulator environment.
+ *
+ * This class is used to test the Soap Transport in the context of our simulator environment.
  */
-public class SoapTransportIntegrationTest extends TestCase
-{
-    private Transport inTransport;
-    private Transport outTransport;
-    private Adapter inAdapter;
-    private Adapter outAdapter;
-    private RouteManager routeManager;
+public class SoapTransportIntegrationTest {
+    CamelContext context;
+    Transport inTransport;
+    Transport outTransport;
+    Adapter inAdapter;
+    Adapter outAdapter;
+    RouteManager routeManager;
 
     private static final String SOAP_FILE = "soap_test.xml";
 
@@ -50,8 +51,7 @@ public class SoapTransportIntegrationTest extends TestCase
     private static final String RESPONSE_GREETING = "HELLLLLLLOOWWWWWW";
 
     @Before
-    public void setup()
-    {
+    public void setup(){
         inTransport = TransportFactory.getInstance().getTransport(TransportConstants.SOAP);
         outTransport = TransportFactory.getInstance().getTransport(TransportConstants.SOAP);
         inAdapter = new SoapAdapter();
@@ -59,10 +59,15 @@ public class SoapTransportIntegrationTest extends TestCase
         routeManager = new RouteManagerImpl();
     }
 
+    @Test
+    public void testTemporary()
+    {
+        assertEquals("Me", "Me");
+    }
+
     @Ignore("Ignoring until soap transport is ready.")
     @Test
-    public void succesfulSoapTest() throws Exception
-    {
+    public void succesfulSoapTest() throws Exception{
 
         Map<String, String> transportParams = new HashMap<String, String>();
         transportParams.put(HttpTransport.PARAM_RESOURCE_URI, "/soapService");
@@ -81,10 +86,10 @@ public class SoapTransportIntegrationTest extends TestCase
         outAdapter.setBoundAndParameters(Configurable.BOUND_OUT, adapterParams);
 
         Conversation conv = new ConversationImpl(1, "Soap conversation", inTransport, outTransport, inAdapter, outAdapter, "");
-        String criteriaScript = "payload.sayHello.firstName == 'Dude'";
+        String criteriaScript       = "payload.sayHello.firstName == 'Dude'";
         String transformationScript = "payload.sayHello.greeting = '" + RESPONSE_GREETING + "'; payload;";
 
-        conv.addOrUpdateScenario(1, "javascript", criteriaScript, transformationScript);
+        conv.addOrUpdateScenario(1,"javascript", criteriaScript, transformationScript);
 
         //Activate the route
         routeManager.activate(conv);
