@@ -3,7 +3,8 @@ package com.tacitknowledge.simulator.impl;
 import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.SimulatorException;
 import com.tacitknowledge.simulator.Transport;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Factory for creating conversation objects
@@ -15,7 +16,7 @@ public class ConversationFactory
     /**
      * Logger for this class.
      */
-    private static Logger logger = Logger.getLogger(ConversationFactory.class);
+    private static Logger logger = LoggerFactory.getLogger(ConversationFactory.class);
 
     /**
      * Creates a new Conversation from the given transports and adapters.

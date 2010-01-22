@@ -4,7 +4,8 @@ import com.tacitknowledge.simulator.Conversation;
 import com.tacitknowledge.simulator.configuration.EventDispatcher;
 import com.tacitknowledge.simulator.configuration.SimulatorEventType;
 import org.apache.camel.Exchange;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class will be used as an endpoint in the camel route, to dispatch different events.
@@ -17,7 +18,7 @@ public class EventBean
     /**
      * Logger for this class.
      */
-    private static Logger logger = Logger.getLogger(EventBean.class);
+    private static Logger logger = LoggerFactory.getLogger(EventBean.class);
 
     /**
      * Conversation object

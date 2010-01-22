@@ -15,7 +15,8 @@ import com.tacitknowledge.simulator.configuration.SimulatorEventListener;
 import com.tacitknowledge.simulator.formats.AdapterFactory;
 import com.tacitknowledge.simulator.scripting.ScriptExecutionService;
 import com.tacitknowledge.simulator.transports.TransportFactory;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -39,7 +40,7 @@ public class ConversationManagerImpl implements ConversationManager
     /**
      * Logger for this class.
      */
-    private static Logger logger = Logger.getLogger(ConversationManagerImpl.class);
+    private static Logger logger = LoggerFactory.getLogger(ConversationManagerImpl.class);
 
     /**
      * COnversation manager instance

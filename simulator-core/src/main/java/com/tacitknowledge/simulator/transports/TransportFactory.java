@@ -2,7 +2,8 @@ package com.tacitknowledge.simulator.transports;
 
 import com.tacitknowledge.simulator.ConfigurableFactoryImpl;
 import com.tacitknowledge.simulator.Transport;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +20,7 @@ public final class TransportFactory extends ConfigurableFactoryImpl
     /**
      * Logger for this class.
      */
-    private static Logger logger = Logger.getLogger(TransportFactory.class);
+    private static Logger logger = LoggerFactory.getLogger(TransportFactory.class);
 
     /**
      * Singleton instance

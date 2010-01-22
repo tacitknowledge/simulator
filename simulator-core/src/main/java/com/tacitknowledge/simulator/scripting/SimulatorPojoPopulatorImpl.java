@@ -3,7 +3,8 @@ package com.tacitknowledge.simulator.scripting;
 import com.tacitknowledge.simulator.SimulatorException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.StructuredSimulatorPojo;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -18,7 +19,7 @@ public class SimulatorPojoPopulatorImpl
     /**
      * Logger for this class.
      */
-    private static Logger logger = Logger.getLogger(SimulatorPojoPopulatorImpl.class);
+    private static Logger logger = LoggerFactory.getLogger(SimulatorPojoPopulatorImpl.class);
 
     /**
      * Singleton instance

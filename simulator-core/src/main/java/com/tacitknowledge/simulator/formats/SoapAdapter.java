@@ -8,7 +8,8 @@ import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.StructuredSimulatorPojo;
 import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
 import org.apache.camel.Exchange;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.wsdl.Binding;
 import javax.wsdl.BindingOperation;
@@ -78,7 +79,7 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
     /**
      * Logger for this class.
      */
-    private static Logger logger = Logger.getLogger(SoapAdapter.class);
+    private static Logger logger = LoggerFactory.getLogger(SoapAdapter.class);
 
     /**
      * Soap Factory object

@@ -2,7 +2,8 @@ package com.tacitknowledge.simulator.camel;
 
 import com.tacitknowledge.simulator.Conversation;
 import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.RollingFileAppender;
 import org.apache.camel.Exchange;
@@ -26,8 +27,8 @@ public class LoggingBean
 
     static
     {
-        Logger logger = Logger.getLogger("com.tacitknowledge.conversations");
-        logger.removeAllAppenders();
+        Logger logger = LoggerFactory.getLogger("com.tacitknowledge.conversations");
+        //logger.removeAllAppenders();
     }
 
     /**
@@ -39,7 +40,7 @@ public class LoggingBean
     public LoggingBean(final boolean input, final Conversation conversation) throws IOException
     {
         this.input = input;
-        logger = Logger.getLogger("com.tacitknowledge.conversations." + conversation.getId());
+        logger = LoggerFactory.getLogger("com.tacitknowledge.conversations." + conversation.getId());
 
         if (input)
         {
@@ -56,7 +57,7 @@ public class LoggingBean
         throws IOException
     {
         //remove parent appenders
-        logger.setLevel(org.apache.log4j.Level.ALL);
+        //logger.setLevel(org.apache.log4j.Level.ALL);
 
         //create a new appender for each conversation
         RollingFileAppender newAppender = new RollingFileAppender(
@@ -66,7 +67,7 @@ public class LoggingBean
         newAppender.setBufferSize(1024 * 3);
         newAppender.setMaxBackupIndex(5);
         newAppender.setThreshold(Level.ALL);
-        logger.addAppender(newAppender);
+        //logger.addAppender(newAppender);
     }
 
     /**
@@ -85,7 +86,7 @@ public class LoggingBean
         {
             logger.info("RESPONSE_MESSAGE");
         }
-        logger.info(exchange);
+        logger.info(exchange.toString());
         if (!input)
         {
             //juts blank lines

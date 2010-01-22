@@ -6,7 +6,8 @@ import com.tacitknowledge.simulator.ConversationScenario;
 import com.tacitknowledge.simulator.configuration.EventDispatcher;
 import com.tacitknowledge.simulator.configuration.SimulatorEventType;
 import org.apache.camel.Exchange;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.Map;
@@ -22,7 +23,7 @@ public class ScenarioExecutionWrapper
     /**
      * Logger for the ScenarioExecutionWrapper class.
      */
-    private static Logger logger  = Logger.getLogger(ScenarioExecutionWrapper.class);
+    private static Logger logger  = LoggerFactory.getLogger(ScenarioExecutionWrapper.class);
     
     /**
      * inAdapter adapter which will take the information from the exchange

@@ -2,7 +2,8 @@ package com.tacitknowledge.simulator.configuration;
 
 import com.tacitknowledge.simulator.Conversation;
 import org.apache.camel.Exchange;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,7 @@ public final class EventDispatcher
     /**
      * Logger for the EventDispatcherImpl class.
      */
-    private static Logger logger = Logger.getLogger(EventDispatcher.class);
+    private static Logger logger = LoggerFactory.getLogger(EventDispatcher.class);
 
     /**
      * Contains all registered event listeners

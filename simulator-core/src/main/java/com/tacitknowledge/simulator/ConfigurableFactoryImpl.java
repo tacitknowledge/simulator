@@ -1,6 +1,7 @@
 package com.tacitknowledge.simulator;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +15,7 @@ public class ConfigurableFactoryImpl implements ConfigurableFactory
     /**
      * Logger for this class.
      */
-    private static Logger logger = Logger.getLogger(ConfigurableFactoryImpl.class);
+    private static Logger logger = LoggerFactory.getLogger(ConfigurableFactoryImpl.class);
 
     /**
      * Container for the Configurables

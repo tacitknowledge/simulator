@@ -2,7 +2,8 @@ package com.tacitknowledge.simulator.scripting;
 
 import org.apache.bsf.BSFException;
 import org.apache.bsf.BSFManager;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.Map.Entry;
@@ -19,7 +20,7 @@ public class ScriptExecutionService
     /**
      * Logger for this class.
      */
-    private static Logger logger = Logger.getLogger(ScriptExecutionService.class);
+    private static Logger logger = LoggerFactory.getLogger(ScriptExecutionService.class);
 
 
    /**

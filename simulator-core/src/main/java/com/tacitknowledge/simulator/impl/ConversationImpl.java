@@ -4,7 +4,8 @@ import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.Conversation;
 import com.tacitknowledge.simulator.ConversationScenario;
 import com.tacitknowledge.simulator.Transport;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -21,7 +22,7 @@ public class ConversationImpl implements Conversation
     /**
      * Logger for this class.
      */
-    private static Logger logger = Logger.getLogger(ConversationImpl.class);
+    private static Logger logger = LoggerFactory.getLogger(ConversationImpl.class);
     /**
      * Prime number to be used in the hashcode method.
      */

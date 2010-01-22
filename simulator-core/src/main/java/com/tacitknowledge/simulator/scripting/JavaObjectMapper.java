@@ -1,6 +1,7 @@
 package com.tacitknowledge.simulator.scripting;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class JavaObjectMapper implements ObjectMapper
     /**
      * Logger for this class.
      */
-    private static Logger logger = Logger.getLogger(JavaObjectMapper.class);
+    private static Logger logger = LoggerFactory.getLogger(JavaObjectMapper.class);
 
     /**
      * Returns a Map from an object. Each attribute in the object will become a key in the Map.

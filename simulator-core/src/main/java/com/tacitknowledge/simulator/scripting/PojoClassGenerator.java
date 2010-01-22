@@ -8,7 +8,8 @@ import javassist.CtClass;
 import javassist.CtField;
 import javassist.Modifier;
 import javassist.NotFoundException;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -32,7 +33,7 @@ public class PojoClassGenerator
     /**
      * Logger for this class.
      */
-    private static Logger logger = Logger.getLogger(PojoClassGenerator.class);
+    private static Logger logger = LoggerFactory.getLogger(PojoClassGenerator.class);
 
 
     /**

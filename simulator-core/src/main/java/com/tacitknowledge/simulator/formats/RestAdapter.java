@@ -11,7 +11,8 @@ import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuil
 import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
 
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.camel.Exchange;
 
 import javax.servlet.http.HttpServletRequest;
@@ -77,7 +78,7 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object>
     /**
      * Logger for this class.
      */
-    private static Logger logger = Logger.getLogger(RestAdapter.class);
+    private static Logger logger = LoggerFactory.getLogger(RestAdapter.class);
     /**
      * params property of the request
      */

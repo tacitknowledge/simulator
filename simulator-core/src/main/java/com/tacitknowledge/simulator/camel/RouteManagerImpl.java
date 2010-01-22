@@ -8,7 +8,8 @@ import com.tacitknowledge.simulator.configuration.SimulatorEventType;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.model.RouteDefinition;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,7 +27,7 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager
     /**
      * Logger for this class.
      */
-    private static Logger logger = Logger.getLogger(RouteManagerImpl.class);
+    private static Logger logger = LoggerFactory.getLogger(RouteManagerImpl.class);
 
     /**
      * true if context has been started by camel
