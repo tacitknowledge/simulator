@@ -43,7 +43,7 @@ public class ConfigurableFactoryImpl implements ConfigurableFactory
 
         if (!configurables.containsKey(name.toUpperCase()))
         {
-            logger.error("No Configurable found for type " + name.toUpperCase());
+            logger.error("No Configurable found for type {}", name.toUpperCase());
         }
         else
         {
