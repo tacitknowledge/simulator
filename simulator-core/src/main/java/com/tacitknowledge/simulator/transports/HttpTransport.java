@@ -10,6 +10,9 @@ import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.p
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * @author galo
  */
@@ -19,17 +22,19 @@ public abstract class HttpTransport extends BaseTransport implements Transport
      * Resource URI parameter. REQUIRED
      */
     public static final String PARAM_RESOURCE_URI = "resourceURI";
-
     /**
      * HTTP out parameter.
      */
     public static final String PARAM_HTTP_OUT = "httpOut";
-
     /**
      * We use 0.0.0.0 instead of localhost to receive requests from any host.
      */
     private static final String HOST = "0.0.0.0";
-
+    /**
+     * Logger for this class.
+     */
+    private static Logger logger = LoggerFactory.getLogger(HttpTransport.class);
+    
     /**
      * Transport parameters definition.
      */
@@ -148,6 +153,8 @@ public abstract class HttpTransport extends BaseTransport implements Transport
 
         sb.append(getParamValue(PARAM_RESOURCE_URI));
         sb.append("?matchOnUriPrefix=true");
+
+        logger.info("Uri String: {}", sb.toString());
 
         return sb.toString();
     }

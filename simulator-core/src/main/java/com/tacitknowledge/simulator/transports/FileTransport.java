@@ -57,7 +57,10 @@ public class FileTransport extends BaseTransport implements Transport
      * Defaults to false. For inbound transports only.
      */
     public static final String PARAM_DELETE_FILE = "deleteFile";
-
+    /**
+     * Logger for this class.
+     */
+    private static Logger logger = LoggerFactory.getLogger(FileTransport.class);
     /**
      * Transport parameters definition.
      */
@@ -203,6 +206,8 @@ public class FileTransport extends BaseTransport implements Transport
         {
             sb.append("?").append(options.toString());
         }
+
+        logger.info("Uri String: {}", sb.toString());
 
         return sb.toString();
     }

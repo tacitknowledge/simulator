@@ -10,6 +10,9 @@ import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.p
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Transport implementation for FTP/SFTP endpoints.
  * FTP transport share File transport options, so it will inherit from FileTransport
@@ -40,7 +43,10 @@ public class FtpTransport extends FileTransport implements Transport
      * Defaults to false (ASCII)
      */
     public static final String PARAM_BINARY = "binary";
-
+    /**
+     * Logger for this class.
+     */
+    private static Logger logger = LoggerFactory.getLogger(FtpTransport.class);
     /**
      * Transport parameters definition.
      */
@@ -225,6 +231,8 @@ public class FtpTransport extends FileTransport implements Transport
         {
             sb.append("?").append(options.toString());
         }
+
+        logger.info("Uri String: {}", sb.toString());
 
         return sb.toString();
     }

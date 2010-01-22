@@ -10,6 +10,9 @@ import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.p
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Transport implementation for Jms endpoints.
  *
@@ -47,7 +50,10 @@ public class JmsTransport extends BaseTransport implements Transport
      * JSM broker password parameter. Optional
      */
     public static final String PARAM_PASSWORD = "password";
-
+    /**
+     * Logger for this class.
+     */
+    private static Logger logger = LoggerFactory.getLogger(HttpTransport.class);
     /**
      * Transport parameters definition.
      */
@@ -154,6 +160,8 @@ public class JmsTransport extends BaseTransport implements Transport
         {
             sb.append(AMP).append("password=").append(getParamValue(PARAM_PASSWORD));
         }
+
+        logger.info("Uri String: {}", sb.toString());
 
         return sb.toString();
     }
