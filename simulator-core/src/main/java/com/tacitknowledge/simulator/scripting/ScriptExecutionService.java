@@ -45,7 +45,7 @@ public class ScriptExecutionService
         }
         catch (BSFException e)
         {
-            throw new ScriptException("Error executing script: " + e.getMessage(), e);
+            throw new ScriptException("Error executing script: ", e);
         }
     }
 
@@ -66,7 +66,7 @@ public class ScriptExecutionService
         }
         catch (BSFException e)
         {
-            throw new ScriptException("Error executing script: " + e.getMessage(), e);
+            throw new ScriptException("Error executing script: ", e);
         }
     }
 
@@ -123,16 +123,14 @@ public class ScriptExecutionService
 
             if (varValue != null)
             {
-                logger.debug("Registering bean '" + varName + "' [" + varValue.getClass().getName()
-                    + "]");
+                logger.debug("Registering bean '{}' [{}]", varName, varValue.getClass().getName());
                 try
                 {
                     manager.declareBean(varName, varValue, varValue.getClass());
                 }
                 catch (BSFException e)
                 {
-                    throw new ScriptException("Error binding variable '" + varName + "': "
-                        + e.getMessage(), e);
+                    throw new ScriptException("Error binding variable '" + varName + "': ", e);
                 }
             }
         }

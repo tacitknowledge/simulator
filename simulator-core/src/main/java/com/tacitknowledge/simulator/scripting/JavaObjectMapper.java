@@ -38,7 +38,7 @@ public class JavaObjectMapper implements ObjectMapper
         for (Field field : o.getClass().getDeclaredFields())
         {
             String fieldName = field.getName();
-            logger.info("Field Name === " + fieldName);
+            logger.info("Field Name === {}", fieldName);
             Object fieldValue = null;
             try
             {
@@ -46,13 +46,11 @@ public class JavaObjectMapper implements ObjectMapper
             }
             catch (IllegalAccessException iae)
             {
-                logger.error(iae.getMessage());
-                throw new ObjectMapperException(
-                    "Unexpected error accesing field value: " + iae.getMessage(),
-                    iae);
-            } catch (Exception e) {
-                logger.error("Exception getting field = " + fieldName + " : " + e.getMessage());
-
+                throw new ObjectMapperException("Unexpected error accesing field value: ", iae);
+            }
+            catch (Exception e)
+            {
+                logger.error("Exception getting field = " + fieldName + ".", e);
             }
 
             // --- Depending on the value type, get it's representation

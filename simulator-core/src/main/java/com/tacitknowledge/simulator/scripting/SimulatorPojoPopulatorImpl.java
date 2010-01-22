@@ -57,7 +57,7 @@ public class SimulatorPojoPopulatorImpl
     public SimulatorPojo populateSimulatorPojoFromBean(final Object bean)
         throws ObjectMapperException
     {
-        logger.debug("Attempting to create SimulatorPojo from bean " + bean);
+        logger.debug("Attempting to create SimulatorPojo from bean {}", bean);
 
         // ---
         SimulatorPojo pojo = new StructuredSimulatorPojo();

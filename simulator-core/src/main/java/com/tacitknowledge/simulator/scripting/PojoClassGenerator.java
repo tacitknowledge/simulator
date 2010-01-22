@@ -176,8 +176,7 @@ public class PojoClassGenerator
         // ---
         for (Entry<String, CtClass> entry : this.generatedClasses.entrySet())
         {
-            logger.debug("Detaching from pool generated class " + entry.getValue().getName());
-            logger.debug("Detaching from pool generated class " + entry.getValue().getName());
+            logger.debug("Detaching from pool generated class {}", entry.getValue().getName());
             entry.getValue().detach();
         }
         this.generatedClasses.clear();
@@ -222,7 +221,7 @@ public class PojoClassGenerator
             {
                 // --- ...if it hasn't been created, make a new one
                 // with the last package name being a time string
-                logger.debug("Generating new temporary class " + getPackTimeClassName(className));
+                logger.debug("Generating new temporary class {}", getPackTimeClassName(className));
                 ctClass = pool.makeClass(getPackTimeClassName(className));
                 isNewClass = true;
             }
@@ -303,7 +302,7 @@ public class PojoClassGenerator
                 ctClass.toClass();
                 generatedClasses.put(packClassName, ctClass);
 
-                logger.debug("Finished generating new temporary class " + ctClass.getName());
+                logger.debug("Finished generating new temporary class {}", ctClass.getName());
             }
         }
 
@@ -331,10 +330,8 @@ public class PojoClassGenerator
         CtField ctField = new CtField(pool.get(className), fieldName, destClass);
         ctField.setModifiers(Modifier.PUBLIC);
 
-        logger.debug(
-                "Added field " + fieldName +
-                " of type " + className +
-                " to temporary class " + destClass.getName());
+        logger.debug("Added field {} of type {} to temporary class {}",
+                new Object[]{fieldName, className, destClass.getName()});
 
         return ctField;
     }
@@ -396,34 +393,29 @@ public class PojoClassGenerator
             catch (ClassNotFoundException e)
             {
                 String errorMessage = "Class : " + realName + " not found.";
-                logger.error(errorMessage, e);
                 throw new ScriptException(errorMessage, e);
             }
             catch (InstantiationException e)
             {
                 String errorMessage = "Object for class : " + realName
                     + " couldn't be instantiated.";
-                logger.error(errorMessage, e);
                 throw new ScriptException(errorMessage, e);
             }
             catch (IllegalAccessException e)
             {
                 String errorMessage =
                     "Object for class : " + realName + " couldn't be accessed.";
-                logger.error(errorMessage, e);
                 throw new ScriptException(errorMessage, e);
             }
             catch (SecurityException e)
             {
                 String errorMessage =
                     "Unexpected security exception for class " + realName;
-                logger.error(errorMessage, e);
                 throw new ScriptException(errorMessage, e);
             }
             catch (NoSuchFieldException e)
             {
                 String errorMessage = "A field wasn't found for class " + realName;
-                logger.error(errorMessage, e);
                 throw new ScriptException(errorMessage, e);
             }
         }
