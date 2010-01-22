@@ -24,4 +24,14 @@ plain_text:
   name: 'PlainText'
   class_name: 'com.tacitknowledge.simulator.formats.PlainTextAdapter'
 
+rest:
+  id: 4
+  name: 'REST' 
+  class_name: 'com.tacitknowledge.simulator.formats.RestAdapter'
+    
+soap:
+  id: 5
+  name: 'SOAP'
+  class_name: 'com.tacitknowledge.simulator.formats.SoapAdapter'
+
 

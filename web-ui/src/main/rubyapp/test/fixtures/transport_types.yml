@@ -38,3 +38,13 @@ mockout2:
   id: 6
   name: 'MockOut2'
   class_name: 'com.tacitknowledge.simulator.transports.MockOutTransport'
+
+rest:    
+  id: 7
+  name: 'REST'
+  class_name: 'com.tacitknowledge.simulator.transports.RestTransport'
+
+soap:
+  id: 8
+  name: 'SOAP' 
+  class_name: 'com.tacitknowledge.simulator.transports.SoapTransport'

@@ -205,11 +205,29 @@ class ConversationsControllerTest < ActionController::TestCase
     get :transport_types
 
     assert_response :success
-
     json = JSON.parse(@response.body)
 
     assert(trans_types.length == json['data'].length)
     assert(trans_types[0].name.eql? json['data'][0]['name'])
+    
+    get :transport_types, :type=>'REST'
+    assert_response :success
+    json = JSON.parse(@response.body)
+    assert(transport_types(:rest).name.eql? json['data'][0]['name'])
+    
+    get :transport_types, :type=>'SOAP'
+    assert_response :success
+    json = JSON.parse(@response.body)
+    assert(transport_types(:soap).name.eql? json['data'][0]['name'])
+    
+    get :transport_types, :type=>''
+    assert_response :success
+    json = JSON.parse(@response.body)
+    names = json['data'].map do |name|
+      name['name']
+    end
+    assert (!names.include? transport_types(:soap).name)
+    assert (!names.include? transport_types(:rest).name)
   end
 
   def test_format_types
@@ -222,6 +240,25 @@ class ConversationsControllerTest < ActionController::TestCase
 
     assert(form_types.length == json['data'].length)
     assert(form_types[0].name.eql? json['data'][0]['name'])
+    
+    get :format_types, :type=>'REST'
+    assert_response :success
+    json = JSON.parse(@response.body)
+    assert(format_types(:rest).name.eql? json['data'][0]['name'])
+    
+    get :format_types, :type=>'SOAP'
+    assert_response :success
+    json = JSON.parse(@response.body)
+    assert(format_types(:soap).name.eql? json['data'][0]['name'])
+    
+    get :format_types, :type=>''
+    assert_response :success
+    json = JSON.parse(@response.body)
+    names = json['data'].map do |name|
+      name['name']
+    end
+    assert (!names.include? format_types(:soap).name)
+    assert (!names.include? format_types(:rest).name)
   end
 
   def test_transport_parameters
@@ -231,7 +268,6 @@ class ConversationsControllerTest < ActionController::TestCase
     json = JSON.parse(@response.body)
 
     assert(json['data'].length > 0)
-
     # Parameter defintions should be arrays with 6 strings
     param1 = json['data'][0]
     assert(param1.length == 6)
@@ -302,5 +338,27 @@ class ConversationsControllerTest < ActionController::TestCase
     json = JSON.parse @response.body
     assert_not_nil json['data']
     assert !json['is_active']
+    
+    get :activate, :id => conversations(:two).id
+    assert_response :success
+    json = JSON.parse @response.body
+    assert_not_nil json['data']
+    assert json['is_active']
   end
+  
+  def test_get_inbound_transport_type_by_conversation_id
+  
+    get :get_inbound_transport_type_by_conversation_id, :conversationId=> ''
+    assert_response :success
+    json = JSON.parse @response.body
+    assert_not_nil json['data']
+    assert_equal '', json['data']
+    
+    get :get_inbound_transport_type_by_conversation_id, :conversationId => conversations(:one).id
+    assert_response :success
+    json = JSON.parse @response.body
+    assert_not_nil json['data']
+    assert_equal transport_types(:file).name, json['data']
+  end
+    
 end
