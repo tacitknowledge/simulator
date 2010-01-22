@@ -54,15 +54,11 @@ public class EventBean
         {
             EventDispatcher.getInstance().dispatchEvent(this.eventType, this.conversation,
                                                                                     exchange);
-            logger.info("Event dispatched: " + this.eventType);
+            logger.info("Event dispatched: {}", this.eventType);
         }
         catch (Exception ex)
         {
-            if (logger.isDebugEnabled())
-            {
-                logger.debug("Exception thrown dispatching event " + this.eventType + ". "
-                        + ex.getMessage());
-            }
+            logger.error("Exception thrown dispatching event " + this.eventType + ". ", ex);
         }
     }
 }
