@@ -161,26 +161,17 @@ public class ConversationScenarioImpl implements ConversationScenario
         {
             result = true;
         }
-        if (o == null || getClass() != o.getClass())
+        else if (o == null || getClass() != o.getClass())
         {
             result = false;
         }
 
         ConversationScenarioImpl that = (ConversationScenarioImpl) o;
 
-        if (active != that.active)
-        {
-            result = false;
-        }
-        if (!criteriaScript.equals(that.criteriaScript))
-        {
-            result = false;
-        }
-        if (!scriptLanguage.equals(that.scriptLanguage))
-        {
-            result = false;
-        }
-        if (!transformationScript.equals(that.transformationScript))
+        if (active != that.active
+                || !criteriaScript.equals(that.criteriaScript)
+                || !scriptLanguage.equals(that.scriptLanguage)
+                || !transformationScript.equals(that.transformationScript))
         {
             result = false;
         }

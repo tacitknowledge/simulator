@@ -107,13 +107,13 @@ public class ConversationImpl implements Conversation
             scenario = new ConversationScenarioImpl(scenarioId, language, criteria, transformation);
             scenarios.put(scenarioId, scenario);
             logger.info("Added new conversation scenario"
-                + " to the conversation with id : " + this.id);
+                + " to the conversation with id : {}", this.id);
         }
         else
         {
             scenario.setScripts(criteria, transformation, language);
             logger.info("Updated conversation scenario with id " + scenarioId
-                + " to the conversation with id : " + this.id);
+                + " to the conversation with id : {}", this.id);
         }
 
         return scenario;

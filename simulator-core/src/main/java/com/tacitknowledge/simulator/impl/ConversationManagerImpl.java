@@ -108,7 +108,7 @@ public class ConversationManagerImpl implements ConversationManager
         Conversation conversationObj = conversations.get(id);
         if (conversationObj != null)
         {
-            logger.info("Removing existing conversation from cache: Id = " + id);
+            logger.info("Removing existing conversation from cache: Id = {}", id);
             conversations.remove(conversationObj);
         }
         ConversationImpl conversation = ConversationFactory.createConversation(id, name,
@@ -118,7 +118,7 @@ public class ConversationManagerImpl implements ConversationManager
 
         conversations.put(id, conversation);
 
-        logger.info("Created new conversation with id : " + id);
+        logger.info("Created new conversation with id : {}", id);
 
         return conversation;
     }
@@ -134,8 +134,6 @@ public class ConversationManagerImpl implements ConversationManager
         Conversation conversation = conversations.get(conversationId);
         if (conversation == null)
         {
-            logger.error("Conversation with id : " + conversationId + " is not found.");
-
             throw new ConversationNotFoundException("Conversation with id " + conversationId
                     + " is not created.");
         }
@@ -182,14 +180,12 @@ public class ConversationManagerImpl implements ConversationManager
         try
         {
             routeManager.activate(conversation);
-            logger.debug("Activated conversation " + conversation);
+            logger.debug("Activated conversation {}", conversation);
         }
         catch (Exception e)
         {
-            String errorMsg = "Conversation with id : "
-                    + conversationId + " couldn't be activated: " + e.getMessage();
-
-            logger.error(errorMsg);
+            String errorMsg = "Conversation with id : " + conversationId +
+                                " couldn't be activated: ";
             throw new SimulatorException(errorMsg, e);
         }
     }
@@ -203,19 +199,13 @@ public class ConversationManagerImpl implements ConversationManager
         {
             Conversation conversation = getConversationById(conversationId);
             routeManager.deactivate(conversation);
-            //conversations.remove(conversationId);
-            logger.debug("Deactivated conversation " + conversation);
-        }
-        catch (ConversationNotFoundException cne)
-        {
-            // Exception was already logged
+            logger.debug("Deactivated conversation {}", conversation);
         }
         catch (Exception e)
         {
-            logger.error("Conversation with id : "
-                    + conversationId + " couldn't be deactivated.", e);
-            throw new SimulatorException("Conversation deactivation exception:"
-                    + e.getMessage(), e);
+            String errorMessage = "Conversation deactivation exception. Conversation with id :"
+                    + conversationId + " couldn't be deactivated.";
+            throw new SimulatorException(errorMessage, e);
         }
 
     }
@@ -238,10 +228,7 @@ public class ConversationManagerImpl implements ConversationManager
         }
         catch (Exception e)
         {
-            String errorMsg = "Conversation with id " + conversationId +
-                    " couldn't be deleted: " + e.getMessage();
-
-            logger.error(errorMsg, e);
+            String errorMsg = "Conversation with id " + conversationId + " couldn't be deleted: ";
             throw new SimulatorException(errorMsg, e);
         }
     }
@@ -365,7 +352,7 @@ public class ConversationManagerImpl implements ConversationManager
                         }
                         catch (IOException e)
                         {
-                            logger.info("Unexpected IO exception: " + e.getMessage());
+                            logger.info("Unexpected IO exception: ", e);
                         }
                     }
                 }
@@ -396,12 +383,11 @@ public class ConversationManagerImpl implements ConversationManager
             Object instanceObject = listenerClass.newInstance();
             EventDispatcher.getInstance().addSimulatorEventListener(
                     (SimulatorEventListener) instanceObject);
-            logger.info("Registered class: " + listenerClass);
+            logger.info("Registered class: {}", listenerClass);
         }
         catch (Exception e)
         {
-            logger.info("Unable to register listener class: " + className +
-                    " due to:" + e.getMessage());
+            logger.info("Unable to register listener class: " + className + " due to:", e);
         }
     }
 }

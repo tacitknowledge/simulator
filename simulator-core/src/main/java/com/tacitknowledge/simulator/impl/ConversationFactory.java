@@ -46,7 +46,6 @@ public class ConversationFactory
             String errorMessage = "Inbound and outbound"
                 + " adapters and transports are required for creating new conversation.";
 
-            logger.error(errorMessage);
             throw new SimulatorException(errorMessage);
         }
         return new ConversationImpl(id, name, inboundTransport, outboundTransport, inboundAdapter,
