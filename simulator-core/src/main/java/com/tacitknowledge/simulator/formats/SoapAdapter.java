@@ -74,7 +74,22 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
     /**
      * SOAP FaultActor key
      */
-    public static final String FAULT_ACTOR = "faultActor;";
+    public static final String FAULT_ACTOR = "faultActor";
+
+    /**
+     * Default SOAP Fault code
+     */
+    public static final String FAULT_CODE_SENDER = "Sender";
+
+    /**
+     * Content Type header
+     */
+    public static final String CONTENT_TYPE = "Content-Type";
+
+    /**
+     * Application SOAP+XML content type
+     */
+    public static final String CT_APP_SOAP_XML = "application/soap+xml";
 
     /**
      * Logger for this class.
@@ -214,7 +229,6 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
             // --- First things first. Check if we got a fault code & string...
             Map<String, String> fault = (Map<String, String>) payload.get(FAULT);
             if (fault != null &&
-                    !fault.get(FAULT_CODE).isEmpty() &&
                     !fault.get(FAULT_STRING).isEmpty())
             {
                 // --- If we do, we'll return a SOAP FAULT instead of a regular payload
@@ -228,8 +242,13 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
                 // --- Validate the result method and parameters
                 if (validateOperationsAndParameters(payload))
                 {
+
+
                     // --- If validation was successful,
-                    // add the payload's content to the SOAP body
+                    // remove the fault object
+                    payload.remove(FAULT);
+
+                    // ...and add the payload's content to the SOAP body
                     for (Map.Entry<String, Map> payloadItem : payload.entrySet())
                     {
                         String methodName = payloadItem.getKey();
@@ -290,6 +309,9 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
             logger.error(errorMsg, ioe);
             throw new FormatAdapterException(errorMsg, ioe);
         }
+
+        // --- Must set the Exchange's out headers Content-Type to "application/soap+xml"
+        exchange.getOut().setHeader(CONTENT_TYPE, CT_APP_SOAP_XML);
 
         logger.debug("Finished generating SOAP content from SimulatorPojo");
         return outputStream.toString();
@@ -459,6 +481,12 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
         for (Map.Entry<String, Map> operationEntry :
                 payload.entrySet())
         {
+            // --- We ignore the fault object
+            if (operationEntry.getKey().equals(FAULT))
+            {
+                continue;
+            }
+
             String opName = operationEntry.getKey();
             Map<String, Object> opParameters = operationEntry.getValue();
             
@@ -574,7 +602,14 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
             throws SOAPException
     {
         SOAPFault fault = soapMessage.getSOAPBody().addFault();
-        fault.setFaultCode(new QName(SOAPConstants.URI_NS_SOAP_1_2_ENVELOPE, code));
+
+        QName qname = new QName(SOAPConstants.URI_NS_SOAP_1_2_ENVELOPE, FAULT_CODE_SENDER);
+        if (code != null && !code.isEmpty() && !code.equals(FAULT_CODE_SENDER))
+        {
+            qname = new QName(SOAPConstants.URI_NS_SOAP_1_2_ENVELOPE, code);
+        }
+        fault.setFaultCode(qname);
+
         fault.setFaultString(string);
         if (actor != null && !actor.isEmpty())
         {
