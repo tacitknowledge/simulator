@@ -70,7 +70,7 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager
     {
         Integer conversationId = conversation.getId();
 
-        logger.info("Activating conversation: " + conversation);
+        logger.info("Activating conversation: {}", conversation);
 
         RouteDefinition definition = convRoutes.get(conversationId);
 
@@ -97,8 +97,8 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager
             definition.setId(conversationId.toString());
             convRoutes.put(conversationId, definition);
 
-            logger.info("Route : " + definition.getId() + " was added to the context : "
-                + getContext().getName());
+            logger.info("Route : {} was added to the context : {}", definition.getId(),
+                getContext().getName());
 
             getContext().startRoute(definition);
             activeRoutes.add(conversationId);
@@ -119,15 +119,15 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager
      */
     public void deactivate(final Conversation conversation) throws Exception
     {
-        logger.info("Deactivating conversation: " + conversation);
+        logger.info("Deactivating conversation: {}", conversation);
         int i = conversation.getId();
         RouteDefinition definition = convRoutes.get(i);
         if (definition != null)
         {
             getContext().stopRoute(definition);
             activeRoutes.remove(i);
-            logger.info("Route : " + definition.getId() + " was stopped in the context : "
-                + getContext().getName());
+            logger.info("Route : {} was stopped in the context : {}", definition.getId(),
+                getContext().getName());
         }
         else
         {

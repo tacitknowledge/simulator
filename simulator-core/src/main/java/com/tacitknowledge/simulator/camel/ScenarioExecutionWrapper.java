@@ -89,10 +89,10 @@ public class ScenarioExecutionWrapper
         {
             synchronized (scenario)
             {
-                logger.info("Evaluating scenario : " + scenario.toString());
+                logger.info("Evaluating scenario : {}", scenario.toString());
                 boolean active = scenario.isActive();
                 boolean matchesCondition = scenario.matchesCondition(scriptExecutionBeans);
-                logger.info("active: " + active + " matches condition: " + matchesCondition);
+                logger.info("active: {} matches condition: {}", active, matchesCondition);
                 if (active && matchesCondition)
                 {
                     EventDispatcher.getInstance().dispatchEvent(SimulatorEventType.SCENARIO_MATCHED,
