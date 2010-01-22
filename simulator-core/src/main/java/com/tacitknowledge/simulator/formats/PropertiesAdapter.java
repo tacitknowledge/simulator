@@ -91,7 +91,7 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
     {
         String object = exchange.getIn().getBody(String.class);
 
-        logger.debug("Attempting to generate SimulatorPojo from Properties content:\n" + object);
+        logger.debug("Attempting to generate SimulatorPojo from Properties content:\n{}", object);
 
         SimulatorPojo pojo = new StructuredSimulatorPojo();
 
@@ -123,8 +123,6 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
             }
             catch (FormatAdapterException fae)
             {
-                logger.error("Unexpected error processing property line: " + rowString);
-                logger.error("Error received is: " + fae.getMessage());
                 throw fae;
             }
         }

@@ -203,7 +203,7 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
     protected String getString(SimulatorPojo pojo, Exchange exchange)
             throws FormatAdapterException
     {
-        logger.debug("Attempting to generate SOAP message from SimulatorPojo:\n" + pojo);
+        logger.debug("Attempting to generate SOAP message from SimulatorPojo:\n{}", pojo);
 
         // --- First, check we got a "payload"
         if (!pojo.getRoot().containsKey(DEFAULT_PAYLOAD_KEY))
@@ -297,16 +297,12 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
         }
         catch(SOAPException se)
         {
-            String errorMsg = "Unexpected SOAP exception trying to generate SOAP message: " +
-                    se.getMessage();
-            logger.error(errorMsg, se);
+            String errorMsg = "Unexpected SOAP exception trying to generate SOAP message: ";
             throw new FormatAdapterException(errorMsg, se);
         }
         catch(IOException ioe)
         {
-            String errorMsg = "Unexpected IO Exception trying to get SOAP message as String: " +
-                    ioe.getMessage();
-            logger.error(errorMsg, ioe);
+            String errorMsg = "Unexpected IO Exception trying to get SOAP message as String: ";
             throw new FormatAdapterException(errorMsg, ioe);
         }
 
@@ -363,7 +359,7 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
     private SimulatorPojo createSimulatorPojo(String o)
         throws FormatAdapterException
     {
-        logger.debug("Attempting to generate SimulatorPojo from SOAP content:\n" + o);
+        logger.debug("Attempting to generate SimulatorPojo from SOAP content:\n{}", o);
 
         SimulatorPojo pojo = new StructuredSimulatorPojo();
 
@@ -387,20 +383,17 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
         }
         catch(SOAPException se)
         {
-            String errorMessage = "Unexpected SOAP exception trying to generate SimulatorPojo: " + se.getMessage();
-            logger.error(errorMessage, se);
+            String errorMessage = "Unexpected SOAP exception trying to generate SimulatorPojo: ";
             throw new FormatAdapterException(errorMessage, se);
         }
         catch(UnsupportedEncodingException uee)
         {
-            String errorMessage = "Unsupported encoding exception: " + uee.getMessage();
-            logger.error(errorMessage, uee);
+            String errorMessage = "Unsupported encoding exception: ";
             throw new FormatAdapterException(errorMessage, uee);
         }
         catch (IOException ioe)
         {
-            String errorMessage = "Unexpected IO exception: " + ioe.getMessage();
-            logger.error(errorMessage, ioe);
+            String errorMessage = "Unexpected IO exception: ";
             throw new FormatAdapterException(errorMessage, ioe);
         }
 
@@ -445,8 +438,7 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
         }
         catch(WSDLException we)
         {
-            String errorMsg = "Unexpected WSDL error: " + we.getMessage();
-            logger.error(errorMsg, we);
+            String errorMsg = "Unexpected WSDL error: ";
             throw new ConfigurableException(errorMsg, we);
         }
     }
@@ -521,7 +513,6 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
                     String errorMsg = "Missing required "+ bound +
                             " parameter (" + partInOp.getName() +
                             ") for method " + opName + " as defined in the provided WSDL";
-                    logger.error(errorMsg);
 
                     // --- If this is an outbound adapter, return a FAULT message in case of
                     // missing params/parts

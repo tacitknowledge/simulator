@@ -8,7 +8,8 @@ import com.tacitknowledge.simulator.StructuredSimulatorPojo;
 import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
 import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.name;
 import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.camel.Exchange;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
@@ -60,7 +61,7 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
     /**
      * Logger for this class.
      */
-    private static Logger logger = Logger.getLogger(XmlAdapter.class);
+    private static Logger logger = LoggerFactory.getLogger(XmlAdapter.class);
 
     /**
      * Adapter parameters definition.
@@ -154,7 +155,7 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
         throws FormatAdapterException
     {
         String o = exchange.getIn().getBody(String.class);
-        logger.debug("Attempting to generate SimulatorPojo from XML content:\n" + o);
+        logger.debug("Attempting to generate SimulatorPojo from XML content:\n{}", o);
 
         SimulatorPojo pojo = new StructuredSimulatorPojo();
 
@@ -177,19 +178,16 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
         catch (ParserConfigurationException e)
         {
             String errorMessage = "Unexpected parser configuration exception";
-            logger.error(errorMessage, e);
             throw new FormatAdapterException(errorMessage, e);
         }
         catch (SAXException e)
         {
             String errorMessage = "Unexpected SAX exception";
-            logger.error(errorMessage, e);
             throw new FormatAdapterException(errorMessage, e);
         }
         catch (IOException e)
         {
             String errorMessage = "Unexpected IO exception";
-            logger.error(errorMessage, e);
             throw new FormatAdapterException(errorMessage, e);
         }
 
@@ -213,8 +211,6 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
             // --- The SimulatorPojo for XmlAdapter should contain only one key in its root
             if (pojo.getRoot().isEmpty() || pojo.getRoot().size() > 1)
             {
-                logger.error("Incorrect SimulatorPojo's root size. Expecting 1, but found"
-                    + pojo.getRoot().size());
                 throw new
                     FormatAdapterException(
                     "Incorrect SimulatorPojo's root size. Expecting 1, but found"
@@ -257,16 +253,12 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
         }
         catch (TransformerConfigurationException tce)
         {
-            String errorMsg = "Error trying to transform XML document into String: "
-                + tce.getMessage();
-            logger.error(errorMsg, tce);
+            String errorMsg = "Error trying to transform XML document into String: ";
             throw new FormatAdapterException(errorMsg, tce);
         }
         catch (TransformerException te)
         {
-            String errorMsg = "Error trying to transform XML document into String: "
-                + te.getMessage();
-            logger.error(errorMsg, te);
+            String errorMsg = "Error trying to transform XML document into String: ";
             throw new FormatAdapterException(errorMsg, te);
         }
         catch (ParserConfigurationException pce)
@@ -360,7 +352,7 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
      * @param childs   Map containing the childs to be contained within the generated Element
      * @return The generated XML Element with its inner children
      */
-    protected Element getStructuredElement(String elemName, Map<String, Object> childs)
+    protected Element getStructuredElement(String elemName, Map<String, Object> childs) throws FormatAdapterException
     {
         Element element = doc.createElement(elemName);
 
@@ -373,8 +365,8 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
             {
                 // --- ...a Map, get the structured element
                 child = getStructuredElement(
-                    entry.getKey(),
-                    (Map<String, Object>) entry.getValue());
+                        entry.getKey(),
+                        (Map<String, Object>) entry.getValue());
             }
             else if (entry.getValue() instanceof List)
             {
@@ -391,7 +383,7 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
                             newElName = "anonymous-list";
                         }
                         element.appendChild(
-                            getStructuredElement(newElName, (Map<String, Object>) item));
+                                getStructuredElement(newElName, (Map<String, Object>) item));
                     }
                     else if (item instanceof List)
                     {
@@ -432,7 +424,7 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
      * @param childs   List containing the children to be contained within the generated Element
      * @return The generated XML Element with its inner children
      */
-    private Element getListElement(String elemName, List childs)
+    private Element getListElement(String elemName, List childs) throws FormatAdapterException
     {
         Element element = doc.createElement(elemName);
 
@@ -469,7 +461,7 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
      * @param text     The text for the TextNode child
      * @return The XML Element containing the TextNode
      */
-    private Element getTextElement(String elemName, String text)
+    private Element getTextElement(String elemName, String text) throws FormatAdapterException
     {
         Node textNode = doc.createTextNode(text);
 
@@ -482,9 +474,8 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
         }
         catch (DOMException de)
         {
-            logger.debug("Unexpected DOM Exception for element name: " + elemName + ". \n"
-                + de.getMessage());
-            throw de;
+            throw new FormatAdapterException("Unexpected DOM Exception for element name: "
+                    + elemName, de);
         }
     }
 

@@ -123,7 +123,7 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
     {
         String o = exchange.getIn().getBody(String.class);
 
-        logger.debug("Attempting to generate SimulatorPojo from CSV content:\n" + o);
+        logger.debug("Attempting to generate SimulatorPojo from CSV content:\n{}", o);
 
         SimulatorPojo pojo = new StructuredSimulatorPojo();
 
@@ -185,7 +185,6 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
         if (simulatorPojo.getRoot().size() > 1)
         {
             String errorMsg = "SimulatorPojo's root should only one Entry for CSV adaptTo";
-            logger.error(errorMsg);
             throw new FormatAdapterException(errorMsg);
         }
 
@@ -239,7 +238,6 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
         if (!firstRowHeader && getParamValue(PARAM_ROW_CONTENT) == null)
         {
             String errorMsg = "RowContent parameter is required if CSV has no headers.";
-            logger.error(errorMsg);
             throw new ConfigurableException(errorMsg);
         }
     }

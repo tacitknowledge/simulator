@@ -114,7 +114,7 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
 
         String o = exchange.getIn().getBody(String.class);
 
-        logger.debug("Attempting to generate SimulatorPojo from JSON content:\n" + o);
+        logger.debug("Attempting to generate SimulatorPojo from JSON content:\n{}", o);
 
         SimulatorPojo pojo = new StructuredSimulatorPojo();
 
@@ -149,8 +149,7 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
         catch (JSONException je)
         {
             String errorMsg =
-                "Unexpected error trying to parse String into JSON: " + je.getMessage();
-            logger.error(errorMsg, je);
+                "Unexpected error trying to parse String into JSON: ";
             throw new FormatAdapterException(errorMsg, je);
         }
 
@@ -174,8 +173,6 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
         // --- The SimulatorPojo for JSONAdapter should contain only one key in its root
         if (simulatorPojo.getRoot().isEmpty() || simulatorPojo.getRoot().size() > 1)
         {
-            logger.error("  Incorrect SimulatorPojo's root size. Expecting 1, but found"
-                + simulatorPojo.getRoot().size());
             throw new
                 FormatAdapterException(
                 "Incorrect SimulatorPojo's root size. Expecting 1, but found"
@@ -220,7 +217,6 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
         if (json == null)
         {
             String errorMsg = "Null JSON object";
-            logger.error(errorMsg);
             throw new FormatAdapterException(errorMsg);
         }
 
@@ -258,7 +254,6 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
             {
                 String errorMsg =
                     "Unexpected error trying to get value JSON object: " + je.getMessage();
-                logger.error(errorMsg, je);
                 throw new FormatAdapterException(errorMsg, je);
             }
 
@@ -279,7 +274,6 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
         if (array == null)
         {
             String errorMsg = "Null JSON array";
-            logger.error(errorMsg);
             throw new FormatAdapterException(errorMsg);
         }
 
@@ -313,8 +307,7 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
             catch (JSONException je)
             {
                 String errorMsg =
-                    "Unexpected error trying to get value JSON object: " + je.getMessage();
-                logger.error(errorMsg, je);
+                    "Unexpected error trying to get value JSON object: ";
                 throw new FormatAdapterException(errorMsg, je);
             }
         }

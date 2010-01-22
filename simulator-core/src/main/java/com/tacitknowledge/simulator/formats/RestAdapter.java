@@ -156,7 +156,7 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object>
     protected SimulatorPojo createSimulatorPojo(Exchange o) throws FormatAdapterException
     {
 
-        logger.debug("Attempting to generate SimulatorPojo from REST content:\n" + o);
+        logger.debug("Attempting to generate SimulatorPojo from REST content:\n{}", o);
 
         HttpServletRequest request = o.getIn().getBody(HttpServletRequest.class);
 

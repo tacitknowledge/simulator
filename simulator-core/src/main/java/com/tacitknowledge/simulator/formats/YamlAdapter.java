@@ -109,7 +109,7 @@ public class YamlAdapter extends BaseAdapter implements Adapter<Object>
         throws FormatAdapterException
     {
         String object = exchange.getIn().getBody(String.class);
-        logger.debug("Attempting to generate SimulatorPojo from YAML content:\n" + object);
+        logger.debug("Attempting to generate SimulatorPojo from YAML content:\n{}", object);
 
         SimulatorPojo pojo = new StructuredSimulatorPojo();
 
@@ -134,8 +134,7 @@ public class YamlAdapter extends BaseAdapter implements Adapter<Object>
         }
         catch (EOFException e)
         {
-            logger.error("Unexpected error trying to read YAML object: " + e.getMessage());
-            throw new FormatAdapterException(e.getMessage(), e);
+            throw new FormatAdapterException("Unexpected error trying to read YAML object:", e);
         }
 
         logger.debug("Finished generating SimulatorPojo from YAML content");
@@ -157,7 +156,6 @@ public class YamlAdapter extends BaseAdapter implements Adapter<Object>
         if (pojo.getRoot().isEmpty() || pojo.getRoot().size() > 1)
         {
             String errorMsg = "SimulatorPojo's root should contain only one Entry for YAML adaptTo";
-            logger.error(errorMsg);
             throw new FormatAdapterException(errorMsg);
         }
 
