@@ -1,0 +1,72 @@
+<definitions name="OrderService"
+             targetNamespace="http://www.examples.com/wsdl/OrderService.wsdl"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:tns="http://www.examples.com/wsdl/OrderService.wsdl"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+    <types>
+        <schema targetNamespace="http://www.examples.com/wsdl/OrderService.wsdl"
+                xmlns="http://www.w3.org/2001/XMLSchema"
+                xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+                xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+            <complexType name="Order">
+                <all>
+                    <element name="id" type="int"/>
+                    <element name="lastUpdate" type="date"/>
+                    <element name="itemsForShipping" type="int"/>
+                </all>
+            </complexType>
+
+            <complexType name="ShippedItems">
+                <complexContent>
+                    <restriction base="soapenc:Array">
+                        <attribute ref="soapenc:arrayType" wsdl:arrayType="string[]"/>
+                    </restriction>
+                </complexContent>
+            </complexType>
+        </schema>
+    </types>
+
+    <message name="UpdateOrderRequest">
+        <part name="order" type="tns:Order"/>
+        <part name="shippedItems" type="tns:ShippedItems"/>
+    </message>
+    <message name="UpdateOrderResponse">
+        <part name="order" type="tns:Order"/>
+    </message>
+
+    <portType name="Order_PortType">
+        <operation name="updateOrderItemsForShipping">
+            <input message="tns:UpdateOrderRequest"/>
+            <output message="tns:UpdateOrderResponse"/>
+        </operation>
+    </portType>
+
+    <binding name="Order_Binding" type="tns:Order_PortType">
+        <soap:binding style="rpc"
+                      transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="updateOrderItemsForShipping">
+            <soap:operation soapAction="updateOrderItemsForShipping"/>
+            <input>
+                <soap:body
+                        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+                        namespace="urn:examples:orderservice"
+                        use="encoded"/>
+            </input>
+            <output>
+                <soap:body
+                        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+                        namespace="urn:examples:orderservice"
+                        use="encoded"/>
+            </output>
+        </operation>
+    </binding>
+
+    <service name="Order_Service">
+        <documentation>WSDL File for OrderService</documentation>
+        <port binding="tns:Order_Binding" name="Order_Port">
+            <soap:address location="http://www.examples.com/orderManagement/"/>            
+        </port>
+    </service>
+</definitions>

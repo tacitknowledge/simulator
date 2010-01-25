@@ -23,16 +23,19 @@ import java.util.Map;
 public class SoapAdapterTest extends TestCase
 {
     public static final String WSDL_FILE = "HelloService.wsdl";
+    public static final String COMPLEX_WSDL_FILE = "OrderService.wsdl";
 
     public static final String SOAP_FILE = "soap_test.xml";
+    public static final String COMPLEX_SOAP_FILE = "complex_soap_test.xml";
     public static final String SOAP_FILE_WITH_WRONG_METHOD = "soap_test_wrong_method.xml";
     public static final String SOAP_FILE_WITH_WRONG_PARAM = "soap_test_wrong_param.xml";
 
     private Exchange exchange;
     private Message message;
 
+    private Map<String, String> params;
     private SoapAdapter adapter;
-    private String testWSDLFileName = TestHelper.RESOURCES_PATH + WSDL_FILE;
+    private String defaultWSDLFileName = TestHelper.RESOURCES_PATH + WSDL_FILE;
     private StringBuilder testFileName;
 
     /**
@@ -49,19 +52,16 @@ public class SoapAdapterTest extends TestCase
         message = new DefaultMessage();
 
         adapter = new SoapAdapter();
-        testFileName = new StringBuilder(TestHelper.ORIGINAL_FILES_PATH );
+        setupSoapAdapter();
 
-        Map<String, String> params = new HashMap<String, String>();
-        params.put(SoapAdapter.PARAM_WSDL_URL, testWSDLFileName);
-        adapter.setParameters(params);
-        adapter.validateParameters();
+        testFileName = new StringBuilder(TestHelper.ORIGINAL_FILES_PATH);
     }
 
     public void testShouldFailWithWrongWsdlUri()
     {
-        Map<String, String> pars = new HashMap<String, String>();
-        pars.put(SoapAdapter.PARAM_WSDL_URL, "noWSDLFileHere.wsdl");
-        adapter.setParameters(pars);
+        params = new HashMap<String, String>();
+        params.put(SoapAdapter.PARAM_WSDL_URL, "noWSDLFileHere.wsdl");
+        adapter.setParameters(params);
 
         try
         {
@@ -88,14 +88,46 @@ public class SoapAdapterTest extends TestCase
             assertNotNull(pojo.getRoot());
             // --- Assert we got the SOAP payload
             assertNotNull(pojo.getRoot().get(SoapAdapter.DEFAULT_PAYLOAD_KEY));
-            Map<String, Object> payload = (Map<String, Object>) pojo.getRoot().get(SoapAdapter.DEFAULT_PAYLOAD_KEY);
+            Map<String, Object> payload =
+                    (Map<String, Object>) pojo.getRoot().get(SoapAdapter.DEFAULT_PAYLOAD_KEY);
 
             assertTrue("Expecting 'sayHello' method in payload", payload.containsKey("sayHello"));
             Map<String, Object> sayHello = (Map<String, Object>) payload.get("sayHello");
-            assertTrue("Expecting 'firstName' param in 'sayHello' method", sayHello.containsKey("firstName"));
+            assertTrue("Expecting 'firstName' param in 'sayHello' method",
+                    sayHello.containsKey("firstName"));
 
             // --- We also expect to get the fault object
             assertNotNull(payload.get(SoapAdapter.FAULT));
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    public void testSuccessfulCreatePojoFromComplexSoap()
+    {
+        try
+        {
+            setupSoapAdapter(TestHelper.RESOURCES_PATH + COMPLEX_WSDL_FILE);
+
+            setExchangeContentsFromFile(
+                    testFileName.append(COMPLEX_SOAP_FILE).toString());
+
+            // --- Get a SimulatorPojo from our fake little XML
+            SimulatorPojo pojo = adapter.createSimulatorPojo(exchange);
+
+            Map<String, Object> payload =
+                    (Map<String, Object>) pojo.getRoot().get(SoapAdapter.DEFAULT_PAYLOAD_KEY);
+
+            assertNotNull(payload.get("updateOrderItemsForShipping"));
+            Map<String, Map> updateOrder =
+                    (Map<String, Map>) payload.get("updateOrderItemsForShipping");
+            // --- Assert it's got the passed parts
+            assertNotNull(updateOrder.get("order"));
+            assertNotNull(updateOrder.get("shippedItems"));
+
         }
         catch (Exception e)
         {
@@ -117,9 +149,9 @@ public class SoapAdapterTest extends TestCase
                 testFileName.append(SOAP_FILE_WITH_WRONG_PARAM).toString());
     }
 
-    public void testSuccessfulGetString()
+    public void testSuccessfulGetString() throws Exception
     {
-        setupOutboundSoapAdapter();
+        setupSoapAdapter(Configurable.BOUND_OUT);
 
         SimulatorPojo pojo = new StructuredSimulatorPojo();
         pojo.getRoot().put(
@@ -145,9 +177,49 @@ public class SoapAdapterTest extends TestCase
         }
     }
 
-    public void testGetSoapFaultResponse()
+
+    public void testSuccessfulGetStringFromComplex() throws Exception
     {
-        setupOutboundSoapAdapter();
+        setupSoapAdapter(Configurable.BOUND_OUT, TestHelper.RESOURCES_PATH + COMPLEX_WSDL_FILE);
+
+        Map<String, String> order = new HashMap<String, String>();
+        order.put("id", "8653216");
+        order.put("lastUpdate", "2010-01-25");
+        order.put("itemsForShipping", "2");
+
+        SimulatorPojo pojo = new StructuredSimulatorPojo();
+        pojo.getRoot().put(
+                SoapAdapter.DEFAULT_PAYLOAD_KEY,
+                TestHelper.getMapOneEntry(
+                        "updateOrderItemsForShipping",
+                        TestHelper.getMapOneEntry(
+                                "order",
+                                order
+                        )
+                )
+        );
+
+        try
+        {
+            String soapMessage = adapter.getString(pojo, exchange);
+
+            assertTrue("Expecting response method updateOrderItemsForShippingResponse",
+                    soapMessage.indexOf("updateOrderItemsForShippingResponse") > -1);
+            assertTrue("Expecting response tag <tns:order>", 
+                    soapMessage.indexOf("<tns:order>") > -1);
+            assertTrue("Expecting tag <tns:itemsForShipping> value to be 2",
+                    soapMessage.indexOf("<tns:itemsForShipping>2</tns:itemsForShipping>") > -1);
+        }
+        catch(FormatAdapterException fae)
+        {
+            fae.printStackTrace();
+            fail("Not expecting exception, yet got: " + fae.getMessage());
+        }
+    }
+
+    public void testGetSoapFaultResponse() throws Exception
+    {
+        setupSoapAdapter(Configurable.BOUND_OUT);
 
         SimulatorPojo pojo = new StructuredSimulatorPojo();
         pojo.getRoot().put(
@@ -174,9 +246,9 @@ public class SoapAdapterTest extends TestCase
         }
     }
 
-    public void testGetStringWithWrongMethod()
+    public void testGetStringWithWrongMethod() throws Exception
     {
-        setupOutboundSoapAdapter();
+        setupSoapAdapter(Configurable.BOUND_OUT);
 
         SimulatorPojo pojo = new StructuredSimulatorPojo();
         pojo.getRoot().put(
@@ -191,9 +263,9 @@ public class SoapAdapterTest extends TestCase
         testGetStringShouldFail(pojo);
     }
 
-    public void testGetStringWithWrongParameter()
+    public void testGetStringWithWrongParameter() throws Exception
     {
-        setupOutboundSoapAdapter();
+        setupSoapAdapter(Configurable.BOUND_OUT);
 
         SimulatorPojo pojo = new StructuredSimulatorPojo();
         pojo.getRoot().put(
@@ -251,11 +323,28 @@ public class SoapAdapterTest extends TestCase
         exchange.setIn(message);
     }
 
-    private void setupOutboundSoapAdapter()
+    private void setupSoapAdapter() throws Exception
+    {
+        setupSoapAdapter(Configurable.BOUND_IN, defaultWSDLFileName);
+    }
+
+    private void setupSoapAdapter(int bound) throws Exception
+    {
+        setupSoapAdapter(bound, defaultWSDLFileName);
+    }
+
+    private void setupSoapAdapter(String wsdlFile) throws Exception
+    {
+        setupSoapAdapter(Configurable.BOUND_IN, wsdlFile);
+    }
+
+    private void setupSoapAdapter(int bound,String wsdlFile) throws Exception
     {
         // --- Flag the adapter as outbound
-        Map<String, String> pars = new HashMap<String, String>();
-        pars.put(SoapAdapter.PARAM_WSDL_URL, testWSDLFileName);
-        adapter.setBoundAndParameters(Configurable.BOUND_OUT, pars);
+        params = new HashMap<String, String>();
+        params.put(SoapAdapter.PARAM_WSDL_URL, wsdlFile);
+        adapter.setBoundAndParameters(bound, params);
+
+        adapter.validateParameters();
     }
 }

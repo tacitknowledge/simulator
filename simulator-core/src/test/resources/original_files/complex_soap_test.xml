@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope"
+              xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+              xmlns:tns="http://www.examples.com/wsdl/OrderService.wsdl">
+        
+   <env:Body>
+     <tns:updateOrderItemsForShipping>
+        <tns:order>
+          <tns:id>8653216</tns:id>
+          <tns:lastUpdate>2009-12-28</tns:lastUpdate>
+          <tns:itemsForShipping>4</tns:itemsForShipping>
+        </tns:order>
+        <tns:shippedItems>
+            <item xsd:type="xsd:string">3575</item>
+            <item xsd:type="xsd:string">9875</item>
+        </tns:shippedItems>
+     </tns:updateOrderItemsForShipping>
+   </env:Body>
+</env:Envelope>

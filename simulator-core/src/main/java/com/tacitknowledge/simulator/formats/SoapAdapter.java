@@ -463,6 +463,7 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
     /**
      * 
      * @param payload Map containing SOAP message's payload
+     * @return True if payload is valid. False otherwise.
      * @throws FormatAdapterException If any validation fails.
      * @throws SOAPException If any SOAP generation error occurs
      */
@@ -575,7 +576,10 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
 
             for (Part part : parts.values())
             {
-                methodParams.put(part.getName(), "");
+                if (!methodParams.containsKey(part.getName()))
+                {
+                    methodParams.put(part.getName(), "");
+                }
             }
         }
 
