@@ -1,21 +1,18 @@
 package com.tacitknowledge.simulator;
 
-import com.tacitknowledge.simulator.formats.AdapterFactory;
-import com.tacitknowledge.simulator.formats.FormatConstants;
 import com.tacitknowledge.simulator.formats.XmlAdapter;
 import com.tacitknowledge.simulator.scripting.ScriptException;
 import com.tacitknowledge.simulator.scripting.ScriptExecutionService;
 import javassist.ClassPool;
 import junit.framework.TestCase;
-
-import java.util.Map;
-
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.impl.DefaultExchange;
 import org.apache.camel.impl.DefaultMessage;
+
+import java.util.Map;
 
 /**
  * This test will help us to validate we are able to read and execute the different scripting
@@ -36,7 +33,7 @@ public class ScriptExecutionServiceTest extends TestCase
         ClassPool pool = ClassPool.getDefault();
 
         // --- First, get the SimulatorPojo from the data
-        XmlAdapter adapter = (XmlAdapter) AdapterFactory.getInstance().getAdapter(FormatConstants.XML);
+        XmlAdapter adapter = new XmlAdapter();
 
         CamelContext context = new DefaultCamelContext();
         Exchange exchange = new DefaultExchange(context);

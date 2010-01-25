@@ -20,7 +20,7 @@ public class XmlAdapterTest extends TestCase
 {
     public void testAdaptFromXml()
     {
-        XmlAdapter adapter = (XmlAdapter) AdapterFactory.getInstance().getAdapter(FormatConstants.XML);
+        XmlAdapter adapter = new XmlAdapter();
 
         SimulatorPojo pojo;
         try
@@ -45,7 +45,7 @@ public class XmlAdapterTest extends TestCase
 
     public void testAdaptToXml()
     {
-        XmlAdapter adapter = (XmlAdapter) AdapterFactory.getInstance().getAdapter(FormatConstants.XML);
+        XmlAdapter adapter = new XmlAdapter();
 
         // --- Lets use the same pojo generated in the generateBeans() method
         try

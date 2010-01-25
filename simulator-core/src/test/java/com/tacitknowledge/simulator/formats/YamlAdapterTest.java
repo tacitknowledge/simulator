@@ -28,7 +28,7 @@ public class YamlAdapterTest extends TestCase
 
     public void setUp()
     {
-        adapter = (YamlAdapter) AdapterFactory.getInstance().getAdapter(FormatConstants.YAML);
+        adapter = new YamlAdapter();
     }
 
     public void testAdapterWithoutParameters()

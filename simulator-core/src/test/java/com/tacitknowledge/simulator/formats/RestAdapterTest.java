@@ -34,7 +34,7 @@ public class RestAdapterTest {
     @Before
     public void setUp()
     {
-        adapter = (RestAdapter) AdapterFactory.getInstance().getAdapter(FormatConstants.REST);
+        adapter = new RestAdapter();
     }
 
     @Test

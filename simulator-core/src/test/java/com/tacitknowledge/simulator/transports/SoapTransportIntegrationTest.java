@@ -6,6 +6,7 @@ import com.tacitknowledge.simulator.Conversation;
 import com.tacitknowledge.simulator.RouteManager;
 import com.tacitknowledge.simulator.TestHelper;
 import com.tacitknowledge.simulator.Transport;
+import com.tacitknowledge.simulator.ConfigurationUtil;
 import org.apache.camel.CamelContext;
 import org.junit.After;
 import org.junit.Before;
@@ -58,8 +59,8 @@ public class SoapTransportIntegrationTest {
     @Before
     public void setup() throws SOAPException
     {
-        inTransport = TransportFactory.getInstance().getTransport(TransportConstants.SOAP);
-        outTransport = TransportFactory.getInstance().getTransport(TransportConstants.SOAP);
+        inTransport = new SoapTransport();
+        outTransport = new SoapTransport();
         inAdapter = new SoapAdapter();
         outAdapter = new SoapAdapter();
         routeManager = new RouteManagerImpl();

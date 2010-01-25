@@ -62,4 +62,5 @@ public interface Configurable
      * @return The bounding (IN or OUT) of the configurable instance
      */
     int getBound();
+    
 }

@@ -13,4 +13,13 @@ class FormatType < ActiveRecord::Base
 #  has_many :formats
 
   validates_presence_of :name, :class_name
+
+   #Retrieves class name of a format given a format name
+  def self.get_format_class_name_by_name(name)
+    format_type = FormatType.find(:first, :conditions => ["name = ?", name], :select => "class_name")
+    if format_type
+      return format_type.class_name
+    end
+  end
+
 end

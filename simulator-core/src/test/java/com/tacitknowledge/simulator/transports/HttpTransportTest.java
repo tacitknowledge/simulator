@@ -121,7 +121,7 @@ public class HttpTransportTest extends TestCase
         params.put(HttpTransport.PARAM_RESOURCE_URI, "/mytestapp");
         transport.setParameters(params);
 
-        Transport out_tr = TransportFactory.getInstance().getTransport(TransportConstants.REST);
+        Transport out_tr = new RestTransport();
         Map<String, String> pars = new HashMap<String, String>();
         pars.put(HttpTransport.PARAM_HTTP_OUT, "true");
         out_tr.setParameters(pars);

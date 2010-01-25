@@ -25,11 +25,11 @@ class ConversationsController < ApplicationController
       @conversation[:inbound_format_type_id] = @conversation.in_format.format_type_id
       @conversation[:outbound_format_type_id] = @conversation.out_format.format_type_id
 
-      in_tt_name = TransportType.find(@conversation.in_transport.transport_type_id).name
-      out_tt_name = TransportType.find(@conversation.out_transport.transport_type_id).name
+      in_tt_name = TransportType.find(@conversation.in_transport.transport_type_id).class_name
+      out_tt_name = TransportType.find(@conversation.out_transport.transport_type_id).class_name
 
-      in_frmt_name = FormatType.find(@conversation.in_format.format_type_id).name
-      out_frmt_name = FormatType.find(@conversation.out_format.format_type_id).name
+      in_frmt_name = FormatType.find(@conversation.in_format.format_type_id).class_name
+      out_frmt_name = FormatType.find(@conversation.out_format.format_type_id).class_name
 
       # Include the configurations in the JSON response
       configurations = {}
@@ -193,11 +193,13 @@ class ConversationsController < ApplicationController
   end
 
   def transport_parameters
-    render :json => {:data => SimulatorConnector.instance.get_transport_parameters(params[:type])}
+    transport_class_name = TransportType.get_transport_class_name_by_name(params[:type])
+    render :json => {:data => SimulatorConnector.instance.get_transport_parameters(transport_class_name)}
   end
 
   def format_parameters
-    render :json => {:data => SimulatorConnector.instance.get_format_parameters(params[:format])}
+    format_class_name = FormatType.get_format_class_name_by_name(params[:format])
+    render :json => {:data => SimulatorConnector.instance.get_format_parameters(format_class_name)}
   end
 
   def enable

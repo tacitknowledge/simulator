@@ -32,7 +32,7 @@ public class
 
     public void setUp()
     {
-        adapter = (CsvAdapter) AdapterFactory.getInstance().getAdapter(FormatConstants.CSV);
+        adapter = new CsvAdapter();
     }
 
     public void testSuccessfulAdaptFromWithHeaders()

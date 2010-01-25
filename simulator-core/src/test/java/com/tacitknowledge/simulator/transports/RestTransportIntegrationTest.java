@@ -32,8 +32,8 @@ public class RestTransportIntegrationTest {
 
     @Before
     public void setup(){
-        inTransport = TransportFactory.getInstance().getTransport(TransportConstants.REST);
-        outTransport = TransportFactory.getInstance().getTransport(TransportConstants.REST);
+        inTransport = new RestTransport();
+        outTransport = new RestTransport();
         inAdapter = new RestAdapter();
         outAdapter = new RestAdapter();
         routeManager = new RouteManagerImpl();

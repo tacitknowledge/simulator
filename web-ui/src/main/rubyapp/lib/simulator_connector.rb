@@ -24,8 +24,8 @@ class SimulatorConnector
     @conv_mgr.getAdapterParameters(format)
   end
 
-  def get_transport_parameters(type)
-    @conv_mgr.getTransportParameters(type)
+  def get_transport_parameters(class_name)
+    @conv_mgr.getTransportParameters(class_name)
   end
 
 

@@ -10,14 +10,10 @@ class ConfigurationController < ApplicationController
 
   def export
     begin
-      systems = System.find(:all)
-
+      systems = System.find(:all)  
       #doc - REXML document
       doc = systems_to_xml(systems)
-      #todo add error handling
-
-#      response.headers["Content-Type"] = 'text/xml'
-      render :xml => doc.to_s(2) ,:content_type=>"text/json"
+      render :xml => doc.to_s() ,:content_type=>"application/xml"
     rescue Exception => e
       render :template => "error"
     end
@@ -25,15 +21,16 @@ class ConfigurationController < ApplicationController
 
   def import
     begin
-
-      file_path = params[:file].local_path
+      puts "Importing file : #{params[:file]}"
+      file_path = params[:file]
 
       file = File.new(file_path)
+      puts "File path #{file.path}"
       doc = REXML::Document.new file
       import_xml(doc)
       render :text => {:message => "Successfully imported"}.to_s 
     rescue Exception => e
-      render :text => {:message => "Error" }.to_s
+      render :text => {:message => "Error", :error => e.message}.to_s
     end
   end
 end

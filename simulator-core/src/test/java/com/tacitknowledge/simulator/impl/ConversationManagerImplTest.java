@@ -8,14 +8,15 @@ import com.tacitknowledge.simulator.ConversationScenario;
 import com.tacitknowledge.simulator.RouteManager;
 import com.tacitknowledge.simulator.SimulatorCamelTestSupportBase;
 import com.tacitknowledge.simulator.SimulatorException;
-import com.tacitknowledge.simulator.configuration.SimulatorEventListener;
-import com.tacitknowledge.simulator.configuration.EventDispatcher;
 import com.tacitknowledge.simulator.camel.RouteManagerImpl;
-import com.tacitknowledge.simulator.formats.AdapterFactory;
+import com.tacitknowledge.simulator.configuration.EventDispatcher;
+import com.tacitknowledge.simulator.configuration.SimulatorEventListener;
 import com.tacitknowledge.simulator.formats.FormatConstants;
-import org.junit.Test;
-import org.junit.Ignore;
+import com.tacitknowledge.simulator.formats.JsonAdapter;
+import com.tacitknowledge.simulator.formats.PlainTextAdapter;
+import com.tacitknowledge.simulator.formats.CsvAdapter;
 import org.apache.camel.Exchange;
+import org.junit.Test;
 
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         RouteManager routeManager = new RouteManagerImpl();
         ConversationManager manager = new ConversationManagerImpl(routeManager);
 
-        List<List> params = manager.getAdapterParameters(FormatConstants.CSV);
+        List<List> params = manager.getAdapterParameters(CsvAdapter.class.getName());
         assertEquals(4, params.size());
     }
 
@@ -44,11 +45,11 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         ConversationManager manager = new ConversationManagerImpl(routeManager);
 
         Conversation conversation = manager.createOrUpdateConversation(null,
-            "testCreateConversation",
-            inTransport,
-            outTransport,
-            AdapterFactory.getInstance().getAdapter(FormatConstants.JSON),
-            AdapterFactory.getInstance().getAdapter(FormatConstants.JSON), "");
+                "testCreateConversation",
+                inTransport,
+                outTransport,
+                new JsonAdapter(),
+                new JsonAdapter(), "");
         assertNotNull(conversation);
         assertNotNull(conversation.getInboundTransport());
         assertNotNull(conversation.getOutboundTransport());
@@ -64,11 +65,11 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         try
         {
             conversation = manager.createOrUpdateConversation(null,
-                "testCreateConversationWithWrongFormat",
-                inTransport,
-                outTransport,
-                AdapterFactory.getInstance().getAdapter("WTF?"),
-                AdapterFactory.getInstance().getAdapter("WTF?"), "");
+                    "testCreateConversationWithWrongFormat",
+                    inTransport,
+                    outTransport,
+                    null,
+                    new JsonAdapter(), "");
             fail();
         }
         catch (SimulatorException e)
@@ -95,12 +96,12 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
 
         Conversation conversation = null;
         conversation = manager.createOrUpdateConversation(1,
-            "testIsActive",
-            inTransport,
-            outTransport,
-            AdapterFactory.getInstance().getAdapter(FormatConstants.PLAIN_TEXT),
-            AdapterFactory.getInstance().getAdapter(FormatConstants.PLAIN_TEXT),
-            "");
+                "testIsActive",
+                inTransport,
+                outTransport,
+                new PlainTextAdapter(),
+                new PlainTextAdapter(),
+                "");
         assertFalse(manager.isActive(conversation.getId()));
         manager.activate(conversation.getId());
         assertTrue(manager.isActive(conversation.getId()));
@@ -109,17 +110,17 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
 
     @Test
     public void testCreateOrUpdateScenarioConversationDoesntExits()
-        throws SimulatorException, ConversationNotFoundException
+            throws SimulatorException, ConversationNotFoundException
     {
         RouteManager routeManager = new RouteManagerImpl();
         ConversationManager manager = new ConversationManagerImpl(routeManager);
 
         Conversation conversation = manager.createOrUpdateConversation(1,
-            "testCreateOrUpdateScenarioConversationDoesntExits",
-            inTransport,
-            outTransport,
-            AdapterFactory.getInstance().getAdapter(FormatConstants.PLAIN_TEXT),
-            AdapterFactory.getInstance().getAdapter(FormatConstants.PLAIN_TEXT), "");
+                "testCreateOrUpdateScenarioConversationDoesntExits",
+                inTransport,
+                outTransport,
+                new PlainTextAdapter(),
+                new PlainTextAdapter(), "");
         ConversationScenario scenario = manager.createOrUpdateConversationScenario(2, 2, "javascript", "true", "2+2");
         assertNull(scenario);
     }
@@ -132,8 +133,8 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         ConversationManager manager = new ConversationManagerImpl(routeManager);
 
         Conversation conversation = manager.createOrUpdateConversation(1, "testCreateScenario", inTransport, outTransport,
-                AdapterFactory.getInstance().getAdapter(FormatConstants.PLAIN_TEXT),
-                AdapterFactory.getInstance().getAdapter(FormatConstants.PLAIN_TEXT),
+                new PlainTextAdapter(),
+                new PlainTextAdapter(),
                 "defaultScenario");
         ConversationScenario scenario = manager.createOrUpdateConversationScenario(1, 2, "javascript", "true", "2+2");
         assertNotNull(scenario);
@@ -158,8 +159,8 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         ConversationManager manager = new ConversationManagerImpl(routeManager);
 
         Conversation conversation = manager.createOrUpdateConversation(1, "testDeleteConversation", inTransport, outTransport,
-                AdapterFactory.getInstance().getAdapter(FormatConstants.PLAIN_TEXT),
-                AdapterFactory.getInstance().getAdapter(FormatConstants.PLAIN_TEXT),
+                new PlainTextAdapter(),
+                new PlainTextAdapter(),
                 "");
         ConversationScenario scenario = manager.createOrUpdateConversationScenario(1, 2, "javascript", "true", "2+2");
         assertNotNull(scenario);
@@ -185,8 +186,8 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         assertFalse(manager.conversationExists(1));
         Conversation conversation = manager.createOrUpdateConversation(1, "testConversationExists",
                 inTransport, outTransport,
-                AdapterFactory.getInstance().getAdapter(FormatConstants.PLAIN_TEXT),
-                AdapterFactory.getInstance().getAdapter(FormatConstants.PLAIN_TEXT),
+                new PlainTextAdapter(),
+                new PlainTextAdapter(),
                 "");
         assertTrue(manager.conversationExists(1));
         manager.activate(1);
@@ -202,12 +203,12 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
 
         Conversation conversation = manager.createOrUpdateConversation(1, "testDefaultScenarioWasExecuted",
                 inTransport, outTransport,
-                AdapterFactory.getInstance().getAdapter(FormatConstants.PLAIN_TEXT),
-                AdapterFactory.getInstance().getAdapter(FormatConstants.PLAIN_TEXT),
+                new PlainTextAdapter(),
+                new PlainTextAdapter(),
                 "var testVar=123");
         ConversationScenario scenario = manager.createOrUpdateConversationScenario(1, 2, "javascript", "true",
-            "testVar=testVar+1\n" +
-                "testVar");
+                "testVar=testVar+1\n" +
+                        "testVar");
 
         manager.activate(1);
 
@@ -225,9 +226,10 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
     public static final String TEST_IMPL_3 =
             "com.tacitknowledge.simulator.impl.ConversationManagerImplTest$TestEventListenerImpl3";
 
-    
+
     @Test
-    public void testRegisterListeners() {
+    public void testRegisterListeners()
+    {
         ConversationManager manager = new ConversationManagerImpl(routeManager);
         manager.registerListeners(System.getProperty("user.dir") + "/src/test/resources/listeners");
         List<SimulatorEventListener> listeners = EventDispatcher.getInstance().getSimulatorEventListeners();
@@ -236,13 +238,19 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         boolean impl1Found = false;
         boolean impl2Found = false;
         boolean impl3Found = false;
-        for(SimulatorEventListener listener : listeners) {
+        for (SimulatorEventListener listener : listeners)
+        {
             String className = listener.getClass().getName();
-            if(className.equals(TEST_IMPL_1)) {
+            if (className.equals(TEST_IMPL_1))
+            {
                 impl1Found = true;
-            } else if(className.equals(TEST_IMPL_2)) {
+            }
+            else if (className.equals(TEST_IMPL_2))
+            {
                 impl2Found = true;
-            } else if(className.equals(TEST_IMPL_3)) {
+            }
+            else if (className.equals(TEST_IMPL_3))
+            {
                 impl3Found = true;
             }
         }
@@ -252,59 +260,76 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
     /**
      * SimulatorEventListener implementation for testing purposes
      */
-    public static final class TestEventListenerImpl1 implements SimulatorEventListener {
+    public static final class TestEventListenerImpl1 implements SimulatorEventListener
+    {
 
-        public TestEventListenerImpl1(){}
-
-
-        public void onNewMessage(Exchange exchange, Conversation conversation) {
+        public TestEventListenerImpl1()
+        {
         }
 
-        public void onMatchingScenario(Exchange exchange, Conversation conversation) {
+
+        public void onNewMessage(Exchange exchange, Conversation conversation)
+        {
         }
 
-        public void onResponseBuilt(Exchange exchange, Conversation conversation) {
+        public void onMatchingScenario(Exchange exchange, Conversation conversation)
+        {
         }
 
-        public void onResponseSent(Exchange exchange, Conversation conversation) {
-        }
-    }
-
-    /**
-     * SimulatorEventListener implementation for testing purposes
-     */
-    public static final class TestEventListenerImpl2 implements SimulatorEventListener {
-
-
-        public void onNewMessage(Exchange exchange, Conversation conversation) {
+        public void onResponseBuilt(Exchange exchange, Conversation conversation)
+        {
         }
 
-        public void onMatchingScenario(Exchange exchange, Conversation conversation) {
-        }
-
-        public void onResponseBuilt(Exchange exchange, Conversation conversation) {
-        }
-
-        public void onResponseSent(Exchange exchange, Conversation conversation) {
+        public void onResponseSent(Exchange exchange, Conversation conversation)
+        {
         }
     }
 
     /**
      * SimulatorEventListener implementation for testing purposes
      */
-    public static final class TestEventListenerImpl3 implements SimulatorEventListener {
+    public static final class TestEventListenerImpl2 implements SimulatorEventListener
+    {
 
 
-        public void onNewMessage(Exchange exchange, Conversation conversation) {
+        public void onNewMessage(Exchange exchange, Conversation conversation)
+        {
         }
 
-        public void onMatchingScenario(Exchange exchange, Conversation conversation) {
+        public void onMatchingScenario(Exchange exchange, Conversation conversation)
+        {
         }
 
-        public void onResponseBuilt(Exchange exchange, Conversation conversation) {
+        public void onResponseBuilt(Exchange exchange, Conversation conversation)
+        {
         }
 
-        public void onResponseSent(Exchange exchange, Conversation conversation) {
+        public void onResponseSent(Exchange exchange, Conversation conversation)
+        {
+        }
+    }
+
+    /**
+     * SimulatorEventListener implementation for testing purposes
+     */
+    public static final class TestEventListenerImpl3 implements SimulatorEventListener
+    {
+
+
+        public void onNewMessage(Exchange exchange, Conversation conversation)
+        {
+        }
+
+        public void onMatchingScenario(Exchange exchange, Conversation conversation)
+        {
+        }
+
+        public void onResponseBuilt(Exchange exchange, Conversation conversation)
+        {
+        }
+
+        public void onResponseSent(Exchange exchange, Conversation conversation)
+        {
         }
     }
 }

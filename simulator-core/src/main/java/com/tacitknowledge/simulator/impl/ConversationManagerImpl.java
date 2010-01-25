@@ -1,20 +1,10 @@
 package com.tacitknowledge.simulator.impl;
 
-import com.tacitknowledge.simulator.Adapter;
-import com.tacitknowledge.simulator.ConfigurableException;
-import com.tacitknowledge.simulator.Conversation;
-import com.tacitknowledge.simulator.ConversationManager;
-import com.tacitknowledge.simulator.ConversationNotFoundException;
-import com.tacitknowledge.simulator.ConversationScenario;
-import com.tacitknowledge.simulator.RouteManager;
-import com.tacitknowledge.simulator.SimulatorException;
-import com.tacitknowledge.simulator.Transport;
+import com.tacitknowledge.simulator.*;
 import com.tacitknowledge.simulator.camel.RouteManagerImpl;
 import com.tacitknowledge.simulator.configuration.EventDispatcher;
 import com.tacitknowledge.simulator.configuration.SimulatorEventListener;
-import com.tacitknowledge.simulator.formats.AdapterFactory;
 import com.tacitknowledge.simulator.scripting.ScriptExecutionService;
-import com.tacitknowledge.simulator.transports.TransportFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -103,7 +93,7 @@ public class ConversationManagerImpl implements ConversationManager
                                                    final Adapter inAdapter,
                                                    final Adapter outAdapter,
                                                    final String defaultResponse) throws
-                                                   SimulatorException
+            SimulatorException
     {
         Conversation conversationObj = conversations.get(id);
         if (conversationObj != null)
@@ -128,8 +118,8 @@ public class ConversationManagerImpl implements ConversationManager
      * @return conversation from the list of created conversations
      * @throws ConversationNotFoundException in case conversation is not found
      */
-    private Conversation getConversationById(final int conversationId)
-            throws ConversationNotFoundException
+    private Conversation getConversationById(final int conversationId) throws
+            ConversationNotFoundException
     {
         Conversation conversation = conversations.get(conversationId);
         if (conversation == null)
@@ -185,7 +175,7 @@ public class ConversationManagerImpl implements ConversationManager
         catch (Exception e)
         {
             String errorMsg = "Conversation with id : " + conversationId +
-                                " couldn't be activated: ";
+                    " couldn't be activated: ";
             throw new SimulatorException(errorMsg, e);
         }
     }
@@ -263,23 +253,33 @@ public class ConversationManagerImpl implements ConversationManager
 
 
     /**
-     * @param format @see ConversationManager#getAdapterParameters
+     * @param className @see ConversationManager#getAdapterParameters
      * @return @see ConversationManager#getAdapterParameters
      * @inheritDoc
      */
-    public List<List> getAdapterParameters(String format) throws ConfigurableException
+    public List<List> getAdapterParameters(String className) throws ConfigurableException
     {
-        return AdapterFactory.getInstance().getParametersDefinition(format);
+        Configurable configurable = ConfigurationUtil.getConfigurable(className);
+        if (configurable == null)
+        {
+            throw new ConfigurableException("Configurable Adapter is null");
+        }
+        return configurable.getParametersList();
     }
 
     /**
-     * @param type The transport type
+     * @param className The transport type
      * @return @see ConversationManager#getTransportParameters
      * @inheritDoc
      */
-    public List<List> getTransportParameters(String type) throws ConfigurableException
+    public List<List> getTransportParameters(String className) throws ConfigurableException
     {
-        return TransportFactory.getInstance().getParametersDefinition(type);
+        Configurable configurable = ConfigurationUtil.getConfigurable(className);
+        if (configurable == null)
+        {
+            throw new ConfigurableException("Configurable Transport is null");
+        }
+        return configurable.getParametersList();
     }
 
     /**
