@@ -50,8 +50,10 @@ public class SoapTransportIntegrationTest {
     SOAPConnection connection;
 
     private static final String SOAP_FILE = "soap_test.xml";
+    private static final String COMPLEX_SOAP_FILE = "complex_soap_test.xml";
 
     private String testWSDLFileName = TestHelper.RESOURCES_PATH + "HelloService.wsdl";
+    private String complexWSDLFileName = TestHelper.RESOURCES_PATH + "OrderService.wsdl";
 
     private static final String DESTINATION = "http://0.0.0.0:7000/soapService";
     private static final String RESPONSE_GREETING = "HELLLLLLLOOWWWWWW";
@@ -89,11 +91,12 @@ public class SoapTransportIntegrationTest {
     public void successfulSoapTest() throws Exception
     {
         String criteriaScript  = "payload.sayHello.firstName == 'Dude'";
-        String executionScript = "payload.sayHello.greeting = '" + RESPONSE_GREETING + "'; payload;";
-        setupConversation(criteriaScript, executionScript);
+        String executionScript = "payload.sayHello.greeting = '" +
+                RESPONSE_GREETING + "'; payload;";
+        setupConversation(testWSDLFileName, criteriaScript, executionScript);
 
         //Make web service call
-        SOAPMessage reply = connection.call(createMessage(), DESTINATION);
+        SOAPMessage reply = connection.call(createMessage(SOAP_FILE), DESTINATION);
 
         SOAPBody body = reply.getSOAPBody();
         Iterator iter = body.getChildElements();
@@ -117,16 +120,63 @@ public class SoapTransportIntegrationTest {
     }
 
     @Test
+    public void successfulComplexSoapTest() throws Exception
+    {
+        String criteriaScript = "payload.updateOrderItemsForShipping.order.id == '8653216'";
+        String executionScript =
+                "payload.updateOrderItemsForShipping.order.itemsForShipping = " +
+                    "payload.updateOrderItemsForShipping.order.itemsForShipping - " +
+                "payload.updateOrderItemsForShipping.shippedItems.item.length;" +
+                "payload;";
+        setupConversation(complexWSDLFileName, criteriaScript, executionScript);
+
+        //Make web service call
+        SOAPMessage reply = connection.call(createMessage(COMPLEX_SOAP_FILE), DESTINATION);
+
+        SOAPBody body = reply.getSOAPBody();
+        Iterator iter = body.getChildElements();
+        SOAPElement element;
+        while (iter.hasNext())
+        {
+            element = (SOAPElement) iter.next();
+
+            // --- As response, we expect the method name + "Response"
+            assertEquals("tns:updateOrderItemsForShippingResponse", element.getTagName());
+            Iterator childIter = element.getChildElements();
+            while (childIter.hasNext())
+            {
+                element = (SOAPElement) childIter.next();
+                assertEquals("tns:order", element.getTagName());
+
+                Iterator orderChildren = element.getChildElements();
+                while (orderChildren.hasNext())
+                {
+                    SOAPElement orderChild = (SOAPElement) orderChildren.next();
+                    if (orderChild.getTagName().equals("id"))
+                    {
+                        assertEquals("8653216", orderChild.getValue());
+                    } else if (orderChild.getTagName().equals("itemsForShipping"))
+                    {
+                        assertEquals("2", orderChild.getValue());
+                    }
+                }
+                break;
+            }
+            break;
+        }
+    }
+
+    @Test
     public void getSOAPFaultResponseTest() throws Exception
     {
         String criteriaScript  = "payload.sayHello.firstName == 'Dude'";
         String executionScript =
                 "payload.fault." + SoapAdapter.FAULT_STRING + " = 'Who are you, Dude?!';" +
                 "payload;";
-        setupConversation(criteriaScript, executionScript);
+        setupConversation(testWSDLFileName, criteriaScript, executionScript);
 
         //Make web service call
-        SOAPMessage reply = connection.call(createMessage(), DESTINATION);
+        SOAPMessage reply = connection.call(createMessage(SOAP_FILE), DESTINATION);
 
         //Print message, for debugging
         reply.writeTo(System.out);
@@ -160,13 +210,13 @@ public class SoapTransportIntegrationTest {
         }
     }
 
-    private SOAPMessage createMessage() throws Exception
+    private SOAPMessage createMessage(String messageFile) throws Exception
     {
         //Create the Soap message
         MessageFactory messageFactory =
                 MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
         InputStream is = new ByteArrayInputStream(
-                TestHelper.readFile(TestHelper.ORIGINAL_FILES_PATH + SOAP_FILE).getBytes("UTF-8"));
+                TestHelper.readFile(TestHelper.ORIGINAL_FILES_PATH + messageFile).getBytes("UTF-8"));
 
         SOAPMessage message = messageFactory.createMessage(null, is);
 
@@ -176,7 +226,7 @@ public class SoapTransportIntegrationTest {
         return message;
     }
 
-    private void setupTransportsAndFormats()
+    private void setupTransportsAndFormats(String wsdlFile)
     {
         Map<String, String> transportParams = new HashMap<String, String>();
         transportParams.put(HttpTransport.PARAM_RESOURCE_URI, "/soapService");
@@ -185,7 +235,7 @@ public class SoapTransportIntegrationTest {
 
 
         Map<String, String> adapterParams = new HashMap<String, String>();
-        adapterParams.put(SoapAdapter.PARAM_WSDL_URL, testWSDLFileName);
+        adapterParams.put(SoapAdapter.PARAM_WSDL_URL, wsdlFile);
         inAdapter.setParameters(adapterParams);
 
         Map<String, String> pars = new HashMap<String, String>();
@@ -195,10 +245,10 @@ public class SoapTransportIntegrationTest {
         outAdapter.setBoundAndParameters(Configurable.BOUND_OUT, adapterParams);
     }
 
-    private void setupConversation(String criteriaScript, String executionScript)
+    private void setupConversation(String wsdlFile, String criteriaScript, String executionScript)
             throws Exception
     {
-        setupTransportsAndFormats();
+        setupTransportsAndFormats(wsdlFile);
 
         conv = new ConversationImpl(
                 1,
