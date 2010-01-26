@@ -1,0 +1,47 @@
+<?xml version='1.0'?>
+<systems>
+  <system>
+    <name>
+      system
+    </name>
+    <description>
+    </description>
+    <script_language>
+      javascript
+    </script_language>
+    <conversation>
+      <name>
+        conversation 1
+      </name>
+      <description>
+      </description>
+      <default_response>
+      </default_response>
+      <enabled>
+      </enabled>
+      <inbound_transport>
+        <type>
+          FTP
+        </type>
+        <configuration/>
+      </inbound_transport>
+      <outbound_transport>
+        <type>
+          File
+        </type>
+        <configuration/>
+      </outbound_transport>
+      <inbound_format>
+        <type>
+          PlainText
+        </type>
+        <configuration/>
+      </inbound_format>
+      <outbound_format>
+        <type>
+          PlainText
+        </type>
+      </outbound_format>
+    </conversation>
+  </system>
+</systems>

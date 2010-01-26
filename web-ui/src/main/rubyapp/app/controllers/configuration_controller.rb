@@ -21,16 +21,13 @@ class ConfigurationController < ApplicationController
 
   def import
     begin
-      puts "Importing file : #{params[:file]}"
       file_path = params[:file]
-
       file = File.new(file_path)
-      puts "File path #{file.path}"
       doc = REXML::Document.new file
       import_xml(doc)
-      render :text => {:message => "Successfully imported"}.to_s 
+      render :text => {:message => "Successfully imported"} 
     rescue Exception => e
-      render :text => {:message => "Error", :error => e.message}.to_s
+      render :text => {:message => "Error:", :error => e.message}.to_s
     end
   end
 end

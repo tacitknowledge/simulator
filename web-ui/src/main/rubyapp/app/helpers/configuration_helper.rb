@@ -151,28 +151,28 @@ module ConfigurationHelper
 
 
   def parse_format(format_element)
-    format_type_name = get_property(format_element,"type")
+    format_type_name = get_property(format_element,"type").strip
     format_type = FormatType.find_by_name(format_type_name)
-
     format = Format.new
     format.format_type_id = format_type.id
 
     configuration_element = format_element.get_elements("configuration")[0]
     configurations=[]
-    configuration_element.elements.each do |config_name|
-      config=FormatConfiguration.new
-      config.attribute_name = config_name.name
-      config.attribute_value = config_name.text
-      configurations << config
+    if configuration_element
+      configuration_element.elements.each do |config_name|
+        config=FormatConfiguration.new
+        config.attribute_name = config_name.name
+        config.attribute_value = config_name.text
+        configurations << config
+      end
     end
     format.configurations = configurations
     format
   end
 
   def parse_transport(transport_element)
-    transport_type_name = get_property(transport_element,"type")
+    transport_type_name = get_property(transport_element,"type").strip
     transport_type = TransportType.find_by_name(transport_type_name)
-
     transport = Transport.new
     transport.transport_type_id = transport_type.id
 
@@ -193,7 +193,4 @@ module ConfigurationHelper
   def get_property(element,property_name)
    element.get_elements(property_name)[0].text
   end
-
-
-
 end

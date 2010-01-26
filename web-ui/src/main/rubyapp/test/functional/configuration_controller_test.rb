@@ -9,8 +9,8 @@ class ConfigurationControllerTest < ActionController::TestCase
   end
   
   def test_import 
-    get :import, :file=> 'export.xml'
+    get :import, :file=> 'test/functional/export.xml'
     assert_response(200)
-    puts "#{@response.body}"
+    assert_equal "messageSuccessfully imported", @response.body
   end
 end
