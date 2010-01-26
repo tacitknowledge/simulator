@@ -136,10 +136,10 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
      * @param simulatorPojo - SimulatorPojo instance
      * @param exchange The Camel exchange
      * @return representation of properties as string
-     * @throws FormatAdapterException - If an exception occurs when converting a pojo into a string
+     * @throws FormatAdapterException If an exception occurs when converting a pojo into a string
      */
     @Override
-    protected String getString(final SimulatorPojo simulatorPojo, Exchange exchange)
+    protected String getString(final SimulatorPojo simulatorPojo, final Exchange exchange)
         throws FormatAdapterException
     {
         if (simulatorPojo.getRoot().isEmpty())
@@ -165,10 +165,10 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
 
     /**
      * 
-     * @param container
-     * @param path
-     * @param value
-     * @throws FormatAdapterException
+     * @param container The properties container Map
+     * @param path The property path as a list
+     * @param value The property value
+     * @throws FormatAdapterException If any error occurs
      */
     private void setPropertyToMap(Map<String, Object> container, List<String> path, String value)
         throws FormatAdapterException
@@ -186,7 +186,7 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
             // --- Check its instance
             if (keyValue instanceof Map)
             {
-                // --- If the keyValue is a Map, there should more path elements
+                // --- If the keyValue is a Map, there should be more path elements
                 if (path.size() > 0)
                 {
                     // --- So, go down the tree
@@ -196,8 +196,8 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
                 {
                     // --- If there are no path entries left, something is wrong
                     throw new FormatAdapterException(
-                        "Expecting either leaf path name or further path declaration. " +
-                            "Current path name: " + current);
+                        "Expecting either leaf path name or further path declaration. "
+                                + "Current path name: " + current);
                 }
             }
             else if (keyValue instanceof String)
@@ -222,7 +222,7 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
             }
             else
             {
-                // --- ...this is a lead name, set the value in the current key
+                // --- ...this is a leaf name, set the value in the current key
                 container.put(current, value);
             }
         }
@@ -230,11 +230,11 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
 
     /**
      * 
-     * @param path
-     * @param map
-     * @return
+     * @param path  Accumulated property path
+     * @param map   Map containing properties
+     * @return      The String representation of the properties in #map
      */
-    private String getPropertiesAsString(String path, Map<String, Object> map)
+    private String getPropertiesAsString(final String path, final Map<String, Object> map)
     {
         StringBuilder sb = new StringBuilder();
 
@@ -280,7 +280,6 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
      */
     public List<List> getParametersList()
     {
-
         return getParametersDefinitionsAsList(parametersList);
     }
 }

@@ -161,11 +161,12 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
      * Gets String value from simulator pojo
      *
      * @param simulatorPojo the simulator pojo
+     * @param exchange The Camel Exchange
      * @return the string value
      * @throws FormatAdapterException if a format adapter error occurs
      */
     @Override
-    protected String getString(final SimulatorPojo simulatorPojo, Exchange exchange)
+    protected String getString(final SimulatorPojo simulatorPojo, final Exchange exchange)
             throws FormatAdapterException
     {
         String jsonString;
@@ -317,7 +318,7 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
     /**
      * Validates parameters
      *
-     * @throws FormatAdapterException If a required parameter is missing or not properly formatted
+     * @throws ConfigurableException If a required parameter is missing
      * @inheritDoc
      */
     @Override

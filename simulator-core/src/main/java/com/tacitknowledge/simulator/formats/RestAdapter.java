@@ -153,25 +153,28 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object>
      * {@inheritDoc}
      */
     @Override
-    protected SimulatorPojo createSimulatorPojo(Exchange o) throws FormatAdapterException
+    protected SimulatorPojo createSimulatorPojo(final Exchange exchange)
+            throws FormatAdapterException
     {
 
-        logger.debug("Attempting to generate SimulatorPojo from REST content:\n{}", o);
+        logger.debug("Attempting to generate SimulatorPojo from REST content:\n{}", exchange);
 
-        HttpServletRequest request = o.getIn().getBody(HttpServletRequest.class);
+        HttpServletRequest request = exchange.getIn().getBody(HttpServletRequest.class);
 
         SimulatorPojo pojo = new StructuredSimulatorPojo();
 
         Map attributes = new HashMap<String, Object>();
-        String parameterExtractionPattern = getParamValue(PARAM_EXTRACTION_PATTERN) == null ?
-                                            DEFAULT_EXTRACTION_PATTERN :
-                                            getParamValue(PARAM_EXTRACTION_PATTERN);
+        String parameterExtractionPattern =
+                getParamValue(PARAM_EXTRACTION_PATTERN) == null
+                        ? DEFAULT_EXTRACTION_PATTERN
+                        : getParamValue(PARAM_EXTRACTION_PATTERN);
         attributes.put(REQUEST, populateRequestAttributes(request, parameterExtractionPattern));
         attributes.put(RESPONSE, populateResponseAttributes());
 
-        String parameterObjectName = getParamValue(PARAM_OBJECT_NAME) == null ?
-                                     DEFAULT_OBJECT_NAME :
-                                     getParamValue(PARAM_OBJECT_NAME);
+        String parameterObjectName =
+                getParamValue(PARAM_OBJECT_NAME) == null
+                        ? DEFAULT_OBJECT_NAME
+                        : getParamValue(PARAM_OBJECT_NAME);
         pojo.getRoot().put(parameterObjectName, attributes);
 
         logger.debug("Finished generating SimulatorPojo from REST content");
@@ -180,7 +183,7 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object>
     }
 
     /**
-     * Populate a map with default response values for status code, content type and response body.
+     * Populate a map with default response values for status code, content type and response body
      *
      * @return Map of String, Object entries
      */
@@ -190,6 +193,7 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object>
         responseMap.put(STATUS_CODE, DEFAULT_STATUS_CODE);
         responseMap.put(CONTENT_TYPE, HTML_CONTENT_TYPE);
         responseMap.put(BODY, "");
+        
         return responseMap;
     }
 
@@ -201,8 +205,9 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object>
      * @param extractionPattern - Pattern used to parse REST URL
      * @return Map of String, Object entries
      */
-    private Map<String, Object> populateRequestAttributes(HttpServletRequest request,
-                                                          String extractionPattern)
+    private Map<String, Object> populateRequestAttributes(
+            final HttpServletRequest request,
+            final String extractionPattern)
     {
         Map<String, Object> requestMap = new HashMap<String, Object>();
 
@@ -234,12 +239,18 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object>
 
     /**
      * @inheritDoc
+     *
+     * @param scriptExecutionResult SimulatorPojo with structured data from the execution script
+     * @param exchange The Camel Exchange
+     * @return The String representation of the input data
+     * @throws FormatAdapterException If any error occurs
      */
     @Override
-    protected String getString(SimulatorPojo scriptExecutionResult, Exchange exchange)
-            throws FormatAdapterException {
+    protected String getString(final SimulatorPojo scriptExecutionResult, final Exchange exchange)
+            throws FormatAdapterException
+    {
 
-        HttpServletResponse response = null;
+        HttpServletResponse response;
         String body = "";
         //get the first entry
         Map<String, Object> pojo = null;
@@ -274,7 +285,7 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object>
      * @param pattern pattern to use
      * @return Map with parameters read from the URL
      */
-    private Map<String, Object> extractValuesFromUri(String url, String pattern)
+    private Map<String, Object> extractValuesFromUri(final String url, final String pattern)
     {
         String[] patternArr = pattern.split(DEFAULT_EXTRACTION_PATTERN);
         Object[] urlArr = url.split(DEFAULT_EXTRACTION_PATTERN);
@@ -305,5 +316,4 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object>
         }
         return parameterMap;
     }
-
 }

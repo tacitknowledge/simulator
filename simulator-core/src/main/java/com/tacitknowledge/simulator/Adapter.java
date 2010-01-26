@@ -2,7 +2,6 @@ package com.tacitknowledge.simulator;
 
 import org.apache.camel.Exchange;
 
-import java.util.List;
 import java.util.Map;
 
 
@@ -21,20 +20,21 @@ public interface Adapter<E> extends Configurable
      * @param exchange The Camel exchange
      * @return a SimulatorPojo object constructed based on the inboud transport data.
      * @throws FormatAdapterException in case the incoming data object is not in correct format
-     *                                or missing required parameters. Also @see #BaseAdapter
+     * @throws ConfigurableException  If missing required parameters
+     * @see com.tacitknowledge.simulator.formats.BaseAdapter
      */
-    Map<String, Object> generateBeans(Exchange exchange) throws ConfigurableException,
-            FormatAdapterException;
+    Map<String, Object> generateBeans(Exchange exchange)
+            throws ConfigurableException, FormatAdapterException;
 
     /**
      * Adapts the data from the simulation result SimulatorPojo into the desired format used
      * for outbound transport.
      *
-     * @param scriptExecutionResult
-     * @param exchange
+     * @param scriptExecutionResult The resulting object obtained from the execution script
+     * @param exchange  Camel Exchange object
      * @return generic data object.
      * @throws FormatAdapterException If the pojo object is not properly structured
-     *                                , an error occurs during convertion.
+     *                                or an error occurs during processing.
      */
     Object adaptTo(Object scriptExecutionResult, Exchange exchange)
             throws ConfigurableException, FormatAdapterException;

@@ -21,6 +21,7 @@ public interface ConversationManager
      * @param inAdapter         the outbound adapter of the conversation
      * @param outAdapter        the outbound transport of the conversation
      * @param defaultResponse   @return the created conversation object
+     * @return The created or updated Conversation
      * @throws SimulatorException in case of an error
      */
     Conversation createOrUpdateConversation(Integer id, String name, Transport inboundTransport,
@@ -32,11 +33,11 @@ public interface ConversationManager
      * Creates a new scenario for an existing conversation
      *
      * @param conversationId the id of the conversation to be created
-     * @param scenarioId
+     * @param scenarioId     The unique scenario id
      * @param language       The scripting language for the scenario. This would be System wide.
      * @param criteria       The criteria script
      * @param transformation The transformation script
-     * @return
+     * @return The created or updated Scenario
      */
     ConversationScenario createOrUpdateConversationScenario(int conversationId, int scenarioId,
                                                             String language, String criteria,
@@ -88,9 +89,9 @@ public interface ConversationManager
      *
      * @param name to get an instance for
      * @return an instance of this ClassName
-     * @throws ClassNotFoundException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
+     * @throws ClassNotFoundException If class with the given name was not found
+     * @throws IllegalAccessException If the class is accessed from an incorrect context
+     * @throws InstantiationException If the class cannot be instantiated
      */
     Object getClassByName(String name) throws ClassNotFoundException,
             IllegalAccessException, InstantiationException;
@@ -105,28 +106,29 @@ public interface ConversationManager
     boolean isActive(int conversationId) throws SimulatorException;
 
     /**
-     * returns available scripting languages
      *
-     * @return
+     * @return List of available scripting languages
      */
     String[][] getAvailableLanguages();
 
     /**
      * deletes scenario from list of scenarios
      *
-     * @param conversationId
-     * @param scenarioId
+     * @param conversationId Conversation Id
+     * @param scenarioId Scenario Id
      */
     void deleteScenario(int conversationId, int scenarioId);
 
     /**
-     * @param conversationId
-     * @return
+     * @param conversationId Conversation Id
+     * @return True is a Conversation with the given Id is found. False otherwise
      */
     boolean conversationExists(int conversationId);
 
     /**
      * Register all listeners specifying a location
+     *
+     * @param fileLocation Listener file location and name
      */
     void registerListeners(String fileLocation);
 }

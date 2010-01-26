@@ -1,8 +1,5 @@
 package com.tacitknowledge.simulator;
 
-import java.util.List;
-import java.util.Map;
-
 /**
  * Transport interface for different transports.
  *

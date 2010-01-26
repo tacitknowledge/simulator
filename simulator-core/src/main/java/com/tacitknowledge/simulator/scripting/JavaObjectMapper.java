@@ -85,7 +85,7 @@ public class JavaObjectMapper implements ObjectMapper
      * @return The list populated with eithert Strings or the Map representation of its items
      * @throws ObjectMapperException If anything goes wrong
      */
-    private List getListFromArray(Object[] objects) throws ObjectMapperException
+    private List getListFromArray(final Object[] objects) throws ObjectMapperException
     {
         List list = new ArrayList();
         for (Object o : objects)

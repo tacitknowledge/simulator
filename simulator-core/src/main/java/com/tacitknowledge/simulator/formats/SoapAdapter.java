@@ -9,7 +9,6 @@ import com.tacitknowledge.simulator.StructuredSimulatorPojo;
 import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
 import org.apache.camel.Exchange;
 import org.apache.commons.lang.StringUtils;
-import org.mortbay.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -196,16 +195,16 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
     /**
      * @param pojo The populated SimulatorPojo with the script execution results
      * @param exchange      The Camel exchange
-     * @return
-     * @throws com.tacitknowledge.simulator.FormatAdapterException
+     * @return The String representation of the input data
+     * @throws FormatAdapterException If any error occurs
      *
      * @inheritDoc
      */
     @Override
-    protected String getString(SimulatorPojo pojo, Exchange exchange)
-            throws FormatAdapterException
+    protected String getString(final SimulatorPojo pojo, final Exchange exchange)
+        throws FormatAdapterException
     {
-        logger.debug("Attempting to generate SOAP message from SimulatorPojo:\n{}", pojo);
+        logger.debug("Attempting to generate SOAP message from SimulatorPojo:\n   ", pojo);
 
         // --- First, check we got a "payload"
         if (!pojo.getRoot().containsKey(DEFAULT_PAYLOAD_KEY))
@@ -230,8 +229,8 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
 
             // --- First things first. Check if we got a fault string...
             Map<String, String> fault = (Map<String, String>) payload.get(FAULT);
-            if (fault != null &&
-                    !StringUtils.isEmpty(fault.get(FAULT_STRING)))
+            if (fault != null
+                    && !StringUtils.isEmpty(fault.get(FAULT_STRING)))
             {
                 // --- If we do, we'll return a SOAP FAULT instead of a regular payload
                 addFaultToResponse(
@@ -295,12 +294,12 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
             }
             soapMessage.writeTo(outputStream);
         }
-        catch(SOAPException se)
+        catch (SOAPException se)
         {
             String errorMsg = "Unexpected SOAP exception trying to generate SOAP message: ";
             throw new FormatAdapterException(errorMsg, se);
         }
-        catch(IOException ioe)
+        catch (IOException ioe)
         {
             String errorMsg = "Unexpected IO Exception trying to get SOAP message as String: ";
             throw new FormatAdapterException(errorMsg, ioe);
@@ -313,8 +312,17 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
         return outputStream.toString();
     }
 
-    private SOAPElement getSOAPElementFromMap(String elemName, Map<String, Object> items)
-            throws SOAPException
+    /**
+     *
+     * @param elemName The new SOAP element's name
+     * @param items Map containing the new element's children
+     * @return A SOAP Element containing all its corresponding SOAPElement children
+     * @throws SOAPException If any SOAP error occurs
+     */
+    private SOAPElement getSOAPElementFromMap(
+            final String elemName,
+            final Map<String, Object> items)
+        throws SOAPException
     {
         SOAPElement elem = soapFactory.createElement(getQName(elemName));
 
@@ -341,8 +349,15 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
         return elem;
     }
 
-    private SOAPElement getSOAPElementFromString(String elemName, String text)
-            throws SOAPException
+    /**
+     *
+     * @param elemName The new SOAP element's name
+     * @param text The text that corresponds to the inner TextElement
+     * @return A SOAPElement containing a TextElement only
+     * @throws SOAPException If any SOAP error occurs
+     */
+    private SOAPElement getSOAPElementFromString(final String elemName, final String text)
+        throws SOAPException
     {
         SOAPElement elem = soapFactory.createElement(getQName(elemName));
         elem.addTextNode(text);
@@ -352,14 +367,14 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
 
     /**
      *
-     * @param o The String representation of the SOAP message
+     * @param soapString The String representation of the SOAP message
      * @return The generated SimulatorPojo
      * @throws FormatAdapterException If any error during the process occurs
      */
-    private SimulatorPojo createSimulatorPojo(String o)
+    private SimulatorPojo createSimulatorPojo(final String soapString)
         throws FormatAdapterException
     {
-        logger.debug("Attempting to generate SimulatorPojo from SOAP content:\n{}", o);
+        logger.debug("Attempting to generate SimulatorPojo from SOAP content:\n{}", soapString);
 
         SimulatorPojo pojo = new StructuredSimulatorPojo();
 
@@ -367,7 +382,7 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
         {
             messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
 
-            InputStream is = new ByteArrayInputStream(o.getBytes("UTF-8"));
+            InputStream is = new ByteArrayInputStream(soapString.getBytes("UTF-8"));
             // TODO - SO WHAT ABOUT THE HEADERS?
             SOAPMessage message = messageFactory.createMessage(null, is);
 
@@ -381,12 +396,12 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
 
             pojo.getRoot().put(payloadKey, addResponseParametersAndFault(payload));
         }
-        catch(SOAPException se)
+        catch (SOAPException se)
         {
             String errorMessage = "Unexpected SOAP exception trying to generate SimulatorPojo: ";
             throw new FormatAdapterException(errorMessage, se);
         }
-        catch(UnsupportedEncodingException uee)
+        catch (UnsupportedEncodingException uee)
         {
             String errorMessage = "Unsupported encoding exception: ";
             throw new FormatAdapterException(errorMessage, uee);
@@ -403,23 +418,21 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
 
     /**
      * Downloads and reads a WSDL from the provided URI
-     * @throws ConfigurableException If the WSDL file was not in the provided WSDL URL or is wrong
+     * @throws ConfigurableException If the WSDL file is not in the provided URI or is wrong
      */
-    private void getWSDLDefinition() throws ConfigurableException {
+    private void getWSDLDefinition() throws ConfigurableException
+    {
         try
         {
             WSDLFactory wsdlFactory = WSDLFactory.newInstance();
             WSDLReader wsdlReader = wsdlFactory.newWSDLReader();
 
-            //wsdlReader.setFeature("javax.wsdl.verbose", false);
-            //wsdlReader.setFeature("javax.wsdl.importDocuments", true);
-
             definition = wsdlReader.readWSDL(getParamValue(PARAM_WSDL_URL));
             if (definition == null)
             {
                 throw new ConfigurableException(
-                        "Definition element is null for WSDL URL: " +
-                        getParamValue(PARAM_WSDL_URL));
+                        "Definition element is null for WSDL URL: "
+                                + getParamValue(PARAM_WSDL_URL));
             }
 
             String targetNS = definition.getTargetNamespace();
@@ -467,7 +480,7 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
      * @throws FormatAdapterException If any validation fails.
      * @throws SOAPException If any SOAP generation error occurs
      */
-    private boolean validateOperationsAndParameters(Map<String, Map> payload)
+    private boolean validateOperationsAndParameters(final Map<String, Map> payload)
             throws FormatAdapterException, SOAPException
     {
         // --- Review all Methods passed in the SOAP message
@@ -487,8 +500,8 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
             {
                 // --- If the requested Operation is no available, throw an error
                 throw new FormatAdapterException(
-                        "The requested service operation is not available in the provided WSDL: " +
-                        opName);
+                        "The requested service operation is not available in the provided WSDL: "
+                                + opName);
             }
 
             BindingOperation availableOp = availableOps.get(opName);
@@ -551,7 +564,12 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
         return getParametersDefinitionsAsList(parametersList);
     }
 
-    private QName getQName(String localPart)
+    /**
+     *
+     * @param localPart The QName local part
+     * @return A qualified name, with a NameSpace if it was defined in the WSDL
+     */
+    private QName getQName(final String localPart)
     {
         QName qname = new QName(localPart);
         if (this.payloadNS != null)
@@ -561,7 +579,12 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
         return qname;
     }
 
-    private Map<String, Map> addResponseParametersAndFault(Map<String, Map> payload)
+    /**
+     * Adds the expected response parts and Fault to the payload Map representation
+     * @param payload The payload containing the original SOAP message representation
+     * @return Payload including response parts ans Fault
+     */
+    private Map<String, Map> addResponseParametersAndFault(final Map<String, Map> payload)
     {
         // --- Set the response parameters to the invoked method in the payload
         for (Map.Entry<String, Map> methodEntry : payload.entrySet())
@@ -593,6 +616,13 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
         return payload;
     }
 
+    /**
+     * Generates and adds the Fault SOAPBodyElement to the response SOAPMessage
+     * @param code The fault code. Optional. Defaults to 'Sender"
+     * @param string the fault string. Acts as fault description
+     * @param actor The fault actor that caused the fault.
+     * @throws SOAPException If any SOAP error occurs
+     */
     private void addFaultToResponse(String code, String string, String actor)
             throws SOAPException
     {

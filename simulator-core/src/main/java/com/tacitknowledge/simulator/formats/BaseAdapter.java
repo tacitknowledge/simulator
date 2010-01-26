@@ -63,8 +63,8 @@ public abstract class BaseAdapter extends BaseConfigurable implements Adapter<Ob
      * @throws ConfigurableException  If any required parameter is missing.
      * @throws FormatAdapterException If any other error occurs.
      */
-    public Map<String, Object> generateBeans(final Exchange exchange) throws ConfigurableException,
-            FormatAdapterException
+    public Map<String, Object> generateBeans(final Exchange exchange)
+            throws ConfigurableException, FormatAdapterException
     {
         validateParameters();
 
@@ -75,7 +75,7 @@ public abstract class BaseAdapter extends BaseConfigurable implements Adapter<Ob
     /**
      * @param o The Camel exchange
      * @return The generated SimulatorPojo
-     * @throws FormatAdapterException
+     * @throws FormatAdapterException If any error occurs
      */
     protected abstract SimulatorPojo createSimulatorPojo(Exchange o) throws FormatAdapterException;
 
@@ -88,15 +88,21 @@ public abstract class BaseAdapter extends BaseConfigurable implements Adapter<Ob
     protected abstract String getString(SimulatorPojo scriptExecutionResult, Exchange exchange)
             throws FormatAdapterException;
 
-    private SimulatorPojo getSimulatorPojo(Object object) throws ObjectMapperException
+    /**
+     *
+     * @param object The object to be used to populate a SimulatorPojo
+     * @return SimulatorPojo containing the sctructured representation of the incoming Object
+     * @throws ObjectMapperException If an error mapping the Object into the SimulatorPojo occurs
+     */
+    private SimulatorPojo getSimulatorPojo(final Object object) throws ObjectMapperException
     {
         return SimulatorPojoPopulatorImpl.getInstance().populateSimulatorPojoFromBean(object);
     }
 
     /**
-     * @param scriptExecutionResult
-     * @param exchange
-     * @return
+     * @param scriptExecutionResult The object result from the execution script
+     * @param exchange The Camel Exchange
+     * @return The object data in the desired format
      * @throws ConfigurableException  If any required parameter is missing.
      * @throws FormatAdapterException If any other error occurs.
      * @inheritDoc
@@ -122,11 +128,11 @@ public abstract class BaseAdapter extends BaseConfigurable implements Adapter<Ob
      * Generates the classes from the incoming data and registers them in the class pool.
      *
      * @param pojo incoming data pojo
-     * @return
-     * @throws com.tacitknowledge.simulator.scripting.ScriptException
-     *          in case an exception has occured.
+     * @return Map containing the generated classes
+     * @throws FormatAdapterException If any error occurs
      */
-    protected Map<String, Object> generateClasses(SimulatorPojo pojo) throws FormatAdapterException
+    protected Map<String, Object> generateClasses(final SimulatorPojo pojo)
+            throws FormatAdapterException
     {
         Map<String, Object> scriptExecutionBeans;
         try

@@ -214,7 +214,7 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
     }
 
     /**
-     * @throws FormatAdapterException if any required parameter is missing
+     * @throws ConfigurableException If any required parameter is missing
      * @inheritDoc
      */
     @Override
@@ -248,7 +248,7 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
      * @param row The row values as a String, separated by #columnSeparator
      * @return The Map populated with the given column keys and row values
      */
-    private Map<String, String> getRowAsMap(String row)
+    private Map<String, String> getRowAsMap(final String row)
     {
         Map<String, String> rowMap = new HashMap<String, String>();
 
@@ -268,7 +268,7 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
      * @param row The row values as a String, separated by #columnSeparator
      * @return The List populated with the given row values
      */
-    private List<String> getRowAsList(String row)
+    private List<String> getRowAsList(final String row)
     {
         List<String> rowList = new ArrayList<String>();
 
@@ -286,7 +286,7 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
      * @param keySet The key set where to get the header names from
      * @return A String containing the key names, separated by #columnSeparator
      */
-    private String getHeadersFromKeys(Set<String> keySet)
+    private String getHeadersFromKeys(final Set<String> keySet)
     {
         StringBuilder sb = new StringBuilder();
         colNames = new ArrayList<String>();
@@ -314,7 +314,7 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
      * @param row The Map representing a CSV row
      * @return A String containing the row values, separated by #columnSeparator
      */
-    private String getValuesFromMap(Map<String, Object> row)
+    private String getValuesFromMap(final Map<String, Object> row)
     {
         StringBuilder sb = new StringBuilder();
         // --- If using first-row headers, use them for keeping columns in synch

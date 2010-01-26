@@ -1,6 +1,16 @@
 package com.tacitknowledge.simulator.impl;
 
-import com.tacitknowledge.simulator.*;
+import com.tacitknowledge.simulator.Adapter;
+import com.tacitknowledge.simulator.ConfigurableException;
+import com.tacitknowledge.simulator.Conversation;
+import com.tacitknowledge.simulator.ConversationManager;
+import com.tacitknowledge.simulator.ConversationNotFoundException;
+import com.tacitknowledge.simulator.ConversationScenario;
+import com.tacitknowledge.simulator.RouteManager;
+import com.tacitknowledge.simulator.SimulatorException;
+import com.tacitknowledge.simulator.Transport;
+import com.tacitknowledge.simulator.Configurable;
+import com.tacitknowledge.simulator.ConfigurationUtil;
 import com.tacitknowledge.simulator.camel.RouteManagerImpl;
 import com.tacitknowledge.simulator.configuration.EventDispatcher;
 import com.tacitknowledge.simulator.configuration.SimulatorEventListener;
@@ -85,14 +95,14 @@ public class ConversationManagerImpl implements ConversationManager
      * {@inheritDoc}
      */
     public Conversation createOrUpdateConversation(
-            final Integer id,                     
-            final String name,
-            final Transport inboundTransport,
-            final Transport outboundTransport,
-            final Adapter inAdapter,
-            final Adapter outAdapter,
-            final String defaultResponse)
-            throws SimulatorException
+        final Integer id,
+        final String name,
+        final Transport inboundTransport,
+        final Transport outboundTransport,
+        final Adapter inAdapter,
+        final Adapter outAdapter,
+        final String defaultResponse)
+        throws SimulatorException
     {
         Conversation conversationObj = conversations.get(id);
         if (conversationObj != null)
@@ -130,39 +140,37 @@ public class ConversationManagerImpl implements ConversationManager
     }
 
     /**
-     * @param conversationId the id of the conversation to be created
-     * @param scenarioId     Scenario ID
-     * @param language       The scripting language for the scenario. This would be System wide.
-     * @param criteria       The criteria script
-     * @param transformation The transformation script
-     * @return new scenario object. null if conversation does not exist
+     * {@inheritDoc}
      */
     public ConversationScenario createOrUpdateConversationScenario(
-            int conversationId,
-            int scenarioId,
-            String language,
-            String criteria,
-            String transformation)
+        final int conversationId,
+        final int scenarioId,
+        final String language,
+        final String criteria,
+        final String transformation)
     {
         Conversation conversation = conversations.get(conversationId);
         ConversationScenario conversationScenario = null;
         if (conversation != null)
         {
             String defaultResponse = conversation.getDefaultResponse();
-            conversationScenario = conversation.addOrUpdateScenario(scenarioId, language, criteria,
-                    defaultResponse == null ? transformation : defaultResponse + "\n"
-                            + transformation);
+            conversationScenario =
+                    conversation.addOrUpdateScenario(
+                            scenarioId,
+                            language,
+                            criteria,
+                            defaultResponse == null
+                                    ? transformation
+                                    : defaultResponse + "\n" + transformation
+                    );
         }
         return conversationScenario;
     }
 
     /**
-     * @param conversationId conversation id of the conversation to be activated.
-     * @throws ConversationNotFoundException exception.
-     * @throws SimulatorException            exception.
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    public void activate(int conversationId)
+    public void activate(final int conversationId)
             throws ConversationNotFoundException, SimulatorException
     {
         Conversation conversation = getConversationById(conversationId);
@@ -180,7 +188,7 @@ public class ConversationManagerImpl implements ConversationManager
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public void deactivate(int conversationId) throws SimulatorException
     {
@@ -199,11 +207,9 @@ public class ConversationManagerImpl implements ConversationManager
     }
 
     /**
-     * @param conversationId conversation id of the conversation to be deleted.
-     * @throws SimulatorException exception.
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    public void deleteConversation(int conversationId) throws SimulatorException
+    public void deleteConversation(final int conversationId) throws SimulatorException
     {
         try
         {
@@ -221,7 +227,11 @@ public class ConversationManagerImpl implements ConversationManager
         }
     }
 
-    public void deleteScenario(int conversationId, int scenarioId)
+    /**
+     * 
+     * {@inheritDoc}
+     */
+    public void deleteScenario(final int conversationId, final int scenarioId)
     {
         Conversation conversation = conversations.get(conversationId);
         if (conversation != null)
@@ -250,11 +260,9 @@ public class ConversationManagerImpl implements ConversationManager
 
 
     /**
-     * @param className @see ConversationManager#getAdapterParameters
-     * @return @see ConversationManager#getAdapterParameters
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    public List<List> getAdapterParameters(String className) throws ConfigurableException
+    public List<List> getAdapterParameters(final String className) throws ConfigurableException
     {
         Configurable configurable = ConfigurationUtil.getConfigurable(className);
         if (configurable == null)
@@ -265,9 +273,8 @@ public class ConversationManagerImpl implements ConversationManager
     }
 
     /**
-     * @param className The transport type
-     * @return @see ConversationManager#getTransportParameters
-     * @inheritDoc
+     *
+     * {@inheritDoc}
      */
     public List<List> getTransportParameters(String className) throws ConfigurableException
     {
@@ -282,6 +289,9 @@ public class ConversationManagerImpl implements ConversationManager
     /**
      * @param name class name
      * @return instance of the class
+     * @throws ClassNotFoundException If a class with the passed name was not found
+     * @throws IllegalAccessException If the class was access from the incorrect context
+     * @throws InstantiationException If the class couldn't be instantiated
      * @inheritDoc
      */
     public Object getClassByName(String name)
@@ -293,7 +303,7 @@ public class ConversationManagerImpl implements ConversationManager
     /**
      * {@inheritDoc}
      */
-    public boolean isActive(int conversationId) throws SimulatorException
+    public boolean isActive(final int conversationId) throws SimulatorException
     {
         try
         {
@@ -306,6 +316,9 @@ public class ConversationManagerImpl implements ConversationManager
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public String[][] getAvailableLanguages()
     {
         return ScriptExecutionService.getAvailableLanguages();
@@ -314,7 +327,7 @@ public class ConversationManagerImpl implements ConversationManager
     /**
      * {@inheritDoc}
      */
-    public void registerListeners(String filePath)
+    public void registerListeners(final String filePath)
     {
         if (filePath != null)
         {
@@ -370,7 +383,7 @@ public class ConversationManagerImpl implements ConversationManager
      *
      * @param className - Qualified Class Name
      */
-    private void registerListenerImplementation(String className)
+    private void registerListenerImplementation(final String className)
     {
         Class listenerClass;
         try

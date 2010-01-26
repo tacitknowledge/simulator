@@ -150,7 +150,8 @@ public class YamlAdapter extends BaseAdapter implements Adapter<Object>
      * @throws FormatAdapterException if an error occurs
      */
     @Override
-    protected String getString(SimulatorPojo pojo, Exchange exchange) throws FormatAdapterException
+    protected String getString(final SimulatorPojo pojo, final Exchange exchange)
+        throws FormatAdapterException
     {
         // --- Only one entry in the root should exist
         if (pojo.getRoot().isEmpty() || pojo.getRoot().size() > 1)

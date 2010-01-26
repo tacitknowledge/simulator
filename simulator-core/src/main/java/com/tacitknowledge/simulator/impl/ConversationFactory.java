@@ -11,12 +11,20 @@ import org.slf4j.LoggerFactory;
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class ConversationFactory
+public final class ConversationFactory
 {
     /**
      * Logger for this class.
      */
     private static Logger logger = LoggerFactory.getLogger(ConversationFactory.class);
+
+
+    /**
+     * Hiding the default constructor
+     */
+    private ConversationFactory()
+    {
+    }
 
     /**
      * Creates a new Conversation from the given transports and adapters.
@@ -28,34 +36,28 @@ public class ConversationFactory
      * @param inboundAdapter    inbound adapter
      * @param outboundAdapter   outbound adapter
      * @param defaultResponse   @return conversation object
+     * @return The created Conversation
      * @throws SimulatorException in case of an error
      */
-    public static ConversationImpl createConversation(final Integer id, final String name,
-                                                      final Transport inboundTransport,
-                                                      final Transport outboundTransport,
-                                                      final Adapter inboundAdapter,
-                                                      final Adapter outboundAdapter,
-                                                      final String defaultResponse)
+    public static ConversationImpl createConversation(
+        final Integer id, final String name,
+        final Transport inboundTransport,
+        final Transport outboundTransport,
+        final Adapter inboundAdapter,
+        final Adapter outboundAdapter,
+        final String defaultResponse)
         throws SimulatorException
     {
-
         if (inboundAdapter == null || outboundAdapter == null
-            || inboundTransport == null
-            || outboundTransport == null)
+                || inboundTransport == null
+                || outboundTransport == null)
         {
             String errorMessage = "Inbound and outbound"
-                + " adapters and transports are required for creating new conversation.";
+                    + " adapters and transports are required for creating new conversation.";
 
             throw new SimulatorException(errorMessage);
         }
         return new ConversationImpl(id, name, inboundTransport, outboundTransport, inboundAdapter,
-            outboundAdapter, defaultResponse);
-    }
-
-    /**
-     * Hidding the default constructor
-     */
-    private ConversationFactory()
-    {
+                outboundAdapter, defaultResponse);
     }
 }

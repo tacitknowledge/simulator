@@ -80,33 +80,33 @@ public abstract class BaseConfigurable implements Configurable
      * @inheritDoc
      * @param parameters Configurable parameter values
      */
-    public void setParameters(Map<String, String> parameters)
+    public void setParameters(final Map<String, String> parameters)
     {
         this.parameters = parameters;
     }
 
     /**
      * @inheritDoc
-     * @param bound Configurable bound
-     * @param parameters Configurable parameter values
+     * @param bnd Configurable bound
+     * @param param Configurable parameter values
      */
-    public void setBoundAndParameters(int bound, Map<String, String> parameters)
+    public void setBoundAndParameters(final int bnd, final Map<String, String> param)
     {
-        this.bound = bound;
-        this.parameters = parameters;
+        this.bound = bnd;
+        this.parameters = param;
     }
 
     /**
      * Returns a List of ParameterDefinitions in their List representation
      *
-     * @param parametersList The parameter definitions list
+     * @param paramsList The parameter definitions list
      * @return The list of lists
      */
     protected List<List> getParametersDefinitionsAsList(
-        List<ParameterDefinitionBuilder.ParameterDefinition> parametersList)
+        final List<ParameterDefinitionBuilder.ParameterDefinition> paramsList)
     {
         List<List> list = new ArrayList<List>();
-        for (ParameterDefinitionBuilder.ParameterDefinition param : parametersList)
+        for (ParameterDefinitionBuilder.ParameterDefinition param : paramsList)
         {
             list.add(param.getAsList());
         }

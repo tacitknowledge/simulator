@@ -60,7 +60,9 @@ public final class ConfigurationUtil
             }
             catch (ClassNotFoundException e)
             {
-                throw new ConfigurableException("Unable to find configurable class " + className, e);
+                throw new ConfigurableException(
+                        "Unable to find configurable class " + className,
+                        e);
             }
 
         }

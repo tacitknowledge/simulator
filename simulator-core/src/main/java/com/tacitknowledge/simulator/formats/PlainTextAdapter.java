@@ -54,7 +54,7 @@ public class PlainTextAdapter extends BaseAdapter
     /**
      * empty method.
      *
-     * @throws ConfigurableException
+     * @throws ConfigurableException If any required parameter is missing
      */
     @Override
     protected void validateParameters() throws ConfigurableException
@@ -63,13 +63,14 @@ public class PlainTextAdapter extends BaseAdapter
     }
 
     /**
-     * @param o The Camel exchange
+     * @param exchange The Camel exchange
      * @return The generated SimulatorPojo
-     * @throws com.tacitknowledge.simulator.FormatAdapterException
+     * @throws com.tacitknowledge.simulator.FormatAdapterException If any error occurs
      *
      */
     @Override
-    protected SimulatorPojo createSimulatorPojo(Exchange o) throws FormatAdapterException
+    protected SimulatorPojo createSimulatorPojo(final Exchange exchange)
+            throws FormatAdapterException
     {
         return null;
     }
@@ -78,11 +79,9 @@ public class PlainTextAdapter extends BaseAdapter
      * @param scriptExecutionResult The object returned by the scenario excecution script
      * @param exchange              The Camel exchange
      * @return A String object in the requested format representing the script result
-     * @throws com.tacitknowledge.simulator.FormatAdapterException
-     *          If any other error occurs
      */
     @Override
-    protected String getString(SimulatorPojo scriptExecutionResult, Exchange exchange)
+    protected String getString(final SimulatorPojo scriptExecutionResult, final Exchange exchange)
     {
         return null;
     }

@@ -48,7 +48,7 @@ public interface ConversationScenario
     /**
      * Veryfies if the entry data matches the criteria
      *
-     * @param scriptExecutionBeans
+     * @param scriptExecutionBeans The beans that need to be available to the script
      * @return True is the data matches the contained criteria, false otherwise
      * @throws ScriptException in case a script execution exception occured
      */
@@ -61,19 +61,19 @@ public interface ConversationScenario
     String getScriptLanguage();
 
     /**
-     * @return
+     * @return The criteria script
      */
     String getCriteriaScript();
 
     /**
-     * @return
+     * @return The transformation script
      */
     String getTransformationScript();
 
     /**
      * unique scenario id in the system.
      *
-     * @return
+     * @return The unique Scenario Id
      */
     int getScenarioId();
 }
