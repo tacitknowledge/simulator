@@ -311,11 +311,17 @@ public class ScenarioExecutionWrapperTest
 
         List<Element> list = rootElement.getChildren();
 
-        Assert.assertEquals("arrayField", list.get(0).getName());
-        Assert.assertEquals("arrayField", list.get(1).getName());
-        Assert.assertEquals("objectProperty", list.get(2).getName());
-        Assert.assertEquals("undefinedVar", list.get(3).getName());
-        Assert.assertEquals("numberFieldName", list.get(4).getName());
-        Assert.assertEquals("stringFieldName", list.get(5).getName());
+        List<String> fieldList = new ArrayList<String>();
+
+        for(Element ele : list){
+            fieldList.add(ele.getName());
+        }
+
+        Assert.assertTrue(fieldList.contains("arrayField"));
+        Assert.assertTrue(fieldList.contains("arrayField"));
+        Assert.assertTrue(fieldList.contains("objectProperty"));
+        Assert.assertTrue(fieldList.contains("undefinedVar"));
+        Assert.assertTrue(fieldList.contains("numberFieldName"));
+        Assert.assertTrue(fieldList.contains("stringFieldName"));
     }
 }
