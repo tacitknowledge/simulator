@@ -25,8 +25,6 @@ import java.util.Map;
  */
 public class ConversationManagerImpl implements ConversationManager
 {
-
-
     /**
      * Logger for this class.
      */
@@ -45,7 +43,7 @@ public class ConversationManagerImpl implements ConversationManager
     /**
      * Currently configured conversations
      */
-    private Map<Integer, ConversationImpl> conversations;
+    private Map<Integer, Conversation> conversations;
 
 
     /**
@@ -56,7 +54,7 @@ public class ConversationManagerImpl implements ConversationManager
     public ConversationManagerImpl(final RouteManager routeManager)
     {
         this.routeManager = routeManager;
-        this.conversations = new HashMap<Integer, ConversationImpl>();
+        this.conversations = new HashMap<Integer, Conversation>();
     }
 
     /**
@@ -66,9 +64,8 @@ public class ConversationManagerImpl implements ConversationManager
     public ConversationManagerImpl()
     {
         this.routeManager = new RouteManagerImpl();
-        this.conversations = new HashMap<Integer, ConversationImpl>();
+        this.conversations = new HashMap<Integer, Conversation>();
     }
-
 
     /**
      * Default Constructor
@@ -87,13 +84,15 @@ public class ConversationManagerImpl implements ConversationManager
     /**
      * {@inheritDoc}
      */
-    public Conversation createOrUpdateConversation(final Integer id, final String name,
-                                                   final Transport inboundTransport,
-                                                   final Transport outboundTransport,
-                                                   final Adapter inAdapter,
-                                                   final Adapter outAdapter,
-                                                   final String defaultResponse) throws
-            SimulatorException
+    public Conversation createOrUpdateConversation(
+            final Integer id,                     
+            final String name,
+            final Transport inboundTransport,
+            final Transport outboundTransport,
+            final Adapter inAdapter,
+            final Adapter outAdapter,
+            final String defaultResponse)
+            throws SimulatorException
     {
         Conversation conversationObj = conversations.get(id);
         if (conversationObj != null)
@@ -118,8 +117,8 @@ public class ConversationManagerImpl implements ConversationManager
      * @return conversation from the list of created conversations
      * @throws ConversationNotFoundException in case conversation is not found
      */
-    private Conversation getConversationById(final int conversationId) throws
-            ConversationNotFoundException
+    private Conversation getConversationById(final int conversationId)
+            throws ConversationNotFoundException
     {
         Conversation conversation = conversations.get(conversationId);
         if (conversation == null)
@@ -197,7 +196,6 @@ public class ConversationManagerImpl implements ConversationManager
                     + conversationId + " couldn't be deactivated.";
             throw new SimulatorException(errorMessage, e);
         }
-
     }
 
     /**
@@ -209,7 +207,7 @@ public class ConversationManagerImpl implements ConversationManager
     {
         try
         {
-            ConversationImpl conversation = conversations.get(conversationId);
+            Conversation conversation = conversations.get(conversationId);
             if (conversation != null)
             {
                 routeManager.delete(conversation);
@@ -225,7 +223,7 @@ public class ConversationManagerImpl implements ConversationManager
 
     public void deleteScenario(int conversationId, int scenarioId)
     {
-        ConversationImpl conversation = conversations.get(conversationId);
+        Conversation conversation = conversations.get(conversationId);
         if (conversation != null)
         {
             Collection<ConversationScenario> scenarios = conversation.getScenarios();
@@ -239,7 +237,6 @@ public class ConversationManagerImpl implements ConversationManager
                     break;
                 }
             }
-
         }
     }
 
@@ -366,7 +363,6 @@ public class ConversationManagerImpl implements ConversationManager
         {
             logger.info("Listeners not registered. Listener file location is null.");
         }
-
     }
 
     /**
