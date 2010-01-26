@@ -39,7 +39,7 @@ public final class ConfigurationUtil
         }
         else
         {
-            Class configurationClass = null;
+            Class configurationClass;
             try
             {
                 configurationClass = Class.forName(className);
@@ -49,19 +49,18 @@ public final class ConfigurationUtil
                     configurable = (Configurable) instance;
                     classPool.put(className, configurable);
                 }
-                instance = null;
             }
             catch (InstantiationException e)
             {
-                throw new ConfigurableException("Unable to instantiate class. ", e);
+                throw new ConfigurableException("Unable to instantiate class " + className, e);
             }
             catch (IllegalAccessException e)
             {
-                throw new ConfigurableException("Unable to access class. ", e);
+                throw new ConfigurableException("Unable to access class " + className, e);
             }
             catch (ClassNotFoundException e)
             {
-                throw new ConfigurableException("Unable to find configurable class. ", e);
+                throw new ConfigurableException("Unable to find configurable class " + className, e);
             }
 
         }
