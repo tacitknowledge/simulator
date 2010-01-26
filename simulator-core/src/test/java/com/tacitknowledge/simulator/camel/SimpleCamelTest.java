@@ -3,11 +3,14 @@ package com.tacitknowledge.simulator.camel;
 import com.tacitknowledge.simulator.TestHelper;
 import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.transports.FileTransport;
-import junit.framework.TestCase;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.model.RouteDefinition;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.util.HashMap;
@@ -16,7 +19,7 @@ import java.util.Map;
 /**
  * @author galo
  */
-public class SimpleCamelTest extends TestCase
+public class SimpleCamelTest
 {
     public static final String INBOX = "src/main/resources/inbox";
     public static final String OUTBOX = "src/main/resources/outbox";
@@ -24,6 +27,7 @@ public class SimpleCamelTest extends TestCase
 
     RouteBuilder builder;
 
+    @Before
     public void setUp()
     {
         builder = new RouteBuilder()
@@ -34,6 +38,7 @@ public class SimpleCamelTest extends TestCase
         };
     }
 
+    @Test
     public void testSimpleFileRoute()
     {
         CamelContext context = new DefaultCamelContext();

@@ -1,11 +1,16 @@
 package com.tacitknowledge.simulator.configuration;
 
 import com.tacitknowledge.simulator.Conversation;
-import junit.framework.TestCase;
 
 import java.util.List;
 
 import org.apache.camel.Exchange;
+import org.junit.Before;
+import org.junit.After;
+import org.junit.Test;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test class for EventDispatcher
@@ -13,23 +18,24 @@ import org.apache.camel.Exchange;
  * @author Daniel Valencia (dvalencia@tacitknowledge.com)
  * @author Raul Huerta (rhuerta@tacitknowledge.com)
  */
-public class EventDispatcherTest extends TestCase {
+public class EventDispatcherTest {
 
     private EventDispatcher eventDispatcher;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         eventDispatcher = EventDispatcher.getInstance();
     }
 
-    @Override
-     protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         eventDispatcher.removeAllSimulatorEventListeners();
     }
 
     /**
      * Tests that calling getInstance always returns a not null object
      */
+    @Test
     public void testGetInstance() {
         assertNotNull(eventDispatcher);
     }
@@ -37,6 +43,7 @@ public class EventDispatcherTest extends TestCase {
     /**
      * Test adding an event listener
      */
+    @Test
     public void testAddEventListener() {
         List<SimulatorEventListener> eventListeners = eventDispatcher.getSimulatorEventListeners();
         assertTrue(eventListeners.size() == 0);
@@ -66,6 +73,7 @@ public class EventDispatcherTest extends TestCase {
     /**
      * Test dispatch event method
      */
+    @Test
     public void testDispatchEvent(){
 
         final SampleClass sample = new SampleClass();

@@ -14,6 +14,11 @@ import org.apache.camel.Message;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.impl.DefaultExchange;
 import org.apache.camel.impl.DefaultMessage;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.fail;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,15 +30,17 @@ import java.util.Map;
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class JsonAdapterTest extends TestCase
+public class JsonAdapterTest
 {
     private JsonAdapter adapter;
 
+    @Before
     public void setUp()
     {
         adapter = new JsonAdapter();
     }
 
+    @Test
     public void testAdapterWithoutParameters()
     {
         try
@@ -52,6 +59,7 @@ public class JsonAdapterTest extends TestCase
         }
     }
 
+    @Test
     public void testSuccessfulAdaptFrom()
     {
         // --- Provide required configuration
@@ -97,6 +105,7 @@ public class JsonAdapterTest extends TestCase
         }
     }
 
+    @Test
     public void testSuccessfulAdaptTo()
     {
         // ---
@@ -148,6 +157,7 @@ public class JsonAdapterTest extends TestCase
         }
     }
 
+    @Test
     public void testSuccessfulAdaptToWithOnlyArrays()
             throws FormatAdapterException, JSONException, ConfigurableException
     {

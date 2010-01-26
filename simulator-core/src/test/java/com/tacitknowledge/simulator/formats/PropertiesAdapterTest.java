@@ -3,7 +3,6 @@ package com.tacitknowledge.simulator.formats;
 import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.TestHelper;
-import junit.framework.TestCase;
 
 import java.util.Map;
 
@@ -13,21 +12,29 @@ import org.apache.camel.Message;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.impl.DefaultExchange;
 import org.apache.camel.impl.DefaultMessage;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test class for PropertiesAdapter
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class PropertiesAdapterTest extends TestCase
+public class PropertiesAdapterTest
 {
     private PropertiesAdapter adapter;
 
+    @Before
     public void setUp()
     {
         adapter = new PropertiesAdapter();
     }
 
+    @Test
     public void testSuccessfulAdaptFrom()
     {
         try
@@ -61,6 +68,7 @@ public class PropertiesAdapterTest extends TestCase
         }
     }
 
+    @Test
     public void testSuccessfulAdaptTo()
     {
         try
