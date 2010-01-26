@@ -7,7 +7,7 @@ class ScenariosControllerTest < ActionController::TestCase
   def test_get_index
     get :index, :conversation_id => conversations(:one).id
 
-    assert_redirected_to :controller => 'conversations', :action => 'show'
+    assert_redirected_to "/conversations/show/#{conversations(:one).id}" 
   end
 
   def test_get_json_index

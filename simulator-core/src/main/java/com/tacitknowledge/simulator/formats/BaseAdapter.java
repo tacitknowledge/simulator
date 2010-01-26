@@ -63,8 +63,8 @@ public abstract class BaseAdapter extends BaseConfigurable implements Adapter<Ob
      * @throws ConfigurableException  If any required parameter is missing.
      * @throws FormatAdapterException If any other error occurs.
      */
-    public Map<String, Object> generateBeans(final Exchange exchange)
-            throws ConfigurableException, FormatAdapterException
+    public Map<String, Object> generateBeans(final Exchange exchange) throws ConfigurableException,
+            FormatAdapterException
     {
         validateParameters();
 

@@ -27,6 +27,7 @@ public final class ConfigurationUtil
      *
      * @param className The Configurable name.
      * @return Configurable implementation or null if the Configurable name is not supported.
+     * @throws ConfigurableException if an error occurs
      */
     public static Configurable getConfigurable(final String className) throws ConfigurableException
     {

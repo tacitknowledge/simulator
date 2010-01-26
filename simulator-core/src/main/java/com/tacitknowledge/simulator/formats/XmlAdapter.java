@@ -352,7 +352,8 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
      * @param childs   Map containing the childs to be contained within the generated Element
      * @return The generated XML Element with its inner children
      */
-    protected Element getStructuredElement(String elemName, Map<String, Object> childs) throws FormatAdapterException
+    protected Element getStructuredElement(String elemName, Map<String, Object> childs)
+            throws FormatAdapterException
     {
         Element element = doc.createElement(elemName);
 

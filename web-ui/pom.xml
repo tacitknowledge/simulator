@@ -120,7 +120,7 @@
                                     <arguments>
                                         <argument>-c</argument>
                                         <argument>
-                                            rcov --rails test/*.rb -i "app/*/*.rb" -x "/opt/jruby/*, *recognize_optimized*, *yaml*, *parser*, *eval*, *\(erb\)*"
+                                            rcov --rails -Ilib:test test/unit/**/*.rb test/functional/*.rb test/integration/*.rb -x "/opt/jruby/*, *recognize_optimized*, *yaml*, *parser*, *eval*, *\(erb\)*"
                                         </argument>
                                     </arguments>
                                 </configuration>

@@ -166,8 +166,8 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
      * @throws FormatAdapterException if an error occurs
      */
     @Override
-    protected SimulatorPojo createSimulatorPojo(final Exchange exchange)
-            throws FormatAdapterException
+    protected SimulatorPojo createSimulatorPojo(final Exchange exchange) throws
+            FormatAdapterException
     {
         return createSimulatorPojo(exchange.getIn().getBody(String.class));
     }

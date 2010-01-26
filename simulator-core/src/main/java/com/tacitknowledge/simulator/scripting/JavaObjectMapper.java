@@ -30,7 +30,7 @@ public class JavaObjectMapper implements ObjectMapper
      * @return The map representation of the passed object
      * @throws ObjectMapperException If anything goes wrong
      */
-    public Map<String, Object> getMapFromObject(Object o) throws ObjectMapperException
+    public Map<String, Object> getMapFromObject(final Object o) throws ObjectMapperException
     {
         Map<String, Object> map = new HashMap<String, Object>();
 

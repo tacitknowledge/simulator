@@ -23,8 +23,8 @@ public interface Adapter<E> extends Configurable
      * @throws FormatAdapterException in case the incoming data object is not in correct format
      *                                or missing required parameters. Also @see #BaseAdapter
      */
-    Map<String, Object> generateBeans(Exchange exchange)
-            throws ConfigurableException, FormatAdapterException;
+    Map<String, Object> generateBeans(Exchange exchange) throws ConfigurableException,
+            FormatAdapterException;
 
     /**
      * Adapts the data from the simulation result SimulatorPojo into the desired format used

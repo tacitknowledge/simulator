@@ -176,7 +176,7 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
      * @throws FormatAdapterException if an error occurs
      */
     @Override
-    protected String getString(SimulatorPojo simulatorPojo, Exchange exchange)
+    protected String getString(final SimulatorPojo simulatorPojo, final Exchange exchange)
         throws FormatAdapterException
     {
 

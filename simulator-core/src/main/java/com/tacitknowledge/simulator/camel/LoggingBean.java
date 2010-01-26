@@ -40,7 +40,8 @@ public class LoggingBean
     public LoggingBean(final boolean input, final Conversation conversation) throws IOException
     {
         this.input = input;
-        logger = LoggerFactory.getLogger("com.tacitknowledge.conversations." + conversation.getId());
+        logger = LoggerFactory.getLogger("com.tacitknowledge.conversations."
+                + conversation.getId());
 
         if (input)
         {
