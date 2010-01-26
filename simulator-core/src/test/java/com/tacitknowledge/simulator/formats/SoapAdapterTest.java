@@ -6,13 +6,17 @@ import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.StructuredSimulatorPojo;
 import com.tacitknowledge.simulator.TestHelper;
-import junit.framework.TestCase;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.impl.DefaultExchange;
 import org.apache.camel.impl.DefaultMessage;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.fail;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +24,7 @@ import java.util.Map;
 /**
  * @author galo
  */
-public class SoapAdapterTest extends TestCase
+public class SoapAdapterTest
 {
     public static final String WSDL_FILE = "HelloService.wsdl";
     public static final String COMPLEX_WSDL_FILE = "OrderService.wsdl";
@@ -42,11 +46,9 @@ public class SoapAdapterTest extends TestCase
      * Sets up the fixture, for example, open a network connection.
      * This method is called before a test is executed.
      */
-    @Override
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
-        super.setUp();
-
         CamelContext context = new DefaultCamelContext();
         exchange = new DefaultExchange(context);
         message = new DefaultMessage();
@@ -57,6 +59,7 @@ public class SoapAdapterTest extends TestCase
         testFileName = new StringBuilder(TestHelper.ORIGINAL_FILES_PATH);
     }
 
+    @Test
     public void testShouldFailWithWrongWsdlUri()
     {
         params = new HashMap<String, String>();
@@ -68,12 +71,13 @@ public class SoapAdapterTest extends TestCase
             adapter.validateParameters();
             fail("Expecting exception from wrong WSDL location");
         }
-        catch(ConfigurableException ce)
+        catch (ConfigurableException ce)
         {
             // --- This is OK
         }
     }
 
+    @Test
     public void testSuccessfulCreateSimulatorPojo()
     {
         try
@@ -101,41 +105,12 @@ public class SoapAdapterTest extends TestCase
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            e.printStackTrace(System.err);
             fail();
         }
     }
 
-    public void testSuccessfulCreatePojoFromComplexSoap()
-    {
-        try
-        {
-            setupSoapAdapter(TestHelper.RESOURCES_PATH + COMPLEX_WSDL_FILE);
-
-            setExchangeContentsFromFile(
-                    testFileName.append(COMPLEX_SOAP_FILE).toString());
-
-            // --- Get a SimulatorPojo from our fake little XML
-            SimulatorPojo pojo = adapter.createSimulatorPojo(exchange);
-
-            Map<String, Object> payload =
-                    (Map<String, Object>) pojo.getRoot().get(SoapAdapter.DEFAULT_PAYLOAD_KEY);
-
-            assertNotNull(payload.get("updateOrderItemsForShipping"));
-            Map<String, Map> updateOrder =
-                    (Map<String, Map>) payload.get("updateOrderItemsForShipping");
-            // --- Assert it's got the passed parts
-            assertNotNull(updateOrder.get("order"));
-            assertNotNull(updateOrder.get("shippedItems"));
-
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            fail();
-        }
-    }
-
+    @Test
     public void testCreateSimulatorPojoWithWrongMethod()
     {
         testCreateSimulatorPojoShouldFail(
@@ -143,12 +118,14 @@ public class SoapAdapterTest extends TestCase
         );
     }
 
+    @Test
     public void testCreateSimulatorPojoWithWrongParameter()
     {
         testCreateSimulatorPojoShouldFail(
                 testFileName.append(SOAP_FILE_WITH_WRONG_PARAM).toString());
     }
 
+    @Test
     public void testSuccessfulGetString() throws Exception
     {
         setupSoapAdapter(Configurable.BOUND_OUT);
@@ -157,11 +134,11 @@ public class SoapAdapterTest extends TestCase
         pojo.getRoot().put(
                 SoapAdapter.DEFAULT_PAYLOAD_KEY,
                 TestHelper.getMapOneEntry(
-                    "sayHello",
-                    TestHelper.getMapOneEntry(
-                            "greeting",
-                            "Hello there, Dude!"))
-                );
+                        "sayHello",
+                        TestHelper.getMapOneEntry(
+                                "greeting",
+                                "Hello there, Dude!"))
+        );
 
         // --- Now invoke the getString method
         try
@@ -177,46 +154,7 @@ public class SoapAdapterTest extends TestCase
         }
     }
 
-
-    public void testSuccessfulGetStringFromComplex() throws Exception
-    {
-        setupSoapAdapter(Configurable.BOUND_OUT, TestHelper.RESOURCES_PATH + COMPLEX_WSDL_FILE);
-
-        Map<String, String> order = new HashMap<String, String>();
-        order.put("id", "8653216");
-        order.put("lastUpdate", "2010-01-25");
-        order.put("itemsForShipping", "2");
-
-        SimulatorPojo pojo = new StructuredSimulatorPojo();
-        pojo.getRoot().put(
-                SoapAdapter.DEFAULT_PAYLOAD_KEY,
-                TestHelper.getMapOneEntry(
-                        "updateOrderItemsForShipping",
-                        TestHelper.getMapOneEntry(
-                                "order",
-                                order
-                        )
-                )
-        );
-
-        try
-        {
-            String soapMessage = adapter.getString(pojo, exchange);
-
-            assertTrue("Expecting response method updateOrderItemsForShippingResponse",
-                    soapMessage.indexOf("updateOrderItemsForShippingResponse") > -1);
-            assertTrue("Expecting response tag <tns:order>", 
-                    soapMessage.indexOf("<tns:order>") > -1);
-            assertTrue("Expecting tag <tns:itemsForShipping> value to be 2",
-                    soapMessage.indexOf("<tns:itemsForShipping>2</tns:itemsForShipping>") > -1);
-        }
-        catch(FormatAdapterException fae)
-        {
-            fae.printStackTrace();
-            fail("Not expecting exception, yet got: " + fae.getMessage());
-        }
-    }
-
+    @Test
     public void testGetSoapFaultResponse() throws Exception
     {
         setupSoapAdapter(Configurable.BOUND_OUT);
@@ -246,6 +184,7 @@ public class SoapAdapterTest extends TestCase
         }
     }
 
+
     public void testGetStringWithWrongMethod() throws Exception
     {
         setupSoapAdapter(Configurable.BOUND_OUT);
@@ -263,6 +202,7 @@ public class SoapAdapterTest extends TestCase
         testGetStringShouldFail(pojo);
     }
 
+    @Test
     public void testGetStringWithWrongParameter() throws Exception
     {
         setupSoapAdapter(Configurable.BOUND_OUT);
@@ -319,7 +259,7 @@ public class SoapAdapterTest extends TestCase
             throws Exception
     {
         message.setBody(
-                    TestHelper.readFile(fileName));        
+                TestHelper.readFile(fileName));
         exchange.setIn(message);
     }
 
