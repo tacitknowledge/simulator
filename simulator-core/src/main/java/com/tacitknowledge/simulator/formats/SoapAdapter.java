@@ -8,6 +8,8 @@ import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.StructuredSimulatorPojo;
 import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
 import org.apache.camel.Exchange;
+import org.apache.commons.lang.StringUtils;
+import org.mortbay.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -226,10 +228,10 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
             soapMessage = messageFactory.createMessage();
             SOAPBody soapBody = soapMessage.getSOAPBody();
 
-            // --- First things first. Check if we got a fault code & string...
+            // --- First things first. Check if we got a fault string...
             Map<String, String> fault = (Map<String, String>) payload.get(FAULT);
             if (fault != null &&
-                    !fault.get(FAULT_STRING).isEmpty())
+                    !StringUtils.isEmpty(fault.get(FAULT_STRING)))
             {
                 // --- If we do, we'll return a SOAP FAULT instead of a regular payload
                 addFaultToResponse(
@@ -242,8 +244,6 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
                 // --- Validate the result method and parameters
                 if (validateOperationsAndParameters(payload))
                 {
-
-
                     // --- If validation was successful,
                     // remove the fault object
                     payload.remove(FAULT);
@@ -599,14 +599,14 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
         SOAPFault fault = soapMessage.getSOAPBody().addFault();
 
         QName qname = new QName(SOAPConstants.URI_NS_SOAP_1_2_ENVELOPE, FAULT_CODE_SENDER);
-        if (code != null && !code.isEmpty() && !code.equals(FAULT_CODE_SENDER))
+        if (code != null && !StringUtils.isEmpty(code) && !code.equals(FAULT_CODE_SENDER))
         {
             qname = new QName(SOAPConstants.URI_NS_SOAP_1_2_ENVELOPE, code);
         }
         fault.setFaultCode(qname);
 
         fault.setFaultString(string);
-        if (actor != null && !actor.isEmpty())
+        if (actor != null && !StringUtils.isEmpty(actor))
         {
             fault.setFaultActor(actor);
         }

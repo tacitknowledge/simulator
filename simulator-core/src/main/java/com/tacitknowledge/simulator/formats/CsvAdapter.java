@@ -372,7 +372,6 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
      * @see com.tacitknowledge.simulator.configuration
      *              .ParameterDefinitionBuilder.ParameterDefinition
      */
-    @Override
     public List<List> getParametersList()
     {
         return getParametersDefinitionsAsList(parametersList);
