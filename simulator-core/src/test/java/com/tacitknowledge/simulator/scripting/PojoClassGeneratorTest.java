@@ -3,25 +3,30 @@ package com.tacitknowledge.simulator.scripting;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.TestHelper;
 import javassist.ClassPool;
-import junit.framework.TestCase;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import static org.junit.Assert.assertNotNull;
+
 /**
  * Test class for PojoClassGenerator
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class PojoClassGeneratorTest extends TestCase
+public class PojoClassGeneratorTest
 {
     private final static String[] ITEM_FIELDS = {"sku", "quantity", "price"};
 
     static ClassPool pool = new ClassPool(true);
     static PojoClassGenerator generator = new PojoClassGenerator(pool);
 
+    @Test
     public void testNoGeneratedClasses()
     {
         // ---
@@ -30,6 +35,7 @@ public class PojoClassGeneratorTest extends TestCase
         assertEquals(0, list.size());
     }
 
+    @Test
     public void testGeneratedClasses()
     {
         // --- Send a SimulatorPojo and make sure it generates the expected classes
@@ -82,6 +88,7 @@ public class PojoClassGeneratorTest extends TestCase
         }
     }
 
+    @Test
     public void testGeneratedBeans()
     {
         SimulatorPojo pojo = TestHelper.createOrderSimulatorPojo();

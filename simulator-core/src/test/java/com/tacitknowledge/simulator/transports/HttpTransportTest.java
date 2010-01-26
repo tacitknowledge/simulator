@@ -2,8 +2,6 @@ package com.tacitknowledge.simulator.transports;
 
 import com.tacitknowledge.simulator.Configurable;
 import com.tacitknowledge.simulator.Transport;
-import com.tacitknowledge.simulator.TransportException;
-import junit.framework.TestCase;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -13,6 +11,12 @@ import org.apache.camel.model.RouteDefinition;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -21,13 +25,14 @@ import java.util.Map;
 /**
  * @author galo
  */
-public class HttpTransportTest extends TestCase
+public class HttpTransportTest
 {
     private Transport transport;
     private Map<String, String> params;
 
     RouteBuilder builder;
 
+    @Before
     public void setUp()
     {
         transport = new RestTransport();
@@ -41,6 +46,7 @@ public class HttpTransportTest extends TestCase
         };
     }
 
+    @Test
     public void testGetUriWithoutParams()
     {
         assertEquals(TransportConstants.REST, transport.getType());
@@ -57,6 +63,7 @@ public class HttpTransportTest extends TestCase
         }
     }
 
+    @Test
     public void testGetSimplestInUri()
     {
         // --- Try to get this URI: jetty:http://localhost/mytestapp/myservices
@@ -76,6 +83,7 @@ public class HttpTransportTest extends TestCase
         }
     }
 
+    @Test
     public void testGetFullInUri()
     {
         // --- Try to get this URI: jetty:http://localhost:8080/mytestapp/myservices
@@ -96,6 +104,7 @@ public class HttpTransportTest extends TestCase
         }
     }
 
+    @Test
     public void testGetOutUri()
     {
         // --- Try to get this URI: direct:end
@@ -115,6 +124,7 @@ public class HttpTransportTest extends TestCase
         }
     }
 
+    @Test
     public void testHttpInRoute()
     {
         params.put(HttpTransport.PARAM_PORT, "9696");

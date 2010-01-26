@@ -2,7 +2,6 @@ package com.tacitknowledge.simulator.formats;
 
 import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
-import junit.framework.TestCase;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;

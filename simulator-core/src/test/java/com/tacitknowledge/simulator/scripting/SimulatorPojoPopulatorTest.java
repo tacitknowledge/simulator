@@ -3,20 +3,24 @@ package com.tacitknowledge.simulator.scripting;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.TestHelper;
 import javassist.ClassPool;
-import junit.framework.TestCase;
 
 import java.util.Map;
+
+import org.junit.Test;
+import static org.junit.Assert.fail;
+import static junit.framework.Assert.assertTrue;
 
 /**
  * Test class for SimulatorPojoPopulator
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class SimulatorPojoPopulatorTest extends TestCase
+public class SimulatorPojoPopulatorTest
 {
     static ClassPool pool = new ClassPool(true);
     static PojoClassGenerator generator = new PojoClassGenerator(pool);
 
+    @Test
     public void testGetSimulatorPojoFromGeneratedBean()
     {
         // --- First, get the starting SimulatorPojo

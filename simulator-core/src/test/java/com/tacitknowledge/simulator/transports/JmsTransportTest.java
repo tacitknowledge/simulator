@@ -1,18 +1,22 @@
 package com.tacitknowledge.simulator.transports;
 
 import com.tacitknowledge.simulator.Transport;
-import com.tacitknowledge.simulator.TransportException;
-import junit.framework.TestCase;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test class for JmsTransport
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class JmsTransportTest extends TestCase
+public class JmsTransportTest
 {
     /**
      * Params for transport
@@ -24,12 +28,13 @@ public class JmsTransportTest extends TestCase
      *
      * @throws Exception Anything goes wrong
      */
-    @Override
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
         params = new HashMap<String, String>();
     }
 
+    @Test
     public void testGetUriWithoutParams()
     {
         Transport transport = new JmsTransport();
@@ -48,6 +53,7 @@ public class JmsTransportTest extends TestCase
         }
     }
 
+    @Test
     public void testGetSimplestUri()
     {
         // --- Try to get this URI: activemq:foo.bar?brokerURL=tcp://localhost:61616
@@ -68,6 +74,7 @@ public class JmsTransportTest extends TestCase
         }
     }
 
+    @Test
     public void testGetUriForActiveMQTopic()
     {
         // --- Try to get this URI: activemq:topic:foo.bar?brokerURL=tcp://localhost:61616

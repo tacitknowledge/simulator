@@ -1,28 +1,34 @@
 package com.tacitknowledge.simulator.transports;
 
 import com.tacitknowledge.simulator.Transport;
-import com.tacitknowledge.simulator.TransportException;
-import junit.framework.TestCase;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test class for FtpTransport
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class FtpTransportTest extends TestCase
+public class FtpTransportTest
 {
     private Transport transport;
     private Map<String, String> params;
 
+    @Before
     public void setUp()
     {
         transport = new FtpTransport();
         params = new HashMap<String, String>();
     }
 
+    @Test
     public void testGetUriWithoutParams()
     {
         assertEquals("FTP", transport.getType());
@@ -39,6 +45,7 @@ public class FtpTransportTest extends TestCase
         }
     }
 
+    @Test
     public void testGetSimplestUri()
     {
         // --- Try to get this URI: ftp://127.0.0.1
@@ -58,6 +65,7 @@ public class FtpTransportTest extends TestCase
         }
     }
 
+    @Test
     public void testGetSftpUri()
     {
         // --- Try to get this URI: sftp://127.0.0.1
@@ -79,6 +87,7 @@ public class FtpTransportTest extends TestCase
         }
     }
 
+    @Test
     public void testGetUriWithUserPasswordAndDirectory()
     {
         // --- Try to get this URI: ftp://meandmyself@127.0.0.1:2121/inbox?password=secret
@@ -103,6 +112,7 @@ public class FtpTransportTest extends TestCase
         }
     }
 
+    @Test
     public void testGetUriWithFileOptionsAndBinary()
     {
         // --- Try to get this URI: ftp://127.0.0.1/inbox?binary=true&include=^.*\\.(csv|CSV)$
@@ -126,6 +136,7 @@ public class FtpTransportTest extends TestCase
         }
     }
 
+    @Test
     public void testGetUriForFilesWithSomething()
     {
         // --- Try to get this URI: ftp://inbox/csv?include=(.*)(something)(.*)
@@ -149,6 +160,7 @@ public class FtpTransportTest extends TestCase
         }
     }
 
+    @Test
     public void testGetUriWithLongDelay()
     {
         // --- Try to get this URI: ftp://127.0.0.1/inbox?initialDelay=10000&delay=10000

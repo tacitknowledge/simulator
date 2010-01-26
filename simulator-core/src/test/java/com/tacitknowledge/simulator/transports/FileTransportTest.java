@@ -1,26 +1,32 @@
 package com.tacitknowledge.simulator.transports;
 
 import com.tacitknowledge.simulator.Transport;
-import com.tacitknowledge.simulator.TransportException;
-import junit.framework.TestCase;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test class for FileTransport
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class FileTransportTest extends TestCase
+public class FileTransportTest
 {
     private Map<String, String> params;
 
+    @Before
     public void setUp()
     {
         params = new HashMap<String, String>();
     }
 
+    @Test
     public void testGetUriWithoutParams()
     {
         // --- Create a FileTransport with default constructor
@@ -40,6 +46,7 @@ public class FileTransportTest extends TestCase
         }
     }
 
+    @Test
     public void testGetUriDeletingFile()
     {
         // --- Try to get this URI: file://inbox?delete=true
@@ -64,6 +71,7 @@ public class FileTransportTest extends TestCase
         }
     }
 
+    @Test
     public void testGetUriForCsvFilesOnly()
     {
         // --- Try to get this URI: file://inbox/csv?include=^.*\\.(csv|CSV)$
@@ -86,6 +94,7 @@ public class FileTransportTest extends TestCase
         }
     }
 
+    @Test
     public void testGetUriForFilesWithSomething()
     {
         // --- Try to get this URI: file://inbox/csv?include=(.*)(something)(.*)
@@ -108,6 +117,7 @@ public class FileTransportTest extends TestCase
         }
     }
 
+    @Test
     public void testGetUriWithLongDelay()
     {
         // --- Try to get this URI: file://inbox?initialDelay=10000&delay=10000

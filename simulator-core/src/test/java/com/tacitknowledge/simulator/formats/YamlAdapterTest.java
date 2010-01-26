@@ -3,7 +3,6 @@ package com.tacitknowledge.simulator.formats;
 import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.TestHelper;
-import junit.framework.TestCase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,21 +15,29 @@ import org.apache.camel.Message;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.impl.DefaultExchange;
 import org.apache.camel.impl.DefaultMessage;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.fail;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test class for YamlAdapter
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class YamlAdapterTest extends TestCase
+public class YamlAdapterTest
 {
     private YamlAdapter adapter;
 
+    @Before
     public void setUp()
     {
         adapter = new YamlAdapter();
     }
 
+    @Test
     public void testAdapterWithoutParameters()
     {
         try
@@ -50,6 +57,7 @@ public class YamlAdapterTest extends TestCase
         }
     }
 
+    @Test
     public void testSuccessfulAdaptFrom()
     {
         // --- Provide the required configuration
@@ -82,6 +90,7 @@ public class YamlAdapterTest extends TestCase
         }
     }
 
+    @Test
     public void testSuccessfulAdaptFromSequence() throws FormatAdapterException
     {
         // --- Provide the required configuration

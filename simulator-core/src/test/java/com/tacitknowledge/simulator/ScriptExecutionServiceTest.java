@@ -4,13 +4,15 @@ import com.tacitknowledge.simulator.formats.XmlAdapter;
 import com.tacitknowledge.simulator.scripting.ScriptException;
 import com.tacitknowledge.simulator.scripting.ScriptExecutionService;
 import javassist.ClassPool;
-import junit.framework.TestCase;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.impl.DefaultExchange;
 import org.apache.camel.impl.DefaultMessage;
+import org.junit.Test;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Map;
 
@@ -20,13 +22,14 @@ import java.util.Map;
  *
  * @author JOrge Galindo (jgalindo@tacitknowledge.com)
  */
-public class ScriptExecutionServiceTest extends TestCase
+public class ScriptExecutionServiceTest
 {
     /**
      * This method will test the evaluation for JavaScript
      *
      * @throws Exception if there is a problem evaluating the script
      */
+    @Test
     public void testEvalJavaScript() throws Exception
     {
         // --- Default Javassist' JVM class pool
@@ -64,6 +67,7 @@ public class ScriptExecutionServiceTest extends TestCase
      *
      * @throws ScriptException if there is a problem with the language evaluation
      */
+    @Test
     public void testEvalRuby() throws ScriptException
     {
         String myScript = "puts 'Hello Ruby'\n return 'hello'";

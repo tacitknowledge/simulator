@@ -3,21 +3,25 @@ package com.tacitknowledge.simulator.formats;
 import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.TestHelper;
-import junit.framework.TestCase;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.impl.DefaultExchange;
 import org.apache.camel.impl.DefaultMessage;
+import org.junit.Test;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test class for XmlAdapter
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class XmlAdapterTest extends TestCase
+public class XmlAdapterTest
 {
+    @Test
     public void testAdaptFromXml()
     {
         XmlAdapter adapter = new XmlAdapter();
@@ -43,6 +47,7 @@ public class XmlAdapterTest extends TestCase
         }
     }
 
+    @Test
     public void testAdaptToXml()
     {
         XmlAdapter adapter = new XmlAdapter();
