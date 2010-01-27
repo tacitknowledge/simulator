@@ -64,7 +64,7 @@ public abstract class BaseAdapter extends BaseConfigurable implements Adapter<Ob
      * @throws FormatAdapterException If any other error occurs.
      */
     public Map<String, Object> generateBeans(final Exchange exchange)
-            throws ConfigurableException, FormatAdapterException
+        throws ConfigurableException, FormatAdapterException
     {
         validateParameters();
 
@@ -86,7 +86,7 @@ public abstract class BaseAdapter extends BaseConfigurable implements Adapter<Ob
      * @throws FormatAdapterException If any other error occurs
      */
     protected abstract String getString(SimulatorPojo scriptExecutionResult, Exchange exchange)
-            throws FormatAdapterException;
+        throws FormatAdapterException;
 
     /**
      *
@@ -107,8 +107,8 @@ public abstract class BaseAdapter extends BaseConfigurable implements Adapter<Ob
      * @throws FormatAdapterException If any other error occurs.
      * @inheritDoc
      */
-    public Object adaptTo(Object scriptExecutionResult, Exchange exchange)
-            throws ConfigurableException, FormatAdapterException
+    public Object adaptTo(final Object scriptExecutionResult, final Exchange exchange)
+        throws ConfigurableException, FormatAdapterException
     {
         validateParameters();
 
@@ -132,7 +132,7 @@ public abstract class BaseAdapter extends BaseConfigurable implements Adapter<Ob
      * @throws FormatAdapterException If any error occurs
      */
     protected Map<String, Object> generateClasses(final SimulatorPojo pojo)
-            throws FormatAdapterException
+        throws FormatAdapterException
     {
         Map<String, Object> scriptExecutionBeans;
         try

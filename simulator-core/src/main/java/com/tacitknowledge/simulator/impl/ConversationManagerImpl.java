@@ -128,7 +128,7 @@ public class ConversationManagerImpl implements ConversationManager
      * @throws ConversationNotFoundException in case conversation is not found
      */
     private Conversation getConversationById(final int conversationId)
-            throws ConversationNotFoundException
+        throws ConversationNotFoundException
     {
         Conversation conversation = conversations.get(conversationId);
         if (conversation == null)
@@ -155,14 +155,14 @@ public class ConversationManagerImpl implements ConversationManager
         {
             String defaultResponse = conversation.getDefaultResponse();
             conversationScenario =
-                    conversation.addOrUpdateScenario(
-                            scenarioId,
-                            language,
-                            criteria,
-                            defaultResponse == null
-                                    ? transformation
-                                    : defaultResponse + "\n" + transformation
-                    );
+                conversation.addOrUpdateScenario(
+                    scenarioId,
+                    language,
+                    criteria,
+                    defaultResponse == null
+                        ? transformation
+                        : defaultResponse + "\n" + transformation
+                );
         }
         return conversationScenario;
     }
@@ -171,7 +171,7 @@ public class ConversationManagerImpl implements ConversationManager
      * {@inheritDoc}
      */
     public void activate(final int conversationId)
-            throws ConversationNotFoundException, SimulatorException
+        throws ConversationNotFoundException, SimulatorException
     {
         Conversation conversation = getConversationById(conversationId);
         try
@@ -181,8 +181,8 @@ public class ConversationManagerImpl implements ConversationManager
         }
         catch (Exception e)
         {
-            String errorMsg = "Conversation with id : " + conversationId +
-                    " couldn't be activated: ";
+            String errorMsg = "Conversation with id : " + conversationId
+                    + " couldn't be activated: ";
             throw new SimulatorException(errorMsg, e);
         }
     }
@@ -190,7 +190,7 @@ public class ConversationManagerImpl implements ConversationManager
     /**
      * {@inheritDoc}
      */
-    public void deactivate(int conversationId) throws SimulatorException
+    public void deactivate(final int conversationId) throws SimulatorException
     {
         try
         {
@@ -253,7 +253,7 @@ public class ConversationManagerImpl implements ConversationManager
     /**
      * {@inheritDoc}
      */
-    public boolean conversationExists(int conversationId)
+    public boolean conversationExists(final int conversationId)
     {
         return conversations.containsKey(conversationId);
     }
@@ -276,7 +276,7 @@ public class ConversationManagerImpl implements ConversationManager
      *
      * {@inheritDoc}
      */
-    public List<List> getTransportParameters(String className) throws ConfigurableException
+    public List<List> getTransportParameters(final String className) throws ConfigurableException
     {
         Configurable configurable = ConfigurationUtil.getConfigurable(className);
         if (configurable == null)
@@ -294,8 +294,8 @@ public class ConversationManagerImpl implements ConversationManager
      * @throws InstantiationException If the class couldn't be instantiated
      * @inheritDoc
      */
-    public Object getClassByName(String name)
-            throws ClassNotFoundException, IllegalAccessException, InstantiationException
+    public Object getClassByName(final String name)
+        throws ClassNotFoundException, IllegalAccessException, InstantiationException
     {
         return Class.forName(name).newInstance();
     }

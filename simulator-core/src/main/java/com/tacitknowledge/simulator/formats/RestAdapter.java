@@ -154,7 +154,7 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object>
      */
     @Override
     protected SimulatorPojo createSimulatorPojo(final Exchange exchange)
-            throws FormatAdapterException
+        throws FormatAdapterException
     {
 
         logger.debug("Attempting to generate SimulatorPojo from REST content:\n{}", exchange);
@@ -247,7 +247,7 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object>
      */
     @Override
     protected String getString(final SimulatorPojo scriptExecutionResult, final Exchange exchange)
-            throws FormatAdapterException
+        throws FormatAdapterException
     {
 
         HttpServletResponse response;

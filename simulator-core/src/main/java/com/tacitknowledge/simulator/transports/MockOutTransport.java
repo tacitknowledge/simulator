@@ -5,7 +5,6 @@ import com.tacitknowledge.simulator.ConfigurableException;
 import com.tacitknowledge.simulator.Transport;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Date: 30.11.2009
@@ -24,17 +23,15 @@ public class MockOutTransport extends BaseTransport implements Transport
     }
 
     /**
-     * Returns the uri in string format
-     * @return uri representation
+     * {@inheritDoc}
      */
-    public String toUriString()
+    protected String getUriString()
     {
         return "mock:result";
     }
 
     /**
-     * List of parameters for this transport
-     * @return List of parameters
+     * {@inheritDoc}
      */
     public List<List> getParametersList()
     {
@@ -42,10 +39,7 @@ public class MockOutTransport extends BaseTransport implements Transport
     }
 
     /**
-     * Validate that all the required parameters have been provided.
-     *
-     * @throws com.tacitknowledge.simulator.ConfigurableException
-     *          If any required parameter has not been set.
+     * {@inheritDoc}
      */
     @Override
     protected void validateParameters() throws ConfigurableException

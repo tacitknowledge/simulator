@@ -1,6 +1,5 @@
 package com.tacitknowledge.simulator.transports;
 
-import com.tacitknowledge.simulator.Configurable;
 import com.tacitknowledge.simulator.ConfigurableException;
 import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.TransportException;
@@ -152,14 +151,10 @@ public class FileTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @return @see #Transport.toUriString()
-     * @throws TransportException If a required parameter is missing or not properly formatted.
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    public String toUriString() throws ConfigurableException, TransportException
+    protected String getUriString() throws ConfigurableException, TransportException
     {
-        validateParameters();
-
         StringBuilder sb = new StringBuilder("file://");
 
         // --- directory name
@@ -213,8 +208,7 @@ public class FileTransport extends BaseTransport implements Transport
     }
 
     /**
-     * @throws TransportException If any required parameter is missing or incorrect
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override
     protected void validateParameters() throws ConfigurableException
@@ -242,26 +236,13 @@ public class FileTransport extends BaseTransport implements Transport
     /**
      * @param deleteFile @see #deleteFile
      */
-    protected void setDeleteFile(boolean deleteFile)
+    protected void setDeleteFile(final boolean deleteFile)
     {
         this.deleteFile = deleteFile;
     }
 
     /**
-     * Returns a List of parameters the implementing instance uses.
-     * Each list element is itself a List to describe the parameter as follows:
-     * <p/>
-     * - 0 : Parameter name
-     * - 1 : Parameter description. Useful for GUI rendition
-     * - 2 : Parameter type. Useful for GUI rendition.
-     * - 3 : Required or Optional parameter. Useful for GUI validation.
-     * - 4 : Parameter usage. Useful for GUI rendition.
-     * - 5 : Default value
-     *
-     * @return List of Parameters for the implementing Transport.
-     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder
-     * @see com.tacitknowledge.simulator.configuration
-     *              .ParameterDefinitionBuilder.ParameterDefinition
+     * {@inheritDoc}
      */
     public List<List> getParametersList()
     {

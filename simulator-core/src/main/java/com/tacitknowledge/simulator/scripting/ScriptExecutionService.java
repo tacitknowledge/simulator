@@ -58,7 +58,7 @@ public class ScriptExecutionService
      * @return the result of the script evaluation
      * @throws ScriptException if an unexpected error occurs
      */
-    public Object eval(String script, String scriptName, Map globals) throws ScriptException
+    public Object eval(final String script, final String scriptName, final Map globals) throws ScriptException
     {
         try
         {
@@ -78,7 +78,7 @@ public class ScriptExecutionService
      *
      * @param manager the newly created BSFManager
      */
-    protected void configureBSFManager(BSFManager manager)
+    protected void configureBSFManager(final BSFManager manager)
     {
         // Nothing to do in the base class
     }
@@ -90,7 +90,7 @@ public class ScriptExecutionService
      * @return a new, fully initialized <code>BSFManager</code> instance
      * @throws ScriptException if an unexpected error occurs
      */
-    private BSFManager initBSFManager(Map globals) throws ScriptException
+    private BSFManager initBSFManager(final Map globals) throws ScriptException
     {
         BSFManager manager = new BSFManager();
         bindObjectToEngineRuntime(manager, globals);
@@ -108,8 +108,10 @@ public class ScriptExecutionService
      * @param beans   the map of bean names-to-beans
      * @throws ScriptException if there was a problem adding a bean to the interpreter
      */
-    private void bindObjectToEngineRuntime(BSFManager manager,
-                                           Map<String, Object> beans) throws ScriptException
+    private void bindObjectToEngineRuntime(
+        final BSFManager manager,
+        final Map<String, Object> beans)
+        throws ScriptException
     {
         if (beans == null)
         {
@@ -147,15 +149,19 @@ public class ScriptExecutionService
     /**
      * @param language The language to set.
      */
-    public void setLanguage(String language)
+    public void setLanguage(final String language)
     {
         this.language = language;
     }
 
 
+    /**
+     *
+     * @return An Array with the available scripting languages
+     */
     public static String[][] getAvailableLanguages()
     {
-        //todo automate this
+        //TODO automate this
         String[][] languages = {
             {"javascript", "Java Script"},
             {"ruby", "JRuby"}

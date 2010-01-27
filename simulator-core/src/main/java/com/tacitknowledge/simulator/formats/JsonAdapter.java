@@ -167,7 +167,7 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
      */
     @Override
     protected String getString(final SimulatorPojo simulatorPojo, final Exchange exchange)
-            throws FormatAdapterException
+        throws FormatAdapterException
     {
         String jsonString;
 

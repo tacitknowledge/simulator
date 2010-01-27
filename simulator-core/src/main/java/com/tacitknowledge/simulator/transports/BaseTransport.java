@@ -1,7 +1,6 @@
 package com.tacitknowledge.simulator.transports;
 
 import com.tacitknowledge.simulator.BaseConfigurable;
-import com.tacitknowledge.simulator.Configurable;
 import com.tacitknowledge.simulator.ConfigurableException;
 import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.TransportException;
@@ -116,19 +115,23 @@ public abstract class BaseTransport extends BaseConfigurable implements Transpor
     }
 
     /**
-     * Returns a valid String URI representation of this transport for Camel route creation e.g.:
-     * file://path/to/file/directory , jms:queue/myqueue ,
-     *
-     * @return URI representation of the transport
-     * @throws com.tacitknowledge.simulator.ConfigurableException
-     *          If a required parameter is missing or not properly formatted.
-     * @throws com.tacitknowledge.simulator.TransportException
-     *          If any other error occurs
+     * {@inheritDoc}
      */
     public String toUriString() throws ConfigurableException, TransportException
     {
         validateParameters();
 
-        return null;
+        return getUriString();
     }
+
+    /**
+     * Returns a valid String URI representation of this transport for Camel route creation e.g.:
+     * file://path/to/file/directory , jms:queue/myqueue ,
+     *
+     * @return URI representation of the transport
+     * @throws ConfigurableException If a required parameter is missing or not properly formatted.
+     * @throws TransportException If any other error occurs
+     */
+    protected abstract String getUriString()
+        throws ConfigurableException, TransportException;
 }

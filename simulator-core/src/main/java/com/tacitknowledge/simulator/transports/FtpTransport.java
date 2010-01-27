@@ -124,7 +124,7 @@ public class FtpTransport extends FileTransport implements Transport
 
     /**
      * @param parameters @see #parameters
-     *                   {@inheritDoc}
+     * {@inheritDoc}
      */
     public FtpTransport(final int bound, final Map<String, String> parameters)
     {
@@ -132,16 +132,11 @@ public class FtpTransport extends FileTransport implements Transport
     }
 
     /**
-     * @return @see #Transport.toUriString()
-     * @throws ConfigurableException If a required parameter is missing or not properly formatted.
-     * @throws TransportException    If any other error occurs.
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override
-    public String toUriString() throws ConfigurableException, TransportException
+    protected String getUriString() throws ConfigurableException, TransportException
     {
-        validateParameters();
-
         StringBuilder sb = new StringBuilder();
 
         // --- Check the protocol
@@ -238,8 +233,7 @@ public class FtpTransport extends FileTransport implements Transport
     }
 
     /**
-     * @throws TransportException If any required parameter is missing or incorrect
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override
     protected void validateParameters() throws ConfigurableException
@@ -265,20 +259,7 @@ public class FtpTransport extends FileTransport implements Transport
     }
 
     /**
-     * Returns a List of parameters the implementing instance uses.
-     * Each list element is itself a List to describe the parameter as follows:
-     * <p/>
-     * - 0 : Parameter name
-     * - 1 : Parameter description. Useful for GUI rendition
-     * - 2 : Parameter type. Useful for GUI rendition.
-     * - 3 : Required or Optional parameter. Useful for GUI validation.
-     * - 4 : Parameter usage. Useful for GUI rendition.
-     * - 5 : Default value
-     *
-     * @return List of Parameters for the implementing Transport.
-     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder
-     * @see com.tacitknowledge.simulator.configuration
-     *      .ParameterDefinitionBuilder.ParameterDefinition
+     * {@inheritDoc}
      */
     @Override
     public List<List> getParametersList()

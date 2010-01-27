@@ -449,7 +449,7 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
 
             getAvailableOperations();
         }
-        catch(WSDLException we)
+        catch (WSDLException we)
         {
             String errorMsg = "Unexpected WSDL error: ";
             throw new ConfigurableException(errorMsg, we);
@@ -481,11 +481,10 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
      * @throws SOAPException If any SOAP generation error occurs
      */
     private boolean validateOperationsAndParameters(final Map<String, Map> payload)
-            throws FormatAdapterException, SOAPException
+        throws FormatAdapterException, SOAPException
     {
         // --- Review all Methods passed in the SOAP message
-        for (Map.Entry<String, Map> operationEntry :
-                payload.entrySet())
+        for (Map.Entry<String, Map> operationEntry : payload.entrySet())
         {
             // --- We ignore the fault object
             if (operationEntry.getKey().equals(FAULT))
@@ -524,9 +523,9 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
                 {
                     String bound = getBound() == Configurable.BOUND_IN ? "inbound" : "outbound";
                     // --- If the defined method part is not in the message, throw an error
-                    String errorMsg = "Missing required "+ bound +
-                            " parameter (" + partInOp.getName() +
-                            ") for method " + opName + " as defined in the provided WSDL";
+                    String errorMsg = "Missing required " + bound
+                            + " parameter (" + partInOp.getName()
+                            + ") for method " + opName + " as defined in the provided WSDL";
 
                     // --- If this is an outbound adapter, return a FAULT message in case of
                     // missing params/parts
@@ -623,8 +622,8 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
      * @param actor The fault actor that caused the fault.
      * @throws SOAPException If any SOAP error occurs
      */
-    private void addFaultToResponse(String code, String string, String actor)
-            throws SOAPException
+    private void addFaultToResponse(final String code, final String string, final String actor)
+        throws SOAPException
     {
         SOAPFault fault = soapMessage.getSOAPBody().addFault();
 

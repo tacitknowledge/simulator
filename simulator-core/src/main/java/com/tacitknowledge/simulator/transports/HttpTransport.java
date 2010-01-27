@@ -90,6 +90,14 @@ public abstract class HttpTransport extends BaseTransport implements Transport
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public List<List> getParametersList()
+    {
+        return getParametersDefinitionsAsList(getHttpParameters());
+    }
+
+    /**
      * Return http parameters
      *
      * @return List of parameters
@@ -100,11 +108,7 @@ public abstract class HttpTransport extends BaseTransport implements Transport
     }
 
     /**
-     * Sets and/or overrides instance variables from provided parameters and validates that
-     * the required parameters are present.
-     *
-     * @throws com.tacitknowledge.simulator.TransportException
-     *          If any required parameter is missing or incorrect
+     * {@inheritDoc}
      */
     @Override
     protected void validateParameters() throws ConfigurableException
@@ -121,19 +125,11 @@ public abstract class HttpTransport extends BaseTransport implements Transport
     }
 
     /**
-     * Returns a valid String URI representation of this transport for Camel route creation e.g.:
-     * file://path/to/file/directory , jms:queue/myqueue ,
-     *
-     * @return URI representation of the transport
-     * @throws TransportException If a required parameter is missing or not properly formatted.
-     * @throws com.tacitknowledge.simulator.TransportException
-     *                            If any other error occurs.
+     * {@inheritDoc}
      */
     @Override
-    public String toUriString() throws ConfigurableException, TransportException
+    protected String getUriString() throws ConfigurableException, TransportException
     {
-        validateParameters();
-
         // --- If this transport is an HTTP OUT, we just end the Camel route,
         // so we return the result from the execution script as the HTTP response body
         if (this.isHttpOut)

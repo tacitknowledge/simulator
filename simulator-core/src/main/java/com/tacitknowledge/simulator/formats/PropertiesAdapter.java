@@ -170,7 +170,10 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
      * @param value The property value
      * @throws FormatAdapterException If any error occurs
      */
-    private void setPropertyToMap(Map<String, Object> container, List<String> path, String value)
+    private void setPropertyToMap(
+        final Map<String, Object> container,
+        final List<String> path,
+        final String value)
         throws FormatAdapterException
     {
         // --- Get the "current" path name.

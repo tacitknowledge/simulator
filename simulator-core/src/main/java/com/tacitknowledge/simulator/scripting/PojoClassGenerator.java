@@ -8,6 +8,7 @@ import javassist.CtClass;
 import javassist.CtField;
 import javassist.Modifier;
 import javassist.NotFoundException;
+import org.apache.commons.lang.WordUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +22,55 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /**
+ * This class deals with dynamically generating POJO classes
+ * from the structured data contained in the SimulatorPojo root.
+ * The generated and populated beans will be passed to the scripting engine.
+ *
+ * It is assumed that the SimulatorPojo root contains only the following objects:
+ * - Map<String, Object>
+ * - List<Object>
+ * - String
+ *
+ * In turn, the generated POJO will have public fields of only the following types:
+ * - Another custom generated POJO class
+ * - An Array of a custom generated POJO class
+ * - String
+ *
+ * For every Map under the SimulatorPojo root, a custom POJO class will be generated.
+ * It's Class name will be its key in the containing Map.
+ * E.g.:
+ *      SimulatorPojo root:
+ *      {
+ *          order :
+ *          {
+ *              id : "2358892"
+ *              date: "2010-01-04"
+ *              orderTotal: "236.99"
+ *              items:
+ *              [
+ *                  {
+ *                      sku: "34690975"
+ *                  },
+ *                  {
+ *                      sku: "90852341"
+ *                  }
+ *              ]
+ *          }
+ *      }
+ *
+ * Generator will create the following classes with their fields:
+ *
+ * - Order
+ *      * <String> id
+ *      * <String> date
+ *      * <String> orderTotal
+ *      * Items[] items
+ * - Items
+ *      * <String> sku
+ *
+ * The generated POJO classes will be generated in a mock package
+ *  #TMP_CLASS_PACKAGE + "." + <timestamp> + <POJO Class name>
+ *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
 public class PojoClassGenerator
@@ -158,7 +208,7 @@ public class PojoClassGenerator
      * @return The real package/class name for the generated class, including time stamp or null
      *         if that class alias hasn't been created
      */
-    public String getRealGeneratedClassName(String packClassName)
+    public String getRealGeneratedClassName(final String packClassName)
     {
         if (generatedClasses.get(packClassName) != null)
         {
@@ -198,7 +248,7 @@ public class PojoClassGenerator
      *                                class or its fields
      * @throws NotFoundException      If a referenced class cannot be found in the ClassPool
      */
-    private CtClass generateClassFromMap(String className, Map<String, Object> attr)
+    private CtClass generateClassFromMap(final String className, final Map<String, Object> attr)
         throws CannotCompileException, NotFoundException
     {
         CtClass ctClass = null;
@@ -319,7 +369,10 @@ public class PojoClassGenerator
      * @throws NotFoundException      If the className name is not found in the ClassPool
      * @throws CannotCompileException If the field cannot be created for some reason
      */
-    private CtField generateField(String className, String fieldName, CtClass destClass)
+    private CtField generateField(
+        final String className,
+        final String fieldName,
+        final CtClass destClass)
         throws NotFoundException, CannotCompileException
     {
         if (destClass == null)
@@ -342,11 +395,13 @@ public class PojoClassGenerator
      * to avoid conflicts or information loss
      *
      * @param packClassName The name of the dinamically-generated class to be populated
-     * @param values        T   he values used to populate the bean
+     * @param values        The values used to populate the bean
      * @return A dinamically-generated-class instance populated with the values data
      * @throws ScriptException If an error happens while trying to populate the bean
      */
-    private Object populateClassIntanceFromMap(String packClassName, Map<String, Object> values)
+    private Object populateClassIntanceFromMap(
+        final String packClassName,
+        final Map<String, Object> values)
         throws ScriptException
     {
         Object obj = null;
@@ -432,7 +487,8 @@ public class PojoClassGenerator
      * @return The populated Array of generated-class type beans
      * @throws ScriptException If an error happens while trying to populate the bean
      */
-    private Object populateArrayFromList(String packClassName, List items) throws ScriptException
+    private Object populateArrayFromList(final String packClassName, final List items)
+        throws ScriptException
     {
         try
         {
@@ -492,28 +548,29 @@ public class PojoClassGenerator
      * @param name The original class name
      * @return The valid Java class name
      */
-    private String getValidClassName(String name)
+    private String getValidClassName(final String name)
     {
         // --- First, strip away non-word characters
-        name = name.replaceAll("\\W", "");
+        String validName = name.replaceAll("\\W", "");
+
         // --- Capitalize
-        return (name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase());
+        return (WordUtils.capitalizeFully(validName));
     }
 
     /**
-     * @param name
-     * @return
+     * @param name The Class name
+     * @return The fully qualified package + class name
      */
-    private String getPackClassName(String name)
+    private String getPackClassName(final String name)
     {
         return generatedClassesPackage + name;
     }
 
     /**
-     * @param name
-     * @return
+     * @param name Valid Class name
+     * @return The fully qualified 
      */
-    private String getPackTimeClassName(String name)
+    private String getPackTimeClassName(final String name)
     {
         return generatedClassesPackage + "q" + new Date().getTime() + "." + name;
     }

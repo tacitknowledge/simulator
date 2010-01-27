@@ -118,7 +118,7 @@ public abstract class BaseConfigurable implements Configurable
      * @param name The parameter name. Parameter names should be defined by each implementation.
      * @return The parameter value or null if not defined.
      */
-    protected String getParamValue(String name)
+    protected String getParamValue(final String name)
     {
         return parameters.get(name);
     }

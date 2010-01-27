@@ -1,6 +1,5 @@
 package com.tacitknowledge.simulator.transports;
 
-import com.tacitknowledge.simulator.Configurable;
 import com.tacitknowledge.simulator.ConfigurableException;
 import com.tacitknowledge.simulator.Transport;
 
@@ -33,17 +32,16 @@ public class MockInTransport extends BaseTransport implements Transport
     }
 
     /**
-     * Default url route for this transport
-     * @return uri string
+     * {@inheritDoc}
      */
-    public String toUriString()
+    @Override
+    protected String getUriString()
     {
         return "direct:start";
     }
 
     /**
-     * Retrieves parameter list
-     * @return - List of parameters
+     * {@inheritDoc}
      */
     public List<List> getParametersList()
     {
@@ -51,8 +49,7 @@ public class MockInTransport extends BaseTransport implements Transport
     }
 
     /**
-     * Set parameters for this transport
-     * @param parameters Configurable parameter values
+     * {@inheritDoc}
      */
     public void setParameters(final Map<String, String> parameters)
     {
@@ -60,10 +57,7 @@ public class MockInTransport extends BaseTransport implements Transport
     }
 
     /**
-     * Validate that all the required parameters have been provided.
-     *
-     * @throws com.tacitknowledge.simulator.ConfigurableException
-     *          If any required parameter has not been set.
+     * {@inheritDoc}
      */
     @Override
     protected void validateParameters() throws ConfigurableException

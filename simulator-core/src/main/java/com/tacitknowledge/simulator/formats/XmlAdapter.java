@@ -70,16 +70,16 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
      */
     private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
             parameters().
-                    add(
-                            name(PARAM_VALIDATE).
-                                    label("Validate?").
-                                    type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN)
-                    ).
-                    add(
-                            name(PARAM_ROOT_TAG_NAME).
-                                    label("XML root tag name").
-                                    outOnly()
-                    );
+            add(
+                name(PARAM_VALIDATE).
+                    label("Validate?").
+                    type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN)
+            ).
+            add(
+                name(PARAM_ROOT_TAG_NAME).
+                    label("XML root tag name").
+                    outOnly()
+            );
 
     /**
      * The Document object used for XML generation in adaptTo() and helper methods
@@ -156,7 +156,7 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
      */
     @Override
     protected SimulatorPojo createSimulatorPojo(final Exchange exchange)
-            throws FormatAdapterException
+        throws FormatAdapterException
     {
         String o = exchange.getIn().getBody(String.class);
         logger.debug("Attempting to generate SimulatorPojo from XML content:\n{}", o);
@@ -208,7 +208,7 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
      */
     @Override
     protected String getString(final SimulatorPojo pojo, final Exchange exchange)
-            throws FormatAdapterException
+        throws FormatAdapterException
     {
         try
         {

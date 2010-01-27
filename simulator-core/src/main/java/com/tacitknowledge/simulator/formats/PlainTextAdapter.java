@@ -70,7 +70,7 @@ public class PlainTextAdapter extends BaseAdapter
      */
     @Override
     protected SimulatorPojo createSimulatorPojo(final Exchange exchange)
-            throws FormatAdapterException
+        throws FormatAdapterException
     {
         return null;
     }

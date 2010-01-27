@@ -93,8 +93,8 @@ public interface ConversationManager
      * @throws IllegalAccessException If the class is accessed from an incorrect context
      * @throws InstantiationException If the class cannot be instantiated
      */
-    Object getClassByName(String name) throws ClassNotFoundException,
-            IllegalAccessException, InstantiationException;
+    Object getClassByName(String name)
+        throws ClassNotFoundException, IllegalAccessException, InstantiationException;
 
     /**
      * Method to determine if a conversation is active or not
