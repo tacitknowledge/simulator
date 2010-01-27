@@ -117,14 +117,7 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
                     Arrays.asList(propNameValue[0].split(splitterRegEx)));
             String propValue = propNameValue[1];
 
-            try
-            {
-                setPropertyToMap(pojo.getRoot(), propName, propValue);
-            }
-            catch (FormatAdapterException fae)
-            {
-                throw fae;
-            }
+            setPropertyToMap(pojo.getRoot(), propName, propValue);
         }
 
         logger.debug("Finished generating SimulatorPojo from Properties content");

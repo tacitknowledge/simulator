@@ -5,7 +5,7 @@ import org.apache.camel.Exchange;
 
 /**
  * SimulatorEventListener interface
- * This interface can be used register a listener for
+ * This interface can be used to register a listener for
  * some events that are triggered during the routing process.
  *
  * @author Daniel Valencia (dvalencia@tacitknowledge.com)

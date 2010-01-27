@@ -28,7 +28,6 @@ public class LoggingBean
     static
     {
         Logger logger = LoggerFactory.getLogger("com.tacitknowledge.conversations");
-        //logger.removeAllAppenders();
     }
 
     /**
@@ -57,8 +56,6 @@ public class LoggingBean
     private void configureLogger(final Conversation conversation)
         throws IOException
     {
-        //remove parent appenders
-        //logger.setLevel(org.apache.log4j.Level.ALL);
 
         //create a new appender for each conversation
         RollingFileAppender newAppender = new RollingFileAppender(
@@ -68,7 +65,6 @@ public class LoggingBean
         newAppender.setBufferSize(1024 * 3);
         newAppender.setMaxBackupIndex(5);
         newAppender.setThreshold(Level.ALL);
-        //logger.addAppender(newAppender);
     }
 
     /**
