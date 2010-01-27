@@ -11,7 +11,6 @@ class SimualtorConnectorTest < ActionController::IntegrationTest
 
   def test_create_conversation
     conversation = Conversation.find 2
-    puts conversation
     jconversation = SimulatorConnector.instance.create_or_update_conversation(conversation)
     assert_not_nil(jconversation)
   end
