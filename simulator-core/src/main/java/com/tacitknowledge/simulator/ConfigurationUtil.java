@@ -31,6 +31,9 @@ public final class ConfigurationUtil
      */
     public static Configurable getConfigurable(final String className) throws ConfigurableException
     {
+        if(null == className) {
+            throw new ConfigurableException("Class name parameter is null");
+        }
         Configurable configurable = null;
 
         if (classPool.containsKey(className))

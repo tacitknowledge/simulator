@@ -193,13 +193,21 @@ class ConversationsController < ApplicationController
   end
 
   def transport_parameters
-    transport_class_name = TransportType.get_transport_class_name_by_name(params[:type])
-    render :json => {:data => SimulatorConnector.instance.get_transport_parameters(transport_class_name)}
+    data = [] 
+    if !params[:type].nil? && !params[:type].empty?
+      transport_class_name = TransportType.get_transport_class_name_by_name(params[:type])
+      data = SimulatorConnector.instance.get_transport_parameters(transport_class_name)
+    end
+    render :json => {:data => data}
   end
 
   def format_parameters
-    format_class_name = FormatType.get_format_class_name_by_name(params[:format])
-    render :json => {:data => SimulatorConnector.instance.get_format_parameters(format_class_name)}
+    data = []
+    if !params[:format].nil? && !params[:format].empty?
+      format_class_name = FormatType.get_format_class_name_by_name(params[:format])
+      data = SimulatorConnector.instance.get_format_parameters(format_class_name)
+    end
+    render :json => {:data => data}
   end
 
   def enable
