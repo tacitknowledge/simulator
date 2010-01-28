@@ -58,9 +58,15 @@ class SystemsController < ApplicationController
     @system = System.find(params[:id])
     system_name = @system.name
 
-    @system.conversations.each do |conversation|
-      SimulatorConnector.instance.delete_conversation(conversation)
+    begin
+      @system.conversations.each do |conversation|
+        SimulatorConnector.instance.delete_conversation(conversation)
+      end
+    rescue java.lang.Exception => ex
+      logger.info(ex)
+      render :status => 500, :json => { :message => "We had a problem deleting system"} and return
     end
+
     if @system.destroy
       notice = "Successfully removed system '#{system_name}' with id #{params[:id]}"
       render :json => {:success => true, :message => notice }

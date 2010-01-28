@@ -19,7 +19,14 @@ class ScenariosController < ApplicationController
     scenario.execution_script = params[:execution_script]
     scenario.enabled = true
     if scenario.save
-      SimulatorConnector.instance.create_or_update_conversation_scenario(scenario)
+
+      begin
+        SimulatorConnector.instance.create_or_update_conversation_scenario(scenario)
+      rescue java.lang.Exception => ex
+        logger.info(ex)
+        render :status => 500, :json => { :message => "We had a problem creating the scenario"} and return
+      end
+
       flash[:notice] = "Successfully created new Scenario '#{scenario.name}' with id #{scenario.id}"
       render :json => { :success => true, :data => scenario }
     else
@@ -36,7 +43,12 @@ class ScenariosController < ApplicationController
     scenario.execution_script = params[:execution_script]
     scenario.enabled=params[:enabled].nil? ? scenario.enabled : params[:enabled];
 
-    SimulatorConnector.instance.create_or_update_conversation_scenario(scenario)
+    begin
+      SimulatorConnector.instance.create_or_update_conversation_scenario(scenario)
+    rescue java.lang.Exception => ex
+      logger.info(ex)
+      render :status => 500, :json => { :message => "We had a problem updating the scenario"} and return
+    end
 
     if scenario.save
       msg = "Successfully updated Scenario '#{scenario.name}' with id #{scenario.id}"
@@ -62,7 +74,13 @@ class ScenariosController < ApplicationController
     @scenario = Scenario.find(params[:id])
     scenario_name = @scenario.name
 
-    SimulatorConnector.instance.delete_scenario(@scenario)
+    begin
+      SimulatorConnector.instance.delete_scenario(@scenario)
+    rescue java.lang.Exception => ex
+      logger.info(ex)
+      render :status => 500, :json => { :message => "We had a problem deleting the scenario"} and return
+    end
+
     if @scenario.destroy
       msg = "Successfully deleted Scenario '#{scenario_name}' with id #{params[:id]}"
       render :json => { :success => true, :message => msg }
