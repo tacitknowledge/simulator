@@ -14,8 +14,9 @@ TK.deleteEntity = function(entityName, relativeUrl) {
                 var obj = Ext.decode(response.responseText);
                 TK.showFlashMessage(obj.message);
             },
-            failure: function() {
-                //todo handler
+            failure: function(response) {
+                var jsonResponse = Ext.util.JSON.decode(response.responseText)
+                Ext.MessageBox.alert('Error',jsonResponse.message)
             }
         })
     }
@@ -34,16 +35,20 @@ TK.editEntity = function(entityName, relativeUrl) {
  * @param entityId entityId
  *
  */
-TK.enableEntity = function(entity, entityId) {
+TK.enableEntity = function(entity, record) {
 
     Ext.Ajax.request({
-        url: entity + '/' + entityId + '/enable'  ,
+        record : record,
+        dataIndex : dataIndex,
+        url: entity + '/' + record.data.id + '/enable'  ,
         method: 'GET',
-        success: function() {
-            //do nothing
+        success: function(fp, o) {
+            record.set(this.dataIndex, !record.data.enabled)
         },
-        failure: function() {
-            //todo handler
+        failure: function(response) {
+                var jsonResponse = Ext.util.JSON.decode(response.responseText)
+                Ext.MessageBox.alert('Error',jsonResponse.message)
+                o.record.set(o.dataIndex, o.record.modified.enabled)
         }
     })
 
@@ -56,16 +61,19 @@ TK.enableEntity = function(entity, entityId) {
  * @param entityId entityId
  *
  */
-TK.activateEntity = function(entity, entityId) {
-
+TK.activateEntity = function(entity, record, dataIndex) {
     Ext.Ajax.request({
-        url: entity + '/' + entityId + '/activate'  ,
+        record : record,
+        dataIndex : dataIndex,
+        url: entity + '/' + record.data.id + '/activate'  ,
         method: 'GET',
-        success: function() {
+        success: function(fp, o) {
             //do nothing
         },
-        failure: function() {
-            //todo handler
+        failure: function(response, o) {
+                var jsonResponse = Ext.util.JSON.decode(response.responseText)
+                Ext.MessageBox.alert('Error',jsonResponse.message)
+                o.record.set(o.dataIndex, o.record.modified.active)
         }
     })
 
@@ -79,21 +87,13 @@ TK.cloneScenario = function (scenarioId) {
             var jsonResponse = Ext.util.JSON.decode(result.responseText)
             window.location = "scenarios/" + jsonResponse.data.id + "/"
         },
-        failure: function(result, request) {
-            alert('errorrrrrr')
+        failure: function(response) {
+                var jsonResponse = Ext.util.JSON.decode(response.responseText)
+                Ext.MessageBox.alert('Error',jsonResponse.message)
         }
     })
 },
 
 TK.export = function () {
     window.location = 'configuration/export.xml'
-//    Ext.Ajax.request({
-//        url: 'configuration/export'  ,
-//        method: 'GET',
-//        success: function(result, request) {
-//        },
-//        failure: function() {
-//            todo handler
-//        }
-//    })
 };

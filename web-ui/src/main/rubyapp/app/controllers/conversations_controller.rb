@@ -12,7 +12,7 @@ class ConversationsController < ApplicationController
         end
       rescue java.lang.Exception => ex
         logger.info(ex)
-        render :json => { :message => "We had a problem retrieving the conversations"} and return
+        render :status => 500, :json => { :message => "We had a problem retrieving the conversations"} and return
       end
       render :json => { :success=>true, :data => @conversations }
     else
@@ -76,7 +76,7 @@ class ConversationsController < ApplicationController
         logger.debug(msg.to_json)
       rescue java.lang.Exception => ex
         logger.info(ex)
-        render :json => { :message => "We had a problem retrieving the conversation"} and return
+        render :status => 500, :json => { :message => "We had a problem retrieving the conversation"} and return
       end
 
       render :json => msg.to_json
@@ -93,7 +93,7 @@ class ConversationsController < ApplicationController
         render :json => { :success => true, :data => conversation }
       rescue java.lang.Exception => ex
         logger.info(ex)
-        render :json => { :message => "We had a problem creating the conversation"} and return
+        render :status => 500, :json => { :message => "We had a problem creating the conversation"} and return
       end
     else
       logger.debug("Unable to save Conversation. List of Errors follow up:")
@@ -131,7 +131,7 @@ class ConversationsController < ApplicationController
       end
     rescue java.lang.Exception => ex
       logger.info(ex)
-      render :json => { :message => "We had a problem updating conversation #{conversation.name}"}
+      render :status => 500, :json => { :message => "We had a problem updating conversation #{conversation.name}"}
     end
   end
 
@@ -148,7 +148,7 @@ class ConversationsController < ApplicationController
       end
     rescue java.lang.Exception => ex
       logger.info(ex)
-      render :json => { :message => "We had a problem destroying conversation #{@conversation.name}"}
+      render :status => 500, :json => { :message => "We had a problem destroying conversation #{@conversation.name}"}
     end
   end
 
@@ -219,7 +219,7 @@ class ConversationsController < ApplicationController
         data = SimulatorConnector.instance.get_transport_parameters(transport_class_name)
       rescue java.lang.Exception => ex
         logger.info(ex)
-        render :json => {:message => "An error ocurred retrieving transport parameters."} and return
+        render :status => 500, :json => {:message => "An error ocurred retrieving transport parameters."} and return
       end
     end
     render :json => {:data => data}
@@ -233,7 +233,7 @@ class ConversationsController < ApplicationController
         data = SimulatorConnector.instance.get_format_parameters(format_class_name)
       rescue java.lang.Exception => ex
         logger.info(ex)
-        render :json => {:message => "An error ocurred retrieving format parameters."} and return
+        render :status => 500, :json => {:message => "An error ocurred retrieving format parameters."} and return
       end
     end
     render :json => {:data => data}
@@ -248,7 +248,7 @@ class ConversationsController < ApplicationController
         SimulatorConnector.instance.deactivate(conversation)
       rescue java.lang.Exception => ex
         logger.info(ex)
-        render :json => {:message => "An error ocurred enabling conversation #{conversation.name}."} and return
+        render :status => 500, :json => {:message => "An error ocurred enabling conversation #{conversation.name}."} and return
       end
     end
     conversation.save
@@ -271,7 +271,7 @@ class ConversationsController < ApplicationController
       is_active = SimulatorConnector.instance.is_active(conversation)
     rescue java.lang.Exception => ex
         logger.info(ex)
-        render :json => {:message => "An error ocurred activating conversation #{conversation.name}."} and return
+        render :status => 500, :json => {:message => "An error ocurred activating conversation #{conversation.name}."} and return
     end
     render :json => { :success=>true, :data => conversation, :is_active => is_active}
   end

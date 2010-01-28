@@ -31,9 +31,10 @@ TK.ScenarioForm = Ext.extend(Ext.FormPanel, {
                             TK.showFlashMessage(o.result.message);
                         }
                    },
-                   failure: function(fp, o) {
-                       Ext.MessageBox.alert('Error', o.result.message)
-                   }
+                   failure: function(response) {
+                        var jsonResponse = Ext.util.JSON.decode(response.responseText)
+                        Ext.MessageBox.alert('Error',jsonResponse.message)
+                    }
                });
            }
        },

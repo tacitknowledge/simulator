@@ -85,7 +85,7 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
 
         })
         enabledColumn.onChange = function(record) {
-            TK.enableEntity('conversations', record.data.id)
+            TK.enableEntity('conversations', record, this.dataIndex)
         }
 
         var activeColumn = new Ext.grid.CheckColumn({
@@ -96,7 +96,7 @@ TK.SystemForm = Ext.extend(Ext.FormPanel, {
         })
 
         activeColumn.onChange = function(record) {
-            TK.activateEntity('conversations', record.data.id)
+            TK.activateEntity('conversations', record, this.dataIndex)
         }
 
         TK.SystemForm.superclass.constructor.call(this, Ext.apply({

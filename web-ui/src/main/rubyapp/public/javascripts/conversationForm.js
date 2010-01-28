@@ -54,8 +54,9 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                         TK.showFlashMessage(o.result.message);
                     }
                 },
-                failure: function(fp, o) {
-                    Ext.MessageBox.alert('Error', o.result.message);
+                failure: function(response) {
+                    var jsonResponse = Ext.util.JSON.decode(response.responseText)
+                    Ext.MessageBox.alert('Error',jsonResponse.message)
                 }
             });
         }
@@ -139,8 +140,9 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
 
                     Ext.getCmp('conversation-form').addParametersToFieldSet(in_out, fieldSetName, jsonResponse.data, fieldPrefix);
                 },
-                failure: function (result, request) {
-                    Ext.MessageBox.alert('Failed', result.responseText);
+                failure: function(response) {
+                    var jsonResponse = Ext.util.JSON.decode(response.responseText)
+                    Ext.MessageBox.alert('Error',jsonResponse.message)
                 }
             });
         }
@@ -234,8 +236,9 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                     //Ext.Msg.alert("Attention", action.response.responseText);
                     Ext.getCmp('conversation-form').handleConfigurationsLoad(action.response.responseText);
                 },
-                failure: function(form, action) {
-                    Ext.Msg.alert("Load failed", action.result.errorMessage);
+                failure: function(response) {
+                var jsonResponse = Ext.util.JSON.decode(response.responseText)
+                Ext.MessageBox.alert('Error',jsonResponse.message)
                 }
             });
             var scenariosGrid = Ext.getCmp('scenarios_grid');
@@ -263,7 +266,7 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
         });
 
         enabledColumn.onChange = function(record) {
-            TK.enableEntity('scenarios', record.data.id)
+            TK.enableEntity('scenarios', record, this.dataIndex)
         };
 
         var initialConfig = {
@@ -553,8 +556,9 @@ TK.ConversationForm = Ext.extend(Ext.FormPanel, {
                     form = Ext.getCmp('conversation-form');
                     TK.refreshStores(params, form)
                 },
-                failure: function (result, request) {
-                    Ext.MessageBox.alert('Failed', result.responseText);
+                failure: function(response) {
+                var jsonResponse = Ext.util.JSON.decode(response.responseText)
+                Ext.MessageBox.alert('Error',jsonResponse.message)
                 }
             });
         }

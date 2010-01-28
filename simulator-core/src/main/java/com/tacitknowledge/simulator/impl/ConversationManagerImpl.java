@@ -41,11 +41,6 @@ public class ConversationManagerImpl implements ConversationManager
     private static Logger logger = LoggerFactory.getLogger(ConversationManagerImpl.class);
 
     /**
-     * COnversation manager instance
-     */
-    private static ConversationManager instance;
-
-    /**
      * CamelRoutes manager
      */
     private RouteManager routeManager;
@@ -75,20 +70,6 @@ public class ConversationManagerImpl implements ConversationManager
     {
         this.routeManager = new RouteManagerImpl();
         this.conversations = new HashMap<Integer, Conversation>();
-    }
-
-    /**
-     * Default Constructor
-     *
-     * @return Conversation Manager instance
-     */
-    public static ConversationManager getInstance()
-    {
-        if (instance == null)
-        {
-            instance = new ConversationManagerImpl();
-        }
-        return instance;
     }
 
     /**

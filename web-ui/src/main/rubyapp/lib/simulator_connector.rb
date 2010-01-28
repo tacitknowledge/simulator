@@ -17,7 +17,7 @@ class SimulatorConnector
   include Singleton
 
   def initialize
-    @conv_mgr = ConversationManagerImpl.getInstance()
+    @conv_mgr = ConversationManagerImpl.new
   end
 
   def get_format_parameters(format)
