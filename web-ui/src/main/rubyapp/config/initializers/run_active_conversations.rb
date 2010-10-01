@@ -1,3 +1,7 @@
+=begin
+This script is run during application deployment and it always hangs the build if there are any enabled conversations.
+It should probably be run during server startup only!
+Commenting out until issue is resolved
 if (!ENV["RAILS_ENV"].eql?("test"))
   begin
     all_conversations = Conversation.find :all
@@ -20,3 +24,4 @@ if (!ENV["RAILS_ENV"].eql?("test"))
     puts e.message
   end
 end
+=end
