@@ -35,7 +35,7 @@ TK.editEntity = function(entityName, relativeUrl) {
  * @param entityId entityId
  *
  */
-TK.enableEntity = function(entity, record) {
+TK.enableEntity = function(entity, record, dataIndex) {
 
     Ext.Ajax.request({
         record : record,
