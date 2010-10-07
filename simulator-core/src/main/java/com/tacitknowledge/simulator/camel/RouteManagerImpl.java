@@ -121,7 +121,7 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager
     {
         logger.info("Deactivating conversation: {}", conversation);
         int i = conversation.getId();
-        RouteDefinition definition = convRoutes.get(i);
+        RouteDefinition definition = convRoutes.remove(i);
         if (definition != null)
         {
             getContext().stopRoute(definition);
