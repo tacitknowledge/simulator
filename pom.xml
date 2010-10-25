@@ -14,9 +14,34 @@
     </properties>
 
     <modules>
+        <module>simulator-dependencies</module>
         <module>web-ui</module>
         <module>simulator-core</module>
         <module>test-system</module>
     </modules>
-    
+        
+    <repositories>
+        <repository>
+            <id>tk-public</id>
+            <name>TK Public Repository</name>
+            <url>http://repo1.tacitknowledge.com/repository/public</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+        <repository>
+            <id>jboss</id>
+            <url>http://repository.jboss.com/maven2</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 </project>
