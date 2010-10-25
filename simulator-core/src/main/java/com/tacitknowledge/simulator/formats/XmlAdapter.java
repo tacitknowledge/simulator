@@ -349,8 +349,13 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
                 {
                     // --- If the childValue is null or empty, means the
                     // underlying child is a Text node.
-                    // Just assign the child's text value as it is.
-                    structuredChild.put(currNodeName, child.getFirstChild().getNodeValue());
+                    // Just assign the child's text value as it is if it's not null, or ? otherwise.
+                	String nodeValue = "?";
+                	if (child.getFirstChild() != null && child.getFirstChild().getNodeValue() != null)
+                	{
+                		nodeValue = child.getFirstChild().getNodeValue();
+                	}
+                    structuredChild.put(currNodeName, nodeValue);
                 }
                 else
                 {
