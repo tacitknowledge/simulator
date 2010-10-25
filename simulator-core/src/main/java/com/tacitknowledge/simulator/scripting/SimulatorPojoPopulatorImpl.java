@@ -79,6 +79,17 @@ public final class SimulatorPojoPopulatorImpl
         {
             stringObjectMap = new RubyObjectMapper().getMapFromObject(bean);
         }
+        //this was added to facilitate work with java maps created specifically for SOAP.
+        //the plan is to use java maps with arbitrary content to build the SOAP response, not the POJO
+        //built from values in the SOAP request.
+        //This code could be moved somewhere in the SoapAdapter classes if it conflicts with other adapters.
+        else if (bean instanceof Map)
+        {
+        	pojo.getRoot().putAll((Map) bean);
+    		logger.info("Object parameter is already a map. Just adding it to POJO's root: " + bean);
+
+        	return pojo; 
+        }
         else
         {
             stringObjectMap = new JavaObjectMapper().getMapFromObject(bean);
