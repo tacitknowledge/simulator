@@ -5,9 +5,13 @@ import com.tacitknowledge.simulator.RouteManager;
 import com.tacitknowledge.simulator.SimulatorException;
 import com.tacitknowledge.simulator.configuration.beans.EventBean;
 import com.tacitknowledge.simulator.configuration.SimulatorEventType;
+
+import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
+import org.apache.camel.jboss.JBossPackageScanClassResolver;
 import org.apache.camel.model.RouteDefinition;
+import org.apache.camel.spi.PackageScanClassResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,7 +56,22 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager
      */
     public RouteManagerImpl()
     {
-        super(new DefaultCamelContext());
+    	CamelContext context = new DefaultCamelContext();
+    	try
+    	{
+    		//check if we run in JBoss. We could check for any class that is provided by Jboss.
+    		Class.forName("org.jboss.logging.appender.RollingFileAppender");
+        	PackageScanClassResolver jbossResolver = new JBossPackageScanClassResolver();
+        	context.setPackageScanClassResolver(jbossResolver);
+    		logger.info("Running in JBoss");
+    	}
+    	catch (ClassNotFoundException e)
+    	{
+    		//just ignore if we're not in jboss
+    		logger.info("Not running in JBoss. Probably we're in Tomcat");
+    	}
+
+        setContext(context);
     }
 
     /**
