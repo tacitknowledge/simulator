@@ -16,8 +16,10 @@ include_class 'com.tacitknowledge.simulator.impl.ConversationManagerImpl'
 class SimulatorConnector
   include Singleton
 
+#On Jboss this Ruby class doesn't act as a singleton (probably because of the complex classloading that JBoss has)
+#To fix that we're using the Singleton version of the ConversationManagerImpl instead of creating an instance using new operator
   def initialize
-    @conv_mgr = ConversationManagerImpl.new
+    @conv_mgr = ConversationManagerImpl.getInstance()
   end
 
   def get_format_parameters(format)

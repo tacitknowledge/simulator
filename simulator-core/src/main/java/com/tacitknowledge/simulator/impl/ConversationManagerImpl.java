@@ -39,6 +39,8 @@ public class ConversationManagerImpl implements ConversationManager
      * Logger for this class.
      */
     private static Logger logger = LoggerFactory.getLogger(ConversationManagerImpl.class);
+    /** The singleton version of the class */
+    private static ConversationManagerImpl instance = new ConversationManagerImpl();
 
     /**
      * CamelRoutes manager
@@ -49,7 +51,16 @@ public class ConversationManagerImpl implements ConversationManager
      * Currently configured conversations
      */
     private Map<Integer, Conversation> conversations;
-
+    
+    /**
+     * The method can be used to get a pre-created version of the ConversationManager as a singleton.
+     * Note that the class can still be created using the constructor so that it's not quite the
+     * implementation of the singleton pattern.
+     */
+    public static ConversationManagerImpl getInstance()
+    {
+    	return instance;
+    }
 
     /**
      * Public constructor for ConversationManagerImpl.
@@ -68,8 +79,7 @@ public class ConversationManagerImpl implements ConversationManager
      */
     public ConversationManagerImpl()
     {
-        this.routeManager = new RouteManagerImpl();
-        this.conversations = new HashMap<Integer, Conversation>();
+    	this(new RouteManagerImpl());
     }
 
     /**
