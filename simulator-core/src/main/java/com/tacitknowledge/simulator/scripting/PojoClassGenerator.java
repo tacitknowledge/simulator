@@ -412,7 +412,8 @@ public class PojoClassGenerator
             try
             {
                 // --- Try to get an instance of the generated class
-                obj = Class.forName(realName).newInstance();
+                obj = Class.forName(realName, false,
+                		Thread.currentThread().getContextClassLoader()).newInstance();
 
                 // --- Iterate through all the Map values
 
