@@ -84,6 +84,10 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object>
      */
     private static final String PARAMS = "params";
     /**
+     * headers property of the request
+     */
+    private static final String HEADERS = "headers";
+    /**
      * method property of the request
      */
     private static final String METHOD = "method";
@@ -212,6 +216,7 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object>
         Map<String, Object> requestMap = new HashMap<String, Object>();
 
         Map<String, Object> paramMap = new HashMap<String, Object>();
+        Map<String, Object> headersMap = new HashMap<String, Object>();
         if (request != null)
         {
 
@@ -224,6 +229,13 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object>
                 paramMap.put(element, request.getParameter(element));
             }
 
+            enumer = request.getHeaderNames();
+            while (enumer.hasMoreElements())
+            {
+                String header = (String) enumer.nextElement();
+                headersMap.put(header, request.getHeader(header));
+            }
+
             Map<String, Object> values =
                     extractValuesFromUri(request.getRequestURI(), extractionPattern);
 
@@ -233,6 +245,7 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object>
             }
         }
         requestMap.put(PARAMS, paramMap);
+        requestMap.put(HEADERS, headersMap);
 
         return requestMap;
     }
