@@ -50,6 +50,7 @@ public class RestAdapterTest {
         Enumeration enumer = mock(Enumeration.class);
         stub(enumer.hasMoreElements()).toReturn(false);
         stub(request.getParameterNames()).toReturn(enumer);
+        stub(request.getHeaderNames()).toReturn(enumer);
 
         CamelContext context = new DefaultCamelContext();
         Exchange exchange = new DefaultExchange(context);
