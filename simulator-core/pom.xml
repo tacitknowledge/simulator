@@ -52,7 +52,7 @@
  	</dependencies>
     
     <profiles>
-    	<!-- profile for tomcat builds. Activated if not passing -Dserver= -->
+    	<!-- profile for tomcat builds, this is the default one -->
     	<profile>
     		<id>tomcat</id>
     		<activation>
@@ -67,7 +67,7 @@
 		        </dependency>
 		 	</dependencies>
         </profile>
-    	<!-- profile for jboss builds. Activated if passing -Dserver=jboss -->
+    	<!-- profile for jboss builds. Activated if passing -Pjboss -->
     	<profile>
     		<id>jboss</id>
 		    <dependencies>
