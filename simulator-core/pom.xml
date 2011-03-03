@@ -49,30 +49,12 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- <dependency>
-            <groupId>org.easymock</groupId>
-            <artifactId>easymock</artifactId>
-            <version>2.4</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.easymock</groupId>
-            <artifactId>easymockclassextension</artifactId>
-            <version>2.4</version>
-            <scope>test</scope>
-        </dependency>-->
  	</dependencies>
     
     <profiles>
     	<!-- profile for tomcat builds. Activated if not passing -Dserver= -->
     	<profile>
     		<id>tomcat</id>
-			<activation>
-				<property>
-		        	<name>!server</name>
-		      	</property>
-       		</activation>
 		    <dependencies>
 		        <dependency>
 		            <groupId>com.tacitknowledge.simulator</groupId>
@@ -85,12 +67,6 @@
     	<!-- profile for jboss builds. Activated if passing -Dserver=jboss -->
     	<profile>
     		<id>jboss</id>
-			<activation>
-				<property>
-		        	<name>server</name>
-		        	<value>jboss</value>
-		      	</property>
-       		</activation>
 		    <dependencies>
 		        <dependency>
 		            <groupId>com.tacitknowledge.simulator</groupId>
@@ -132,6 +108,7 @@
                     <source>1.5</source>
                 </configuration>
             </plugin>
+            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -172,6 +149,28 @@
                     </execution>
                 </executions>
             </plugin>
+            
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                	<execution>
+                		<id>clean-rubyapp-lib</id>
+                        <phase>clean</phase>
+                        <configuration>
+                            <tasks>
+                                <delete>
+                                	<fileset dir="${lib.output.directory}">
+                                		<include name="**/*.jar"/>
+                                	</fileset> 
+                                </delete>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                	</execution>
+                </executions>
+            </plugin>    	
 
         </plugins>
     </build>
