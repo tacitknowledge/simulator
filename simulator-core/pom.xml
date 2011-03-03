@@ -55,6 +55,9 @@
     	<!-- profile for tomcat builds. Activated if not passing -Dserver= -->
     	<profile>
     		<id>tomcat</id>
+    		<activation>
+            	<activeByDefault>true</activeByDefault>
+            </activation>
 		    <dependencies>
 		        <dependency>
 		            <groupId>com.tacitknowledge.simulator</groupId>

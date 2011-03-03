@@ -57,7 +57,7 @@
         </profile>
         
         <profile>
-            <id>tomcat</id>
+            <id>deploy-to-tomcat</id>
             <build>
                 <plugins>
                     <plugin>
@@ -90,7 +90,7 @@
         </profile>
         
         <profile>
-            <id>jboss</id>
+            <id>deploy-to-jboss</id>
             <build>
                 <plugins>
 	               <plugin>
