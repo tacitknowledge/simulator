@@ -1,0 +1,8 @@
+[when]
+2>3
+
+[execute]
+obj.response.body="hello world";
+obj.response.contentType="text/html";
+obj.response.statusCode="404";
+obj;

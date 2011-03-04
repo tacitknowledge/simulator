@@ -68,6 +68,9 @@ public class ConversationImpl implements Conversation
     private Map<Integer, ConversationScenario> scenarios
         = new HashMap<Integer, ConversationScenario>();
 
+    public ConversationImpl()
+    {}
+    
     /**
      * Constructor
      *
