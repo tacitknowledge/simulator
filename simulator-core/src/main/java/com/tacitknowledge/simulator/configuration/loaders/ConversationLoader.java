@@ -4,15 +4,23 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 import com.tacitknowledge.simulator.Conversation;
 import com.tacitknowledge.simulator.ConversationScenario;
+import com.tacitknowledge.simulator.ScenarioParsingException;
 import com.tacitknowledge.simulator.impl.ConversationImpl;
 
 public class ConversationLoader
 {
+    /**
+     * Logger for the EventDispatcherImpl class.
+     */
+    private static Logger logger = LoggerFactory.getLogger(ConversationLoader.class);
+    
     private ConversationLoader()
     {}
 
@@ -60,12 +68,19 @@ public class ConversationLoader
 
         for (File scenarioFile : scenarioFiles)
         {
-            ConversationScenario scenario = ScenarioLoader.parseScenarioFromFile(scenarioFile
-                    .getAbsolutePath());
-
-            conversation.addOrUpdateScenario(scenarioId, scenario.getScriptLanguage(),
-                    scenario.getCriteriaScript(), scenario.getTransformationScript());
-
+            try
+            {
+                ConversationScenario scenario = ScenarioLoader.parseScenarioFromFile(scenarioFile
+                        .getAbsolutePath());
+                
+                conversation.addOrUpdateScenario(scenarioId, scenario.getScriptLanguage(),
+                        scenario.getCriteriaScript(), scenario.getTransformationScript());
+            }
+            catch (ScenarioParsingException ex)
+            {
+                logger.error(ex.getMessage(), ex);
+            }
+            
             scenarioId++;
         }
     }

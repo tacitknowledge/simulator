@@ -1,0 +1,8 @@
+[whenAAAA]
+1==1
+
+[execute]
+obj.response.body="mega test";
+obj.response.contentType="text/html";
+obj.response.statusCode="333";
+obj;
