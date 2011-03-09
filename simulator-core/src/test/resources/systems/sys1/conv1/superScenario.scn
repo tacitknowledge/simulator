@@ -2,7 +2,6 @@
 3>2
 
 [execute]
-obj.response.body="mega test 3";
-obj.response.contentType="text/html";
-obj.response.statusCode="500";
-obj;
+users.user[0].name="new name (superScenario)";
+users;
+

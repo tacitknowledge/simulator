@@ -104,6 +104,8 @@ public class ConversationImpl implements Conversation
             final Transport outboundTransport, final Adapter inboundAdapter,
             final Adapter outboundAdapter)
     {
+        // TODO: mysql artifact - will be removed soon ;)
+        this.id = 1;
         this.conversationPath = conversationPath;
         this.inboundTransport = inboundTransport;
         this.outboundTransport = outboundTransport;
