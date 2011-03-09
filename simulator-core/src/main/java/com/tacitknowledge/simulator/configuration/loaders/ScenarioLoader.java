@@ -14,6 +14,8 @@ import com.tacitknowledge.simulator.impl.ConversationScenarioImpl;
 
 public class ScenarioLoader
 {
+    private static final String SCRIPTING_LANGUAGE = "javascript";
+
     private static final int FLAGS = Pattern.CASE_INSENSITIVE | Pattern.DOTALL | Pattern.MULTILINE;
 
     private static final Pattern SCENARIO_REGEX = Pattern.compile(
@@ -57,7 +59,7 @@ public class ScenarioLoader
             String execute = m.group(2).trim();
 
             //TODO : replace hard-coded "JavaScript"
-            return new ConversationScenarioImpl(1, "javascript", condition, execute);
+            return new ConversationScenarioImpl(1, SCRIPTING_LANGUAGE, condition, execute);
         }
         finally
         {

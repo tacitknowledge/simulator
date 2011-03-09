@@ -16,6 +16,8 @@ import com.tacitknowledge.simulator.impl.ConversationImpl;
 
 public class ConversationLoader
 {
+    private static final String SCENARIO_FILE_EXTENSION = ".scn";
+    
     /**
      * Logger for the EventDispatcherImpl class.
      */
@@ -59,7 +61,7 @@ public class ConversationLoader
 
             public boolean accept(File dir, String name)
             {
-                return name.endsWith(".scn");
+                return name.endsWith(SCENARIO_FILE_EXTENSION);
             }
         });
 

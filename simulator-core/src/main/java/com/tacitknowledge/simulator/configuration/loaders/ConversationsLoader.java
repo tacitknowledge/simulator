@@ -40,7 +40,7 @@ public class ConversationsLoader
 
             for (File conversationDir : conversationDirs)
             {
-                Conversation conversation = ConversationLoader.parseConversationFromPath(systemDir
+                Conversation conversation = ConversationLoader.parseConversationFromPath(conversationDir
                         .getAbsolutePath());
                 conversations.add(conversation);
             }
