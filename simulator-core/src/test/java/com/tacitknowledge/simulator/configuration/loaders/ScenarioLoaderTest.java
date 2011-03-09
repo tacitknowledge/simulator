@@ -23,7 +23,7 @@ public class ScenarioLoaderTest
                 .parseScenarioFromFile(resource.getFile().getAbsolutePath());
 
         assertTrue(scenario.getCriteriaScript().startsWith("1==1"));
-        assertTrue(scenario.getTransformationScript().startsWith("obj.response.body="));
+        assertTrue(scenario.getTransformationScript().startsWith("users."));
     }
 
     @Test
