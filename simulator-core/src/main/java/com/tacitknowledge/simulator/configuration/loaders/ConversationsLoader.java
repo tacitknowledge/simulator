@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
@@ -13,6 +15,11 @@ import com.tacitknowledge.simulator.Conversation;
 
 public class ConversationsLoader
 {
+    /**
+     * Logger for the EventDispatcherImpl class.
+     */
+    private static Logger logger = LoggerFactory.getLogger(ConversationsLoader.class);
+
     private ConversationsLoader()
     {}
 
@@ -40,15 +47,27 @@ public class ConversationsLoader
 
             for (File conversationDir : conversationDirs)
             {
-                Conversation conversation = ConversationLoader.parseConversationFromPath(conversationDir
-                        .getAbsolutePath());
-                conversations.add(conversation);
+                try
+                {
+                    Conversation conversation = ConversationLoader
+                            .parseConversationFromPath(conversationDir.getAbsolutePath());
+                    if (conversation != null)
+                    {
+                        conversations.add(conversation);
+                    }
+                }
+                catch (IOException ex)
+                {
+                    String msg = String.format("Could not parse conversation from '%s' directory",
+                            conversationDir.getAbsolutePath());
+                    logger.warn(msg, ex);
+                }
             }
         }
 
         return conversations;
     }
-    
+
     private static class DirectoryFilter implements FileFilter
     {
 

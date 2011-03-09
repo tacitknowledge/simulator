@@ -61,6 +61,11 @@ public class ConversationImpl implements Conversation
      * Default response
      */
     private String defaultResponse;
+    
+    /**
+     * Conversation configuration directory (as identifier)
+     */
+    private String conversationPath;
 
     /**
      * List of configured scenarios for this conversation
@@ -93,6 +98,17 @@ public class ConversationImpl implements Conversation
         this.inboundAdapter = inboundAdapter;
         this.outboundAdapter = outboundAdapter;
         this.defaultResponse = defaultResponse;
+    }
+    
+    public ConversationImpl(final String conversationPath, final Transport inboundTransport,
+            final Transport outboundTransport, final Adapter inboundAdapter,
+            final Adapter outboundAdapter)
+    {
+        this.conversationPath = conversationPath;
+        this.inboundTransport = inboundTransport;
+        this.outboundTransport = outboundTransport;
+        this.inboundAdapter = inboundAdapter;
+        this.outboundAdapter = outboundAdapter;
     }
 
     /**
