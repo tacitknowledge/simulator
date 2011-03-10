@@ -23,8 +23,8 @@ public class StandAloneTest {
     public void test() {
         try {
             // initialize the "conversations scheduled loader"
-            ConversationsScheduledLoader loader =
-                new ConversationsScheduledLoader();
+            ScheduledConversationsLoader loader =
+                new ScheduledConversationsLoader();
             // initialize a close command waiter.
             CloseCommandWaiter closeWaiter = new CloseCommandWaiter();
 
