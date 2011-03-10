@@ -23,8 +23,8 @@ public class StandAloneStarter {
         try {
             // Initiate conversations scheduled
             // loader and close command waiter.
-            ConversationsScheduledLoader loader =
-                new ConversationsScheduledLoader();
+            ScheduledConversationsLoader loader =
+                new ScheduledConversationsLoader();
             CloseCommandWaiter closeWaiter = new CloseCommandWaiter();
             closeWaiter.setConversationsScheduledLoader(loader);
 

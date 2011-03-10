@@ -31,7 +31,7 @@ public class CloseCommandWaiter extends Thread
      * This variable will be used to communicate
      *  closing procedure to other applicat1ion components.
      */
-    private ConversationsScheduledLoader conversationsScheduledLoader = null;
+    private ScheduledConversationsLoader conversationsScheduledLoader = null;
 
     /**
      * socket on which the application will wait close command.
@@ -123,7 +123,7 @@ public class CloseCommandWaiter extends Thread
      * Conversation scheduled loader getter.
      * @return value of toClose variable
      */
-    public ConversationsScheduledLoader getConversationsScheduledLoader()
+    public ScheduledConversationsLoader getConversationsScheduledLoader()
     {
         return conversationsScheduledLoader;
     }
@@ -133,7 +133,7 @@ public class CloseCommandWaiter extends Thread
      * @param conversationsScheduledLoader scheduled conversations loader.
      */
     public void setConversationsScheduledLoader(
-            ConversationsScheduledLoader conversationsScheduledLoader)
+            ScheduledConversationsLoader conversationsScheduledLoader)
     {
         this.conversationsScheduledLoader = conversationsScheduledLoader;
     }
