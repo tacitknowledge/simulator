@@ -44,6 +44,7 @@ public final class ConfigurationUtil
         }
         else
         {
+            @SuppressWarnings("rawtypes")
             Class configurationClass;
             try
             {

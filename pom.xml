@@ -16,7 +16,6 @@
 
     <modules>
         <module>simulator-dependencies</module>
-        <module>web-ui</module>
         <module>simulator-core</module>
         <module>test-system</module>
     </modules>

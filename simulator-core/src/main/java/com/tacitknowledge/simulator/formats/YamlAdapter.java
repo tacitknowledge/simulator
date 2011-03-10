@@ -1,33 +1,30 @@
 package com.tacitknowledge.simulator.formats;
 
-import com.tacitknowledge.simulator.Adapter;
-import com.tacitknowledge.simulator.ConfigurableException;
-import com.tacitknowledge.simulator.FormatAdapterException;
-import com.tacitknowledge.simulator.SimulatorPojo;
-import com.tacitknowledge.simulator.StructuredSimulatorPojo;
-import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
-import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.name;
-import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.camel.Exchange;
-import org.ho.yaml.YamlDecoder;
-import org.ho.yaml.YamlEncoder;
-
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+
+import org.apache.camel.Exchange;
+import org.ho.yaml.YamlDecoder;
+import org.ho.yaml.YamlEncoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.tacitknowledge.simulator.Adapter;
+import com.tacitknowledge.simulator.ConfigurableException;
+import com.tacitknowledge.simulator.FormatAdapterException;
+import com.tacitknowledge.simulator.SimulatorPojo;
+import com.tacitknowledge.simulator.StructuredSimulatorPojo;
 
 /**
  * Implementation of the Adapter interface for the YAML format
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class YamlAdapter extends BaseAdapter implements Adapter<Object>
+public class YamlAdapter extends BaseAdapter implements Adapter
 {
     /**
      * String describing what are the YAML contents. REQUIRED.
@@ -50,26 +47,6 @@ public class YamlAdapter extends BaseAdapter implements Adapter<Object>
      * e.g.: employee, order, product, etc.
      */
     public static final String PARAM_YAML_ARRAY_CONTENT = "jsonArrayContent";
-
-
-    /**
-     * Adapter parameters definition.
-     */
-    private static List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
-            parameters()
-                    .add(
-                            name(PARAM_YAML_CONTENT).
-                                    label("YAML Contents (e.g. employees, orders, etc.)").
-                                    required())
-                    .add(
-                            name(PARAM_IS_ARRAY).
-                                    label("Is YAML content an array?").
-                                    type(ParameterDefinitionBuilder
-                                            .ParameterDefinition.TYPE_BOOLEAN))
-                    .add(
-                            name(PARAM_YAML_ARRAY_CONTENT).
-                                    label("YAML Array content (What each array element represents. "
-                                    + "e.g.: employee, order. Required if content is array)"));
 
     /**
      * Logger for this class.
@@ -190,26 +167,5 @@ public class YamlAdapter extends BaseAdapter implements Adapter<Object>
             throw new ConfigurableException(
                 "YAML Array Content parameter is required if YAML content is an array");
         }
-    }
-
-    /**
-     * Returns a List of parameters the implementing instance uses.
-     * Each list element is itself a List to describe the parameter as follows:
-     * <p/>
-     * - 0 : Parameter name
-     * - 1 : Parameter description. Useful for GUI rendition
-     * - 2 : Parameter type. Useful for GUI rendition.
-     * - 3 : Required or Optional parameter. Useful for GUI validation.
-     * - 4 : Parameter usage. Useful for GUI rendition.
-     * - 5 : Default value
-     *
-     * @return List of Parameters for the implementing Transport.
-     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder
-     * @see com.tacitknowledge.simulator.configuration
-     *              .ParameterDefinitionBuilder.ParameterDefinition
-     */
-    public List<List> getParametersList()
-    {
-        return getParametersDefinitionsAsList(parametersList);
     }
 }

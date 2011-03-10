@@ -5,6 +5,7 @@ package com.tacitknowledge.simulator;
  *
  * @author galo
  */
+@SuppressWarnings("serial")
 public class TransportException extends SimulatorException
 {
     /**

@@ -36,6 +36,7 @@ public class ScriptExecutionService
      * @param globals    a map of objects to expose as global variables in the script
      * @throws ScriptException if an unexpected error occurs
      */
+    @SuppressWarnings("rawtypes")
     public void exec(final String script, final String scriptName,
                         final Map globals) throws ScriptException
     {
@@ -58,6 +59,7 @@ public class ScriptExecutionService
      * @return the result of the script evaluation
      * @throws ScriptException if an unexpected error occurs
      */
+    @SuppressWarnings("rawtypes")
     public Object eval(final String script, final String scriptName, final Map globals) throws ScriptException
     {
         try
@@ -90,6 +92,7 @@ public class ScriptExecutionService
      * @return a new, fully initialized <code>BSFManager</code> instance
      * @throws ScriptException if an unexpected error occurs
      */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     private BSFManager initBSFManager(final Map globals) throws ScriptException
     {
         BSFManager manager = new BSFManager();

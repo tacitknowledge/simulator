@@ -25,11 +25,6 @@ public class LoggingBean
      */
     private boolean input;
 
-    static
-    {
-        Logger logger = LoggerFactory.getLogger("com.tacitknowledge.conversations");
-    }
-
     /**
      * Default Constructor
      * @param input - true if message is for input, false if it is for output

@@ -5,6 +5,7 @@ package com.tacitknowledge.simulator;
  *
  * @author Nikita Belenkiy (nbelenkiy@tacitknowledge.com)
  */
+@SuppressWarnings("serial")
 public class SimulatorException extends Exception
 {
     /**

@@ -1,17 +1,13 @@
 package com.tacitknowledge.simulator.transports;
 
-import com.tacitknowledge.simulator.ConfigurableException;
-import com.tacitknowledge.simulator.Transport;
-import com.tacitknowledge.simulator.TransportException;
-import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
-import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.name;
-import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
-
-import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.tacitknowledge.simulator.ConfigurableException;
+import com.tacitknowledge.simulator.Transport;
+import com.tacitknowledge.simulator.TransportException;
 
 /**
  * Transport implementation for FTP/SFTP endpoints.
@@ -47,62 +43,6 @@ public class FtpTransport extends FileTransport implements Transport
      * Logger for this class.
      */
     private static Logger logger = LoggerFactory.getLogger(FtpTransport.class);
-    /**
-     * Transport parameters definition.
-     */
-    private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
-            parameters()
-                    .add(
-                            name(PARAM_HOST).
-                                    label("Host Name").
-                                    required())
-                    .add(
-                            name(PARAM_SFTP).
-                                    label("Is this an SFTP transport? (defaults to FTP)").
-                                    type(ParameterDefinitionBuilder
-                                    .ParameterDefinition.TYPE_BOOLEAN))
-                    .add(
-                            name(PARAM_PORT).
-                                    label("Port (defaults to 21 for FTP and "
-                                    + "22 for SFTP if not provided)"))
-                    .add(
-                            name(PARAM_DIRECTORY_NAME).
-                                    label("Directory Name"))
-                    .add(
-                            name(PARAM_USERNAME).
-                                    label("User Name"))
-                    .add(
-                            name(PARAM_PASSWORD).
-                                    label("Password"))
-                    .add(
-                            name(PARAM_FILE_NAME).
-                                    label("File Name"))
-                    .add(
-                            name(PARAM_FILE_EXTENSION).
-                                    label("File Extension the transport will only poll from "
-                                            + "(without dot)").
-                                    inOnly())
-                    .add(
-                            name(PARAM_REGEX_FILTER).
-                                    label("Regex filter "
-                                            + "(will only be applied if neither "
-                                            + "file name nor extension filters are provided)").
-                                    inOnly())
-                    .add(
-                            name(PARAM_DELETE_FILE).
-                                    label("Delete file after simulation?").
-                                    type(ParameterDefinitionBuilder
-                                            .ParameterDefinition.TYPE_BOOLEAN).
-                                    inOnly())
-                    .add(
-                            name(PARAM_POLLING_INTERVAL).
-                                    label("Milliseconds before the next poll").
-                                    inOnly())
-                    .add(
-                            name(PARAM_BINARY).
-                                    label("Is file transfer binary? (defaults to NO)").
-                                    type(ParameterDefinitionBuilder
-                                    .ParameterDefinition.TYPE_BOOLEAN));
 
     /**
      * Flag to determine if this transport is FTP or SFTP. Defaults to FTP
@@ -256,14 +196,5 @@ public class FtpTransport extends FileTransport implements Transport
         {
             throw new ConfigurableException("Host name parameter is required");
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<List> getParametersList()
-    {
-        return getParametersDefinitionsAsList(parametersList);
     }
 }

@@ -121,6 +121,7 @@ public abstract class TestHelper
      *
      * @return The generated SimulatorPojo
      */
+    @SuppressWarnings("rawtypes")
     public static SimulatorPojo createOrderSimulatorPojo()
     {
         /*
@@ -208,28 +209,23 @@ public abstract class TestHelper
         }
 
         InputStream is = new FileInputStream(file);
-        if (is != null)
-        {
-            StringBuilder sb = new StringBuilder();
-            String line;
+        StringBuilder sb = new StringBuilder();
+        String line;
 
-            try
+        try
+        {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            
+            while ((line = reader.readLine()) != null)
             {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-                while ((line = reader.readLine()) != null)
-                {
-                    sb.append(line).append("\n");
-                }
+                sb.append(line).append("\n");
             }
-            finally
-            {
-                is.close();
-            }
+            
             return sb.toString();
         }
-        else
+        finally
         {
-            return "";
+            is.close();
         }
     }
 

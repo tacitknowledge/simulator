@@ -1,23 +1,12 @@
 package com.tacitknowledge.simulator.transports;
 
-import com.tacitknowledge.simulator.Adapter;
-import com.tacitknowledge.simulator.Configurable;
-import com.tacitknowledge.simulator.Conversation;
-import com.tacitknowledge.simulator.RouteManager;
-import com.tacitknowledge.simulator.TestHelper;
-import com.tacitknowledge.simulator.Transport;
-import com.tacitknowledge.simulator.ConfigurationUtil;
-import org.apache.camel.CamelContext;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.Ignore;
-
 import static org.junit.Assert.assertEquals;
 
-import com.tacitknowledge.simulator.impl.ConversationImpl;
-import com.tacitknowledge.simulator.camel.RouteManagerImpl;
-import com.tacitknowledge.simulator.formats.SoapAdapter;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPBody;
@@ -26,13 +15,21 @@ import javax.xml.soap.SOAPConnectionFactory;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPFault;
 import javax.xml.soap.SOAPMessage;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.io.InputStream;
-import java.io.ByteArrayInputStream;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import com.tacitknowledge.simulator.Adapter;
+import com.tacitknowledge.simulator.Configurable;
+import com.tacitknowledge.simulator.Conversation;
+import com.tacitknowledge.simulator.RouteManager;
+import com.tacitknowledge.simulator.TestHelper;
+import com.tacitknowledge.simulator.Transport;
+import com.tacitknowledge.simulator.camel.RouteManagerImpl;
+import com.tacitknowledge.simulator.formats.SoapAdapter;
+import com.tacitknowledge.simulator.impl.ConversationFactory;
 
 /**
  * @author Daniel Valencia (mailto:dvalencia@tacitknowledge.com)
@@ -87,6 +84,7 @@ public class SoapTransportIntegrationTest {
         }
     }
 
+    @SuppressWarnings("rawtypes")
     @Test
     public void successfulSoapTest() throws Exception
     {
@@ -119,6 +117,7 @@ public class SoapTransportIntegrationTest {
         }
     }
 
+    @SuppressWarnings("rawtypes")
     @Test
     public void successfulComplexSoapTest() throws Exception
     {
@@ -166,6 +165,7 @@ public class SoapTransportIntegrationTest {
         }
     }
 
+    @SuppressWarnings("rawtypes")
     @Test
     public void getSOAPFaultResponseTest() throws Exception
     {
@@ -250,14 +250,11 @@ public class SoapTransportIntegrationTest {
     {
         setupTransportsAndFormats(wsdlFile);
 
-        conv = new ConversationImpl(
-                1,
-                "Soap conversation",
-                inTransport,
-                outTransport,
-                inAdapter,
-                outAdapter,
-                "");
+        conv = ConversationFactory.createConversation("Soap conversation",
+                                                      inTransport,
+                                                      outTransport,
+                                                      inAdapter,
+                                                      outAdapter);
 
         conv.addOrUpdateScenario(1,"javascript", criteriaScript, executionScript);
 

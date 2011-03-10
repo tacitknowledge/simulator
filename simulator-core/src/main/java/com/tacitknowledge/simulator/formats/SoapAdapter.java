@@ -1,16 +1,13 @@
 package com.tacitknowledge.simulator.formats;
 
-import com.tacitknowledge.simulator.Adapter;
-import com.tacitknowledge.simulator.Configurable;
-import com.tacitknowledge.simulator.ConfigurableException;
-import com.tacitknowledge.simulator.FormatAdapterException;
-import com.tacitknowledge.simulator.SimulatorPojo;
-import com.tacitknowledge.simulator.StructuredSimulatorPojo;
-import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
-import org.apache.camel.Exchange;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.wsdl.Binding;
 import javax.wsdl.BindingOperation;
@@ -30,22 +27,22 @@ import javax.xml.soap.SOAPFactory;
 import javax.xml.soap.SOAPFault;
 import javax.xml.soap.SOAPMessage;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.apache.camel.Exchange;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
-import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.name;
+import com.tacitknowledge.simulator.Adapter;
+import com.tacitknowledge.simulator.Configurable;
+import com.tacitknowledge.simulator.ConfigurableException;
+import com.tacitknowledge.simulator.FormatAdapterException;
+import com.tacitknowledge.simulator.SimulatorPojo;
+import com.tacitknowledge.simulator.StructuredSimulatorPojo;
 
 /**
  * @author galo
  */
-public class SoapAdapter extends XmlAdapter implements Adapter<Object>
+public class SoapAdapter extends XmlAdapter implements Adapter
 {
     /**
      * WSDL URL parameter. OPTIONAL.
@@ -105,12 +102,6 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
      * Message factory object
      */
     private MessageFactory messageFactory;
-
-    /**
-     * Adapter parameters definition.
-     */
-    private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList = parameters()
-            .add(name(PARAM_WSDL_URL).label("WSDL URL").required());
 
     /**
      * Key for the root where to contain the SOAP message's payload
@@ -200,6 +191,7 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
      *
      * @inheritDoc
      */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     protected String getString(final SimulatorPojo pojo, final Exchange exchange)
         throws FormatAdapterException
@@ -319,6 +311,7 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
      * @return A SOAP Element containing all its corresponding SOAPElement children
      * @throws SOAPException If any SOAP error occurs
      */
+    @SuppressWarnings("unchecked")
     private SOAPElement getSOAPElementFromMap(
             final String elemName,
             final Map<String, Object> items)
@@ -371,6 +364,7 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
      * @return The generated SimulatorPojo
      * @throws FormatAdapterException If any error during the process occurs
      */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     private SimulatorPojo createSimulatorPojo(final String soapString)
         throws FormatAdapterException
     {
@@ -420,6 +414,7 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
      * Downloads and reads a WSDL from the provided URI
      * @throws ConfigurableException If the WSDL file is not in the provided URI or is wrong
      */
+    @SuppressWarnings("unchecked")
     private void getWSDLDefinition() throws ConfigurableException
     {
         try
@@ -459,6 +454,7 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
     /**
      * Populates the list of available operations and their parts as defined in the provided WSDL
      */
+    @SuppressWarnings("unchecked")
     private void getAvailableOperations()
     {
         Map<QName, Binding> bindings = definition.getBindings();
@@ -480,6 +476,7 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
      * @throws FormatAdapterException If any validation fails.
      * @throws SOAPException If any SOAP generation error occurs
      */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     private boolean validateOperationsAndParameters(final Map<String, Map> payload)
         throws FormatAdapterException, SOAPException
     {
@@ -542,28 +539,6 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
     }
 
     /**
-     * Returns a List of parameters the implementing instance uses.
-     * Each list element is itself a List to describe the parameter as follows:
-     * <p/>
-     * - 0 : Parameter name
-     * - 1 : Parameter description. Useful for GUI rendition
-     * - 2 : Parameter type. Useful for GUI rendition.
-     * - 3 : Required or Optional parameter. Useful for GUI validation.
-     * - 4 : Parameter usage. Useful for GUI rendition.
-     * - 5 : Default value
-     *
-     * @return List of Parameters for the implementing Transport.
-     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder
-     * @see com.tacitknowledge.simulator.configuration
-     *      .ParameterDefinitionBuilder.ParameterDefinition
-     */
-    @Override
-    public List<List> getParametersList()
-    {
-        return getParametersDefinitionsAsList(parametersList);
-    }
-
-    /**
      *
      * @param localPart The QName local part
      * @return A qualified name, with a NameSpace if it was defined in the WSDL
@@ -583,6 +558,7 @@ public class SoapAdapter extends XmlAdapter implements Adapter<Object>
      * @param payload The payload containing the original SOAP message representation
      * @return Payload including response parts ans Fault
      */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     private Map<String, Map> addResponseParametersAndFault(final Map<String, Map> payload)
     {
         // --- Set the response parameters to the invoked method in the payload

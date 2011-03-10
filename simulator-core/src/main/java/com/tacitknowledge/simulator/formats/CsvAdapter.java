@@ -1,17 +1,5 @@
 package com.tacitknowledge.simulator.formats;
 
-import com.tacitknowledge.simulator.Adapter;
-import com.tacitknowledge.simulator.ConfigurableException;
-import com.tacitknowledge.simulator.FormatAdapterException;
-import com.tacitknowledge.simulator.SimulatorPojo;
-import com.tacitknowledge.simulator.StructuredSimulatorPojo;
-import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
-import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.name;
-import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.camel.Exchange;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,12 +7,22 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import org.apache.camel.Exchange;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.tacitknowledge.simulator.Adapter;
+import com.tacitknowledge.simulator.ConfigurableException;
+import com.tacitknowledge.simulator.FormatAdapterException;
+import com.tacitknowledge.simulator.SimulatorPojo;
+import com.tacitknowledge.simulator.StructuredSimulatorPojo;
+
 /**
  * Implementation of the Adapter interface for the CSV format
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class CsvAdapter extends BaseAdapter implements Adapter<Object>
+public class CsvAdapter extends BaseAdapter implements Adapter
 {
     // --- Adapter parameters
     /**
@@ -52,31 +50,6 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
      * Logger for this class.
      */
     private static Logger logger = LoggerFactory.getLogger(CsvAdapter.class);
-
-    /**
-     * Adapter parameters definition.
-     */
-    private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
-        parameters().
-            add(
-                name(PARAM_CSV_CONTENT).
-                    label("CSV Contents (e.g. employees, orders, etc.)").
-                    required()
-            ).
-            add(
-                name(PARAM_ROW_CONTENT).
-                    label("Row Contents (What each row represents. e.g. employee, order, etc.)")
-            ).
-            add(
-                name(PARAM_FIRST_ROW_HEADER).
-                    label("Is first row headers row? (If not, Row Contents is required)").
-                    type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN)
-            ).
-            add(
-                name(PARAM_COLUMN_SEPARATOR).
-                    label("Column Separator").
-                    defaultValue(",")
-            );
 
     /**
      * Column value separator. Defaults to comma (,)
@@ -118,6 +91,7 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
      * @param exchange The Camel exchange
      * @return The generated PopulatorPojo
      */
+    @SuppressWarnings("rawtypes")
     @Override
     protected SimulatorPojo createSimulatorPojo(final Exchange exchange)
     {
@@ -175,6 +149,7 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
      * @return The String representation in CSV format of the SimulatorPojo data
      * @throws FormatAdapterException if an error occurs
      */
+    @SuppressWarnings("unchecked")
     @Override
     protected String getString(final SimulatorPojo simulatorPojo, final Exchange exchange)
         throws FormatAdapterException
@@ -314,6 +289,7 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
      * @param row The Map representing a CSV row
      * @return A String containing the row values, separated by #columnSeparator
      */
+    @SuppressWarnings("unchecked")
     private String getValuesFromMap(final Map<String, Object> row)
     {
         StringBuilder sb = new StringBuilder();
@@ -354,26 +330,5 @@ public class CsvAdapter extends BaseAdapter implements Adapter<Object>
         }
 
         return sb.toString();
-    }
-
-    /**
-     * Returns a List of parameters the implementing instance uses.
-     * Each list element is itself a List to describe the parameter as follows:
-     * <p/>
-     * - 0 : Parameter name
-     * - 1 : Parameter description. Useful for GUI rendition
-     * - 2 : Parameter type. Useful for GUI rendition.
-     * - 3 : Required or Optional parameter. Useful for GUI validation.
-     * - 4 : Parameter usage. Useful for GUI rendition.
-     * - 5 : Default value
-     *
-     * @return List of Parameters for the implementing Transport.
-     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder
-     * @see com.tacitknowledge.simulator.configuration
-     *              .ParameterDefinitionBuilder.ParameterDefinition
-     */
-    public List<List> getParametersList()
-    {
-        return getParametersDefinitionsAsList(parametersList);
     }
 }

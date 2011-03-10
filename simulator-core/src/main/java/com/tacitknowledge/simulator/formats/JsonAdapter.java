@@ -1,32 +1,30 @@
 package com.tacitknowledge.simulator.formats;
 
-import com.tacitknowledge.simulator.Adapter;
-import com.tacitknowledge.simulator.ConfigurableException;
-import com.tacitknowledge.simulator.FormatAdapterException;
-import com.tacitknowledge.simulator.SimulatorPojo;
-import com.tacitknowledge.simulator.StructuredSimulatorPojo;
-import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
-import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.name;
-import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.camel.Exchange;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.camel.Exchange;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.tacitknowledge.simulator.Adapter;
+import com.tacitknowledge.simulator.ConfigurableException;
+import com.tacitknowledge.simulator.FormatAdapterException;
+import com.tacitknowledge.simulator.SimulatorPojo;
+import com.tacitknowledge.simulator.StructuredSimulatorPojo;
+
 /**
  * Implementation of the Adapter interface for the JSON format
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class JsonAdapter extends BaseAdapter implements Adapter<Object>
+public class JsonAdapter extends BaseAdapter implements Adapter
 {
     /**
      * JSON content parameter. Describes what are the JSON contents. REQUIRED.
@@ -54,27 +52,6 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
      * Logger for this class.
      */
     private static Logger logger = LoggerFactory.getLogger(JsonAdapter.class);
-
-    /**
-     * Adapter parameters definition.
-     */
-    private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
-            parameters()
-                    .add(
-                            name(PARAM_JSON_CONTENT).
-                                    label("JSON Contents (e.g. employee(s), order(s), etc.)").
-                                    required())
-                    .add(
-                            name(PARAM_IS_ARRAY).
-                                    label("Is JSON content an array? e.g. [ ... ]").
-                                    type(
-                                    ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN))
-                    .add(
-                            name(PARAM_JSON_ARRAY_CONTENT).
-                                    label("JSON Array content (What each array element represents. "
-                                    +
-                                    "e.g.: employee, order. Required if content is array)"));
-
 
     /**
      * @see #PARAM_IS_ARRAY
@@ -120,9 +97,6 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
 
         try
         {
-            //JSONObject json = new JSONObject(o);
-
-            //pojo.getRoot().put(getParamValue(PARAM_JSON_CONTENT), getMapFromJsonObj(json));
             if (this.isArray)
             {
                 logger.debug("Expecting JSON array in content. Processing as such.");
@@ -165,6 +139,7 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
      * @return the string value
      * @throws FormatAdapterException if a format adapter error occurs
      */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     protected String getString(final SimulatorPojo simulatorPojo, final Exchange exchange)
         throws FormatAdapterException
@@ -183,8 +158,6 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
         // --- The pojo's root should only contain an entry with key PARAM_JSON_CONTENT
         Map<String, Object> map =
             (Map<String, Object>) simulatorPojo.getRoot().get(getParamValue(PARAM_JSON_CONTENT));
-
-        String jsonString1;
 
         // --- If the JSON content is an array...
         if (this.isArray)
@@ -212,6 +185,7 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
      * @return the map
      * @throws FormatAdapterException if a format adapter error occurs
      */
+    @SuppressWarnings("rawtypes")
     private Map<String, Object> getMapFromJsonObj(final JSONObject json)
         throws FormatAdapterException
     {
@@ -270,6 +244,7 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
      * @return list
      * @throws FormatAdapterException if a format adapter problem occurs
      */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     private List getListFomJsonArray(final JSONArray array) throws FormatAdapterException
     {
         if (array == null)
@@ -339,26 +314,5 @@ public class JsonAdapter extends BaseAdapter implements Adapter<Object>
             throw new ConfigurableException(
                 "JSON Array Content parameter is required if JSON content is an array");
         }
-    }
-
-    /**
-     * Returns a List of parameters the implementing instance uses.
-     * Each list element is itself a List to describe the parameter as follows:
-     * <p/>
-     * - 0 : Parameter name
-     * - 1 : Parameter description. Useful for GUI rendition
-     * - 2 : Parameter type. Useful for GUI rendition.
-     * - 3 : Required or Optional parameter. Useful for GUI validation.
-     * - 4 : Parameter usage. Useful for GUI rendition.
-     * - 5 : Default value
-     *
-     * @return List of Parameters for the implementing Transport.
-     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder
-     * @see com.tacitknowledge.simulator.configuration
-     *          .ParameterDefinitionBuilder.ParameterDefinition
-     */
-    public List<List> getParametersList()
-    {
-        return getParametersDefinitionsAsList(parametersList);
     }
 }

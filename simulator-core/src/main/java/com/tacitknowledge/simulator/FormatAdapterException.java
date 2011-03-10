@@ -5,6 +5,7 @@ package com.tacitknowledge.simulator;
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
+@SuppressWarnings("serial")
 public class FormatAdapterException extends SimulatorException
 {
     /**

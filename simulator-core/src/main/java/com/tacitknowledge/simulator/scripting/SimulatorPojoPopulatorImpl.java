@@ -53,6 +53,7 @@ public final class SimulatorPojoPopulatorImpl
      * @return A SimulatorPojo instance populated from the map and its included attributes
      * @throws ObjectMapperException If anything goes wrong during analyzing the object fields
      */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public SimulatorPojo populateSimulatorPojoFromBean(final Object bean)
         throws ObjectMapperException
     {

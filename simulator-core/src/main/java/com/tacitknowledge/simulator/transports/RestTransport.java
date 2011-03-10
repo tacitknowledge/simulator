@@ -11,7 +11,6 @@ public class RestTransport extends HttpTransport
 {
     //Marker class for REST
 
-
     /**
      * Default Cosntructor
      */

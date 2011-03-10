@@ -1,23 +1,25 @@
 package com.tacitknowledge.simulator.transports;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.camel.CamelContext;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.junit.Before;
+import org.junit.Test;
+
 import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.Conversation;
 import com.tacitknowledge.simulator.RouteManager;
 import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.camel.RouteManagerImpl;
 import com.tacitknowledge.simulator.formats.RestAdapter;
-import com.tacitknowledge.simulator.impl.ConversationImpl;
-import org.apache.camel.CamelContext;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.methods.GetMethod;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.tacitknowledge.simulator.impl.ConversationFactory;
 
 /**
  * @author Daniel Valencia (mailto:dvalencia@tacitknowledge.com)
@@ -57,7 +59,7 @@ public class RestTransportIntegrationTest {
         pars.put(HttpTransport.PARAM_HTTP_OUT, "true");
         outTransport.setParameters(pars);
 
-        Conversation conv = new ConversationImpl(1, "Rest conversation", inTransport, outTransport, inAdapter, outAdapter, "");
+        Conversation conv = ConversationFactory.createConversation("Rest conversation", inTransport, outTransport, inAdapter, outAdapter);
         String criteriaScript       = "obj1.request.params['id']=='89'";
         String transformationScript = "obj1.response.body='<html><body>ID=89</body></html>';" +
                                       "obj1.response.statusCode='201';" +

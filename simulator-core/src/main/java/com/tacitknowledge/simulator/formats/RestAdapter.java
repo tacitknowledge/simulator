@@ -1,26 +1,21 @@
 package com.tacitknowledge.simulator.formats;
 
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.camel.Exchange;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.ConfigurableException;
 import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.StructuredSimulatorPojo;
-import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
-
-import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.name;
-import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
-
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.camel.Exchange;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Enumeration;
 
 /**
  * Implementation of the Adapter interface for the REST format
@@ -28,7 +23,7 @@ import java.util.Enumeration;
  * @author Raul Huerta (rhuerta@tacitknowledge.com)
  */
 
-public class RestAdapter extends BaseAdapter implements Adapter<Object>
+public class RestAdapter extends BaseAdapter implements Adapter
 {
 
     /**
@@ -92,27 +87,6 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object>
      */
     private static final String METHOD = "method";
 
-
-    /**
-     * Adapter parameters definition.
-     */
-    private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
-            parameters()
-                    .add(
-                            name(PARAM_EXTRACTION_PATTERN).
-                                    label("Pattern used to extract values from the url. (e.g. "
-                                          + "URL: '/system/1/' with pattern:'/system/:system_id' "
-                                          + "will generate an attribute called 'system_id' equals "
-                                          + "to '1'. You can access it from your scenario scripts "
-                                          + "like this => obj.request.params[:system_id] )").
-                                    inOnly().required())
-                    .add(
-                            name(PARAM_OBJECT_NAME).
-                                    label("Object Name to access attributes from the execution "
-                                         + "script. Defaults to 'obj'").
-                                    inOnly().required()
-            );
-
     /**
      * @inheritDoc
      */
@@ -143,19 +117,9 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object>
     }
 
     /**
-     * Get all parameters for this adapter
-     *
-     * @return List of Lists
-     */
-    public List<List> getParametersList()
-    {
-        return getParametersDefinitionsAsList(parametersList);
-    }
-
-
-    /**
      * {@inheritDoc}
      */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     protected SimulatorPojo createSimulatorPojo(final Exchange exchange)
         throws FormatAdapterException
@@ -209,6 +173,7 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object>
      * @param extractionPattern - Pattern used to parse REST URL
      * @return Map of String, Object entries
      */
+    @SuppressWarnings("rawtypes")
     private Map<String, Object> populateRequestAttributes(
             final HttpServletRequest request,
             final String extractionPattern)
@@ -258,6 +223,7 @@ public class RestAdapter extends BaseAdapter implements Adapter<Object>
      * @return The String representation of the input data
      * @throws FormatAdapterException If any error occurs
      */
+    @SuppressWarnings("unchecked")
     @Override
     protected String getString(final SimulatorPojo scriptExecutionResult, final Exchange exchange)
         throws FormatAdapterException

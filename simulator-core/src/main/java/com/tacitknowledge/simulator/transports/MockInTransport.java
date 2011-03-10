@@ -1,10 +1,9 @@
 package com.tacitknowledge.simulator.transports;
 
+import java.util.Map;
+
 import com.tacitknowledge.simulator.ConfigurableException;
 import com.tacitknowledge.simulator.Transport;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * Date: 30.11.2009
@@ -38,14 +37,6 @@ public class MockInTransport extends BaseTransport implements Transport
     protected String getUriString()
     {
         return "direct:start";
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public List<List> getParametersList()
-    {
-        return null;
     }
 
     /**

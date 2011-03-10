@@ -1,10 +1,6 @@
 package com.tacitknowledge.simulator;
 
-import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
-
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,12 +15,6 @@ public abstract class BaseConfigurable implements Configurable
      * @see com.tacitknowledge.simulator.Configurable
      */
     private int bound = BOUND_IN;
-
-    /**
-     * Configurable parameters definition.
-     * Should be set by the implementing Configurable.
-     */
-    private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList = null;
 
     /**
      * The Configurable parameter values.
@@ -95,24 +85,6 @@ public abstract class BaseConfigurable implements Configurable
         this.bound = bnd;
         this.parameters = param;
     }
-
-    /**
-     * Returns a List of ParameterDefinitions in their List representation
-     *
-     * @param paramsList The parameter definitions list
-     * @return The list of lists
-     */
-    protected List<List> getParametersDefinitionsAsList(
-        final List<ParameterDefinitionBuilder.ParameterDefinition> paramsList)
-    {
-        List<List> list = new ArrayList<List>();
-        for (ParameterDefinitionBuilder.ParameterDefinition param : paramsList)
-        {
-            list.add(param.getAsList());
-        }
-        return list;
-    }
-
 
     /**
      * @param name The parameter name. Parameter names should be defined by each implementation.

@@ -16,7 +16,7 @@ import com.tacitknowledge.simulator.Conversation;
 public class ConversationsLoader
 {
     /**
-     * Logger for the EventDispatcherImpl class.
+     * Logger for the ConversationsLoader class.
      */
     private static Logger logger = LoggerFactory.getLogger(ConversationsLoader.class);
 

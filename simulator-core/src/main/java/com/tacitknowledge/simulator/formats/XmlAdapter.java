@@ -1,24 +1,12 @@
 package com.tacitknowledge.simulator.formats;
 
-import com.tacitknowledge.simulator.Adapter;
-import com.tacitknowledge.simulator.ConfigurableException;
-import com.tacitknowledge.simulator.FormatAdapterException;
-import com.tacitknowledge.simulator.SimulatorPojo;
-import com.tacitknowledge.simulator.StructuredSimulatorPojo;
-import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
-
-import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.name;
-import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.camel.Exchange;
-import org.w3c.dom.DOMException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -29,20 +17,29 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import org.apache.camel.Exchange;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+import com.tacitknowledge.simulator.Adapter;
+import com.tacitknowledge.simulator.ConfigurableException;
+import com.tacitknowledge.simulator.FormatAdapterException;
+import com.tacitknowledge.simulator.SimulatorPojo;
+import com.tacitknowledge.simulator.StructuredSimulatorPojo;
 
 /**
  * Implementation of the Adapter interface for the XML format
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class XmlAdapter extends BaseAdapter implements Adapter<Object>
+public class XmlAdapter extends BaseAdapter implements Adapter
 {
     /**
      * Validate parameter. If the XML text should DTD validated. OPTIONAL.
@@ -64,22 +61,6 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
      * Logger for this class.
      */
     private static Logger logger = LoggerFactory.getLogger(XmlAdapter.class);
-
-    /**
-     * Adapter parameters definition.
-     */
-    private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
-            parameters().
-            add(
-                name(PARAM_VALIDATE).
-                    label("Validate?").
-                    type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN)
-            ).
-            add(
-                name(PARAM_ROOT_TAG_NAME).
-                    label("XML root tag name").
-                    outOnly()
-            );
 
     /**
      * The Document object used for XML generation in adaptTo() and helper methods
@@ -206,6 +187,7 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
      * @throws FormatAdapterException if an error occurs
      * @inheritDoc
      */
+    @SuppressWarnings("unchecked")
     @Override
     protected String getString(final SimulatorPojo pojo, final Exchange exchange)
         throws FormatAdapterException
@@ -279,6 +261,7 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
      * @param elem the element to structure the child nodes for
      * @return a Map of child nodes of the XML document
      */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     protected Map getStructuredChilds(final Element elem)
     {
         // --- The Map to be returned
@@ -378,6 +361,7 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
      * @return The generated XML Element with its inner children
      * @throws FormatAdapterException If any error occurs
      */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     protected Element getStructuredElement(final String elemName, final Map<String, Object> childs)
         throws FormatAdapterException
     {
@@ -452,6 +436,7 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
      * @return The generated XML Element with its inner children
      * @throws FormatAdapterException If any error occurs
      */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     private Element getListElement(final String elemName, final List childs)
         throws FormatAdapterException
     {
@@ -521,26 +506,5 @@ public class XmlAdapter extends BaseAdapter implements Adapter<Object>
         {
             this.validate = Boolean.parseBoolean(getParamValue(PARAM_VALIDATE));
         }
-    }
-
-    /**
-     * Returns a List of parameters the implementing instance uses.
-     * Each list element is itself a List to describe the parameter as follows:
-     * <p/>
-     * - 0 : Parameter name
-     * - 1 : Parameter description. Useful for GUI rendition
-     * - 2 : Parameter type. Useful for GUI rendition.
-     * - 3 : Required or Optional parameter. Useful for GUI validation.
-     * - 4 : Parameter usage. Useful for GUI rendition.
-     * - 5 : Default value
-     *
-     * @return List of Parameters for the implementing Transport.
-     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder
-     * @see com.tacitknowledge.simulator
-     *      .configuration.ParameterDefinitionBuilder.ParameterDefinition
-     */
-    public List<List> getParametersList()
-    {
-        return getParametersDefinitionsAsList(parametersList);
     }
 }

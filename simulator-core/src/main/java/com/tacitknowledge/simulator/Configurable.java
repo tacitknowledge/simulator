@@ -1,6 +1,5 @@
 package com.tacitknowledge.simulator;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,27 +22,6 @@ public interface Configurable
      * Constant for defining an outbound configurable
      */
     int BOUND_OUT = 1;
-
-    /**
-     * Returns a List of parameters the implementing instance uses.
-     * Each list element is itself a List to describe the parameter as follows:
-     *
-     * - 0 : Parameter name
-     * - 1 : Parameter description. Useful for GUI rendition
-     * - 2 : Parameter type. Useful for GUI rendition.
-     * - 3 : Required or Optional parameter. Useful for GUI validation.
-     * - 4 : Parameter usage. Useful for GUI rendition.
-     * - 5 : Default value
-     *
-     * @return List of Parameters for the implementing Transport.
-     *
-     *
-     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder
-     * @see com.tacitknowledge.simulator
-     *              .configuration.ParameterDefinitionBuilder.ParameterDefinition
-     * @see com.tacitknowledge.simulator.BaseConfigurable#parametersList
-     */
-    List<List> getParametersList();
 
     /**
      *

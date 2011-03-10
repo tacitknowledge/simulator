@@ -1,17 +1,13 @@
 package com.tacitknowledge.simulator.transports;
 
-import com.tacitknowledge.simulator.ConfigurableException;
-import com.tacitknowledge.simulator.Transport;
-import com.tacitknowledge.simulator.TransportException;
-import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
-import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.name;
-import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
-
-import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.tacitknowledge.simulator.ConfigurableException;
+import com.tacitknowledge.simulator.Transport;
+import com.tacitknowledge.simulator.TransportException;
 
 /**
  * @author galo
@@ -34,31 +30,6 @@ public abstract class HttpTransport extends BaseTransport implements Transport
      * Logger for this class.
      */
     private static Logger logger = LoggerFactory.getLogger(HttpTransport.class);
-    
-    /**
-     * Transport parameters definition.
-     */
-    private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
-            parameters()
-
-                    .add(
-                            name(PARAM_PORT).
-                                    label("Port").
-                                    inOnly())
-                    .add(
-                            name(PARAM_RESOURCE_URI).
-                                    label("Context root (include starting slash e.g.: /mytestapp").
-                                    required().
-                                    inOnly())
-                    .add(
-                            name(PARAM_HTTP_OUT).
-                                    label("Is this an HTTP outbound transport?<br>"
-                                            + "This transport should only be used "
-                                            + "if the inbound transport is HTTP").
-                                    type(ParameterDefinitionBuilder
-                                            .ParameterDefinition.TYPE_BOOLEAN).
-                                    outOnly().
-                                    defaultValue("true"));
 
     /**
      * Checks if http transport is used for output
@@ -87,24 +58,6 @@ public abstract class HttpTransport extends BaseTransport implements Transport
                             final Map<String, String> parameters)
     {
         super(bound, type, parameters);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public List<List> getParametersList()
-    {
-        return getParametersDefinitionsAsList(getHttpParameters());
-    }
-
-    /**
-     * Return http parameters
-     *
-     * @return List of parameters
-     */
-    protected List<ParameterDefinitionBuilder.ParameterDefinition> getHttpParameters()
-    {
-        return parametersList;
     }
 
     /**

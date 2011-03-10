@@ -42,13 +42,13 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager
      * Container for the routes inside the current camel context. Used for activation and
      * deactivation of the routes.
      */
-    private Map<Integer, RouteDefinition> convRoutes = new HashMap<Integer, RouteDefinition>();
+    private Map<String, RouteDefinition> convRoutes = new HashMap<String, RouteDefinition>();
 
 
     /**
      * container for active routes ids.
      */
-    private Set<Integer> activeRoutes = new HashSet<Integer>();
+    private Set<String> activeRoutes = new HashSet<String>();
 
 
     /**
@@ -87,7 +87,7 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager
      */
     public void activate(final Conversation conversation) throws Exception
     {
-        Integer conversationId = conversation.getId();
+        String conversationId = conversation.getId();
 
         logger.info("Activating conversation: {}", conversation);
 
@@ -139,12 +139,13 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager
     public void deactivate(final Conversation conversation) throws Exception
     {
         logger.info("Deactivating conversation: {}", conversation);
-        int i = conversation.getId();
-        RouteDefinition definition = convRoutes.remove(i);
+        String id = conversation.getId();
+        RouteDefinition definition = convRoutes.remove(id);
+        
         if (definition != null)
         {
             getContext().stopRoute(definition);
-            activeRoutes.remove(i);
+            activeRoutes.remove(id);
             logger.info("Route : {} was stopped in the context : {}", definition.getId(),
                 getContext().getName());
         }

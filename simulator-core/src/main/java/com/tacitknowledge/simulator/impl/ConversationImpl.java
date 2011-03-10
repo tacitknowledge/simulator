@@ -1,15 +1,16 @@
 package com.tacitknowledge.simulator.impl;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.Conversation;
 import com.tacitknowledge.simulator.ConversationScenario;
 import com.tacitknowledge.simulator.Transport;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * The Simulator conversation as set up by the user. Works as a wrapper around Camel route
@@ -29,14 +30,10 @@ public class ConversationImpl implements Conversation
     private static final int HASH_CODE_PRIME = 31;
 
     /**
-     * Conversation ID.
+     * Conversation configuration directory (as identifier)
      */
-    private Integer id;
-
-    /**
-     * Conversation Name.
-     */
-    private String name;
+    private String conversationPath;
+    
     /**
      * Wrapper for inbound transport configuration
      */
@@ -58,54 +55,17 @@ public class ConversationImpl implements Conversation
     private Adapter outboundAdapter;
 
     /**
-     * Default response
-     */
-    private String defaultResponse;
-    
-    /**
-     * Conversation configuration directory (as identifier)
-     */
-    private String conversationPath;
-
-    /**
      * List of configured scenarios for this conversation
      */
     private Map<Integer, ConversationScenario> scenarios
         = new HashMap<Integer, ConversationScenario>();
 
-    public ConversationImpl()
-    {}
-    
-    /**
-     * Constructor
-     *
-     * @param id                Conversation ID
-     * @param name              Conversation name
-     * @param inboundTransport  Wrapper for inbound transport configuration
-     * @param outboundTransport Wrapper for outbound transport configuration
-     * @param inboundAdapter    Wrapper for inbound format adapter
-     * @param outboundAdapter   Outbound adapter
-     * @param defaultResponse   Default response
-     */
-    public ConversationImpl(final Integer id, final String name, final Transport inboundTransport,
-                            final Transport outboundTransport, final Adapter inboundAdapter,
-                            final Adapter outboundAdapter, final String defaultResponse)
-    {
-        this.id = id;
-        this.name = name;
-        this.inboundTransport = inboundTransport;
-        this.outboundTransport = outboundTransport;
-        this.inboundAdapter = inboundAdapter;
-        this.outboundAdapter = outboundAdapter;
-        this.defaultResponse = defaultResponse;
-    }
-    
-    public ConversationImpl(final String conversationPath, final Transport inboundTransport,
-            final Transport outboundTransport, final Adapter inboundAdapter,
-            final Adapter outboundAdapter)
-    {
-        // TODO: mysql artifact - will be removed soon ;)
-        this.id = 1;
+    public ConversationImpl(final String conversationPath, 
+                            final Transport inboundTransport,
+                            final Transport outboundTransport, 
+                            final Adapter inboundAdapter,
+                            final Adapter outboundAdapter)
+    {        
         this.conversationPath = conversationPath;
         this.inboundTransport = inboundTransport;
         this.outboundTransport = outboundTransport;
@@ -122,22 +82,28 @@ public class ConversationImpl implements Conversation
                                                     final String transformation)
     {
         ConversationScenario scenario = scenarios.get(scenarioId);
+        
         if (scenario == null)
         {
 
             scenario = new ConversationScenarioImpl(scenarioId, language, criteria, transformation);
             scenarios.put(scenarioId, scenario);
             logger.info("Added new conversation scenario"
-                + " to the conversation with id : {}", this.id);
+                + " to the conversation located at : {}", this.conversationPath);
         }
         else
         {
             scenario.setScripts(criteria, transformation, language);
             logger.info("Updated conversation scenario with id " + scenarioId
-                + " to the conversation with id : {}", this.id);
+                + " to the conversation located at : {}", this.conversationPath);
         }
 
         return scenario;
+    }
+    
+    public String getId()
+    {
+        return conversationPath;
     }
 
     /**
@@ -175,34 +141,6 @@ public class ConversationImpl implements Conversation
     /**
      * {@inheritDoc}
      */
-    public String getDefaultResponse()
-    {
-        return defaultResponse;
-    }
-
-    /**
-     * Gets the conversation ID
-     *
-     * @return the conversation ID
-     */
-    public int getId()
-    {
-        return id;
-    }
-
-    /**
-     * Gets the conversation Name
-     *
-     * @return the conversation name
-     */
-    public String getName()
-    {
-        return name;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public Collection<ConversationScenario> getScenarios()
     {
         return scenarios.values();
@@ -225,7 +163,7 @@ public class ConversationImpl implements Conversation
 
         if (o == null 
             || getClass() != o.getClass()
-            || !id.equals(that.id)
+            || !conversationPath.equals(that.conversationPath)
             || !inboundAdapter.equals(that.inboundAdapter)
             || !inboundTransport.equals(that.inboundTransport)
             || !outboundAdapter.equals(that.outboundAdapter)
@@ -244,7 +182,7 @@ public class ConversationImpl implements Conversation
      */
     public int hashCode()
     {
-        int result = id.hashCode();
+        int result = conversationPath.hashCode();
         result = HASH_CODE_PRIME * result + inboundTransport.hashCode();
         result = HASH_CODE_PRIME * result + outboundTransport.hashCode();
         result = HASH_CODE_PRIME * result + inboundAdapter.hashCode();
@@ -256,8 +194,8 @@ public class ConversationImpl implements Conversation
     public String toString()
     {
         return "ConversationImpl{"
-            + "id="
-            + id
+            + "conversationPath="
+            + conversationPath
             + ", inboundTransport="
             + inboundTransport
             + ", outboundTransport="
@@ -266,12 +204,8 @@ public class ConversationImpl implements Conversation
             + inboundAdapter
             + ", outboundAdapter="
             + outboundAdapter
-            + ", defaultResponse='"
-            + defaultResponse
-            + '\''
             + ", scenarios="
             + scenarios
             + '}';
     }
-
 }

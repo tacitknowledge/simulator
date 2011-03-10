@@ -1,5 +1,6 @@
 package com.tacitknowledge.simulator;
 
+@SuppressWarnings("serial")
 public class ScenarioParsingException extends Exception
 {
     /**

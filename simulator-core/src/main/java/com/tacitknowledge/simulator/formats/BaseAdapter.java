@@ -22,7 +22,7 @@ import java.util.Map;
  *
  * @author galo
  */
-public abstract class BaseAdapter extends BaseConfigurable implements Adapter<Object>
+public abstract class BaseAdapter extends BaseConfigurable implements Adapter
 {
     /**
      * Line separator constant. Available for all adapters

@@ -39,7 +39,7 @@ public class StandAloneTest {
             stoper.sendCloseCommand();
             try {
                 // wait the close command propagation through socket.
-                Thread.currentThread().sleep(MILLISECONDS_TO_WAIT_500);
+                Thread.sleep(MILLISECONDS_TO_WAIT_500);
             } catch (InterruptedException e) {
                 Assert.fail(e.getMessage());
             }

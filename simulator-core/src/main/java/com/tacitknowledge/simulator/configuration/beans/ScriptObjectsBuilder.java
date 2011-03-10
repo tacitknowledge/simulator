@@ -16,7 +16,7 @@ public class ScriptObjectsBuilder
 	 * When invoked by the scripting engine will return an empty map.
 	 * @return an empty map
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public Map newMap()
 	{
 		return new HashMap();
@@ -26,7 +26,7 @@ public class ScriptObjectsBuilder
 	 * When invoked by the scripting engine will return an empty list.
 	 * @return an empty list
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public List newList()
 	{
 		return new ArrayList();

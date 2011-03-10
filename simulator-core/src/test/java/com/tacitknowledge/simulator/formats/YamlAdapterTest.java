@@ -57,6 +57,7 @@ public class YamlAdapterTest
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testSuccessfulAdaptFrom()
     {
@@ -90,6 +91,7 @@ public class YamlAdapterTest
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testSuccessfulAdaptFromSequence() throws FormatAdapterException
     {

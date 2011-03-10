@@ -152,6 +152,7 @@ public class PojoClassGenerator
      * @throws SimulatorException     If the value coming from the incoming does not comply
      *                                with the criteria.
      */
+    @SuppressWarnings("unchecked")
     public Map<String, Object> generateBeansMap(final SimulatorPojo pojo)
         throws CannotCompileException, NotFoundException, ScriptException, SimulatorException
     {
@@ -248,6 +249,7 @@ public class PojoClassGenerator
      *                                class or its fields
      * @throws NotFoundException      If a referenced class cannot be found in the ClassPool
      */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     private CtClass generateClassFromMap(final String className, final Map<String, Object> attr)
         throws CannotCompileException, NotFoundException
     {
@@ -399,6 +401,7 @@ public class PojoClassGenerator
      * @return A dinamically-generated-class instance populated with the values data
      * @throws ScriptException If an error happens while trying to populate the bean
      */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     private Object populateClassIntanceFromMap(
         final String packClassName,
         final Map<String, Object> values)
@@ -488,6 +491,7 @@ public class PojoClassGenerator
      * @return The populated Array of generated-class type beans
      * @throws ScriptException If an error happens while trying to populate the bean
      */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     private Object populateArrayFromList(final String packClassName, final List items)
         throws ScriptException
     {

@@ -1,15 +1,17 @@
 package com.tacitknowledge.simulator.camel;
 
-import com.tacitknowledge.simulator.Adapter;
-import com.tacitknowledge.simulator.Configurable;
-import com.tacitknowledge.simulator.ConversationScenario;
-import com.tacitknowledge.simulator.TestHelper;
-import com.tacitknowledge.simulator.Conversation;
-import com.tacitknowledge.simulator.formats.JsonAdapter;
-import com.tacitknowledge.simulator.formats.PlainTextAdapter;
-import com.tacitknowledge.simulator.formats.XmlAdapter;
-import com.tacitknowledge.simulator.impl.ConversationScenarioImpl;
-import com.tacitknowledge.simulator.impl.ConversationImpl;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
+import org.apache.camel.Message;
+import org.apache.camel.impl.DefaultCamelContext;
+import org.apache.camel.impl.DefaultExchange;
+import org.apache.camel.impl.DefaultMessage;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
@@ -17,19 +19,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.Before;
-import org.apache.camel.Exchange;
-import org.apache.camel.Message;
-import org.apache.camel.CamelContext;
-import org.apache.camel.impl.DefaultExchange;
-import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.camel.impl.DefaultMessage;
 
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.tacitknowledge.simulator.Adapter;
+import com.tacitknowledge.simulator.Configurable;
+import com.tacitknowledge.simulator.Conversation;
+import com.tacitknowledge.simulator.TestHelper;
+import com.tacitknowledge.simulator.formats.JsonAdapter;
+import com.tacitknowledge.simulator.formats.PlainTextAdapter;
+import com.tacitknowledge.simulator.formats.XmlAdapter;
+import com.tacitknowledge.simulator.impl.ConversationImpl;
 
 /**
  * Test class for ScenarioExecutionWrapper
@@ -43,7 +41,7 @@ public class ScenarioExecutionWrapperTest
     @Test
     public void testWithoutScenarios() throws Exception
     {
-        conversation = new ConversationImpl(1, "Conversation1", null, null, new PlainTextAdapter(), new PlainTextAdapter(), null);
+        conversation = new ConversationImpl("Conversation1", null, null, new PlainTextAdapter(), new PlainTextAdapter());
         conversation.addOrUpdateScenario(1, "javascript", "true", "text");
 
         ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(conversation);
@@ -66,7 +64,7 @@ public class ScenarioExecutionWrapperTest
         String criteria = "employees.employee[0].name=='John';";
         String execution = "employees.employee[0].name='John12345';employees";
 
-        conversation = new ConversationImpl(1, "Conversation1", null, null, new XmlAdapter(), new XmlAdapter(), null);
+        conversation = new ConversationImpl("Conversation1", null, null, new XmlAdapter(), new XmlAdapter());
         conversation.addOrUpdateScenario(0, "javascript", criteria, execution);
 
         ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(conversation);
@@ -97,7 +95,7 @@ public class ScenarioExecutionWrapperTest
     @Test
     public void testTreeScenarios() throws Exception
     {
-        conversation = new ConversationImpl(2, "Conversation2", null, null, new XmlAdapter(), new XmlAdapter(), null);
+        conversation = new ConversationImpl("Conversation2", null, null, new XmlAdapter(), new XmlAdapter());
 
         String criteria1 = "employees.employee[0].name=='John12345';"; //false
         String execution1 = "employees.employee[0].name='Johnffff';employees";
@@ -141,7 +139,7 @@ public class ScenarioExecutionWrapperTest
         param.put(JsonAdapter.PARAM_JSON_CONTENT, "employees");
         JsonAdapter outAdapter = new JsonAdapter(Configurable.BOUND_OUT, param);
 
-        conversation = new ConversationImpl(2, "Conversation2", null, null, new XmlAdapter(), outAdapter, null);
+        conversation = new ConversationImpl("Conversation2", null, null, new XmlAdapter(), outAdapter);
 
         conversation.addOrUpdateScenario(0, "javascript", criteria2, execution2);
 
@@ -162,7 +160,7 @@ public class ScenarioExecutionWrapperTest
         // --- Test that the returned String is a valid JSON format
         try
         {
-            JSONObject json = new JSONObject(s);
+            new JSONObject(s);
         }
         catch (JSONException je)
         {
@@ -175,7 +173,7 @@ public class ScenarioExecutionWrapperTest
     public void testRubyScenario() throws Exception
     {
 
-        conversation = new ConversationImpl(2, "Conversation2", null, null, new XmlAdapter(), new XmlAdapter(), null);
+        conversation = new ConversationImpl("Conversation2", null, null, new XmlAdapter(), new XmlAdapter());
 
         conversation.addOrUpdateScenario(0, "ruby", "require 'java'\n$employees.employee[0].name == 'John';", "$employees.employee[0].name='John12345';" +
                 "$employees" );
@@ -196,7 +194,7 @@ public class ScenarioExecutionWrapperTest
     @Test
     public void testReturnDifferentObject() throws Exception
     {
-        conversation = new ConversationImpl(2, "Conversation2", null, null, new XmlAdapter(), new PlainTextAdapter(), null);
+        conversation = new ConversationImpl("Conversation2", null, null, new XmlAdapter(), new PlainTextAdapter());
 
         conversation.addOrUpdateScenario(0, "ruby", "require 'java'\n$employees.employee[0].name == 'John';",
             "$employees.employee[0].name='John12345'; return 'Success'");
@@ -219,7 +217,7 @@ public class ScenarioExecutionWrapperTest
     @Test
     public void testReturnRubyEmptyHash() throws Exception
     {
-        conversation = new ConversationImpl(2, "Conversation2", null, null, new XmlAdapter(), new XmlAdapter(), null);
+        conversation = new ConversationImpl("Conversation2", null, null, new XmlAdapter(), new XmlAdapter());
 
         conversation.addOrUpdateScenario(0, "ruby", "require 'java'\n$employees.employee[0].name == 'John';",
             "$employees.employee[0].name='John12345';" +
@@ -244,7 +242,7 @@ public class ScenarioExecutionWrapperTest
         params.put(XmlAdapter.PARAM_ROOT_TAG_NAME, "root");
         Adapter outAdapter = new XmlAdapter(Configurable.BOUND_OUT, params);
 
-        conversation = new ConversationImpl(2, "Conversation2", null, null, new XmlAdapter(), outAdapter, null);
+        conversation = new ConversationImpl("Conversation2", null, null, new XmlAdapter(), outAdapter);
 
         conversation.addOrUpdateScenario(0, "ruby", "require 'java'\n$employees.employee[0].name == 'John';",
             "$employees.employee[0].name='John12345';" +
@@ -287,7 +285,7 @@ public class ScenarioExecutionWrapperTest
             "}\n" +
             "xxx";
 
-        conversation = new ConversationImpl(2, "Conversation2", null, null, new XmlAdapter(), new XmlAdapter(), null);
+        conversation = new ConversationImpl("Conversation2", null, null, new XmlAdapter(), new XmlAdapter());
 
         conversation.addOrUpdateScenario(0, "javascript", criteria, execution);
 
@@ -309,6 +307,7 @@ public class ScenarioExecutionWrapperTest
         Element rootElement = doc.getRootElement();
         Assert.assertEquals(rootElement.getName(), "nativeobject");
 
+        @SuppressWarnings("unchecked")
         List<Element> list = rootElement.getChildren();
 
         List<String> fieldList = new ArrayList<String>();

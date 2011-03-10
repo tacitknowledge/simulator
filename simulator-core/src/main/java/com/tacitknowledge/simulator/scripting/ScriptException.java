@@ -5,6 +5,7 @@ package com.tacitknowledge.simulator.scripting;
  *
  * @author Alexandru Dereveanco (adereveanco@tacitknowledge.com)
  */
+@SuppressWarnings("serial")
 public class ScriptException extends Exception
 {
     /**

@@ -3,6 +3,7 @@ package com.tacitknowledge.simulator;
 /**
  * @author galo
  */
+@SuppressWarnings("serial")
 public class ConfigurableException extends SimulatorException
 {
     /**

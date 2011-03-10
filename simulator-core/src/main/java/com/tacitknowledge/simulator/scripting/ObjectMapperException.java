@@ -3,6 +3,7 @@ package com.tacitknowledge.simulator.scripting;
 /**
  * @author nikitabelenkiy
  */
+@SuppressWarnings("serial")
 public class ObjectMapperException extends Exception
 {
     /**

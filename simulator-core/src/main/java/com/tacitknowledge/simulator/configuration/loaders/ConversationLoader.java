@@ -19,7 +19,7 @@ import com.tacitknowledge.simulator.ConversationScenario;
 import com.tacitknowledge.simulator.ScenarioParsingException;
 import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.formats.AdapterFactory;
-import com.tacitknowledge.simulator.impl.ConversationImpl;
+import com.tacitknowledge.simulator.impl.ConversationFactory;
 import com.tacitknowledge.simulator.transports.TransportFactory;
 
 public class ConversationLoader
@@ -43,32 +43,26 @@ public class ConversationLoader
     {}
 
     /**
-     * Parses and constructs conversation from a given directory
+     * Parse and constructs conversation from a given directory
      * 
-     * @param conversationDir conversation directory (usually /systems/asystem/aconversation)
+     * @param conversationPath conversation directory (usually /systems/asystem/aconversation)
      * @return Conversation
      * @throws IOException
      */
-    public static Conversation parseConversationFromPath(String conversationDir) throws IOException
+    public static Conversation parseConversationFromPath(String conversationPath) throws IOException
     {
-        Transport inTransport = getTransport(Configurable.BOUND_IN, conversationDir);
-        Transport outTransport = getTransport(Configurable.BOUND_OUT, conversationDir);
+        Transport inTransport = getTransport(Configurable.BOUND_IN, conversationPath);
+        Transport outTransport = getTransport(Configurable.BOUND_OUT, conversationPath);
 
-        Adapter<Object> inAdapter = getAdapter(Configurable.BOUND_IN, conversationDir);
-        Adapter<Object> outAdapter = getAdapter(Configurable.BOUND_OUT, conversationDir);
+        Adapter inAdapter = getAdapter(Configurable.BOUND_IN, conversationPath);
+        Adapter outAdapter = getAdapter(Configurable.BOUND_OUT, conversationPath);
 
-        if (inTransport == null || outTransport == null || inAdapter == null || outAdapter == null)
-        {
-            logger.warn("Could not parse conversation inbound/outbound config. Conversation :"
-                    + conversationDir);
-            return null;
-        }
-
-        ConversationImpl conversation = new ConversationImpl(conversationDir, inTransport,
-                outTransport, inAdapter, outAdapter);
-
-        loadConversationScenarios(conversation, conversationDir);
-
+        Conversation conversation = ConversationFactory.createConversation(conversationPath, 
+                                                                           inTransport,
+                                                                           outTransport, 
+                                                                           inAdapter, 
+                                                                           outAdapter);
+        loadConversationScenarios(conversation, conversationPath);
         return conversation;
     }
 
@@ -86,7 +80,6 @@ public class ConversationLoader
 
         File[] scenarioFiles = resource.getFile().listFiles(new FilenameFilter()
         {
-
             public boolean accept(File dir, String name)
             {
                 return name.endsWith(SCENARIO_FILE_EXTENSION);
@@ -135,7 +128,7 @@ public class ConversationLoader
         }
     }
 
-    private static Adapter<Object> getAdapter(int bound, String conversationDir) throws IOException
+    private static Adapter getAdapter(int bound, String conversationDir) throws IOException
     {
         String configFileName = bound == Configurable.BOUND_IN ? INBOUND_CONFIG : OUTBOUND_CONFIG;
 
@@ -178,7 +171,7 @@ public class ConversationLoader
         return TransportFactory.createTransport(bound, type.toUpperCase(), properties);
     }
 
-    private static Adapter<Object> getConversationAdapter(int bound, Properties properties)
+    private static Adapter getConversationAdapter(int bound, Properties properties)
             throws IOException
     {
         String format = properties.getProperty(FORMAT);

@@ -1,17 +1,13 @@
 package com.tacitknowledge.simulator.transports;
 
-import com.tacitknowledge.simulator.ConfigurableException;
-import com.tacitknowledge.simulator.Transport;
-import com.tacitknowledge.simulator.TransportException;
-import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
-import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.name;
-import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
-
-import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.tacitknowledge.simulator.ConfigurableException;
+import com.tacitknowledge.simulator.Transport;
+import com.tacitknowledge.simulator.TransportException;
 
 /**
  * Transport implementation for Jms endpoints.
@@ -54,34 +50,6 @@ public class JmsTransport extends BaseTransport implements Transport
      * Logger for this class.
      */
     private static Logger logger = LoggerFactory.getLogger(HttpTransport.class);
-    /**
-     * Transport parameters definition.
-     */
-    private static List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
-        parameters().
-            add(
-                name(PARAM_DESTINATION_NAME).
-                    label("Destination Name").
-                    required()
-            ).
-            add(
-                name(PARAM_IS_TOPIC).
-                    label("Is the destination a topic (defaults to Queue)").
-                    type(ParameterDefinitionBuilder.ParameterDefinition.TYPE_BOOLEAN)
-            ).
-            add(
-                name(PARAM_BROKER_URL).
-                    label("Broker URL (e.g. tcp://localhost:61616)").
-                    required()
-            ).
-            add(
-                name(PARAM_USER_NAME).
-                    label("Broker user name")
-            ).
-            add(
-                name(PARAM_PASSWORD).
-                    label("Broker password")
-            );
 
     /**
      * @see #PARAM_ACTIVE_MQ
@@ -185,13 +153,5 @@ public class JmsTransport extends BaseTransport implements Transport
         {
             throw new ConfigurableException("Broker URL is required.");
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public List<List> getParametersList()
-    {
-        return getParametersDefinitionsAsList(parametersList);
     }
 }

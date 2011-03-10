@@ -9,12 +9,12 @@ import java.util.Collection;
  */
 public interface Conversation
 {
-
     /**
-     * @return any name. will be used as log file name
+     * returns the conversation ID
+     * @return id
      */
-    String getName();
-
+    String getId();
+    
     /**
      * Adds or updates a Scenario to this Conversation
      *
@@ -25,7 +25,9 @@ public interface Conversation
      * @param transformation transformation script to be executed by the simulator
      * @return ConversationScenario conversation scenario added to the conversation
      */
-    ConversationScenario addOrUpdateScenario(int scenarioId, String language, String criteria,
+    ConversationScenario addOrUpdateScenario(int scenarioId, 
+                                             String language, 
+                                             String criteria,
                                              String transformation);
 
     /**
@@ -57,22 +59,9 @@ public interface Conversation
     Adapter getOutboundAdapter();
 
     /**
-     * @return unique id
-     */
-    int getId();
-
-
-    /**
      * Returns the current list of configured scenarios for this conversation
      *
      * @return a list of ConversationScenarios
      */
     Collection<ConversationScenario> getScenarios();
-
-    /**
-     * Default script. Will be executed before any scenario
-     *
-     * @return script code
-     */
-    String getDefaultResponse();
 }

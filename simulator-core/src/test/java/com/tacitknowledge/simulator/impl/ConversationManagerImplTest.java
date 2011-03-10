@@ -1,6 +1,10 @@
 package com.tacitknowledge.simulator.impl;
 
-import com.tacitknowledge.simulator.ConfigurableException;
+import java.util.List;
+
+import org.apache.camel.Exchange;
+import org.junit.Test;
+
 import com.tacitknowledge.simulator.Conversation;
 import com.tacitknowledge.simulator.ConversationManager;
 import com.tacitknowledge.simulator.ConversationNotFoundException;
@@ -11,14 +15,8 @@ import com.tacitknowledge.simulator.SimulatorException;
 import com.tacitknowledge.simulator.camel.RouteManagerImpl;
 import com.tacitknowledge.simulator.configuration.EventDispatcher;
 import com.tacitknowledge.simulator.configuration.SimulatorEventListener;
-import com.tacitknowledge.simulator.formats.FormatConstants;
 import com.tacitknowledge.simulator.formats.JsonAdapter;
 import com.tacitknowledge.simulator.formats.PlainTextAdapter;
-import com.tacitknowledge.simulator.formats.CsvAdapter;
-import org.apache.camel.Exchange;
-import org.junit.Test;
-
-import java.util.List;
 
 /**
  * Test class for ConversationManagerImpl
@@ -27,29 +25,18 @@ import java.util.List;
  */
 public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
 {
-
-    @Test
-    public void testGetCsvFormatParameters() throws ConfigurableException
-    {
-        RouteManager routeManager = new RouteManagerImpl();
-        ConversationManager manager = new ConversationManagerImpl(routeManager);
-
-        List<List> params = manager.getAdapterParameters(CsvAdapter.class.getName());
-        assertEquals(4, params.size());
-    }
-
     @Test
     public void testCreateConversation() throws SimulatorException
     {
         RouteManager routeManager = new RouteManagerImpl();
         ConversationManager manager = new ConversationManagerImpl(routeManager);
 
-        Conversation conversation = manager.createOrUpdateConversation(null,
+        Conversation conversation = manager.createOrUpdateConversation(
                 "testCreateConversation",
                 inTransport,
                 outTransport,
                 new JsonAdapter(),
-                new JsonAdapter(), "");
+                new JsonAdapter());
         assertNotNull(conversation);
         assertNotNull(conversation.getInboundTransport());
         assertNotNull(conversation.getOutboundTransport());
@@ -64,27 +51,26 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         Conversation conversation = null;
         try
         {
-            conversation = manager.createOrUpdateConversation(null,
-                    "testCreateConversationWithWrongFormat",
-                    inTransport,
-                    outTransport,
-                    null,
-                    new JsonAdapter(), "");
+            conversation = manager.createOrUpdateConversation("testCreateConversationWithWrongFormat",
+                                                              inTransport,
+                                                              outTransport,
+                                                              null,
+                                                              new JsonAdapter());
             fail();
         }
-        catch (SimulatorException e)
+        catch (IllegalArgumentException e)
         {
             //everything is ok.
         }
+        
         assertNull(conversation);
-
     }
 
     @Test
     public void testIsActiveConversationNotFound() throws SimulatorException
     {
         ConversationManager manager = new ConversationManagerImpl();
-        assertFalse(manager.isActive(1234));
+        assertFalse(manager.isActive("1234"));
     }
 
 
@@ -95,13 +81,12 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         ConversationManager manager = new ConversationManagerImpl(routeManager);
 
         Conversation conversation = null;
-        conversation = manager.createOrUpdateConversation(1,
+        conversation = manager.createOrUpdateConversation(
                 "testIsActive",
                 inTransport,
                 outTransport,
                 new PlainTextAdapter(),
-                new PlainTextAdapter(),
-                "");
+                new PlainTextAdapter());
         assertFalse(manager.isActive(conversation.getId()));
         manager.activate(conversation.getId());
         assertTrue(manager.isActive(conversation.getId()));
@@ -115,13 +100,16 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         RouteManager routeManager = new RouteManagerImpl();
         ConversationManager manager = new ConversationManagerImpl(routeManager);
 
-        Conversation conversation = manager.createOrUpdateConversation(1,
-                "testCreateOrUpdateScenarioConversationDoesntExits",
-                inTransport,
-                outTransport,
-                new PlainTextAdapter(),
-                new PlainTextAdapter(), "");
-        ConversationScenario scenario = manager.createOrUpdateConversationScenario(2, 2, "javascript", "true", "2+2");
+        manager.createOrUpdateConversation("first",
+                                           inTransport,
+                                           outTransport,
+                                           new PlainTextAdapter(),
+                                           new PlainTextAdapter());
+        ConversationScenario scenario = manager.createOrUpdateConversationScenario("second", 
+                                                                                    2, 
+                                                                                    "javascript", 
+                                                                                    "true", 
+                                                                                    "2+2");
         assertNull(scenario);
     }
 
@@ -132,23 +120,24 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         RouteManager routeManager = new RouteManagerImpl();
         ConversationManager manager = new ConversationManagerImpl(routeManager);
 
-        Conversation conversation = manager.createOrUpdateConversation(1, "testCreateScenario", inTransport, outTransport,
-                new PlainTextAdapter(),
-                new PlainTextAdapter(),
-                "defaultScenario");
-        ConversationScenario scenario = manager.createOrUpdateConversationScenario(1, 2, "javascript", "true", "2+2");
+        manager.createOrUpdateConversation("testCreateScenario", 
+                                           inTransport, 
+                                           outTransport,
+                                           new PlainTextAdapter(),
+                                           new PlainTextAdapter());
+        ConversationScenario scenario = manager.createOrUpdateConversationScenario("testCreateScenario", 2, "javascript", "true", "2+2");
         assertNotNull(scenario);
         assertEquals("javascript", scenario.getScriptLanguage());
         assertEquals("true", scenario.getCriteriaScript());
-        assertEquals("defaultScenario\n2+2", scenario.getTransformationScript());
+        assertEquals("2+2", scenario.getTransformationScript());
 
 
-        ConversationScenario scenario1 = manager.createOrUpdateConversationScenario(1, 2, "ruby", "ttttrue", "2+2+2");
+        ConversationScenario scenario1 = manager.createOrUpdateConversationScenario("testCreateScenario", 2, "ruby", "ttttrue", "2+2+2");
         assertSame(scenario, scenario1);
 
         assertEquals("ruby", scenario.getScriptLanguage());
         assertEquals("ttttrue", scenario.getCriteriaScript());
-        assertEquals("defaultScenario\n2+2+2", scenario.getTransformationScript());
+        assertEquals("2+2+2", scenario.getTransformationScript());
 
     }
 
@@ -158,16 +147,17 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         RouteManager routeManager = new RouteManagerImpl();
         ConversationManager manager = new ConversationManagerImpl(routeManager);
 
-        Conversation conversation = manager.createOrUpdateConversation(1, "testDeleteConversation", inTransport, outTransport,
-                new PlainTextAdapter(),
-                new PlainTextAdapter(),
-                "");
-        ConversationScenario scenario = manager.createOrUpdateConversationScenario(1, 2, "javascript", "true", "2+2");
+        manager.createOrUpdateConversation("testDeleteConversation", 
+                                           inTransport, 
+                                           outTransport,
+                                           new PlainTextAdapter(),
+                                           new PlainTextAdapter());
+        ConversationScenario scenario = manager.createOrUpdateConversationScenario("testDeleteConversation", 2, "javascript", "true", "2+2");
         assertNotNull(scenario);
 
-        manager.activate(1);
-        manager.deleteConversation(1);
-        assertTrue(!manager.isActive(1));
+        manager.activate("testDeleteConversation");
+        manager.deleteConversation("testDeleteConversation");
+        assertFalse(manager.isActive("testDeleteConversation"));
     }
 
     @Test
@@ -175,7 +165,7 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
     {
         RouteManager routeManager = new RouteManagerImpl();
         ConversationManager manager = new ConversationManagerImpl(routeManager);
-        manager.deleteConversation(1234);
+        manager.deleteConversation("1234");
     }
 
     @Test
@@ -183,40 +173,17 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
     {
         RouteManager routeManager = new RouteManagerImpl();
         ConversationManager manager = new ConversationManagerImpl(routeManager);
-        assertFalse(manager.conversationExists(1));
-        Conversation conversation = manager.createOrUpdateConversation(1, "testConversationExists",
-                inTransport, outTransport,
-                new PlainTextAdapter(),
-                new PlainTextAdapter(),
-                "");
-        assertTrue(manager.conversationExists(1));
-        manager.activate(1);
-        assertTrue(manager.conversationExists(1));
-        manager.deactivate(1);
-        assertTrue(manager.conversationExists(1));
-    }
-
-    @Test
-    public void testDefaultScenarioWasExecuted() throws SimulatorException, ConversationNotFoundException, InterruptedException
-    {
-        ConversationManager manager = new ConversationManagerImpl(routeManager);
-
-        Conversation conversation = manager.createOrUpdateConversation(1, "testDefaultScenarioWasExecuted",
-                inTransport, outTransport,
-                new PlainTextAdapter(),
-                new PlainTextAdapter(),
-                "var testVar=123");
-        ConversationScenario scenario = manager.createOrUpdateConversationScenario(1, 2, "javascript", "true",
-                "testVar=testVar+1\n" +
-                        "testVar");
-
-        manager.activate(1);
-
-        sendMessage("124.0");
-
-        manager.deactivate(1);
-        resultEndpoint.assertIsSatisfied();
-        assertNotNull(scenario);
+        assertFalse(manager.conversationExists("testConversationExists"));
+        manager.createOrUpdateConversation("testConversationExists",
+                                           inTransport, 
+                                           outTransport,
+                                           new PlainTextAdapter(),
+                                           new PlainTextAdapter());
+        assertTrue(manager.conversationExists("testConversationExists"));
+        manager.activate("testConversationExists");
+        assertTrue(manager.conversationExists("testConversationExists"));
+        manager.deactivate("testConversationExists");
+        assertTrue(manager.conversationExists("testConversationExists"));
     }
 
     public static final String TEST_IMPL_1 =
@@ -238,6 +205,7 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         boolean impl1Found = false;
         boolean impl2Found = false;
         boolean impl3Found = false;
+        
         for (SimulatorEventListener listener : listeners)
         {
             String className = listener.getClass().getName();
@@ -254,6 +222,7 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
                 impl3Found = true;
             }
         }
+
         assertTrue(impl1Found && impl2Found && impl3Found);
     }
 

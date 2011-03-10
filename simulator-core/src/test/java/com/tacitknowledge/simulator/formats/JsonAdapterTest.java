@@ -58,6 +58,7 @@ public class JsonAdapterTest
         }
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Test
     public void testSuccessfulAdaptFrom()
     {

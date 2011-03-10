@@ -77,6 +77,7 @@ public class SoapAdapterTest
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testSuccessfulCreateSimulatorPojo()
     {
@@ -271,11 +272,6 @@ public class SoapAdapterTest
     private void setupSoapAdapter(int bound) throws Exception
     {
         setupSoapAdapter(bound, defaultWSDLFileName);
-    }
-
-    private void setupSoapAdapter(String wsdlFile) throws Exception
-    {
-        setupSoapAdapter(Configurable.BOUND_IN, wsdlFile);
     }
 
     private void setupSoapAdapter(int bound,String wsdlFile) throws Exception

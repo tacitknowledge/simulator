@@ -1,13 +1,11 @@
 package com.tacitknowledge.simulator.impl;
 
+import java.util.Map;
+
 import com.tacitknowledge.simulator.ConversationScenario;
 import com.tacitknowledge.simulator.SimulatorException;
 import com.tacitknowledge.simulator.scripting.ScriptException;
 import com.tacitknowledge.simulator.scripting.ScriptExecutionService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Map;
 
 /**
  * A wrapper for Conversation Scenarios, containing all the information needed for its execution
@@ -16,11 +14,6 @@ import java.util.Map;
  */
 public class ConversationScenarioImpl implements ConversationScenario
 {
-    /**
-     * Logger for this class.
-     */
-    private static Logger logger = LoggerFactory.getLogger(ConversationScenarioImpl.class);
-
     /**
      * Prime number to be used in the hashcode method.
      */

@@ -34,6 +34,7 @@ public class PropertiesAdapterTest
         adapter = new PropertiesAdapter();
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testSuccessfulAdaptFrom()
     {

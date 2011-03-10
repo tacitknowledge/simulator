@@ -7,7 +7,7 @@ import com.tacitknowledge.simulator.ConfigurationUtil;
 
 public class AdapterFactory
 {
-    public static Adapter<Object> createAdapter(int bound, String format, Properties properties)
+    public static Adapter createAdapter(int bound, String format, Properties properties)
     {
         //TODO: Need to refactor adapter types to have default constructor and 
         // replace IFs with a get from map

@@ -40,6 +40,7 @@ public class CsvAdapterTest
         adapter = new CsvAdapter();
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Test
     public void testSuccessfulAdaptFromWithHeaders()
     {
@@ -72,6 +73,7 @@ public class CsvAdapterTest
         assertEquals("el", row.get("tercero"));
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Test
     public void testSuccessFullAdaptFromWithoutHeaders()
             throws FormatAdapterException, ConfigurableException

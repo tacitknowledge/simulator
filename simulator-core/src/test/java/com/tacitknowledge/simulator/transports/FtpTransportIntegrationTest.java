@@ -1,16 +1,12 @@
 package com.tacitknowledge.simulator.transports;
 
-import com.tacitknowledge.simulator.Conversation;
-import com.tacitknowledge.simulator.ConversationManager;
-import com.tacitknowledge.simulator.ConversationNotFoundException;
-import com.tacitknowledge.simulator.SimulatorException;
-import com.tacitknowledge.simulator.camel.RouteManagerImpl;
-import com.tacitknowledge.simulator.formats.XmlAdapter;
-import com.tacitknowledge.simulator.impl.ConversationManagerImpl;
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.camel.EndpointInject;
 import org.apache.camel.Exchange;
-import org.apache.camel.Produce;
-import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.junit4.CamelTestSupport;
@@ -25,10 +21,13 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.tacitknowledge.simulator.Conversation;
+import com.tacitknowledge.simulator.ConversationManager;
+import com.tacitknowledge.simulator.ConversationNotFoundException;
+import com.tacitknowledge.simulator.SimulatorException;
+import com.tacitknowledge.simulator.camel.RouteManagerImpl;
+import com.tacitknowledge.simulator.formats.XmlAdapter;
+import com.tacitknowledge.simulator.impl.ConversationManagerImpl;
 
 /**
  * Test class for FtpTransportIntegration
@@ -47,14 +46,7 @@ public class FtpTransportIntegrationTest extends CamelTestSupport
     @EndpointInject(uri = "mock:result")
     private MockEndpoint resultEndpoint;
 
-    /**
-     * MockEntry point to send the message
-     */
-    @Produce(uri = "direct:start")
-    private ProducerTemplate template;
-
     private RouteManagerImpl routeManager;
-
 
     @Before
     public void setUp() throws Exception
@@ -94,10 +86,10 @@ public class FtpTransportIntegrationTest extends CamelTestSupport
     {
         ConversationManager manager = new ConversationManagerImpl(routeManager);
 
-        Conversation conversation = manager.createOrUpdateConversation(1, "testSimple", ftpTransport, out, new XmlAdapter(), new XmlAdapter(), "");
+        Conversation conversation = manager.createOrUpdateConversation("testSimple", ftpTransport, out, new XmlAdapter(), new XmlAdapter());
         conversation.addOrUpdateScenario(1, "javascript", "true", "employees.employee[0].name='John12345';employees");
         Assert.assertNotNull(conversation);
-        manager.activate(1);
+        manager.activate("testSimple");
         Thread.sleep(10000);
         List<Exchange> list = resultEndpoint.getReceivedExchanges();
         assertTrue(list.get(0).getIn().getBody().toString().contains("John12345"));

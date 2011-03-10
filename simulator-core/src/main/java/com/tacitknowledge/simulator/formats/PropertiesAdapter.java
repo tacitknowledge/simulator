@@ -1,23 +1,21 @@
 package com.tacitknowledge.simulator.formats;
 
-import com.tacitknowledge.simulator.Adapter;
-import com.tacitknowledge.simulator.ConfigurableException;
-import com.tacitknowledge.simulator.FormatAdapterException;
-import com.tacitknowledge.simulator.SimulatorPojo;
-import com.tacitknowledge.simulator.StructuredSimulatorPojo;
-import com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder;
-import static com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder.name;
-import static com.tacitknowledge.simulator.configuration.ParametersListBuilder.parameters;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.camel.Exchange;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+
+import org.apache.camel.Exchange;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.tacitknowledge.simulator.Adapter;
+import com.tacitknowledge.simulator.ConfigurableException;
+import com.tacitknowledge.simulator.FormatAdapterException;
+import com.tacitknowledge.simulator.SimulatorPojo;
+import com.tacitknowledge.simulator.StructuredSimulatorPojo;
 
 /**
  * Implementation of the Adapter interface for the Properties format.
@@ -32,7 +30,7 @@ import java.util.regex.Pattern;
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
+public class PropertiesAdapter extends BaseAdapter implements Adapter
 {
     // --- Adapter parameters
     /**
@@ -45,17 +43,6 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
      * Logger for this class.
      */
     private static Logger logger = LoggerFactory.getLogger(PropertiesAdapter.class);
-
-    /**
-     * Adapter parameters definition.
-     */
-    private List<ParameterDefinitionBuilder.ParameterDefinition> parametersList =
-        parameters().
-            add(
-                name(PARAM_PROPERTY_SEPARATOR).
-                    label("Property level separator (defaults to dot \".\")").
-                    defaultValue(".")
-            );
 
     /**
      * @see #PARAM_PROPERTY_SEPARATOR
@@ -163,6 +150,7 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
      * @param value The property value
      * @throws FormatAdapterException If any error occurs
      */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     private void setPropertyToMap(
         final Map<String, Object> container,
         final List<String> path,
@@ -230,13 +218,13 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
      * @param map   Map containing properties
      * @return      The String representation of the properties in #map
      */
+    @SuppressWarnings("unchecked")
     private String getPropertiesAsString(final String path, final Map<String, Object> map)
     {
         StringBuilder sb = new StringBuilder();
 
         for (Map.Entry<String, Object> entry : map.entrySet())
         {
-            String key = entry.getKey();
             Object value = entry.getValue();
             String fullPath = path + entry.getKey();
 
@@ -256,26 +244,5 @@ public class PropertiesAdapter extends BaseAdapter implements Adapter<Object>
             }
         }
         return sb.toString();
-    }
-
-    /**
-     * Returns a List of parameters the implementing instance uses.
-     * Each list element is itself a List to describe the parameter as follows:
-     * <p/>
-     * - 0 : Parameter name
-     * - 1 : Parameter description. Useful for GUI rendition
-     * - 2 : Parameter type. Useful for GUI rendition.
-     * - 3 : Required or Optional parameter. Useful for GUI validation.
-     * - 4 : Parameter usage. Useful for GUI rendition.
-     * - 5 : Default value
-     *
-     * @return List of Parameters for the implementing Transport.
-     * @see com.tacitknowledge.simulator.configuration.ParameterDefinitionBuilder
-     * @see com.tacitknowledge.simulator
-     *      .configuration.ParameterDefinitionBuilder.ParameterDefinition
-     */
-    public List<List> getParametersList()
-    {
-        return getParametersDefinitionsAsList(parametersList);
     }
 }

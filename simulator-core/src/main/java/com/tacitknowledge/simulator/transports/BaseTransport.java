@@ -46,17 +46,6 @@ public abstract class BaseTransport extends BaseConfigurable implements Transpor
     private String type;
 
     /**
-     * Constructor
-     * The default constructor should not be called. Implementing classes must set
-     * transport type.
-     *
-     * @see com.tacitknowledge.simulator.transports.TransportConstants
-     */
-    private BaseTransport()
-    {
-    }
-
-    /**
      * Default Constructor
      * @param type type
      */

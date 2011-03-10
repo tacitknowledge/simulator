@@ -1,25 +1,26 @@
 package com.tacitknowledge.simulator.formats;
 
-import com.tacitknowledge.simulator.FormatAdapterException;
-import com.tacitknowledge.simulator.SimulatorPojo;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.stub;
+
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.impl.DefaultExchange;
 import org.apache.camel.impl.DefaultMessage;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.stub;
-import org.junit.Test;
 import org.junit.Before;
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Enumeration;
-
-import static junit.framework.Assert.assertNull;
+import com.tacitknowledge.simulator.FormatAdapterException;
+import com.tacitknowledge.simulator.SimulatorPojo;
 
 /**
  * Test class for RestAdapterTest
@@ -36,6 +37,7 @@ public class RestAdapterTest {
         adapter = new RestAdapter();
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Test
     public void testCreateSimulatorPojo() throws FormatAdapterException {
         Map<String, String> params = new HashMap<String, String>();

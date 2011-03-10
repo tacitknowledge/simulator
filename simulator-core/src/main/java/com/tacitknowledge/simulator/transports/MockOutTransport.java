@@ -4,8 +4,6 @@ import com.tacitknowledge.simulator.Configurable;
 import com.tacitknowledge.simulator.ConfigurableException;
 import com.tacitknowledge.simulator.Transport;
 
-import java.util.List;
-
 /**
  * Date: 30.11.2009
  * Time: 15:46:54
@@ -28,14 +26,6 @@ public class MockOutTransport extends BaseTransport implements Transport
     protected String getUriString()
     {
         return "mock:result";
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public List<List> getParametersList()
-    {
-        return null;
     }
 
     /**

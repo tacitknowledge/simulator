@@ -9,9 +9,8 @@ import java.util.Map;
  * Adapter interface for different data formats.
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
- * @param <E> Generic data object
  */
-public interface Adapter<E> extends Configurable
+public interface Adapter extends Configurable
 {
     /**
      * Adapts the data from the inbound transport format to the SimulatorPojo object graph.
