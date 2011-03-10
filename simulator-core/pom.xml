@@ -150,6 +150,23 @@
                             <overWriteIfNewer>true</overWriteIfNewer>
                         </configuration>
                     </execution>
+                    
+                    <execution>
+                        <id>copy-standalone-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeScope>runtime</includeScope>
+                            <excludeArtifactIds>jruby</excludeArtifactIds>
+                            <outputDirectory>${standalone.lib.output.directory}</outputDirectory>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>false</overWriteSnapshots>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                        </configuration>
+                    </execution>
+                    
                 </executions>
             </plugin>
             
@@ -166,12 +183,14 @@
                                 		<include name="**/*.jar"/>
                                 	</fileset> 
                                 </delete>
+                                
                             </tasks>
                         </configuration>
                         <goals>
                             <goal>run</goal>
                         </goals>
                 	</execution>
+                	
                 </executions>
             </plugin>    	
 
@@ -236,6 +255,7 @@
                     </check>
                 </configuration>
             </plugin>
+            
         </plugins>
     </reporting>
 </project>
