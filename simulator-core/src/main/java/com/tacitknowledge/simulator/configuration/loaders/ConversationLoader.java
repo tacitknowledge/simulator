@@ -43,7 +43,7 @@ public class ConversationLoader
     {}
 
     /**
-     * Parse and constructs conversation from a given directory
+     * Parses and constructs conversation from a given directory
      * 
      * @param conversationDir conversation directory (usually /systems/asystem/aconversation)
      * @return Conversation
