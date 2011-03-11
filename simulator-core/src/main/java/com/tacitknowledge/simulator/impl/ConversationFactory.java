@@ -1,6 +1,7 @@
 package com.tacitknowledge.simulator.impl;
 
 import com.tacitknowledge.simulator.Adapter;
+import com.tacitknowledge.simulator.Conversation;
 import com.tacitknowledge.simulator.SimulatorException;
 import com.tacitknowledge.simulator.Transport;
 
@@ -29,7 +30,7 @@ public final class ConversationFactory
      * @return The created Conversation
      * @throws SimulatorException in case of an error
      */
-    public static ConversationImpl createConversation(
+    public static Conversation createConversation(
         final String id,
         final Transport inboundTransport,
         final Transport outboundTransport,

@@ -20,7 +20,12 @@ public class ConversationsLoader
      */
     private static Logger logger = LoggerFactory.getLogger(ConversationsLoader.class);
     
-    private ConversationLoader conversationLoader = new ConversationLoader();
+    private ConversationLoader conversationLoader;
+    
+    public ConversationsLoader(ConversationLoader conversationLoader)
+    {
+        this.conversationLoader = conversationLoader;
+    }
     
     /**
      * Iterates through systems and each system conversations and returns a list of parsed

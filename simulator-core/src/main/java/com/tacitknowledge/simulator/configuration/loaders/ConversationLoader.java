@@ -38,8 +38,13 @@ public class ConversationLoader
      * Logger for the EventDispatcherImpl class.
      */
     private static Logger logger = LoggerFactory.getLogger(ConversationLoader.class);
-    
-    private ScenarioLoader scenarioLoader = new ScenarioLoader();
+
+    private ScenarioLoader scenarioLoader;
+
+    public ConversationLoader(ScenarioLoader scenarioLoader)
+    {
+        this.scenarioLoader = scenarioLoader;
+    }
 
     /**
      * Parse and constructs conversation from a given directory
@@ -48,8 +53,7 @@ public class ConversationLoader
      * @return Conversation
      * @throws IOException
      */
-    public Conversation parseConversationFromPath(String conversationPath)
-            throws IOException
+    public Conversation parseConversationFromPath(String conversationPath) throws IOException
     {
         Transport inTransport = getTransport(Configurable.BOUND_IN, conversationPath);
         Transport outTransport = getTransport(Configurable.BOUND_OUT, conversationPath);
@@ -139,8 +143,7 @@ public class ConversationLoader
         }
     }
 
-    private Properties loadConversationProperties(InputStream inputStream)
-            throws IOException
+    private Properties loadConversationProperties(InputStream inputStream) throws IOException
     {
         Properties properties = new Properties();
         properties.load(inputStream);
@@ -148,8 +151,7 @@ public class ConversationLoader
         return properties;
     }
 
-    private Transport getConversationTransport(int bound, Properties properties)
-            throws IOException
+    private Transport getConversationTransport(int bound, Properties properties) throws IOException
     {
         String type = properties.getProperty(TYPE);
 
@@ -162,8 +164,7 @@ public class ConversationLoader
         return TransportFactory.createTransport(bound, type.toUpperCase(), properties);
     }
 
-    private Adapter getConversationAdapter(int bound, Properties properties)
-            throws IOException
+    private Adapter getConversationAdapter(int bound, Properties properties) throws IOException
     {
         String format = properties.getProperty(FORMAT);
 

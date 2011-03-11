@@ -21,8 +21,11 @@ public class ConversationsLoaderTest
     public void loadAllConversations() throws IOException
     {
         Resource resource = new ClassPathResource("systems");
-
-        ConversationsLoader conversationsLoader = new ConversationsLoader();
+        
+        ScenarioLoader scenarioLoader = new ScenarioLoader();
+        ConversationLoader conversationLoader = new ConversationLoader(scenarioLoader);
+        ConversationsLoader conversationsLoader = new ConversationsLoader(conversationLoader);
+        
         List<Conversation> conversations = conversationsLoader.loadConversations(resource.getFile()
                 .getAbsolutePath());
 

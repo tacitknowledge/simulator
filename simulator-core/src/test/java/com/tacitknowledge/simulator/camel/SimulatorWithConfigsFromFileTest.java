@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -13,13 +14,26 @@ import org.springframework.core.io.Resource;
 import com.tacitknowledge.simulator.BaseConfigurable;
 import com.tacitknowledge.simulator.Conversation;
 import com.tacitknowledge.simulator.RouteManager;
+import com.tacitknowledge.simulator.configuration.loaders.ConversationLoader;
 import com.tacitknowledge.simulator.configuration.loaders.ConversationsLoader;
+import com.tacitknowledge.simulator.configuration.loaders.ScenarioLoader;
 import com.tacitknowledge.simulator.transports.FileTransport;
 import com.tacitknowledge.simulator.utils.Configuration;
 
 public class SimulatorWithConfigsFromFileTest
 {
-    private ConversationsLoader conversationsLoader = new ConversationsLoader();
+    private ScenarioLoader scenarioLoader;
+    private ConversationLoader conversationLoader;
+    private ConversationsLoader conversationsLoader;
+    
+    @Before
+    public void setUp()
+    {
+        scenarioLoader = new ScenarioLoader();
+        conversationLoader = new ConversationLoader(scenarioLoader);
+        conversationsLoader = new ConversationsLoader(conversationLoader);
+    }
+    
     @Test
     public void startSimulator() throws Exception
     {
