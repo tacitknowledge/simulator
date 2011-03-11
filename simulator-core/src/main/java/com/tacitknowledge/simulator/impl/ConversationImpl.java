@@ -86,6 +86,16 @@ public class ConversationImpl implements Conversation
                 this.conversationPath);
         return scenario;
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void addScenario(ConversationScenario scenario)
+    {
+        scenarios.add(scenario);
+        logger.info("Added new conversation scenario to the conversation located at : {}",
+                this.conversationPath);
+    }
 
     public String getId()
     {

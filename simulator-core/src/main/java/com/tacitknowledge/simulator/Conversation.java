@@ -26,6 +26,13 @@ public interface Conversation
      */
     ConversationScenario addScenario(final String language, final String criteria,
             final String transformation);
+    
+    /**
+     * Adds a Scenario to this conversation
+     * 
+     * @param scenario scenario
+     */
+    void addScenario(ConversationScenario scenario);
 
     /**
      * Returns this conversation inbound transport

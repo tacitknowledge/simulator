@@ -91,8 +91,7 @@ public class ConversationLoader
                 ConversationScenario scenario = ScenarioLoader.parseScenarioFromFile(scenarioFile
                         .getAbsolutePath());
 
-                conversation.addScenario(scenario.getScriptLanguage(),
-                        scenario.getCriteriaScript(), scenario.getTransformationScript());
+                conversation.addScenario(scenario);
             }
             catch (ScenarioParsingException ex)
             {
