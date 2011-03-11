@@ -69,11 +69,4 @@ public interface ConversationScenario
      * @return The transformation script
      */
     String getTransformationScript();
-
-    /**
-     * unique scenario id in the system.
-     *
-     * @return The unique Scenario Id
-     */
-    int getScenarioId();
 }

@@ -14,21 +14,18 @@ public interface Conversation
      * @return id
      */
     String getId();
-    
+
     /**
-     * Adds or updates a Scenario to this Conversation
-     *
-     * @param scenarioId Scenario id
+     * Adds a Scenario to this Conversation
+     * 
      * @param language       The scripting language to be used.
      *                      if scenario already exists - will be ignored???
      * @param criteria       criteria script to be executed by the simulator
      * @param transformation transformation script to be executed by the simulator
      * @return ConversationScenario conversation scenario added to the conversation
      */
-    ConversationScenario addOrUpdateScenario(int scenarioId, 
-                                             String language, 
-                                             String criteria,
-                                             String transformation);
+    ConversationScenario addScenario(final String language, final String criteria,
+            final String transformation);
 
     /**
      * Returns this conversation inbound transport

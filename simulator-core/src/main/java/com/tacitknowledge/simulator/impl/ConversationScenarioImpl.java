@@ -20,10 +20,6 @@ public class ConversationScenarioImpl implements ConversationScenario
     private static final int HASH_CODE_PRIME = 29;
 
     /**
-     * Scenario Id
-     */
-    private int scenarioId;
-    /**
      * The scripting language used for this conversation's scenarios
      */
     private String scriptLanguage;
@@ -51,15 +47,13 @@ public class ConversationScenarioImpl implements ConversationScenario
     /**
      * Constructor for the conversation scenario class
      *
-     * @param scenarioId           Scenario ID
      * @param scriptLanguage       the scripting language used in the simulation
      * @param criteriaScript       the criteria script to match
      * @param transformationScript the transformation script for the scenario.
      */
-    public ConversationScenarioImpl(final int scenarioId, final String scriptLanguage,
-                                    final String criteriaScript, final String transformationScript)
+    public ConversationScenarioImpl(final String scriptLanguage, final String criteriaScript,
+            final String transformationScript)
     {
-        this.scenarioId = scenarioId;
         this.scriptLanguage = scriptLanguage;
         this.criteriaScript = criteriaScript;
         this.transformationScript = transformationScript;
@@ -72,17 +66,8 @@ public class ConversationScenarioImpl implements ConversationScenario
     /**
      * {@inheritDoc}
      */
-    public int getScenarioId()
-    {
-        return scenarioId;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public synchronized void setScripts(final String criteriaScriptValue,
-                                        final String transformationScriptValue,
-                                        final String language)
+            final String transformationScriptValue, final String language)
     {
         this.criteriaScript = criteriaScriptValue;
         this.transformationScript = transformationScriptValue;
@@ -111,12 +96,11 @@ public class ConversationScenarioImpl implements ConversationScenario
      * @param scriptExecutionBeans
      * @throws ScriptException
      */
-    public Object executeTransformation(final Map<String, Object> scriptExecutionBeans) throws
-            ScriptException, SimulatorException
+    public Object executeTransformation(final Map<String, Object> scriptExecutionBeans)
+            throws ScriptException, SimulatorException
     {
         return execServ.eval(transformationScript, "Transformation Script", scriptExecutionBeans);
     }
-
 
     /**
      * {@inheritDoc}
@@ -124,8 +108,8 @@ public class ConversationScenarioImpl implements ConversationScenario
      * @param scriptExecutionBeans
      * @throws ScriptException
      */
-    public boolean matchesCondition(final Map<String, Object> scriptExecutionBeans) throws
-            ScriptException
+    public boolean matchesCondition(final Map<String, Object> scriptExecutionBeans)
+            throws ScriptException
     {
 
         Object result = execServ.eval(criteriaScript, "Criteria Script", scriptExecutionBeans);
@@ -161,8 +145,7 @@ public class ConversationScenarioImpl implements ConversationScenario
 
         ConversationScenarioImpl that = (ConversationScenarioImpl) o;
 
-        if (active != that.active
-                || !criteriaScript.equals(that.criteriaScript)
+        if (active != that.active || !criteriaScript.equals(that.criteriaScript)
                 || !scriptLanguage.equals(that.scriptLanguage)
                 || !transformationScript.equals(that.transformationScript))
         {
@@ -222,13 +205,9 @@ public class ConversationScenarioImpl implements ConversationScenario
     @Override
     public String toString()
     {
-        return "ConversationScenarioImpl{"
-                + "scenarioId=" + scenarioId
-                + ", scriptLanguage='" + scriptLanguage + '\''
-                + ", criteriaScript='" + criteriaScript + '\''
-                + ", transformationScript='" + transformationScript + '\''
-                + ", execServ=" + execServ
-                + ", active=" + active
+        return "ConversationScenarioImpl{" + ", scriptLanguage='" + scriptLanguage + '\''
+                + ", criteriaScript='" + criteriaScript + '\'' + ", transformationScript='"
+                + transformationScript + '\'' + ", execServ=" + execServ + ", active=" + active
                 + '}';
     }
 }

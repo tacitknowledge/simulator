@@ -87,7 +87,7 @@ public class FtpTransportIntegrationTest extends CamelTestSupport
         ConversationManager manager = new ConversationManagerImpl(routeManager);
 
         Conversation conversation = manager.createOrUpdateConversation("testSimple", ftpTransport, out, new XmlAdapter(), new XmlAdapter());
-        conversation.addOrUpdateScenario(1, "javascript", "true", "employees.employee[0].name='John12345';employees");
+        conversation.addScenario("javascript", "true", "employees.employee[0].name='John12345';employees");
         Assert.assertNotNull(conversation);
         manager.activate("testSimple");
         Thread.sleep(10000);

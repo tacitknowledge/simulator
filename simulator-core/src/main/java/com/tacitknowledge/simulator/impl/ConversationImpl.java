@@ -1,8 +1,9 @@
 package com.tacitknowledge.simulator.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collections;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,7 @@ public class ConversationImpl implements Conversation
      * Logger for this class.
      */
     private static Logger logger = LoggerFactory.getLogger(ConversationImpl.class);
+
     /**
      * Prime number to be used in the hashcode method.
      */
@@ -33,7 +35,7 @@ public class ConversationImpl implements Conversation
      * Conversation configuration directory (as identifier)
      */
     private String conversationPath;
-    
+
     /**
      * Wrapper for inbound transport configuration
      */
@@ -57,15 +59,12 @@ public class ConversationImpl implements Conversation
     /**
      * List of configured scenarios for this conversation
      */
-    private Map<Integer, ConversationScenario> scenarios
-        = new HashMap<Integer, ConversationScenario>();
+    private List<ConversationScenario> scenarios = new ArrayList<ConversationScenario>();
 
-    public ConversationImpl(final String conversationPath, 
-                            final Transport inboundTransport,
-                            final Transport outboundTransport, 
-                            final Adapter inboundAdapter,
-                            final Adapter outboundAdapter)
-    {        
+    public ConversationImpl(final String conversationPath, final Transport inboundTransport,
+            final Transport outboundTransport, final Adapter inboundAdapter,
+            final Adapter outboundAdapter)
+    {
         this.conversationPath = conversationPath;
         this.inboundTransport = inboundTransport;
         this.outboundTransport = outboundTransport;
@@ -76,31 +75,18 @@ public class ConversationImpl implements Conversation
     /**
      * {@inheritDoc}
      */
-    public ConversationScenario addOrUpdateScenario(final int scenarioId,
-                                                    final String language,
-                                                    final String criteria,
-                                                    final String transformation)
+    public ConversationScenario addScenario(final String language, final String criteria,
+            final String transformation)
     {
-        ConversationScenario scenario = scenarios.get(scenarioId);
-        
-        if (scenario == null)
-        {
+        ConversationScenario scenario = new ConversationScenarioImpl(language, criteria,
+                transformation);
+        scenarios.add(scenario);
 
-            scenario = new ConversationScenarioImpl(scenarioId, language, criteria, transformation);
-            scenarios.put(scenarioId, scenario);
-            logger.info("Added new conversation scenario"
-                + " to the conversation located at : {}", this.conversationPath);
-        }
-        else
-        {
-            scenario.setScripts(criteria, transformation, language);
-            logger.info("Updated conversation scenario with id " + scenarioId
-                + " to the conversation located at : {}", this.conversationPath);
-        }
-
+        logger.info("Added new conversation scenario to the conversation located at : {}",
+                this.conversationPath);
         return scenario;
     }
-    
+
     public String getId()
     {
         return conversationPath;
@@ -143,7 +129,7 @@ public class ConversationImpl implements Conversation
      */
     public Collection<ConversationScenario> getScenarios()
     {
-        return scenarios.values();
+        return Collections.unmodifiableCollection(scenarios);
     }
 
     /**
@@ -161,13 +147,12 @@ public class ConversationImpl implements Conversation
 
         ConversationImpl that = (ConversationImpl) o;
 
-        if (o == null 
-            || getClass() != o.getClass()
-            || !conversationPath.equals(that.conversationPath)
-            || !inboundAdapter.equals(that.inboundAdapter)
-            || !inboundTransport.equals(that.inboundTransport)
-            || !outboundAdapter.equals(that.outboundAdapter)
-            || !outboundTransport.equals(that.outboundTransport))
+        if (o == null || getClass() != o.getClass()
+                || !conversationPath.equals(that.conversationPath)
+                || !inboundAdapter.equals(that.inboundAdapter)
+                || !inboundTransport.equals(that.inboundTransport)
+                || !outboundAdapter.equals(that.outboundAdapter)
+                || !outboundTransport.equals(that.outboundTransport))
         {
             return false;
         }
@@ -193,19 +178,9 @@ public class ConversationImpl implements Conversation
     @Override
     public String toString()
     {
-        return "ConversationImpl{"
-            + "conversationPath="
-            + conversationPath
-            + ", inboundTransport="
-            + inboundTransport
-            + ", outboundTransport="
-            + outboundTransport
-            + ", inboundAdapter="
-            + inboundAdapter
-            + ", outboundAdapter="
-            + outboundAdapter
-            + ", scenarios="
-            + scenarios
-            + '}';
+        return "ConversationImpl{" + "conversationPath=" + conversationPath + ", inboundTransport="
+                + inboundTransport + ", outboundTransport=" + outboundTransport
+                + ", inboundAdapter=" + inboundAdapter + ", outboundAdapter=" + outboundAdapter
+                + ", scenarios=" + scenarios + '}';
     }
 }

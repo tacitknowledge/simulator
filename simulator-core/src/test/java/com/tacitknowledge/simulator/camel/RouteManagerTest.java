@@ -122,9 +122,8 @@ public class RouteManagerTest extends SimulatorCamelTestSupportBase
                                                                                       new PlainTextAdapter(), 
                                                                                       new PlainTextAdapter());
     {
-        conversation1.addOrUpdateScenario(1, "javascript", "true", "text");
-        conversation1.addOrUpdateScenario(2, "javascript", "true", "text");
-
+        conversation1.addScenario("javascript", "true", "text");
+        conversation1.addScenario("javascript", "true", "text");
     }
 
     /**

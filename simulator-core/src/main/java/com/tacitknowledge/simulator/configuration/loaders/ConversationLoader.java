@@ -49,7 +49,8 @@ public class ConversationLoader
      * @return Conversation
      * @throws IOException
      */
-    public static Conversation parseConversationFromPath(String conversationPath) throws IOException
+    public static Conversation parseConversationFromPath(String conversationPath)
+            throws IOException
     {
         Transport inTransport = getTransport(Configurable.BOUND_IN, conversationPath);
         Transport outTransport = getTransport(Configurable.BOUND_OUT, conversationPath);
@@ -57,11 +58,8 @@ public class ConversationLoader
         Adapter inAdapter = getAdapter(Configurable.BOUND_IN, conversationPath);
         Adapter outAdapter = getAdapter(Configurable.BOUND_OUT, conversationPath);
 
-        Conversation conversation = ConversationFactory.createConversation(conversationPath, 
-                                                                           inTransport,
-                                                                           outTransport, 
-                                                                           inAdapter, 
-                                                                           outAdapter);
+        Conversation conversation = ConversationFactory.createConversation(conversationPath,
+                inTransport, outTransport, inAdapter, outAdapter);
         loadConversationScenarios(conversation, conversationPath);
         return conversation;
     }
@@ -86,9 +84,6 @@ public class ConversationLoader
             }
         });
 
-        // TODO: ID will be removed soon (artifact from MySQL)
-        int scenarioId = 1;
-
         for (File scenarioFile : scenarioFiles)
         {
             try
@@ -96,15 +91,13 @@ public class ConversationLoader
                 ConversationScenario scenario = ScenarioLoader.parseScenarioFromFile(scenarioFile
                         .getAbsolutePath());
 
-                conversation.addOrUpdateScenario(scenarioId, scenario.getScriptLanguage(),
+                conversation.addScenario(scenario.getScriptLanguage(),
                         scenario.getCriteriaScript(), scenario.getTransformationScript());
             }
             catch (ScenarioParsingException ex)
             {
                 logger.error(ex.getMessage(), ex);
             }
-
-            scenarioId++;
         }
     }
 

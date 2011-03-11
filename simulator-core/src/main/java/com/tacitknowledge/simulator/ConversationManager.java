@@ -96,14 +96,6 @@ public interface ConversationManager
     String[][] getAvailableLanguages();
 
     /**
-     * deletes scenario from list of scenarios
-     *
-     * @param conversationId Conversation Id
-     * @param scenarioId Scenario Id
-     */
-    void deleteScenario(String conversationId, int scenarioId);
-
-    /**
      * @param conversationId Conversation Id
      * @return True is a Conversation with the given Id is found. False otherwise
      */

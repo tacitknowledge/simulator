@@ -130,15 +130,6 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         assertEquals("javascript", scenario.getScriptLanguage());
         assertEquals("true", scenario.getCriteriaScript());
         assertEquals("2+2", scenario.getTransformationScript());
-
-
-        ConversationScenario scenario1 = manager.createOrUpdateConversationScenario("testCreateScenario", 2, "ruby", "ttttrue", "2+2+2");
-        assertSame(scenario, scenario1);
-
-        assertEquals("ruby", scenario.getScriptLanguage());
-        assertEquals("ttttrue", scenario.getCriteriaScript());
-        assertEquals("2+2+2", scenario.getTransformationScript());
-
     }
 
     @Test

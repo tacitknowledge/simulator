@@ -256,7 +256,7 @@ public class SoapTransportIntegrationTest {
                                                       inAdapter,
                                                       outAdapter);
 
-        conv.addOrUpdateScenario(1,"javascript", criteriaScript, executionScript);
+        conv.addScenario("javascript", criteriaScript, executionScript);
 
         //Activate the route
         routeManager.activate(conv);

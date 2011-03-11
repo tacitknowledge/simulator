@@ -59,7 +59,7 @@ public class ScenarioLoader
             String execute = m.group(2).trim();
 
             //TODO : replace hard-coded "JavaScript"
-            return new ConversationScenarioImpl(1, SCRIPTING_LANGUAGE, condition, execute);
+            return new ConversationScenarioImpl(SCRIPTING_LANGUAGE, condition, execute);
         }
         finally
         {

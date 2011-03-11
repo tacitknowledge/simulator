@@ -36,7 +36,7 @@ public class ConversationManagerImpl implements ConversationManager
      * Logger for this class.
      */
     private static Logger logger = LoggerFactory.getLogger(ConversationManagerImpl.class);
-    
+
     /** The singleton version of the class */
     private static ConversationManagerImpl instance = new ConversationManagerImpl();
 
@@ -49,7 +49,7 @@ public class ConversationManagerImpl implements ConversationManager
      * Currently configured conversations
      */
     private Map<String, Conversation> conversations;
-    
+
     /**
      * The method can be used to get a pre-created version of the ConversationManager as a singleton.
      * Note that the class can still be created using the constructor so that it's not quite the
@@ -57,7 +57,7 @@ public class ConversationManagerImpl implements ConversationManager
      */
     public static ConversationManagerImpl getInstance()
     {
-    	return instance;
+        return instance;
     }
 
     /**
@@ -77,32 +77,26 @@ public class ConversationManagerImpl implements ConversationManager
      */
     public ConversationManagerImpl()
     {
-    	this(new RouteManagerImpl());
+        this(new RouteManagerImpl());
     }
 
     /**
      * {@inheritDoc}
      */
-    public Conversation createOrUpdateConversation(
-        final String id,
-        final Transport inboundTransport,
-        final Transport outboundTransport,
-        final Adapter inAdapter,
-        final Adapter outAdapter)
+    public Conversation createOrUpdateConversation(final String id,
+            final Transport inboundTransport, final Transport outboundTransport,
+            final Adapter inAdapter, final Adapter outAdapter)
     {
         Conversation conversationObj = conversations.get(id);
-        
+
         if (conversationObj != null)
         {
             logger.info("Removing existing conversation from cache: Id = {}", id);
             conversations.remove(conversationObj);
         }
-        
+
         ConversationImpl conversation = ConversationFactory.createConversation(id,
-                                                                               inboundTransport,
-                                                                               outboundTransport, 
-                                                                               inAdapter, 
-                                                                               outAdapter);
+                inboundTransport, outboundTransport, inAdapter, outAdapter);
         assert conversations.get(id) == null;
 
         conversations.put(id, conversation);
@@ -118,7 +112,7 @@ public class ConversationManagerImpl implements ConversationManager
      * @throws ConversationNotFoundException in case conversation is not found
      */
     private Conversation getConversationById(final String conversationId)
-        throws ConversationNotFoundException
+            throws ConversationNotFoundException
     {
         Conversation conversation = conversations.get(conversationId);
         if (conversation == null)
@@ -132,32 +126,26 @@ public class ConversationManagerImpl implements ConversationManager
     /**
      * {@inheritDoc}
      */
-    public ConversationScenario createOrUpdateConversationScenario(
-        final String conversationId,
-        final int scenarioId,
-        final String language,
-        final String criteria,
-        final String transformation)
+    public ConversationScenario createOrUpdateConversationScenario(final String conversationId,
+            final int scenarioId, final String language, final String criteria,
+            final String transformation)
     {
         Conversation conversation = conversations.get(conversationId);
         ConversationScenario conversationScenario = null;
-        
+
         if (conversation != null)
         {
-            conversationScenario = conversation.addOrUpdateScenario(scenarioId,
-                                                                    language,
-                                                                    criteria,
-                                                                    transformation);
+            conversationScenario = conversation.addScenario(language, criteria, transformation);
         }
-        
+
         return conversationScenario;
     }
 
     /**
      * {@inheritDoc}
      */
-    public void activate(final String conversationId)
-        throws ConversationNotFoundException, SimulatorException
+    public void activate(final String conversationId) throws ConversationNotFoundException,
+            SimulatorException
     {
         Conversation conversation = getConversationById(conversationId);
         try
@@ -214,29 +202,6 @@ public class ConversationManagerImpl implements ConversationManager
     }
 
     /**
-     * 
-     * {@inheritDoc}
-     */
-    public void deleteScenario(final String conversationId, final int scenarioId)
-    {
-        Conversation conversation = conversations.get(conversationId);
-        if (conversation != null)
-        {
-            Collection<ConversationScenario> scenarios = conversation.getScenarios();
-            for (Iterator<ConversationScenario> iterator = scenarios.iterator();
-                 iterator.hasNext();)
-            {
-                ConversationScenario scenario = iterator.next();
-                if (scenario.getScenarioId() == scenarioId)
-                {
-                    iterator.remove();
-                    break;
-                }
-            }
-        }
-    }
-
-    /**
      * {@inheritDoc}
      */
     public boolean conversationExists(final String conversationId)
@@ -252,8 +217,8 @@ public class ConversationManagerImpl implements ConversationManager
      * @throws InstantiationException If the class couldn't be instantiated
      * @inheritDoc
      */
-    public Object getClassByName(final String name)
-        throws ClassNotFoundException, IllegalAccessException, InstantiationException
+    public Object getClassByName(final String name) throws ClassNotFoundException,
+            IllegalAccessException, InstantiationException
     {
         return Class.forName(name).newInstance();
     }
