@@ -27,6 +27,7 @@ import com.tacitknowledge.simulator.ConversationNotFoundException;
 import com.tacitknowledge.simulator.SimulatorException;
 import com.tacitknowledge.simulator.camel.RouteManagerImpl;
 import com.tacitknowledge.simulator.formats.XmlAdapter;
+import com.tacitknowledge.simulator.impl.ConversationImpl;
 import com.tacitknowledge.simulator.impl.ConversationManagerImpl;
 
 /**
@@ -82,14 +83,12 @@ public class FtpTransportIntegrationTest extends CamelTestSupport
     }
 
     @Test
-    public void testSimple() throws FtpException, SimulatorException, InterruptedException, ConversationNotFoundException
+    public void testSimple() throws Exception
     {
-        ConversationManager manager = new ConversationManagerImpl(routeManager);
-
-        Conversation conversation = manager.createOrUpdateConversation("testSimple", ftpTransport, out, new XmlAdapter(), new XmlAdapter());
+        Conversation conversation = new ConversationImpl("somepath", ftpTransport, out, new XmlAdapter(), new XmlAdapter());
         conversation.addScenario("javascript", "true", "employees.employee[0].name='John12345';employees");
         Assert.assertNotNull(conversation);
-        manager.activate("testSimple");
+        routeManager.activate(conversation);
         Thread.sleep(10000);
         List<Exchange> list = resultEndpoint.getReceivedExchanges();
         assertTrue(list.get(0).getIn().getBody().toString().contains("John12345"));
