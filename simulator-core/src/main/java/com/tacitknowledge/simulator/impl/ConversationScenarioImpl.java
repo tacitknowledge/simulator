@@ -58,9 +58,7 @@ public class ConversationScenarioImpl implements ConversationScenario
         this.criteriaScript = criteriaScript;
         this.transformationScript = transformationScript;
 
-        this.execServ = new ScriptExecutionService();
-        this.execServ.setLanguage(scriptLanguage);
-
+        this.execServ = new ScriptExecutionService(scriptLanguage);
     }
 
     /**

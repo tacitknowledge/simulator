@@ -46,8 +46,7 @@ public class ScriptExecutionServiceTest
         Map<String, Object> beans = adapter.generateBeans(exchange);
 
         // --- Now, get a ScriptExecutionService and set the language (javascript)
-        ScriptExecutionService execServ = new ScriptExecutionService();
-        execServ.setLanguage("javascript");
+        ScriptExecutionService execServ = new ScriptExecutionService("javascript");
 
         // --- Test a couple of values
         Object result = execServ.eval("employees", "Get employees", beans);
@@ -69,8 +68,7 @@ public class ScriptExecutionServiceTest
     public void testEvalRuby() throws ScriptException
     {
         String myScript = "puts 'Hello Ruby'\n return 'hello'";
-        ScriptExecutionService execServ = new ScriptExecutionService();
-        execServ.setLanguage("ruby");
+        ScriptExecutionService execServ = new ScriptExecutionService("ruby");
         Object result = execServ.eval(myScript, "myScript.rb", null);
         assertEquals("hello", result.toString());
     }

@@ -90,12 +90,6 @@ public interface ConversationManager
     boolean isActive(String conversationId) throws SimulatorException;
 
     /**
-     *
-     * @return List of available scripting languages
-     */
-    String[][] getAvailableLanguages();
-
-    /**
      * @param conversationId Conversation Id
      * @return True is a Conversation with the given Id is found. False otherwise
      */

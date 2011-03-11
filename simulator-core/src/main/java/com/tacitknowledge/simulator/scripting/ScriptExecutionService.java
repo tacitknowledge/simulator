@@ -27,6 +27,16 @@ public class ScriptExecutionService
      * The name of the scripting language to use
      */
     private String language = null;
+    
+    /**
+     * Constructor
+     * 
+     * @param language scripting language
+     */
+    public ScriptExecutionService(String language)
+    {
+        this.language = language;
+    }
 
     /**
      * Executes the specified script.
@@ -147,28 +157,5 @@ public class ScriptExecutionService
     public String getLanguage()
     {
         return language;
-    }
-
-    /**
-     * @param language The language to set.
-     */
-    public void setLanguage(final String language)
-    {
-        this.language = language;
-    }
-
-
-    /**
-     *
-     * @return An Array with the available scripting languages
-     */
-    public static String[][] getAvailableLanguages()
-    {
-        //TODO automate this
-        String[][] languages = {
-            {"javascript", "Java Script"},
-            {"ruby", "JRuby"}
-        };
-        return languages;
     }
 }

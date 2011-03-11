@@ -240,14 +240,6 @@ public class ConversationManagerImpl implements ConversationManager
     /**
      * {@inheritDoc}
      */
-    public String[][] getAvailableLanguages()
-    {
-        return ScriptExecutionService.getAvailableLanguages();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public void registerListeners(final String filePath)
     {
         if (filePath != null)
