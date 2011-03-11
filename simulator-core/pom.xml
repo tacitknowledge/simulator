@@ -113,60 +113,42 @@
             </plugin>
             
             <plugin>
-			  <artifactId>maven-antrun-plugin</artifactId>
-			  <executions>
-			    <execution>
-			      <id>create folders</id>
-			      <phase>install</phase>
-			      <configuration>
-			        <tasks>
-			          <mkdir dir="target/simulator"/>
-					  <mkdir dir="target/simulator/bin"/>
-					  <mkdir dir="target/simulator/lib"/>
-					  <mkdir dir="target/simulator/config"/>
-					  <mkdir dir="target/simulator/systems"/>
-					  <mkdir dir="target/simulator/log"/>
-					  <copy file="../startStandAloneApplication.sh" todir="target/simulator/bin/"/>
-					  <copy file="../startStandAloneApplication.bat" todir="target/simulator/bin/"/>
-					  <copy file="../stopStandAloneApplication.sh" todir="target/simulator/bin/"/>
-			          <copy file="../stopStandAloneApplication.bat" todir="target/simulator/bin/"/>
-			          <copy file="../config/config.properties" todir="target/simulator/config/"/>
-			          
-			        </tasks>
-			      </configuration>
-			      <goals>
-			        <goal>run</goal>
-			      </goals>
-			    </execution>
-			  </executions>
-			</plugin>
+		<artifactId>maven-antrun-plugin</artifactId>
+		<executions>
+		<execution>
+		<id>create folders</id>
+		<phase>integration-test</phase>
+		<configuration>
+		<tasks>
+			<mkdir dir="target/simulator"/>
+			<mkdir dir="target/simulator/bin"/>
+			<mkdir dir="target/simulator/lib"/>
+			<mkdir dir="target/simulator/config"/>
+			<mkdir dir="target/simulator/systems"/>
+			<mkdir dir="target/simulator/log"/>
+			<copy file="../startStandAloneApplication.sh" todir="target/simulator/bin/"/>
+			<copy file="../startStandAloneApplication.bat" todir="target/simulator/bin/"/>
+			<copy file="../stopStandAloneApplication.sh" todir="target/simulator/bin/"/>
+			<copy file="../stopStandAloneApplication.bat" todir="target/simulator/bin/"/>
+			<copy file="../config/config.properties" todir="target/simulator/config/"/>
+			<copy file="target/simulator-core.jar" todir="target/simulator/lib"/>
+			
+		</tasks>
+		</configuration>
+		<goals>
+		<goal>run</goal>
+		</goals>
+		</execution>
+		</executions>
+	      </plugin>
 			
 			<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
-                    <execution>
-                        <id>copy-installed</id>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>${project.groupId}</groupId>
-                                    <artifactId>${project.artifactId}</artifactId>
-                                    <version>${project.version}</version>
-                                    <type>${project.packaging}</type>
-                                </artifactItem>
-                            </artifactItems>
-                            <outputDirectory>target/simulator/lib</outputDirectory>
-                        </configuration>
-                    </execution>
-
-                    <execution>
+  					<execution>
                         <id>copy-standalone-dependencies</id>
-                        <phase>install</phase>
+                        <phase>verify</phase>
                         <goals>
                             <goal>copy-dependencies</goal>
                         </goals>
