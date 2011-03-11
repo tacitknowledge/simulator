@@ -20,29 +20,30 @@ import com.tacitknowledge.simulator.utils.Configuration;
  * @author Oleg Ciobanu ociobanu@tacitknowledge.com
  *
  */
-public class ScheduledConversationsLoader extends Thread {
+public class ScheduledConversationsLoader extends Thread
+{
 
     /**
      *  stop flag.
      */
     private Boolean toStop = Boolean.FALSE;
-    
+
     /**
      * Route manager for camel context. 
      */
     RouteManager routeManager;
-    
+
     /**
      * class logger.
      */
     private static Logger logger = LoggerFactory.getLogger(ScheduledConversationsLoader.class);
-    
+
     private ScenarioLoader scenarioLoader;
-    
+
     private ConversationLoader conversationLoader;
-    
+
     private ConversationsLoader conversationsLoader;
-    
+
     /**
      * The constructor will load from config files all interested configs.
      */
@@ -110,20 +111,16 @@ public class ScheduledConversationsLoader extends Thread {
             }
         }
     }
-    
-    public void loadConversations() throws Exception{
-        
-        File resource = new File(
-                Configuration.getPropertyAsString(Configuration.SYSTEMS_DIRECTORY));
-        
-        List<Conversation> conversations = conversationsLoader.loadConversations(resource.getAbsolutePath());
+
+    public void loadConversations() throws Exception
+    {
+        //TODO deactivate previous activated conversation (reload functionality)
+        File resource = new File(Configuration.getPropertyAsString(Configuration.SYSTEMS_DIRECTORY));
+
+        List<Conversation> conversations = conversationsLoader.loadConversations(resource
+                .getAbsolutePath());
         for (Conversation conversation : conversations)
         {
-            // TODO: refactor this
-            // Workaround: relative paths don't work from junit and camel :) Don't know why yet.
-            // workaroundAbsolutePaths((BaseConfigurable) conversation.getInboundTransport());
-            // workaroundAbsolutePaths((BaseConfigurable) conversation.getOutboundTransport());
-
             routeManager.activate(conversation);
         }
     }

@@ -26,7 +26,7 @@ public class StandAloneStopper
      * constructor.
      */
     public StandAloneStopper()
-    { }
+    {}
 
     /**
      * send close command on the close port.
