@@ -12,7 +12,6 @@ import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.junit4.CamelTestSupport;
 import org.apache.ftpserver.FtpServer;
 import org.apache.ftpserver.FtpServerFactory;
-import org.apache.ftpserver.ftplet.FtpException;
 import org.apache.ftpserver.listener.ListenerFactory;
 import org.apache.ftpserver.usermanager.Md5PasswordEncryptor;
 import org.apache.ftpserver.usermanager.impl.PropertiesUserManager;
@@ -22,13 +21,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.tacitknowledge.simulator.Conversation;
-import com.tacitknowledge.simulator.ConversationManager;
-import com.tacitknowledge.simulator.ConversationNotFoundException;
-import com.tacitknowledge.simulator.SimulatorException;
 import com.tacitknowledge.simulator.camel.RouteManagerImpl;
 import com.tacitknowledge.simulator.formats.XmlAdapter;
 import com.tacitknowledge.simulator.impl.ConversationImpl;
-import com.tacitknowledge.simulator.impl.ConversationManagerImpl;
 
 /**
  * Test class for FtpTransportIntegration
