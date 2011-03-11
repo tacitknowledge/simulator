@@ -40,11 +40,6 @@ public class ConversationScenarioImpl implements ConversationScenario
     private ScriptExecutionService execServ;
 
     /**
-     * Whether this scenario is active or not
-     */
-    private boolean active = true;
-
-    /**
      * Constructor for the conversation scenario class
      *
      * @param scriptLanguage       the scripting language used in the simulation
@@ -60,34 +55,7 @@ public class ConversationScenarioImpl implements ConversationScenario
 
         this.execServ = new ScriptExecutionService(scriptLanguage);
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    public synchronized void setScripts(final String criteriaScriptValue,
-            final String transformationScriptValue, final String language)
-    {
-        this.criteriaScript = criteriaScriptValue;
-        this.transformationScript = transformationScriptValue;
-        this.scriptLanguage = language;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void setActive(final boolean active)
-    {
-        this.active = active;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public boolean isActive()
-    {
-        return active;
-    }
-
+    
     /**
      * {@inheritDoc}
      *
@@ -143,7 +111,7 @@ public class ConversationScenarioImpl implements ConversationScenario
 
         ConversationScenarioImpl that = (ConversationScenarioImpl) o;
 
-        if (active != that.active || !criteriaScript.equals(that.criteriaScript)
+        if (!criteriaScript.equals(that.criteriaScript)
                 || !scriptLanguage.equals(that.scriptLanguage)
                 || !transformationScript.equals(that.transformationScript))
         {
@@ -187,16 +155,6 @@ public class ConversationScenarioImpl implements ConversationScenario
         int result = scriptLanguage.hashCode();
         result = HASH_CODE_PRIME * result + criteriaScript.hashCode();
         result = HASH_CODE_PRIME * result + transformationScript.hashCode();
-
-        if (active)
-        {
-            result = HASH_CODE_PRIME * result + 1;
-        }
-        else
-        {
-            result = HASH_CODE_PRIME * result + 0;
-        }
-
         return result;
     }
 
@@ -205,7 +163,6 @@ public class ConversationScenarioImpl implements ConversationScenario
     {
         return "ConversationScenarioImpl{" + ", scriptLanguage='" + scriptLanguage + '\''
                 + ", criteriaScript='" + criteriaScript + '\'' + ", transformationScript='"
-                + transformationScript + '\'' + ", execServ=" + execServ + ", active=" + active
-                + '}';
+                + transformationScript + '\'' + ", execServ=" + execServ + "}";
     }
 }

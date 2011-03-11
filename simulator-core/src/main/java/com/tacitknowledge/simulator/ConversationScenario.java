@@ -12,29 +12,6 @@ import java.util.Map;
 public interface ConversationScenario
 {
     /**
-     * Updates criteria script
-     *
-     * @param criteriaScript       new criteria script
-     * @param transformationScript new transformation script
-     * @param language             new language
-     */
-    void setScripts(String criteriaScript, String transformationScript, String language);
-
-    /**
-     * Sets the active flag
-     *
-     * @param active @see #active
-     */
-    void setActive(boolean active);
-
-    /**
-     * Returns if this scenarios is active or not
-     *
-     * @return @see #active
-     */
-    boolean isActive();
-
-    /**
      * Starts this scenario execution with the provided entry data
      *
      * @param scriptExecutionBeans - Script execution parameters
