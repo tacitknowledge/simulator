@@ -113,6 +113,35 @@
             </plugin>
             
             <plugin>
+			  <artifactId>maven-antrun-plugin</artifactId>
+			  <executions>
+			    <execution>
+			      <id>create folders</id>
+			      <phase>install</phase>
+			      <configuration>
+			        <tasks>
+			          <mkdir dir="target/simulator"/>
+					  <mkdir dir="target/simulator/bin"/>
+					  <mkdir dir="target/simulator/lib"/>
+					  <mkdir dir="target/simulator/config"/>
+					  <mkdir dir="target/simulator/systems"/>
+					  <mkdir dir="target/simulator/log"/>
+					  <copy file="../startStandAloneApplication.sh" todir="target/simulator/bin/"/>
+					  <copy file="../startStandAloneApplication.bat" todir="target/simulator/bin/"/>
+					  <copy file="../stopStandAloneApplication.sh" todir="target/simulator/bin/"/>
+			          <copy file="../stopStandAloneApplication.bat" todir="target/simulator/bin/"/>
+			          <copy file="../config/config.properties" todir="target/simulator/config/"/>
+			          
+			        </tasks>
+			      </configuration>
+			      <goals>
+			        <goal>run</goal>
+			      </goals>
+			    </execution>
+			  </executions>
+			</plugin>
+			
+			<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
@@ -131,36 +160,20 @@
                                     <type>${project.packaging}</type>
                                 </artifactItem>
                             </artifactItems>
-                            <outputDirectory>${lib.output.directory}</outputDirectory>
+                            <outputDirectory>target/simulator/lib</outputDirectory>
                         </configuration>
                     </execution>
 
                     <execution>
-                        <id>copy-dependencies</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <includeScope>runtime</includeScope>
-                            <excludeArtifactIds>jruby</excludeArtifactIds>
-                            <outputDirectory>${lib.output.directory}</outputDirectory>
-                            <overWriteReleases>false</overWriteReleases>
-                            <overWriteSnapshots>false</overWriteSnapshots>
-                            <overWriteIfNewer>true</overWriteIfNewer>
-                        </configuration>
-                    </execution>
-                    
-                    <execution>
                         <id>copy-standalone-dependencies</id>
-                        <phase>package</phase>
+                        <phase>install</phase>
                         <goals>
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
                             <includeScope>runtime</includeScope>
                             <excludeArtifactIds>jruby</excludeArtifactIds>
-                            <outputDirectory>${standalone.lib.output.directory}</outputDirectory>
+                            <outputDirectory>target/simulator/lib</outputDirectory>
                             <overWriteReleases>false</overWriteReleases>
                             <overWriteSnapshots>false</overWriteSnapshots>
                             <overWriteIfNewer>true</overWriteIfNewer>
@@ -169,6 +182,24 @@
                     
                 </executions>
             </plugin>
+            
+            <plugin>
+			  <artifactId>maven-antrun-plugin</artifactId>
+			  <executions>
+			    <execution>
+			      <id>create zip</id>
+			      <phase>install</phase>
+			      <configuration>
+			        <tasks>
+			          <zip destfile="target/simulator.zip" basedir="target/simulator"/>
+			        </tasks>
+			      </configuration>
+			      <goals>
+			        <goal>run</goal>
+			      </goals>
+			    </execution>
+			  </executions>
+			</plugin>
             
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
