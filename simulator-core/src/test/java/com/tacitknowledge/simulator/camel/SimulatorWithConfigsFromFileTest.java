@@ -19,12 +19,13 @@ import com.tacitknowledge.simulator.utils.Configuration;
 
 public class SimulatorWithConfigsFromFileTest
 {
+    private ConversationsLoader conversationsLoader = new ConversationsLoader();
     @Test
     public void startSimulator() throws Exception
     {
         Resource resource = new ClassPathResource(
                 Configuration.getPropertyAsString(Configuration.SYSTEMS_DIRECTORY));
-        List<Conversation> conversations = ConversationsLoader.loadConversations(resource.getFile()
+        List<Conversation> conversations = conversationsLoader.loadConversations(resource.getFile()
                 .getAbsolutePath());
 
         RouteManager routeManager = new RouteManagerImpl();

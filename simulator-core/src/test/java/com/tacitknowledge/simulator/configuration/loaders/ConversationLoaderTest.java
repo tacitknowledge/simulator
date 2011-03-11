@@ -20,8 +20,9 @@ public class ConversationLoaderTest
     public void loadScenarioListTest() throws IOException
     {
         Resource resource = new ClassPathResource("systems/sys1/conv1");
+        ConversationLoader conversationLoader = new ConversationLoader();
 
-        Conversation conversation = ConversationLoader.parseConversationFromPath(resource.getFile()
+        Conversation conversation = conversationLoader.parseConversationFromPath(resource.getFile()
                 .getAbsolutePath());
 
         Collection<ConversationScenario> scenarios = conversation.getScenarios();

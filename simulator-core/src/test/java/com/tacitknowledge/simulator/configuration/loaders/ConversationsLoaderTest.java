@@ -22,7 +22,8 @@ public class ConversationsLoaderTest
     {
         Resource resource = new ClassPathResource("systems");
 
-        List<Conversation> conversations = ConversationsLoader.loadConversations(resource.getFile()
+        ConversationsLoader conversationsLoader = new ConversationsLoader();
+        List<Conversation> conversations = conversationsLoader.loadConversations(resource.getFile()
                 .getAbsolutePath());
 
         assertNotNull(conversations);

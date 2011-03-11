@@ -21,9 +21,6 @@ public class ScenarioLoader
     private static final Pattern SCENARIO_REGEX = Pattern.compile(
             "\\s*\\[language\\](.+)\\[when\\](.+)\\[execute\\](.+)", FLAGS);
 
-    private ScenarioLoader()
-    {}
-
     /**
      * Parses scenario from given '.scn' file and returns ConversationScenario object
      * 
@@ -32,7 +29,7 @@ public class ScenarioLoader
      * @throws IOException
      * @throws ScenarioParsingException 
      */
-    public static ConversationScenario parseScenarioFromFile(String fileName) throws IOException,
+    public ConversationScenario parseScenarioFromFile(String fileName) throws IOException,
             ScenarioParsingException
     {
         InputStream is = new FileInputStream(fileName);

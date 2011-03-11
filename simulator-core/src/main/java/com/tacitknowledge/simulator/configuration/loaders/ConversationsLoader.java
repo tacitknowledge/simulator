@@ -19,10 +19,9 @@ public class ConversationsLoader
      * Logger for the ConversationsLoader class.
      */
     private static Logger logger = LoggerFactory.getLogger(ConversationsLoader.class);
-
-    private ConversationsLoader()
-    {}
-
+    
+    private ConversationLoader conversationLoader = new ConversationLoader();
+    
     /**
      * Iterates through systems and each system conversations and returns a list of parsed
      * conversations (which contains scenarios)
@@ -31,7 +30,7 @@ public class ConversationsLoader
      * @return
      * @throws IOException
      */
-    public static List<Conversation> loadConversations(String systemsPath) throws IOException
+    public List<Conversation> loadConversations(String systemsPath) throws IOException
     {
         List<Conversation> conversations = new ArrayList<Conversation>();
 
@@ -49,7 +48,7 @@ public class ConversationsLoader
             {
                 try
                 {
-                    Conversation conversation = ConversationLoader
+                    Conversation conversation = conversationLoader
                             .parseConversationFromPath(conversationDir.getAbsolutePath());
                     if (conversation != null)
                     {

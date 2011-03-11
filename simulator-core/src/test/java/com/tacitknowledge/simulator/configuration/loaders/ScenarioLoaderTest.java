@@ -14,12 +14,14 @@ import com.tacitknowledge.simulator.impl.ConversationScenarioImpl;
 
 public class ScenarioLoaderTest
 {
+    private ScenarioLoader scenarioLoader = new ScenarioLoader();
+
     @Test
     public void loadScenario() throws IOException, ScenarioParsingException
     {
         Resource resource = new ClassPathResource("systems/sys1/conv1/scenario1.scn");
 
-        ConversationScenarioImpl scenario = (ConversationScenarioImpl) ScenarioLoader
+        ConversationScenarioImpl scenario = (ConversationScenarioImpl) scenarioLoader
                 .parseScenarioFromFile(resource.getFile().getAbsolutePath());
 
         assertTrue(scenario.getCriteriaScript().startsWith("1==1"));
@@ -31,11 +33,11 @@ public class ScenarioLoaderTest
     {
         Resource resource = new ClassPathResource("systems/sys1/conv1/scenarioBadFormat.scn");
         String scenarioFileName = resource.getFile().getAbsolutePath();
-        
+
         try
         {
-            ScenarioLoader.parseScenarioFromFile(scenarioFileName);
-            
+            scenarioLoader.parseScenarioFromFile(scenarioFileName);
+
             fail("parsing of scenario scenarioBadFormat.scn must fail");
         }
         catch (ScenarioParsingException ex)

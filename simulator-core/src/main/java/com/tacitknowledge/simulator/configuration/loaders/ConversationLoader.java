@@ -38,9 +38,8 @@ public class ConversationLoader
      * Logger for the EventDispatcherImpl class.
      */
     private static Logger logger = LoggerFactory.getLogger(ConversationLoader.class);
-
-    private ConversationLoader()
-    {}
+    
+    private ScenarioLoader scenarioLoader = new ScenarioLoader();
 
     /**
      * Parse and constructs conversation from a given directory
@@ -49,7 +48,7 @@ public class ConversationLoader
      * @return Conversation
      * @throws IOException
      */
-    public static Conversation parseConversationFromPath(String conversationPath)
+    public Conversation parseConversationFromPath(String conversationPath)
             throws IOException
     {
         Transport inTransport = getTransport(Configurable.BOUND_IN, conversationPath);
@@ -71,7 +70,7 @@ public class ConversationLoader
      * @param conversationDir conversation directory
      * @throws IOException
      */
-    private static void loadConversationScenarios(Conversation conversation, String conversationDir)
+    private void loadConversationScenarios(Conversation conversation, String conversationDir)
             throws IOException
     {
         Resource resource = new FileSystemResource(conversationDir);
@@ -88,7 +87,7 @@ public class ConversationLoader
         {
             try
             {
-                ConversationScenario scenario = ScenarioLoader.parseScenarioFromFile(scenarioFile
+                ConversationScenario scenario = scenarioLoader.parseScenarioFromFile(scenarioFile
                         .getAbsolutePath());
 
                 conversation.addScenario(scenario);
@@ -100,7 +99,7 @@ public class ConversationLoader
         }
     }
 
-    private static Transport getTransport(int bound, String conversationDir) throws IOException
+    private Transport getTransport(int bound, String conversationDir) throws IOException
     {
         String configFileName = bound == Configurable.BOUND_IN ? INBOUND_CONFIG : OUTBOUND_CONFIG;
 
@@ -120,7 +119,7 @@ public class ConversationLoader
         }
     }
 
-    private static Adapter getAdapter(int bound, String conversationDir) throws IOException
+    private Adapter getAdapter(int bound, String conversationDir) throws IOException
     {
         String configFileName = bound == Configurable.BOUND_IN ? INBOUND_CONFIG : OUTBOUND_CONFIG;
 
@@ -140,7 +139,7 @@ public class ConversationLoader
         }
     }
 
-    private static Properties loadConversationProperties(InputStream inputStream)
+    private Properties loadConversationProperties(InputStream inputStream)
             throws IOException
     {
         Properties properties = new Properties();
@@ -149,7 +148,7 @@ public class ConversationLoader
         return properties;
     }
 
-    private static Transport getConversationTransport(int bound, Properties properties)
+    private Transport getConversationTransport(int bound, Properties properties)
             throws IOException
     {
         String type = properties.getProperty(TYPE);
@@ -163,7 +162,7 @@ public class ConversationLoader
         return TransportFactory.createTransport(bound, type.toUpperCase(), properties);
     }
 
-    private static Adapter getConversationAdapter(int bound, Properties properties)
+    private Adapter getConversationAdapter(int bound, Properties properties)
             throws IOException
     {
         String format = properties.getProperty(FORMAT);
