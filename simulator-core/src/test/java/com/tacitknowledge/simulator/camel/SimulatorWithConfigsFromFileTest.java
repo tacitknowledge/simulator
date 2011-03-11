@@ -43,6 +43,7 @@ public class SimulatorWithConfigsFromFileTest
                 .getAbsolutePath());
 
         RouteManager routeManager = new RouteManagerImpl();
+        routeManager.start();
 
         for (Conversation conversation : conversations)
         {

@@ -1,24 +1,22 @@
 package com.tacitknowledge.simulator.camel;
 
-import com.tacitknowledge.simulator.Conversation;
-import com.tacitknowledge.simulator.RouteManager;
-import com.tacitknowledge.simulator.SimulatorException;
-import com.tacitknowledge.simulator.configuration.beans.EventBean;
-import com.tacitknowledge.simulator.configuration.SimulatorEventType;
-
-import org.apache.camel.CamelContext;
-import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.camel.jboss.JBossPackageScanClassResolver;
-import org.apache.camel.model.RouteDefinition;
-import org.apache.camel.spi.PackageScanClassResolver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import org.apache.camel.CamelContext;
+import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.impl.DefaultCamelContext;
+import org.apache.camel.model.RouteDefinition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.tacitknowledge.simulator.Conversation;
+import com.tacitknowledge.simulator.RouteManager;
+import com.tacitknowledge.simulator.SimulatorException;
+import com.tacitknowledge.simulator.configuration.SimulatorEventType;
+import com.tacitknowledge.simulator.configuration.beans.EventBean;
 
 /**
  * Manages Camel routes based on the provided conversation objects.
@@ -42,44 +40,37 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager
      * Container for the routes inside the current camel context. Used for activation and
      * deactivation of the routes.
      */
-    private Map<String, RouteDefinition> convRoutes = new HashMap<String, RouteDefinition>();
-
+    private Map<String, RouteDefinition> routes = new HashMap<String, RouteDefinition>();
 
     /**
      * container for active routes ids.
      */
     private Set<String> activeRoutes = new HashSet<String>();
 
-
     /**
      * Default Constructor
      */
     public RouteManagerImpl()
     {
-    	CamelContext context = new DefaultCamelContext();
-    	try
-    	{
-    		//check if we run in JBoss. We could check for any class that is provided by Jboss.
-    		Class.forName("org.jboss.logging.appender.RollingFileAppender");
-        	PackageScanClassResolver jbossResolver = new JBossPackageScanClassResolver();
-        	context.setPackageScanClassResolver(jbossResolver);
-    		logger.info("Running in JBoss");
-    	}
-    	catch (ClassNotFoundException e)
-    	{
-    		//just ignore if we're not in jboss
-    		logger.info("Not running in JBoss. Probably we're in Tomcat");
-    	}
-
-        setContext(context);
+        setContext(new DefaultCamelContext());
     }
 
     /**
      * {@inheritDoc}
      */
     public void configure() throws Exception
+    {}
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void start() throws Exception
     {
-
+        if (!contextStarted)
+        {
+            getContext().start();
+            contextStarted = true;
+        }
     }
 
     /**
@@ -87,48 +78,40 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager
      */
     public void activate(final Conversation conversation) throws Exception
     {
+        ensureThatContextIsStarted();
+        
+        CamelContext context = getContext();
         String conversationId = conversation.getId();
+        RouteDefinition definition = routes.get(conversationId);
 
         logger.info("Activating conversation: {}", conversation);
 
-        RouteDefinition definition = convRoutes.get(conversationId);
-
-        if (!contextStarted)
-        {
-            getContext().start();
-            contextStarted = true;
-        }
         if (definition == null)
         {
-
-            // --- Entry endpoint
             String inboundTransportURI = conversation.getInboundTransport().toUriString();
             String outboundTransportURI = conversation.getOutboundTransport().toUriString();
 
             definition = this.from(inboundTransportURI);
-            // --- Adapt input format, run scenarios and finally adapt into output format
             definition.bean(new ScenarioExecutionWrapper(conversation));
-
-            // --- Exit endpoint
             definition.to(outboundTransportURI);
             definition.bean(new EventBean(SimulatorEventType.RESPONSE_SENT, conversation));
-
             definition.setId(conversationId.toString());
-            convRoutes.put(conversationId, definition);
 
-            logger.info("Route : {} was added to the context : {}", definition.getId(),
-                getContext().getName());
+            routes.put(conversationId, definition);
 
-            getContext().startRoute(definition);
+            logger.info("Route : {} was added to the context : {}", 
+                        definition.getId(),
+                        context.getName());
+
+            context.startRoute(definition);
             activeRoutes.add(conversationId);
-
         }
         else
         {
             if (!activeRoutes.contains(conversationId))
             {
                 activeRoutes.add(conversationId);
-                getContext().startRoute(definition);
+                context.startRoute(definition);
             }
         }
     }
@@ -138,16 +121,26 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager
      */
     public void deactivate(final Conversation conversation) throws Exception
     {
-        logger.info("Deactivating conversation: {}", conversation);
-        String id = conversation.getId();
-        RouteDefinition definition = convRoutes.remove(id);
+        ensureThatContextIsStarted();
         
+        String id = conversation.getId();
+        stopRoute(id);
+    }
+
+    private void stopRoute(String id) throws Exception
+    {
+        ensureThatContextIsStarted();
+        
+        CamelContext context = getContext();
+        RouteDefinition definition = routes.remove(id);
+
         if (definition != null)
         {
-            getContext().stopRoute(definition);
+            context.stopRoute(definition);
             activeRoutes.remove(id);
-            logger.info("Route : {} was stopped in the context : {}", definition.getId(),
-                getContext().getName());
+            logger.info("Route : {} was stopped in the context : {}", 
+                        definition.getId(),
+                        context.getName());
         }
         else
         {
@@ -160,6 +153,8 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager
      */
     public boolean isActive(final Conversation conversation) throws SimulatorException
     {
+        ensureThatContextIsStarted();
+        
         return activeRoutes.contains(conversation.getId());
     }
 
@@ -168,7 +163,38 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager
      */
     public void delete(final Conversation conversation) throws Exception
     {
+        ensureThatContextIsStarted();
+        
         deactivate(conversation);
-        convRoutes.remove(conversation.getId());
+        routes.remove(conversation.getId());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void stop() throws Exception
+    {
+        if (contextStarted)
+        {
+            stopAllActiveRoutes();
+            getContext().stop();
+            contextStarted = false;
+        }
+    }
+
+    private void stopAllActiveRoutes() throws Exception
+    {
+        for(String id : activeRoutes)
+        {
+            stopRoute(id);
+        }
+    }
+    
+    private void ensureThatContextIsStarted()
+    {
+        if(!contextStarted)
+        {
+            throw new IllegalStateException("Please start the route manager by calling the start() method"); 
+        }
     }
 }

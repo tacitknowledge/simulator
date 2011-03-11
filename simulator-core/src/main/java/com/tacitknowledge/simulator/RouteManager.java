@@ -9,12 +9,19 @@ public interface RouteManager
 {
 
     /**
-     * Implementaion of route builder configure
-     *
-     * @throws Exception in case of an error
+     * Starts the route manager
+     * 
+     * @throws Exception
      */
-    void configure() throws Exception;
-
+    void start() throws Exception;
+    
+    /**
+     * Stops the route manager
+     * 
+     * @throws Exception
+     */
+    void stop() throws Exception;
+    
     /**
      * Builds simulation route using conversation object. Assigns adapter beans to the route,
      * assigns simulation execution bean to the route. Adds route to the current camel context.
@@ -44,5 +51,4 @@ public interface RouteManager
      * @throws Exception if an error occurs
      */
     void delete(Conversation conversation) throws Exception;
-
 }

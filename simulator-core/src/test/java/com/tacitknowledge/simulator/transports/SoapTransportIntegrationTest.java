@@ -14,7 +14,6 @@ import javax.xml.soap.SOAPConnection;
 import javax.xml.soap.SOAPConnectionFactory;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPElement;
-import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
 import org.junit.After;
@@ -56,14 +55,14 @@ public class SoapTransportIntegrationTest {
     private static final String RESPONSE_GREETING = "HELLLLLLLOOWWWWWW";
 
     @Before
-    public void setup() throws SOAPException
+    public void setup() throws Exception
     {
         inTransport = new SoapTransport();
         outTransport = new SoapTransport();
         inAdapter = new SoapAdapter();
         outAdapter = new SoapAdapter();
         routeManager = new RouteManagerImpl();
-
+        routeManager.start();
         //Create the soap connection
         SOAPConnectionFactory soapConnFactory = SOAPConnectionFactory.newInstance();
         connection = soapConnFactory.createConnection();
@@ -75,8 +74,9 @@ public class SoapTransportIntegrationTest {
         try
         {
             routeManager.deactivate(conv);
-
+            routeManager.stop();
             connection.close();
+            
         }
         catch(Exception e)
         {

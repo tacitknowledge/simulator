@@ -22,7 +22,6 @@ import com.tacitknowledge.simulator.utils.Configuration;
  */
 public class ScheduledConversationsLoader extends Thread
 {
-
     /**
      *  stop flag.
      */
@@ -31,7 +30,7 @@ public class ScheduledConversationsLoader extends Thread
     /**
      * Route manager for camel context. 
      */
-    RouteManager routeManager;
+    private RouteManager routeManager;
 
     /**
      * class logger.
@@ -53,6 +52,8 @@ public class ScheduledConversationsLoader extends Thread
         scenarioLoader = new ScenarioLoader();
         conversationLoader = new ConversationLoader(scenarioLoader);
         conversationsLoader = new ConversationsLoader(conversationLoader);
+        
+        startRouteManager();
     }
 
     /**
@@ -105,11 +106,12 @@ public class ScheduledConversationsLoader extends Thread
                 }
                 catch (InterruptedException e)
                 {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    logger.warn(e.getMessage());
                 }
             }
         }
+        
+        stopRouteManager();
     }
 
     public void loadConversations() throws Exception
@@ -119,9 +121,36 @@ public class ScheduledConversationsLoader extends Thread
 
         List<Conversation> conversations = conversationsLoader.loadConversations(resource
                 .getAbsolutePath());
+        
         for (Conversation conversation : conversations)
         {
             routeManager.activate(conversation);
+        }
+    }
+    
+    private void startRouteManager()
+    {
+        try
+        {
+            routeManager.start();
+        }
+        catch (Exception e)
+        {
+            logger.error("Route manager could not be started.", e);
+            throw new RuntimeException("Route manager could not be started.");
+        }
+    }
+    
+    private void stopRouteManager()
+    {
+        try
+        {
+            routeManager.stop();
+        }
+        catch (Exception e)
+        {
+            logger.error("Route manager could not be stoped.", e);
+            throw new RuntimeException("Route manager could not be stoped.");
         }
     }
 }

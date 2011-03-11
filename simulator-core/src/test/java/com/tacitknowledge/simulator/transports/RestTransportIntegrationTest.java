@@ -33,12 +33,13 @@ public class RestTransportIntegrationTest {
     RouteManager routeManager;
 
     @Before
-    public void setup(){
+    public void setup() throws Exception {
         inTransport = new RestTransport();
         outTransport = new RestTransport();
         inAdapter = new RestAdapter();
         outAdapter = new RestAdapter();
         routeManager = new RouteManagerImpl();
+        routeManager.start();
     }
 
     @Test

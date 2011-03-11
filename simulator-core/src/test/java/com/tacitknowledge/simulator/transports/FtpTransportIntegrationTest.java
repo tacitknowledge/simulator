@@ -100,6 +100,7 @@ public class FtpTransportIntegrationTest extends CamelTestSupport
     protected RouteBuilder createRouteBuilder() throws Exception
     {
         routeManager = new RouteManagerImpl();
+        routeManager.start();
         return routeManager;
     }
 

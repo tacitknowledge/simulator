@@ -125,7 +125,7 @@ public class RouteManagerTest extends SimulatorCamelTestSupportBase
         conversation1.addScenario("javascript", "true", "text");
         conversation1.addScenario("javascript", "true", "text");
     }
-
+    
     /**
      * Test for activating a route.
      *
@@ -234,6 +234,7 @@ public class RouteManagerTest extends SimulatorCamelTestSupportBase
     protected RouteBuilder createRouteBuilder() throws Exception
     {
         routeManager = new RouteManagerImpl();
+        routeManager.start();
         return routeManager;
     }
 
