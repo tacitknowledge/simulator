@@ -14,12 +14,12 @@ import com.tacitknowledge.simulator.impl.ConversationScenarioImpl;
 
 public class ScenarioLoader
 {
-    private static final String SCRIPTING_LANGUAGE = "javascript";
-
     private static final int FLAGS = Pattern.CASE_INSENSITIVE | Pattern.DOTALL | Pattern.MULTILINE;
 
+    private static final int SCENARIO_SECTIONS_COUNT = 3;
+    
     private static final Pattern SCENARIO_REGEX = Pattern.compile(
-            "\\s*\\[when\\](.+)\\[execute\\](.+)", FLAGS);
+            "\\s*\\[language\\](.+)\\[when\\](.+)\\[execute\\](.+)", FLAGS);
 
     private ScenarioLoader()
     {}
@@ -49,17 +49,17 @@ public class ScenarioLoader
             }
 
             Matcher m = SCENARIO_REGEX.matcher(sb.toString());
-            if (!m.matches() || m.groupCount() != 2)
+            if (!m.matches() || m.groupCount() != SCENARIO_SECTIONS_COUNT)
             {
                 String msg = String.format("Unable to parse scenario from '%s'", fileName);
                 throw new ScenarioParsingException(msg);
             }
 
-            String condition = m.group(1).trim();
-            String execute = m.group(2).trim();
-
-            //TODO : replace hard-coded "JavaScript"
-            return new ConversationScenarioImpl(SCRIPTING_LANGUAGE, condition, execute);
+            String language = m.group(1).trim().toLowerCase();
+            String condition = m.group(2).trim();
+            String execute = m.group(3).trim();
+            
+            return new ConversationScenarioImpl(language, condition, execute);
         }
         finally
         {
