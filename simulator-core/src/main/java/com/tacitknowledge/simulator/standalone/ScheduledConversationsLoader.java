@@ -107,9 +107,9 @@ public class ScheduledConversationsLoader extends Thread {
         File resource = new File(
                 Configuration.getPropertyAsString(Configuration.SYSTEMS_DIRECTORY));
         
-        ConversationsLoader conversationLoader = new ConversationsLoader();
+        ConversationsLoader conversationsLoader = new ConversationsLoader();
         
-        List<Conversation> conversations = conversationLoader.loadConversations(resource.getAbsolutePath());
+        List<Conversation> conversations = conversationsLoader.loadConversations(resource.getAbsolutePath());
         for (Conversation conversation : conversations)
         {
             // TODO: refactor this
