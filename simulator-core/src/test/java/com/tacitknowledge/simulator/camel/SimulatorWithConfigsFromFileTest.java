@@ -38,7 +38,7 @@ public class SimulatorWithConfigsFromFileTest
     public void startSimulator() throws Exception
     {
         Resource resource = new ClassPathResource(
-                Configuration.getPropertyAsString(Configuration.SYSTEMS_DIRECTORY));
+                Configuration.getPropertyAsString(Configuration.SYSTEMS_DIRECTORY_NAME));
         List<Conversation> conversations = conversationsLoader.loadConversations(resource.getFile()
                 .getAbsolutePath());
 

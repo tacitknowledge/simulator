@@ -115,7 +115,7 @@ public class ScheduledConversationsLoader extends Thread
     public void loadConversations() throws Exception
     {
         //TODO deactivate previous activated conversation (reload functionality)
-        File resource = new File(Configuration.getPropertyAsString(Configuration.SYSTEMS_DIRECTORY));
+        File resource = new File(Configuration.getPropertyAsString(Configuration.SYSTEMS_DIRECTORY_NAME));
 
         List<Conversation> conversations = conversationsLoader.loadConversations(resource
                 .getAbsolutePath());
