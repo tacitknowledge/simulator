@@ -29,7 +29,7 @@ public class Configuration
     /**
      * Config file name.
      */
-    public static final String CONFIG_FILE_NAME = "config/config.properties";
+    public static final String CONFIG_FILE_NAME = "config.properties";
 
     /**
      * Close port property name.
