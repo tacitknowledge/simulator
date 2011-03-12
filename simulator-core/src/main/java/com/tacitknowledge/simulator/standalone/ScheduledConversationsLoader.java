@@ -83,9 +83,6 @@ public class ScheduledConversationsLoader extends Thread
     {
         while (!getToStop())
         {
-            // TODO
-            // reload conversations from files every
-            // conversationReadingFrequency milliseconds
             try
             {
                 loadConversations();
@@ -121,6 +118,11 @@ public class ScheduledConversationsLoader extends Thread
     public void loadConversations() throws Exception
     {
         File resource = new File(Configuration.getPropertyAsString(Configuration.SYSTEMS_DIRECTORY_NAME));
+        if (!resource.exists())
+        {
+            logger.error("Could not find systems directory. Stopping application");
+            System.exit(1);
+        }
 
         List<Conversation> conversations = conversationsLoader.loadConversations(resource
                 .getAbsolutePath());
