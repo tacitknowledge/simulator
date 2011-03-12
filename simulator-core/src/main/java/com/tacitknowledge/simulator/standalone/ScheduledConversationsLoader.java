@@ -1,18 +1,17 @@
 package com.tacitknowledge.simulator.standalone;
 
 import java.io.File;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tacitknowledge.simulator.Conversation;
+import com.tacitknowledge.simulator.ConversationManager;
 import com.tacitknowledge.simulator.RouteManager;
 import com.tacitknowledge.simulator.camel.RouteManagerImpl;
 import com.tacitknowledge.simulator.configuration.loaders.ConversationLoader;
 import com.tacitknowledge.simulator.configuration.loaders.ConversationsLoader;
 import com.tacitknowledge.simulator.configuration.loaders.ScenarioLoader;
+import com.tacitknowledge.simulator.impl.ConversationManagerImpl;
 import com.tacitknowledge.simulator.utils.Configuration;
 
 /**
@@ -44,6 +43,8 @@ public class ScheduledConversationsLoader extends Thread
 
     private ConversationsLoader conversationsLoader;
 
+    private ConversationManager conversationManager;
+
     /**
      * The constructor will load from config files all interested configs.
      */
@@ -53,6 +54,8 @@ public class ScheduledConversationsLoader extends Thread
         scenarioLoader = new ScenarioLoader();
         conversationLoader = new ConversationLoader(scenarioLoader);
         conversationsLoader = new ConversationsLoader(conversationLoader);
+
+        conversationManager = new ConversationManagerImpl(routeManager, conversationsLoader);
 
         startRouteManager();
     }
@@ -124,7 +127,9 @@ public class ScheduledConversationsLoader extends Thread
     public void loadConversations() throws Exception
     {
         String systemsDirectory = getSystemsDirectory();
+        
         File resource = new File(systemsDirectory);
+        
         if (!resource.exists())
         {
             logger.error("Could not find systems directory '" + systemsDirectory
@@ -132,14 +137,7 @@ public class ScheduledConversationsLoader extends Thread
             System.exit(1);
         }
 
-        Map<String, Conversation> conversations = conversationsLoader.loadConversations(resource
-                .getAbsolutePath());
-
-        for (Entry<String, Conversation> entry : conversations.entrySet())
-        {
-            Conversation conversation = entry.getValue();
-            routeManager.activate(conversation);
-        }
+        conversationManager.loadConversations(systemsDirectory);
     }
 
     private void startRouteManager()

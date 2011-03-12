@@ -4,13 +4,18 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.tacitknowledge.simulator.Conversation;
 import com.tacitknowledge.simulator.ConversationManager;
+import com.tacitknowledge.simulator.RouteManager;
 import com.tacitknowledge.simulator.configuration.EventDispatcher;
 import com.tacitknowledge.simulator.configuration.SimulatorEventListener;
+import com.tacitknowledge.simulator.configuration.loaders.ConversationsLoader;
 
 /**
  * Conversation manager implementation.
@@ -23,6 +28,31 @@ public class ConversationManagerImpl implements ConversationManager
      * Logger for this class.
      */
     private static Logger logger = LoggerFactory.getLogger(ConversationManagerImpl.class);
+
+    private RouteManager routeManager;
+
+    private ConversationsLoader conversationsLoader;
+
+    public ConversationManagerImpl(RouteManager routeManager,
+            ConversationsLoader conversationsLoader)
+    {
+        this.routeManager = routeManager;
+        this.conversationsLoader = conversationsLoader;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void loadConversations(String systemsDirectoryPath) throws Exception
+    {
+        Map<String, Conversation> conversations = conversationsLoader.loadConversations(systemsDirectoryPath);
+
+        for (Entry<String, Conversation> entry : conversations.entrySet())
+        {
+            Conversation conversation = entry.getValue();
+            routeManager.activate(conversation);
+        }
+    }
 
     /**
      * {@inheritDoc}

@@ -18,26 +18,25 @@ import com.tacitknowledge.simulator.configuration.SimulatorEventListener;
  */
 public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
 {
-    public static final String TEST_IMPL_1 =
-            "com.tacitknowledge.simulator.impl.ConversationManagerImplTest$TestEventListenerImpl1";
-    public static final String TEST_IMPL_2 =
-            "com.tacitknowledge.simulator.impl.ConversationManagerImplTest$TestEventListenerImpl2";
-    public static final String TEST_IMPL_3 =
-            "com.tacitknowledge.simulator.impl.ConversationManagerImplTest$TestEventListenerImpl3";
+    public static final String TEST_IMPL_1 = "com.tacitknowledge.simulator.impl.ConversationManagerImplTest$TestEventListenerImpl1";
 
+    public static final String TEST_IMPL_2 = "com.tacitknowledge.simulator.impl.ConversationManagerImplTest$TestEventListenerImpl2";
+
+    public static final String TEST_IMPL_3 = "com.tacitknowledge.simulator.impl.ConversationManagerImplTest$TestEventListenerImpl3";
 
     @Test
     public void testRegisterListeners()
     {
-        ConversationManager manager = new ConversationManagerImpl();
+        ConversationManager manager = new ConversationManagerImpl(null, null);
         manager.registerListeners(System.getProperty("user.dir") + "/src/test/resources/listeners");
-        List<SimulatorEventListener> listeners = EventDispatcher.getInstance().getSimulatorEventListeners();
+        List<SimulatorEventListener> listeners = EventDispatcher.getInstance()
+                .getSimulatorEventListeners();
         assertTrue(listeners.size() > 0);
         //need to do this since equals method could be different among implementations
         boolean impl1Found = false;
         boolean impl2Found = false;
         boolean impl3Found = false;
-        
+
         for (SimulatorEventListener listener : listeners)
         {
             String className = listener.getClass().getName();
@@ -65,25 +64,19 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
     {
 
         public TestEventListenerImpl1()
-        {
-        }
-
+        {}
 
         public void onNewMessage(Exchange exchange, Conversation conversation)
-        {
-        }
+        {}
 
         public void onMatchingScenario(Exchange exchange, Conversation conversation)
-        {
-        }
+        {}
 
         public void onResponseBuilt(Exchange exchange, Conversation conversation)
-        {
-        }
+        {}
 
         public void onResponseSent(Exchange exchange, Conversation conversation)
-        {
-        }
+        {}
     }
 
     /**
@@ -92,22 +85,17 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
     public static final class TestEventListenerImpl2 implements SimulatorEventListener
     {
 
-
         public void onNewMessage(Exchange exchange, Conversation conversation)
-        {
-        }
+        {}
 
         public void onMatchingScenario(Exchange exchange, Conversation conversation)
-        {
-        }
+        {}
 
         public void onResponseBuilt(Exchange exchange, Conversation conversation)
-        {
-        }
+        {}
 
         public void onResponseSent(Exchange exchange, Conversation conversation)
-        {
-        }
+        {}
     }
 
     /**
@@ -116,21 +104,16 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
     public static final class TestEventListenerImpl3 implements SimulatorEventListener
     {
 
-
         public void onNewMessage(Exchange exchange, Conversation conversation)
-        {
-        }
+        {}
 
         public void onMatchingScenario(Exchange exchange, Conversation conversation)
-        {
-        }
+        {}
 
         public void onResponseBuilt(Exchange exchange, Conversation conversation)
-        {
-        }
+        {}
 
         public void onResponseSent(Exchange exchange, Conversation conversation)
-        {
-        }
+        {}
     }
 }
