@@ -6,9 +6,7 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
 
-import com.sun.jersey.api.core.ClasspathResourceConfig;
 import com.tacitknowledge.simulator.standalone.StandAloneStopper;
 
 /**
