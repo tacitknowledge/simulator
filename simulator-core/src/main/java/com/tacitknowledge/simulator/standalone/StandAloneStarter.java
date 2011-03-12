@@ -5,8 +5,6 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tacitknowledge.simulator.utils.Configuration;
-
 /**
  * Entry point class for the application in standalone mode.
  * @author Oleg Ciobanu ociobanu@taciteknowledge.com
@@ -27,7 +25,6 @@ public class StandAloneStarter
     {
         try
         {
-
             // Initiate conversations scheduled
             // loader and close command waiter.
             ScheduledConversationsLoader loader = new ScheduledConversationsLoader();
