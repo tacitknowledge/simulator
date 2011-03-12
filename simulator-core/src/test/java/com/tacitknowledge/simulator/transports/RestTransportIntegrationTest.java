@@ -65,13 +65,13 @@ public class RestTransportIntegrationTest {
         String transformationScript = "obj1.response.body='<html><body>ID=89</body></html>';" +
                                       "obj1.response.statusCode='201';" +
                                       "obj1;";
-        conv.addScenario("javascript", criteriaScript, transformationScript);
+        conv.addScenario("file1.scn", "javascript", criteriaScript, transformationScript);
 
         String criteriaScript2       = "obj1.request.params.id=='90'";
         String transformationScript2 = "obj1.response.body='<html><body>ID=90</body></html>';" +
                                        "obj1.response.statusCode='200';" +
                                        "obj1;";
-        conv.addScenario("javascript", criteriaScript2, transformationScript2);
+        conv.addScenario("file2.scn", "javascript", criteriaScript2, transformationScript2);
 
 
 

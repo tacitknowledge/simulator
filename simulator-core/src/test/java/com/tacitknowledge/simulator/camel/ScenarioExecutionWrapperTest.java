@@ -42,7 +42,7 @@ public class ScenarioExecutionWrapperTest
     public void testWithoutScenarios() throws Exception
     {
         conversation = new ConversationImpl("Conversation1", null, null, new PlainTextAdapter(), new PlainTextAdapter());
-        conversation.addScenario("javascript", "true", "text");
+        conversation.addScenario("file.scn", "javascript", "true", "text");
 
         ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(conversation);
 
@@ -65,7 +65,7 @@ public class ScenarioExecutionWrapperTest
         String execution = "employees.employee[0].name='John12345';employees";
 
         conversation = new ConversationImpl("Conversation1", null, null, new XmlAdapter(), new XmlAdapter());
-        conversation.addScenario("javascript", criteria, execution);
+        conversation.addScenario("file.scn", "javascript", criteria, execution);
 
         ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(conversation);
 
@@ -93,9 +93,9 @@ public class ScenarioExecutionWrapperTest
         String criteria3 = "employees.employee[0].name=='Johnffff';";      //false
         String execution3 = "employees.employee[0].name='John12345';employees";
 
-        conversation.addScenario("javascript", criteria1, execution1);
-        conversation.addScenario("javascript", criteria2, execution2);
-        conversation.addScenario("javascript", criteria3, execution3);
+        conversation.addScenario("file1.scn", "javascript", criteria1, execution1);
+        conversation.addScenario("file2.scn", "javascript", criteria2, execution2);
+        conversation.addScenario("file3.scn", "javascript", criteria3, execution3);
 
         ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(conversation);
 
@@ -128,7 +128,7 @@ public class ScenarioExecutionWrapperTest
 
         conversation = new ConversationImpl("Conversation2", null, null, new XmlAdapter(), outAdapter);
 
-        conversation.addScenario("javascript", criteria2, execution2);
+        conversation.addScenario("file.scn", "javascript", criteria2, execution2);
 
         ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(conversation);
 
@@ -162,7 +162,7 @@ public class ScenarioExecutionWrapperTest
 
         conversation = new ConversationImpl("Conversation2", null, null, new XmlAdapter(), new XmlAdapter());
 
-        conversation.addScenario("ruby", "require 'java'\n$employees.employee[0].name == 'John';", "$employees.employee[0].name='John12345';" +
+        conversation.addScenario("file.scn", "ruby", "require 'java'\n$employees.employee[0].name == 'John';", "$employees.employee[0].name='John12345';" +
                 "$employees" );
 
         ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(conversation);
@@ -183,7 +183,7 @@ public class ScenarioExecutionWrapperTest
     {
         conversation = new ConversationImpl("Conversation2", null, null, new XmlAdapter(), new PlainTextAdapter());
 
-        conversation.addScenario("ruby", "require 'java'\n$employees.employee[0].name == 'John';",
+        conversation.addScenario("file.scn", "ruby", "require 'java'\n$employees.employee[0].name == 'John';",
             "$employees.employee[0].name='John12345'; return 'Success'");
 
         ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(conversation);
@@ -206,7 +206,7 @@ public class ScenarioExecutionWrapperTest
     {
         conversation = new ConversationImpl("Conversation2", null, null, new XmlAdapter(), new XmlAdapter());
 
-        conversation.addScenario("ruby", "require 'java'\n$employees.employee[0].name == 'John';",
+        conversation.addScenario("file.scn", "ruby", "require 'java'\n$employees.employee[0].name == 'John';",
             "$employees.employee[0].name='John12345';" +
                 "return {}");
 
@@ -231,7 +231,7 @@ public class ScenarioExecutionWrapperTest
 
         conversation = new ConversationImpl("Conversation2", null, null, new XmlAdapter(), outAdapter);
 
-        conversation.addScenario("ruby", "require 'java'\n$employees.employee[0].name == 'John';",
+        conversation.addScenario("file.scn", "ruby", "require 'java'\n$employees.employee[0].name == 'John';",
             "$employees.employee[0].name='John12345';" +
                 "return { :nilProperty => nil," +
                 ":numberProperty => 1234," +
@@ -274,7 +274,7 @@ public class ScenarioExecutionWrapperTest
 
         conversation = new ConversationImpl("Conversation2", null, null, new XmlAdapter(), new XmlAdapter());
 
-        conversation.addScenario("javascript", criteria, execution);
+        conversation.addScenario("file.scn", "javascript", criteria, execution);
 
         ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(conversation);
 

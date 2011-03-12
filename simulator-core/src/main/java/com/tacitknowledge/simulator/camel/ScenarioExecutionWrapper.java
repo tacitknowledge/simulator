@@ -57,7 +57,7 @@ public class ScenarioExecutionWrapper
 
         this.inAdapter = conv.getInboundAdapter();
         this.outAdapter = conv.getOutboundAdapter();
-        this.scenarios = conv.getScenarios();
+        this.scenarios = conv.getScenarios().values();
 
         if (this.inAdapter == null || this.outAdapter == null || this.scenarios == null)
         {

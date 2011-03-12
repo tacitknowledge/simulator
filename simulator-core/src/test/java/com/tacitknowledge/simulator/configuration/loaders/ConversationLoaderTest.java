@@ -27,7 +27,7 @@ public class ConversationLoaderTest
         Conversation conversation = conversationLoader.parseConversationFromPath(resource.getFile()
                 .getAbsolutePath());
 
-        Collection<ConversationScenario> scenarios = conversation.getScenarios();
+        Collection<ConversationScenario> scenarios = conversation.getScenarios().values();
 
         assertNotNull(scenarios);
         assertTrue(scenarios.size() == 3);

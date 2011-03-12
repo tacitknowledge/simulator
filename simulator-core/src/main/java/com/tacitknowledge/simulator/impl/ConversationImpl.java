@@ -1,9 +1,10 @@
 package com.tacitknowledge.simulator.impl;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,11 +91,11 @@ public class ConversationImpl implements Conversation
     /**
      * {@inheritDoc}
      */
-    public ConversationScenario addScenario(final String language, final String criteria,
-            final String transformation)
+    public ConversationScenario addScenario(final String scenarioConfigFilePath,
+            final String language, final String criteria, final String transformation)
     {
-        ConversationScenario scenario = new ConversationScenarioImpl(language, criteria,
-                transformation);
+        ConversationScenario scenario = new ConversationScenarioImpl(scenarioConfigFilePath,
+                language, criteria, transformation);
         scenarios.add(scenario);
 
         logger.info("Added new conversation scenario to the conversation located at : {}",
@@ -171,9 +172,16 @@ public class ConversationImpl implements Conversation
     /**
      * {@inheritDoc}
      */
-    public Collection<ConversationScenario> getScenarios()
+    public Map<String, ConversationScenario> getScenarios()
     {
-        return Collections.unmodifiableCollection(scenarios);
+        Map<String, ConversationScenario> map = new HashMap<String, ConversationScenario>();
+        
+        for (ConversationScenario scenario : scenarios)
+        {
+            map.put(scenario.getConfigurationFilePath(), scenario);
+        }
+        
+        return Collections.unmodifiableMap(map);
     }
 
     /**

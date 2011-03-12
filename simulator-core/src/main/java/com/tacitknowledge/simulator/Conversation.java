@@ -1,6 +1,6 @@
 package com.tacitknowledge.simulator;
 
-import java.util.Collection;
+import java.util.Map;
 
 /**
  * Defines the contract for the Conversation.
@@ -36,14 +36,15 @@ public interface Conversation
     /**
      * Adds a Scenario to this Conversation
      * 
+     * @param scenarioConfigFilePath scenario configuration file path
      * @param language       The scripting language to be used.
      *                      if scenario already exists - will be ignored???
      * @param criteria       criteria script to be executed by the simulator
      * @param transformation transformation script to be executed by the simulator
      * @return ConversationScenario conversation scenario added to the conversation
      */
-    ConversationScenario addScenario(final String language, final String criteria,
-            final String transformation);
+    ConversationScenario addScenario(final String scenarioConfigFilePath, final String language,
+            final String criteria, final String transformation);
 
     /**
      * Adds a Scenario to this conversation
@@ -85,5 +86,5 @@ public interface Conversation
      *
      * @return a list of ConversationScenarios
      */
-    Collection<ConversationScenario> getScenarios();
+    Map<String, ConversationScenario> getScenarios();
 }

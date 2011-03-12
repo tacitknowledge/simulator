@@ -11,14 +11,13 @@ import java.util.regex.Pattern;
 import com.tacitknowledge.simulator.ConversationScenario;
 import com.tacitknowledge.simulator.ScenarioParsingException;
 import com.tacitknowledge.simulator.impl.ConversationScenarioImpl;
-import com.tacitknowledge.simulator.utils.ConversationUtil;
 
 public class ScenarioLoader
 {
     private static final int FLAGS = Pattern.CASE_INSENSITIVE | Pattern.DOTALL | Pattern.MULTILINE;
 
     private static final int SCENARIO_SECTIONS_COUNT = 3;
-    
+
     private static final Pattern SCENARIO_REGEX = Pattern.compile(
             "\\s*\\[language\\](.+)\\[when\\](.+)\\[execute\\](.+)", FLAGS);
 
@@ -56,11 +55,10 @@ public class ScenarioLoader
             String language = m.group(1).trim().toLowerCase();
             String condition = m.group(2).trim();
             String execute = m.group(3).trim();
-            
-            ConversationScenario scenario = new ConversationScenarioImpl(language, condition, execute);
-            
-            scenario.setLastModifiedDate(ConversationUtil.getFileModifiedDate(fileName));
-            
+
+            ConversationScenario scenario = new ConversationScenarioImpl(fileName, language,
+                    condition, execute);
+
             return scenario;
         }
         finally

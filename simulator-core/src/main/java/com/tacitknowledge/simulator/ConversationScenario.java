@@ -54,8 +54,8 @@ public interface ConversationScenario
     long getLastModifiedDate();
     
     /**
-     * setter for lastModifiedDate field
+     * get scenario configuration file path
      * @param lastModifiedDate
      */
-    void setLastModifiedDate(long lastModifiedDate);
+    String getConfigurationFilePath();
 }

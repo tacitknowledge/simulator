@@ -81,7 +81,7 @@ public class FtpTransportIntegrationTest extends CamelTestSupport
     public void testSimple() throws Exception
     {
         Conversation conversation = new ConversationImpl("somepath", ftpTransport, out, new XmlAdapter(), new XmlAdapter());
-        conversation.addScenario("javascript", "true", "employees.employee[0].name='John12345';employees");
+        conversation.addScenario("file.scn", "javascript", "true", "employees.employee[0].name='John12345';employees");
         Assert.assertNotNull(conversation);
         routeManager.activate(conversation);
         Thread.sleep(10000);

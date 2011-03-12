@@ -37,7 +37,7 @@ public class ConversationsLoaderTest
         for (Entry<String, Conversation> entry : conversations.entrySet())
         {
             Conversation conversation = entry.getValue();
-            Collection<ConversationScenario> scenarios = conversation.getScenarios();
+            Collection<ConversationScenario> scenarios = conversation.getScenarios().values();
             assertNotNull(scenarios);
 
             for (ConversationScenario scenario : scenarios)

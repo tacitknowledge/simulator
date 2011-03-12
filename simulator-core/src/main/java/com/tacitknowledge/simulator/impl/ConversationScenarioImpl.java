@@ -6,6 +6,7 @@ import com.tacitknowledge.simulator.ConversationScenario;
 import com.tacitknowledge.simulator.SimulatorException;
 import com.tacitknowledge.simulator.scripting.ScriptException;
 import com.tacitknowledge.simulator.scripting.ScriptExecutionService;
+import com.tacitknowledge.simulator.utils.ConversationUtil;
 
 /**
  * A wrapper for Conversation Scenarios, containing all the information needed for its execution
@@ -38,11 +39,16 @@ public class ConversationScenarioImpl implements ConversationScenario
      * Script Execution service which will run the actual simulation on the data received *
      */
     private ScriptExecutionService execServ;
-    
+
     /**
      * last modified date of this scenario file
      */
     private long lastModifiedDate;
+
+    /**
+     * scenario configuration file path
+     */
+    private String configFilePath;
 
     /**
      * Constructor for the conversation scenario class
@@ -51,16 +57,19 @@ public class ConversationScenarioImpl implements ConversationScenario
      * @param criteriaScript       the criteria script to match
      * @param transformationScript the transformation script for the scenario.
      */
-    public ConversationScenarioImpl(final String scriptLanguage, final String criteriaScript,
-            final String transformationScript)
+    public ConversationScenarioImpl(final String configFilePath, final String scriptLanguage,
+            final String criteriaScript, final String transformationScript)
     {
         this.scriptLanguage = scriptLanguage;
         this.criteriaScript = criteriaScript;
         this.transformationScript = transformationScript;
 
         this.execServ = new ScriptExecutionService(scriptLanguage);
+
+        this.configFilePath = configFilePath;
+        this.lastModifiedDate = ConversationUtil.getFileModifiedDate(configFilePath);
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -68,15 +77,15 @@ public class ConversationScenarioImpl implements ConversationScenario
     {
         return this.lastModifiedDate;
     }
-    
+
     /**
      * {@inheritDoc}
      */
-    public void setLastModifiedDate(long lastModifiedDate)
+    public String getConfigurationFilePath()
     {
-        this.lastModifiedDate = lastModifiedDate;
+        return this.configFilePath;
     }
-    
+
     /**
      * {@inheritDoc}
      *
