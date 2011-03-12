@@ -9,11 +9,29 @@ import java.util.Collection;
  */
 public interface Conversation
 {
+    String SCENARIO_FILE_EXTENSION = ".scn";
+
+    String INBOUND_CONFIG = "inbound.properties";
+
+    String OUTBOUND_CONFIG = "outbound.properties";
+
     /**
      * returns the conversation ID
      * @return id
      */
     String getId();
+
+    /**
+     * returns last modified date of inbound.properties file
+     * @return long
+     */
+    long getIboundModifiedDate();
+
+    /**
+     * returns last modified date of outbound.properties file
+     * @return long
+     */
+    long getOutboundModifiedDate();
 
     /**
      * Adds a Scenario to this Conversation
@@ -26,7 +44,7 @@ public interface Conversation
      */
     ConversationScenario addScenario(final String language, final String criteria,
             final String transformation);
-    
+
     /**
      * Adds a Scenario to this conversation
      * 

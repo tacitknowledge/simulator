@@ -46,4 +46,16 @@ public interface ConversationScenario
      * @return The transformation script
      */
     String getTransformationScript();
+    
+    /**
+     * last modified date of scenario file
+     * @return long
+     */
+    long getLastModifiedDate();
+    
+    /**
+     * setter for lastModifiedDate field
+     * @param lastModifiedDate
+     */
+    void setLastModifiedDate(long lastModifiedDate);
 }

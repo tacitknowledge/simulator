@@ -38,6 +38,11 @@ public class ConversationScenarioImpl implements ConversationScenario
      * Script Execution service which will run the actual simulation on the data received *
      */
     private ScriptExecutionService execServ;
+    
+    /**
+     * last modified date of this scenario file
+     */
+    private long lastModifiedDate;
 
     /**
      * Constructor for the conversation scenario class
@@ -54,6 +59,22 @@ public class ConversationScenarioImpl implements ConversationScenario
         this.transformationScript = transformationScript;
 
         this.execServ = new ScriptExecutionService(scriptLanguage);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public long getLastModifiedDate()
+    {
+        return this.lastModifiedDate;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void setLastModifiedDate(long lastModifiedDate)
+    {
+        this.lastModifiedDate = lastModifiedDate;
     }
     
     /**

@@ -12,6 +12,7 @@ import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.Conversation;
 import com.tacitknowledge.simulator.ConversationScenario;
 import com.tacitknowledge.simulator.Transport;
+import com.tacitknowledge.simulator.utils.ConversationUtil;
 
 /**
  * The Simulator conversation as set up by the user. Works as a wrapper around Camel route
@@ -57,6 +58,16 @@ public class ConversationImpl implements Conversation
     private Adapter outboundAdapter;
 
     /**
+     * Last modified date of inbound.properties file
+     */
+    private long inboundModifiedDate;
+
+    /**
+     * Last modified date of outbound.properties file
+     */
+    private long outboundModifiedDate;
+
+    /**
      * List of configured scenarios for this conversation
      */
     private List<ConversationScenario> scenarios = new ArrayList<ConversationScenario>();
@@ -70,6 +81,10 @@ public class ConversationImpl implements Conversation
         this.outboundTransport = outboundTransport;
         this.inboundAdapter = inboundAdapter;
         this.outboundAdapter = outboundAdapter;
+        this.inboundModifiedDate = ConversationUtil.getFileModifiedDate(conversationPath,
+                Conversation.INBOUND_CONFIG);
+        this.outboundModifiedDate = ConversationUtil.getFileModifiedDate(conversationPath,
+                Conversation.OUTBOUND_CONFIG);
     }
 
     /**
@@ -86,7 +101,7 @@ public class ConversationImpl implements Conversation
                 this.conversationPath);
         return scenario;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -97,6 +112,25 @@ public class ConversationImpl implements Conversation
                 this.conversationPath);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public long getIboundModifiedDate()
+    {
+        return this.inboundModifiedDate;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public long getOutboundModifiedDate()
+    {
+        return this.outboundModifiedDate;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public String getId()
     {
         return conversationPath;

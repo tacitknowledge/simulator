@@ -24,12 +24,6 @@ import com.tacitknowledge.simulator.transports.TransportFactory;
 
 public class ConversationLoader
 {
-    private static final String SCENARIO_FILE_EXTENSION = ".scn";
-
-    private static final String INBOUND_CONFIG = "inbound.properties";
-
-    private static final String OUTBOUND_CONFIG = "outbound.properties";
-
     private static final String TYPE = "type";
 
     private static final String FORMAT = "format";
@@ -83,7 +77,7 @@ public class ConversationLoader
         {
             public boolean accept(File dir, String name)
             {
-                return name.endsWith(SCENARIO_FILE_EXTENSION);
+                return name.endsWith(Conversation.SCENARIO_FILE_EXTENSION);
             }
         });
 
@@ -105,7 +99,7 @@ public class ConversationLoader
 
     private Transport getTransport(int bound, String conversationDir) throws IOException
     {
-        String configFileName = bound == Configurable.BOUND_IN ? INBOUND_CONFIG : OUTBOUND_CONFIG;
+        String configFileName = bound == Configurable.BOUND_IN ? Conversation.INBOUND_CONFIG : Conversation.OUTBOUND_CONFIG;
 
         String configFilePath = new File(conversationDir, configFileName).getAbsolutePath();
 
@@ -125,7 +119,7 @@ public class ConversationLoader
 
     private Adapter getAdapter(int bound, String conversationDir) throws IOException
     {
-        String configFileName = bound == Configurable.BOUND_IN ? INBOUND_CONFIG : OUTBOUND_CONFIG;
+        String configFileName = bound == Configurable.BOUND_IN ? Conversation.INBOUND_CONFIG : Conversation.OUTBOUND_CONFIG;
 
         String configFilePath = new File(conversationDir, configFileName).getAbsolutePath();
 

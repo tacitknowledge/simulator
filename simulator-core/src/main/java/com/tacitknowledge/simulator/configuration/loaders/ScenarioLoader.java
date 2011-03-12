@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 import com.tacitknowledge.simulator.ConversationScenario;
 import com.tacitknowledge.simulator.ScenarioParsingException;
 import com.tacitknowledge.simulator.impl.ConversationScenarioImpl;
+import com.tacitknowledge.simulator.utils.ConversationUtil;
 
 public class ScenarioLoader
 {
@@ -56,7 +57,11 @@ public class ScenarioLoader
             String condition = m.group(2).trim();
             String execute = m.group(3).trim();
             
-            return new ConversationScenarioImpl(language, condition, execute);
+            ConversationScenario scenario = new ConversationScenarioImpl(language, condition, execute);
+            
+            scenario.setLastModifiedDate(ConversationUtil.getFileModifiedDate(fileName));
+            
+            return scenario;
         }
         finally
         {
