@@ -1,1 +1,0 @@
-java -classpath simulator-core\target\simulator-core\target\activeio-core-3.1.2.jar:simulator-core\target\log4j-1.2.14.jar:simulator-core\target\simulator-core.jar:simulator-core\target\slf4j-log4j12-1.5.6.jar:simulator-core\target\slf4j-api-1.5.6.jar:simulator-core\target\commons-logging-1.0.4.jar com.tacitknowledge.simulator.standalone.StandAloneStopper 
