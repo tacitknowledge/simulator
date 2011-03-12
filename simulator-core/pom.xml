@@ -130,7 +130,7 @@
 			<copy file="src/test/resources/scripts/startStandAloneApplication.bat" todir="target/simulator/bin/"/>
 			<copy file="src/test/resources/scripts/stopStandAloneApplication.sh" todir="target/simulator/bin/"/>
 			<copy file="src/test/resources/scripts/stopStandAloneApplication.bat" todir="target/simulator/bin/"/>
-			<copy file="src/test/resources/config/config.properties" todir="target/simulator/config/"/>
+			<copy file="src/test/resources/config.properties" todir="target/simulator/config/"/>
 			<copy file="target/simulator-core.jar" todir="target/simulator/lib"/>
 			<copy file="src/test/resources/log4j.properties" todir="target/simulator/config"/>
 		</tasks>
