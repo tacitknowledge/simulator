@@ -1,15 +1,14 @@
 package com.tacitknowledge.simulator.utils;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
-import java.util.ResourceBundle;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 
+import com.sun.jersey.api.core.ClasspathResourceConfig;
 import com.tacitknowledge.simulator.standalone.StandAloneStopper;
 
 /**
@@ -32,7 +31,7 @@ public class Configuration
     /**
      * Config file name.
      */
-    public static final String CONFIG_FILE_NAME = "../config/config.properties";
+    public static final String CONFIG_FILE_NAME = "config/config.properties";
 
     /**
      * Close port property name.
@@ -62,7 +61,7 @@ public class Configuration
     /**
      * default systems directory property name
      */
-    public static final String DEFAULT_SYSTEMS_DIRECTORY = "../systems/";
+    public static final String DEFAULT_SYSTEMS_DIRECTORY = "systems";
 
     /**
      * Default conversation reading frequency.
@@ -91,35 +90,19 @@ public class Configuration
      * @param configurationFileName - file name containing configurations.
      * @return ResourceBundle - containing configurations
      */
-    private static Properties loadConfigurationFile(String configurationFileName)
+    private static void loadConfigurationFile()
     {
-        Properties properties = new Properties();
+        configurationProperties = new Properties();
         try
         {
-            properties.load(new FileInputStream(configurationFileName));
-        }
-        catch (FileNotFoundException e)
-        {
-            logger.error(e.getMessage());
+            configurationProperties.load(new ClassPathResource(Configuration.CONFIG_FILE_NAME).getInputStream());
         }
         catch (IOException e)
         {
             logger.error(e.getMessage());
         }
-        return properties;
     }
-
-    /**
-     * Load configured properties.
-     */
-    private static void loadConfigurationFile()
-    {
-        if (configurationProperties == null)
-        {
-            configurationProperties = loadConfigurationFile(path + CONFIG_FILE_NAME);
-        }
-    }
-
+    
     /**
      * Fetch property value as String.
      * @param propertyName - configured property name

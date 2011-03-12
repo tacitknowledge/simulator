@@ -1,7 +1,6 @@
 package com.tacitknowledge.simulator.standalone;
 
 import java.io.IOException;
-import java.net.URL;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,10 +27,6 @@ public class StandAloneStarter
     {
         try
         {
-            if (args != null && args.length > 2)
-            {
-                Configuration.path = args[1];
-            }
 
             // Initiate conversations scheduled
             // loader and close command waiter.
