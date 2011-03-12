@@ -126,11 +126,11 @@
 			<mkdir dir="target/simulator/config"/>
 			<mkdir dir="target/simulator/systems"/>
 			<mkdir dir="target/simulator/log"/>
-			<copy file="../startStandAloneApplication.sh" todir="target/simulator/bin/"/>
-			<copy file="../startStandAloneApplication.bat" todir="target/simulator/bin/"/>
-			<copy file="../stopStandAloneApplication.sh" todir="target/simulator/bin/"/>
-			<copy file="../stopStandAloneApplication.bat" todir="target/simulator/bin/"/>
-			<copy file="../config/config.properties" todir="target/simulator/config/"/>
+			<copy file="src/test/resources/scripts/startStandAloneApplication.sh" todir="target/simulator/bin/"/>
+			<copy file="src/test/resources/scripts/startStandAloneApplication.bat" todir="target/simulator/bin/"/>
+			<copy file="src/test/resources/scripts/stopStandAloneApplication.sh" todir="target/simulator/bin/"/>
+			<copy file="src/test/resources/scripts/stopStandAloneApplication.bat" todir="target/simulator/bin/"/>
+			<copy file="src/test/resources/config/config.properties" todir="target/simulator/config/"/>
 			<copy file="target/simulator-core.jar" todir="target/simulator/lib"/>
 			
 		</tasks>
