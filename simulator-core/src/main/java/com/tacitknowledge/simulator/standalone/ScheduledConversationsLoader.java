@@ -52,7 +52,7 @@ public class ScheduledConversationsLoader extends Thread
         scenarioLoader = new ScenarioLoader();
         conversationLoader = new ConversationLoader(scenarioLoader);
         conversationsLoader = new ConversationsLoader(conversationLoader);
-        
+
         startRouteManager();
     }
 
@@ -107,32 +107,39 @@ public class ScheduledConversationsLoader extends Thread
                 }
             }
         }
-        
+
         stopRouteManager();
     }
-    
+
+    protected String getSystemsDirectory()
+    {
+        return Configuration.getPropertyAsString(Configuration.SYSTEMS_DIRECTORY_NAME);
+    }
+
     /**
      * Load conversations from the file system.
      * @throws Exception
      */
     public void loadConversations() throws Exception
     {
-        File resource = new File(Configuration.getPropertyAsString(Configuration.SYSTEMS_DIRECTORY_NAME));
+        String systemsDirectory = getSystemsDirectory();
+        File resource = new File(systemsDirectory);
         if (!resource.exists())
         {
-            logger.error("Could not find systems directory. Stopping application");
+            logger.error("Could not find systems directory '" + systemsDirectory
+                    + "'. Stopping application");
             System.exit(1);
         }
 
         List<Conversation> conversations = conversationsLoader.loadConversations(resource
                 .getAbsolutePath());
-        
+
         for (Conversation conversation : conversations)
         {
             routeManager.activate(conversation);
         }
     }
-    
+
     private void startRouteManager()
     {
         try
@@ -145,7 +152,7 @@ public class ScheduledConversationsLoader extends Thread
             throw new RuntimeException("Route manager could not be started.");
         }
     }
-    
+
     private void stopRouteManager()
     {
         try

@@ -5,12 +5,15 @@ import java.io.IOException;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 /** Test that a close command is detected on the close port
  *  and this is detected by ConversationsScheduledLoader.
  * @author Oleg Ciobanu ociobanu@tacitknowledge.com
  */
-public class StandAloneTest {
+public class StandAloneTest
+{
     /**
      * Number of milliseconds to wait for close command propagation.
      */
@@ -20,11 +23,29 @@ public class StandAloneTest {
      * Test close command propagation.
      */
     @Test
-    public void test() {
-        try {
+    public void test()
+    {
+        try
+        {
             // initialize the "conversations scheduled loader"
-            ScheduledConversationsLoader loader =
-                new ScheduledConversationsLoader();
+            ScheduledConversationsLoader loader = new ScheduledConversationsLoader()
+            {
+                @Override
+                protected String getSystemsDirectory()
+                {
+                    try
+                    {
+                        Resource resource = new ClassPathResource("systems");
+                        return resource.getFile().getAbsolutePath();
+                    }
+                    catch (IOException ex)
+                    {
+                        Assert.fail("Could not find systems directory");
+                        return null;
+                    }
+                }
+            };
+
             // initialize a close command waiter.
             CloseCommandWaiter closeWaiter = new CloseCommandWaiter();
 
@@ -37,15 +58,20 @@ public class StandAloneTest {
             // send close command
             StandAloneStopper stoper = new StandAloneStopper();
             stoper.sendCloseCommand();
-            try {
+            try
+            {
                 // wait the close command propagation through socket.
                 Thread.sleep(MILLISECONDS_TO_WAIT_10000);
-            } catch (InterruptedException e) {
+            }
+            catch (InterruptedException e)
+            {
                 Assert.fail(e.getMessage());
             }
             // assert the close command was detected.
             Assert.assertEquals(Boolean.TRUE, loader.getToStop());
-        } catch (IOException e) {
+        }
+        catch (IOException e)
+        {
             Assert.fail(e.getMessage());
         }
     }
