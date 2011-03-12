@@ -3,8 +3,8 @@ package com.tacitknowledge.simulator.configuration.loaders;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,25 +19,25 @@ public class ConversationsLoader
      * Logger for the ConversationsLoader class.
      */
     private static Logger logger = LoggerFactory.getLogger(ConversationsLoader.class);
-    
+
     private ConversationLoader conversationLoader;
-    
+
     public ConversationsLoader(ConversationLoader conversationLoader)
     {
         this.conversationLoader = conversationLoader;
     }
-    
+
     /**
      * Iterates through systems and each system conversations and returns a list of parsed
      * conversations (which contains scenarios)
      * 
      * @param systemsPath - system path (usually /systems)
-     * @return
+     * @return a map with (path,conversation) 
      * @throws IOException
      */
-    public List<Conversation> loadConversations(String systemsPath) throws IOException
+    public Map<String, Conversation> loadConversations(String systemsPath) throws IOException
     {
-        List<Conversation> conversations = new ArrayList<Conversation>();
+        Map<String, Conversation> conversations = new HashMap<String, Conversation>();
 
         Resource resource = new FileSystemResource(systemsPath);
 
@@ -53,11 +53,11 @@ public class ConversationsLoader
             {
                 try
                 {
-                    Conversation conversation = conversationLoader
-                            .parseConversationFromPath(conversationDir.getAbsolutePath());
+                    String path = conversationDir.getAbsolutePath();
+                    Conversation conversation = conversationLoader.parseConversationFromPath(path);
                     if (conversation != null)
                     {
-                        conversations.add(conversation);
+                        conversations.put(path, conversation);
                     }
                 }
                 catch (IOException ex)

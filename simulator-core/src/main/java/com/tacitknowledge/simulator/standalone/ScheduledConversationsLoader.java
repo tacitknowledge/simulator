@@ -1,7 +1,8 @@
 package com.tacitknowledge.simulator.standalone;
 
 import java.io.File;
-import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -131,11 +132,12 @@ public class ScheduledConversationsLoader extends Thread
             System.exit(1);
         }
 
-        List<Conversation> conversations = conversationsLoader.loadConversations(resource
+        Map<String, Conversation> conversations = conversationsLoader.loadConversations(resource
                 .getAbsolutePath());
 
-        for (Conversation conversation : conversations)
+        for (Entry<String, Conversation> entry : conversations.entrySet())
         {
+            Conversation conversation = entry.getValue();
             routeManager.activate(conversation);
         }
     }

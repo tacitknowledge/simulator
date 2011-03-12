@@ -5,7 +5,8 @@ import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
@@ -21,20 +22,21 @@ public class ConversationsLoaderTest
     public void loadAllConversations() throws IOException
     {
         Resource resource = new ClassPathResource("systems");
-        
+
         ScenarioLoader scenarioLoader = new ScenarioLoader();
         ConversationLoader conversationLoader = new ConversationLoader(scenarioLoader);
         ConversationsLoader conversationsLoader = new ConversationsLoader(conversationLoader);
-        
-        List<Conversation> conversations = conversationsLoader.loadConversations(resource.getFile()
-                .getAbsolutePath());
+
+        Map<String, Conversation> conversations = conversationsLoader.loadConversations(resource
+                .getFile().getAbsolutePath());
 
         assertNotNull(conversations);
 
         assertFalse(conversations.isEmpty());
 
-        for (Conversation conversation : conversations)
+        for (Entry<String, Conversation> entry : conversations.entrySet())
         {
+            Conversation conversation = entry.getValue();
             Collection<ConversationScenario> scenarios = conversation.getScenarios();
             assertNotNull(scenarios);
 
