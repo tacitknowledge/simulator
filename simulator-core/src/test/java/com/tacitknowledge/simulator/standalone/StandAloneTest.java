@@ -14,7 +14,7 @@ public class StandAloneTest {
     /**
      * Number of milliseconds to wait for close command propagation.
      */
-    private static final int MILLISECONDS_TO_WAIT_500 = 500;
+    private static final int MILLISECONDS_TO_WAIT_10000 = 1000;
 
     /**
      * Test close command propagation.
@@ -39,7 +39,7 @@ public class StandAloneTest {
             stoper.sendCloseCommand();
             try {
                 // wait the close command propagation through socket.
-                Thread.sleep(MILLISECONDS_TO_WAIT_500);
+                Thread.sleep(MILLISECONDS_TO_WAIT_10000);
             } catch (InterruptedException e) {
                 Assert.fail(e.getMessage());
             }
