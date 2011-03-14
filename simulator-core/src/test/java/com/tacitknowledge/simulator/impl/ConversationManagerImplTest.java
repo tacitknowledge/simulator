@@ -1,7 +1,12 @@
 package com.tacitknowledge.simulator.impl;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.camel.Exchange;
 import org.junit.Assert;
@@ -10,11 +15,13 @@ import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 
+import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.Conversation;
 import com.tacitknowledge.simulator.ConversationManager;
 import com.tacitknowledge.simulator.ConversationScenario;
 import com.tacitknowledge.simulator.ScenarioParsingException;
 import com.tacitknowledge.simulator.SimulatorCamelTestSupportBase;
+import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.configuration.EventDispatcher;
 import com.tacitknowledge.simulator.configuration.SimulatorEventListener;
 import com.tacitknowledge.simulator.configuration.loaders.ConversationLoader;
@@ -224,7 +231,9 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         Assert.assertTrue(conversationManager.hasDifferencesInConfiguration(conversation1,
                 conversation2));
     }
-
+    /**
+     * Check detection of scenarios addition
+     */
     @Test
     public void testHasDifferencesInConfigurationForDiferentConversationsSize()
     {
@@ -254,4 +263,133 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         Assert.assertTrue(conversationManager.hasDifferencesInConfiguration(conversation1,
                 conversation2));
     }
+    /**
+     * Check detection of the same number of scenarios with ids.
+     */
+    @Test
+    public void testHasDifferencesInConfigurationForDiferentConversationScenarios()
+    {
+        ConversationLoader conversationLoader = new ConversationLoader(new ScenarioLoader());
+
+        Conversation conversation1 = null;
+        Conversation conversation2 = null;
+
+        try
+        {
+            conversation1 = new ConversationImpl1(conversationLoader.parseConversationFromPath(folderPath));
+            conversation2 = new ConversationImpl2(conversationLoader.parseConversationFromPath(folderPath));
+        }
+        catch (IOException e)
+        {
+            fail(e.getMessage());
+        }
+
+        Assert.assertTrue(conversationManager.hasDifferencesInConfiguration(conversation1,
+                conversation2));
+    }
+    
+    /**
+     * This class overrides the getScenarios() method of the superior class.
+     * @author Oleg Ciobanu (ociobanu@tacitknowledge.com)
+     *
+     */
+    static class ConversationImpl1 extends ConversationImpl{
+        Conversation conversation;
+        
+        public ConversationImpl1(Conversation conversation)
+        {
+            super(null, null, null, null, null);
+            this.conversation = conversation;
+        }
+        
+        public ConversationImpl1(final String conversationPath, final Transport inboundTransport,
+                final Transport outboundTransport, final Adapter inboundAdapter,
+                final Adapter outboundAdapter)
+        {
+            super(conversationPath, inboundTransport, outboundTransport, inboundAdapter, outboundAdapter);
+        }
+        
+        public long getIboundModifiedDate()
+        {
+            return conversation.getIboundModifiedDate(); 
+        }
+        
+        public long getOutboundModifiedDate(){
+            return conversation.getOutboundModifiedDate();
+        }
+        /**
+         * This method will return all scenarios without the last one.
+         */
+        public Map<String, ConversationScenario> getScenarios(){
+            Map<String, ConversationScenario> localeScenarios = new HashMap<String, ConversationScenario>();
+            Iterator<Entry<String, ConversationScenario>> scenariosIterator = conversation.getScenarios().entrySet().iterator();
+            int count = 0;
+            while(scenariosIterator.hasNext()){
+                if (count==0) {
+                    scenariosIterator.next();
+                    ++count;
+                    continue;
+                } else {
+                    Entry<String, ConversationScenario> entry = scenariosIterator.next();
+                    localeScenarios.put(entry.getKey(), entry.getValue());
+                    ++count;
+                }
+            }
+            return localeScenarios;
+        }
+    }
+    /**
+     * This class overrides the getScenarios() method of the superior class.
+     * @author Oleg Ciobanu ociobanu@tacitknowledge.com
+     *
+     */
+    static class ConversationImpl2 extends ConversationImpl{
+        Conversation conversation;
+        
+        public ConversationImpl2(Conversation conversation)
+        {
+            super(null, null, null, null, null);
+            this.conversation = conversation;
+        }
+        
+        public ConversationImpl2(final String conversationPath, final Transport inboundTransport,
+                final Transport outboundTransport, final Adapter inboundAdapter,
+                final Adapter outboundAdapter)
+        {
+            super(conversationPath, inboundTransport, outboundTransport, inboundAdapter, outboundAdapter);
+        }
+        
+        public long getIboundModifiedDate()
+        {
+            return conversation.getIboundModifiedDate(); 
+        }
+        
+        public long getOutboundModifiedDate(){
+            return conversation.getOutboundModifiedDate();
+        }
+        /**
+         * This method will return all scenarios without the last.
+         */
+        public Map<String, ConversationScenario> getScenarios(){
+            Map<String, ConversationScenario> localeScenarios = new HashMap<String, ConversationScenario>();
+            Iterator<Entry<String, ConversationScenario>> scenariosIterator = conversation.getScenarios().entrySet().iterator();
+            int count = 0;
+            while(scenariosIterator.hasNext()){
+                if (count==(conversation.getScenarios().size()-1)) {
+                    scenariosIterator.next();
+                    ++count;
+                    continue;
+                } else {
+                    Entry<String, ConversationScenario> entry = scenariosIterator.next();
+                    localeScenarios.put(entry.getKey(), entry.getValue());
+                    ++count;
+                }
+            }
+            return localeScenarios;
+        }
+    }
 }
+
+
+
+
