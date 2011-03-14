@@ -264,7 +264,7 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
                 conversation2));
     }
     /**
-     * Check detection of the same number of scenarios with ids.
+     * Check detection of the same number of scenarios with different ids.
      */
     @Test
     public void testHasDifferencesInConfigurationForDiferentConversationScenarios()
@@ -278,6 +278,31 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         {
             conversation1 = new ConversationImpl1(conversationLoader.parseConversationFromPath(folderPath));
             conversation2 = new ConversationImpl2(conversationLoader.parseConversationFromPath(folderPath));
+        }
+        catch (IOException e)
+        {
+            fail(e.getMessage());
+        }
+
+        Assert.assertTrue(conversationManager.hasDifferencesInConfiguration(conversation1,
+                conversation2));
+    }
+    
+    /**
+     * Check detection of the same number of scenarios with different lastModifiedDate.
+     */
+    @Test
+    public void testHasDifferencesInConfigurationForScenariosWithDifferentLastModifiedDate()
+    {
+        ConversationLoader conversationLoader = new ConversationLoader(new ScenarioLoader());
+
+        Conversation conversation1 = null;
+        Conversation conversation2 = null;
+
+        try
+        {
+            conversation1 = conversationLoader.parseConversationFromPath(folderPath);
+            conversation2 = new ConversationImpl3(conversationLoader.parseConversationFromPath(folderPath));
         }
         catch (IOException e)
         {
@@ -318,7 +343,7 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
             return conversation.getOutboundModifiedDate();
         }
         /**
-         * This method will return all scenarios without the last one.
+         * This method will return all scenarios without the first one.
          */
         public Map<String, ConversationScenario> getScenarios(){
             Map<String, ConversationScenario> localeScenarios = new HashMap<String, ConversationScenario>();
@@ -386,6 +411,79 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
                 }
             }
             return localeScenarios;
+        }
+    }
+    /**
+     * This class overrides the getScenarios() method of the superior class.
+     * @author Oleg Ciobanu ociobanu@tacitknowledge.com
+     *
+     */
+    static class ConversationImpl3 extends ConversationImpl{
+        Conversation conversation;
+        
+        public ConversationImpl3(Conversation conversation)
+        {
+            super(null, null, null, null, null);
+            this.conversation = conversation;
+        }
+        
+        public ConversationImpl3(final String conversationPath, final Transport inboundTransport,
+                final Transport outboundTransport, final Adapter inboundAdapter,
+                final Adapter outboundAdapter)
+        {
+            super(conversationPath, inboundTransport, outboundTransport, inboundAdapter, outboundAdapter);
+        }
+        
+        public long getIboundModifiedDate()
+        {
+            return conversation.getIboundModifiedDate(); 
+        }
+        
+        public long getOutboundModifiedDate(){
+            return conversation.getOutboundModifiedDate();
+        }
+        /**
+         * This method will return all scenarios without the last.
+         */
+        public Map<String, ConversationScenario> getScenarios(){
+            Map<String, ConversationScenario> localeScenarios = new HashMap<String, ConversationScenario>();
+            Iterator<Entry<String, ConversationScenario>> scenariosIterator = conversation.getScenarios().entrySet().iterator();
+            int count = 0;
+            while(scenariosIterator.hasNext()){
+                if (count==(conversation.getScenarios().size()-1)) {
+                    ConversationScenario scenario = scenariosIterator.next().getValue();
+                    ConversationScenario newScenario = new ConversationScenarioImplDateModifier(scenario);
+                    localeScenarios.put(scenario.getConfigurationFilePath(), newScenario);
+                    ++count;
+                    continue;
+                } else {
+                    Entry<String, ConversationScenario> entry = scenariosIterator.next();
+                    localeScenarios.put(entry.getKey(), entry.getValue());
+                    ++count;
+                }
+            }
+            return localeScenarios;
+        }
+    }
+    /**
+     * Adapter class for ConversationScenarioImpl that will override getLatModifiedDate().
+     * @author ociobanu
+     *
+     */
+    static class ConversationScenarioImplDateModifier extends ConversationScenarioImpl{
+        ConversationScenario scenario;
+        public ConversationScenarioImplDateModifier(ConversationScenario scenario){
+            super(scenario.getConfigurationFilePath(), scenario.getScriptLanguage(), scenario.getCriteriaScript(), scenario.getTransformationScript());
+            this.scenario = scenario;
+        }
+        /**
+         * This method should return a wrong last modified date
+         */
+        @Override
+        public long getLastModifiedDate()
+        {
+            // TODO Auto-generated method stub
+            return scenario.getLastModifiedDate()+100l;
         }
     }
 }
