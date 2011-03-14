@@ -51,7 +51,7 @@ public class ConversationManagerImpl implements ConversationManager
         Map<String, Conversation> conversations = conversationsLoader
                 .loadConversations(systemsDirectoryPath);
 
-        // If this 1st call - just load/activate all conversations
+        // the first time conversations are just loaded/activated.
         if (activeConversations == null || activeConversations.isEmpty())
         {
             logger.debug("1st call of conversations load. Enabling all of them ...");
@@ -62,9 +62,10 @@ public class ConversationManagerImpl implements ConversationManager
 
         boolean hasChanges = false;
 
-        // Verify each existing active conversations if it's needed to reload
+        // Verify each existing active conversation if it's needed to reload/reactivate or delete
         for (Conversation activeConversation : activeConversations.values())
         {
+            // check if this conversation was deleted.
             if (!conversations.containsKey(activeConversation.getId()))
             {
                 // This active conversation doesn't exist anymore (was removed)
@@ -88,16 +89,16 @@ public class ConversationManagerImpl implements ConversationManager
                 hasChanges = true;
             }
         }
-
+        // every new conversation should be activated
         for (Conversation newConversation : conversations.values())
         {
+            // check if it is a new conversation.
             if (!activeConversations.containsKey(newConversation))
             {
                 // This is a new conversation. Activate it!
-
                 logger.info(String.format("Detected new conversation '%s'. Activating it ...",
                         newConversation.getId()));
-
+                
                 routeManager.activate(newConversation);
                 hasChanges = true;
             }
@@ -129,7 +130,7 @@ public class ConversationManagerImpl implements ConversationManager
      * @param conv2 conversation
      * @return
      */
-    private boolean hasDifferencesInConfiguration(Conversation conv1, Conversation conv2)
+    protected boolean hasDifferencesInConfiguration(Conversation conv1, Conversation conv2)
     {
         if (conv1.getIboundModifiedDate() != conv2.getIboundModifiedDate())
         {
