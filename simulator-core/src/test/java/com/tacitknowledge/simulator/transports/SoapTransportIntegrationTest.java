@@ -58,7 +58,7 @@ public class SoapTransportIntegrationTest {
     public void setup() throws Exception
     {
         inTransport = new SoapTransport();
-        outTransport = new SoapTransport();
+        outTransport = new MockOutTransport();
         inAdapter = new SoapAdapter();
         outAdapter = new SoapAdapter();
         routeManager = new RouteManagerImpl();

@@ -29,7 +29,7 @@ public class SimulatorCamelTestSupportBase extends CamelTestSupport
     @Produce(uri = "direct:start")
     protected ProducerTemplate template;
 
-    protected RouteManagerImpl routeManager = new RouteManagerImpl();
+    protected RouteManagerImpl routeManager;
 
     protected Transport inTransport = new MockInTransport();
     protected Transport outTransport = new MockOutTransport();
@@ -46,6 +46,7 @@ public class SimulatorCamelTestSupportBase extends CamelTestSupport
     protected RouteBuilder createRouteBuilder() throws Exception
     {
         routeManager = new RouteManagerImpl();
+        routeManager.start();
         return routeManager;
     }
 
@@ -57,10 +58,7 @@ public class SimulatorCamelTestSupportBase extends CamelTestSupport
      */
     protected void sendMessage(String expectedBody) throws InterruptedException
     {
-        String body = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><matched/>";
-
         resultEndpoint.expectedBodiesReceived(expectedBody);
-
-        template.sendBody(body);
+        template.sendBody(expectedBody);
     }
 }

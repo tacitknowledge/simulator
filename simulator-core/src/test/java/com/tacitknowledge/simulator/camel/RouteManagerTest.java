@@ -2,12 +2,13 @@ package com.tacitknowledge.simulator.camel;
 
 import java.util.Map;
 
-import org.apache.camel.builder.RouteBuilder;
 import org.junit.Test;
 
+import com.tacitknowledge.simulator.ConfigurableException;
 import com.tacitknowledge.simulator.Conversation;
 import com.tacitknowledge.simulator.SimulatorCamelTestSupportBase;
 import com.tacitknowledge.simulator.Transport;
+import com.tacitknowledge.simulator.TransportException;
 import com.tacitknowledge.simulator.formats.PlainTextAdapter;
 import com.tacitknowledge.simulator.impl.ConversationFactory;
 
@@ -24,108 +25,33 @@ public class RouteManagerTest extends SimulatorCamelTestSupportBase
      */
     private static final int TIMEOUT = 500;
 
+    /**
+     * A transport to use in tests
+     */
+    private final Transport outTransport1 = new MockTransport("mock", "mock:result1");
 
     /**
      * A transport to use in tests
      */
-    private final Transport outTransport1 = new Transport()
-    {
-
-        public String getType()
-        {
-            return "file";
-        }
-
-        public String toUriString()
-        {
-            return "mock:result1";
-        }
-
-        public void setParameters(Map<String, String> parameters)
-        {
-
-        }
-
+    private final Transport inTransport1 = new MockTransport("mock", "direct:start1");
         /**
-         * @param bound      Configurable bound
-         * @param parameters Configurable parameter values
-         */
-        public void setBoundAndParameters(int bound, Map<String, String> parameters)
-        {
-
-        }
-
-        /**
-         * @return The bounding (IN or OUT) of the configurable instance
-         */
-        public int getBound()
-        {
-            return 0;
-        }
-    };
-
-    /**
-     * A transport to use in tests
+     * Conversation to be used in tests
      */
-    private final Transport inTransport1 = new Transport()
-    {
-
-        public String getType()
-        {
-            return "Mock In Transport1";
-        }
-
-        public String toUriString()
-        {
-            return "direct:start1";
-        }
-
-        public void setParameters(Map<String, String> parameters)
-        {
-
-        }
-
-        /**
-         * @param bound      Configurable bound
-         * @param parameters Configurable parameter values
-         */
-        public void setBoundAndParameters(int bound, Map<String, String> parameters)
-        {
-
-        }
-
-        /**
-         * @return The bounding (IN or OUT) of the configurable instance
-         */
-        public int getBound()
-        {
-            return 0;
-        }
-    };
-
+    private final Conversation conversation1 = ConversationFactory.createConversation(
+            "conversation1", inTransport, outTransport, new PlainTextAdapter(),
+            new PlainTextAdapter());
 
     /**
      * Conversation to be used in tests
      */
-    private final Conversation conversation1 = ConversationFactory.createConversation("conversation1", 
-                                                                                      inTransport, 
-                                                                                      outTransport, 
-                                                                                      new PlainTextAdapter(), 
-                                                                                      new PlainTextAdapter());
-
-    /**
-     * Conversation to be used in tests
-     */
-    private final Conversation conversation2 = ConversationFactory.createConversation("conversation2", 
-                                                                                      inTransport1,
-                                                                                      outTransport1, 
-                                                                                      new PlainTextAdapter(), 
-                                                                                      new PlainTextAdapter());
+    private final Conversation conversation2 = ConversationFactory.createConversation(
+            "conversation2", inTransport1, outTransport1, new PlainTextAdapter(),
+            new PlainTextAdapter());
     {
         conversation1.addScenario("file.scn", "javascript", "true", "text");
         conversation1.addScenario("file.scn", "javascript", "true", "text");
     }
-    
+
     /**
      * Test for activating a route.
      *
@@ -135,9 +61,7 @@ public class RouteManagerTest extends SimulatorCamelTestSupportBase
     public void testActivate() throws Exception
     {
         routeManager.activate(conversation1);
-
-        sendMessage();
-
+        sendMessage("<matched/>");
         resultEndpoint.assertIsSatisfied();
     }
 
@@ -151,13 +75,9 @@ public class RouteManagerTest extends SimulatorCamelTestSupportBase
     public void testTwoCallsToActivateWithTheSameConversation() throws Exception
     {
         routeManager.activate(conversation1);
-
         routeManager.activate(conversation1);
-
-        sendMessage();
-
+        sendMessage("<matched/>");
         resultEndpoint.assertIsSatisfied();
-
         assertCollectionSize(routeManager.getContext().getRoutes(), 1);
     }
 
@@ -170,21 +90,10 @@ public class RouteManagerTest extends SimulatorCamelTestSupportBase
     public void testActivateDeactivateActivateAgain() throws Exception
     {
         routeManager.activate(conversation1);
-
         routeManager.deactivate(conversation1);
-
-        resultEndpoint.setResultWaitTime(TIMEOUT);
-
-        sendMessage();
-
-        resultEndpoint.assertIsNotSatisfied();
-
         routeManager.activate(conversation1);
-
         resultEndpoint.setResultWaitTime(TIMEOUT);
-
-        sendMessage();
-
+        sendMessage("<matched/>");
         resultEndpoint.assertIsSatisfied();
     }
 
@@ -198,9 +107,7 @@ public class RouteManagerTest extends SimulatorCamelTestSupportBase
     public void testTwoCallsToActivateWithDifferentConversations() throws Exception
     {
         routeManager.activate(conversation1);
-
         routeManager.activate(conversation2);
-
         assertCollectionSize(routeManager.getRouteCollection().getRoutes(), 2);
     }
 
@@ -213,42 +120,40 @@ public class RouteManagerTest extends SimulatorCamelTestSupportBase
     public void testDeactivate() throws Exception
     {
         routeManager.activate(conversation1);
-
         routeManager.deactivate(conversation1);
-
-        resultEndpoint.setResultWaitTime(TIMEOUT);
-
-        sendMessage();
-
-        resultEndpoint.assertIsNotSatisfied();
+        assertCollectionSize(routeManager.getContext().getRoutes(), 0);
     }
 
-    /**
-     * Overriding the route builder as suggested by Camel testing
-     * techniques.
-     *
-     * @return a route builder.
-     * @throws Exception in case of an error.
-     */
-    @Override
-    protected RouteBuilder createRouteBuilder() throws Exception
+    private static class MockTransport implements Transport
     {
-        routeManager = new RouteManagerImpl();
-        routeManager.start();
-        return routeManager;
-    }
+        private String type;
+        private String uri;
+        
+        public MockTransport(String type, String uri)
+        {
+            this.type = type;
+            this.uri = uri;
+        }
+        
+        public void setParameters(Map<String, String> parameters)
+        {}
 
-    /**
-     * Utility method to send a message to Camel.
-     *
-     * @throws InterruptedException in case of an error
-     */
-    private void sendMessage() throws InterruptedException
-    {
-        String expectedBody = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><matched/>";
+        public void setBoundAndParameters(int bound, Map<String, String> parameters)
+        {}
 
-        resultEndpoint.expectedBodiesReceived(expectedBody);
+        public int getBound()
+        {
+            return 0;
+        }
 
-        template.sendBody(expectedBody);
+        public String getType()
+        {
+            return type;
+        }
+
+        public String toUriString() throws ConfigurableException, TransportException
+        {
+            return uri;
+        }
     }
 }

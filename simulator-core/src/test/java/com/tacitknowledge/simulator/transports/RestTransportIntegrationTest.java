@@ -35,7 +35,7 @@ public class RestTransportIntegrationTest {
     @Before
     public void setup() throws Exception {
         inTransport = new RestTransport();
-        outTransport = new RestTransport();
+        outTransport = new MockOutTransport();
         inAdapter = new RestAdapter();
         outAdapter = new RestAdapter();
         routeManager = new RouteManagerImpl();

@@ -7,13 +7,15 @@
         <artifactId>simulator</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
+
     <name>Simulator Core Framework</name>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.tacitknowledge.simulator</groupId>
     <artifactId>simulator-core</artifactId>
     <packaging>jar</packaging>
+    
     <properties>
-        <camel.version>2.1.0</camel.version>
+        <camel.version>2.6.0</camel.version>
     </properties>
 
 	<dependencies>

@@ -1,7 +1,12 @@
 package com.tacitknowledge.simulator.transports;
 
-import com.tacitknowledge.simulator.Configurable;
-import com.tacitknowledge.simulator.Transport;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -13,14 +18,9 @@ import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertNotNull;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Map;
+import com.tacitknowledge.simulator.Configurable;
+import com.tacitknowledge.simulator.Transport;
 
 /**
  * @author galo
@@ -131,10 +131,10 @@ public class HttpTransportTest
         params.put(HttpTransport.PARAM_RESOURCE_URI, "/mytestapp");
         transport.setParameters(params);
 
-        Transport out_tr = new RestTransport();
+        Transport outTransport = new MockOutTransport();
         Map<String, String> pars = new HashMap<String, String>();
         pars.put(HttpTransport.PARAM_HTTP_OUT, "true");
-        out_tr.setParameters(pars);
+        outTransport.setParameters(pars);
 
         try
         {
@@ -147,20 +147,11 @@ public class HttpTransportTest
             def.bean(new Processor(){
                 public void process(Exchange exchange)
                 {
-                    // just get the body as a string
-                    String body = exchange.getIn().getBody(String.class);
-                    System.out.println("\n\n\n\n\n\n\n\nbody:\n" + body + "\n\n\n\n\n\n\n\n\n\n\n");
-
-                    HttpServletRequest req = exchange.getIn().getBody(HttpServletRequest.class);
-                    assertNotNull(req);
-
-                    System.out.println("\n\n\n\n\n\n\n\nrequest:\n" + req + "\n\n\n\n\n\n\n\n\n");
-                    assertEquals("My Test System", req.getParameter("system_name"));
-
-                    exchange.getOut().setBody("<html><body>We got pinged!</body></html>");
+                    exchange.getOut().setBody("test");
                 }
             });
-            def.to(out_tr.toUriString());
+            
+            def.to(outTransport.toUriString());
 
             context.addRoutes(builder);
 
@@ -184,14 +175,11 @@ public class HttpTransportTest
 
             // Read the response body.
             byte[] responseBody = method.getResponseBody();
-
-            // Deal with the response.
-            // Use caution: ensure correct character encoding and is not binary data
-            System.out.println(new String(responseBody));
-            assertEquals("<html><body>We got pinged!</body></html>", new String(responseBody));
+            
+            assertEquals("test", new String(responseBody));
 
             context.stop();
-
+            
         } catch(Exception e)
         {
             e.printStackTrace();
