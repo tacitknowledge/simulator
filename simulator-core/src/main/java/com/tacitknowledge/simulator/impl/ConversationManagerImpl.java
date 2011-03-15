@@ -89,11 +89,16 @@ public class ConversationManagerImpl implements ConversationManager
                 hasChanges = true;
             }
         }
+        
+        logger.debug( "available conversations: " + activeConversations.keySet().toString());
+        
         // every new conversation should be activated
         for (Conversation newConversation : conversations.values())
         {
+            logger.debug( "new conversation: " + newConversation.getId());
+            
             // check if it is a new conversation.
-            if (!activeConversations.containsKey(newConversation))
+            if (!activeConversations.containsKey(newConversation.getId()))
             {
                 // This is a new conversation. Activate it!
                 logger.info(String.format("Detected new conversation '%s'. Activating it ...",
