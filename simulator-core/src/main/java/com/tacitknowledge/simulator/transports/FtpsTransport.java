@@ -12,6 +12,14 @@ import com.tacitknowledge.simulator.TransportException;
 public class FtpsTransport extends FtpTransport
 {
 
+    public static final String FTP_CLIENT_KEY_STORE_KEY_PASSWORD = "ftpClient.keyStore.keyPassword=";
+
+    public static final String FTP_CLIENT_KEY_STORE_PASSWORD = "ftpClient.keyStore.password=";
+
+    public static final String FTP_CLIENT_KEY_STORE_FILE = "ftpClient.keyStore.file=";
+
+    public static final String REQUIRED_PARAMETERS_MESSAGE = "For active mode all of the following parameters are required: ";
+
     /**
      * Logger for this class.
      */
@@ -35,17 +43,17 @@ public class FtpsTransport extends FtpTransport
     /**
      *  Key Store file.
      */
-    public final String KEY_STORE_FILE = "keyStoreFile";
+    public static final String KEY_STORE_FILE = "keyStoreFile";
 
     /**
      * Key password.
      */
-    public final String KEY_STORE_PASSWORD = "keyStorePassword";
+    public static final String KEY_STORE_PASSWORD = "keyStorePassword";
 
     /**
      * Private key password.
      */
-    public final String KEY_STORE_KEY_PASSWORD = "keyStoreKeyPassword";
+    public static final String KEY_STORE_KEY_PASSWORD = "keyStoreKeyPassword";
 
     /**
      * {@link Inherited}
@@ -127,17 +135,17 @@ public class FtpsTransport extends FtpTransport
         // next three parameters are necessary for active mode ftps 
         if (getParamValue(KEY_STORE_FILE) != null)
         {
-            options.append("ftpClient.keyStore.file=" + getParamValue(KEY_STORE_FILE)).append(AMP);
+            options.append(FTP_CLIENT_KEY_STORE_FILE + getParamValue(KEY_STORE_FILE)).append(AMP);
         }
         if (getParamValue(KEY_STORE_PASSWORD) != null)
         {
-            options.append("ftpClient.keyStore.password=" + getParamValue(KEY_STORE_PASSWORD))
+            options.append(FTP_CLIENT_KEY_STORE_PASSWORD + getParamValue(KEY_STORE_PASSWORD))
                     .append(AMP);
         }
         if (getParamValue(KEY_STORE_KEY_PASSWORD) != null)
         {
             options.append(
-                    "ftpClient.keyStore.keyPassword=" + getParamValue(KEY_STORE_KEY_PASSWORD))
+                    FTP_CLIENT_KEY_STORE_KEY_PASSWORD + getParamValue(KEY_STORE_KEY_PASSWORD))
                     .append(AMP);
         }
 
@@ -201,10 +209,8 @@ public class FtpsTransport extends FtpTransport
 
         if (activeMode && count != 3)
         {
-            throw new ConfigurableException(
-                    "For active mode all of the following parameters are required: "
-                            + KEY_STORE_FILE + ", " + KEY_STORE_PASSWORD + ", "
-                            + KEY_STORE_KEY_PASSWORD);
+            throw new ConfigurableException(REQUIRED_PARAMETERS_MESSAGE + KEY_STORE_FILE + ", "
+                    + KEY_STORE_PASSWORD + ", " + KEY_STORE_KEY_PASSWORD);
         }
         super.validateParameters();
     }
