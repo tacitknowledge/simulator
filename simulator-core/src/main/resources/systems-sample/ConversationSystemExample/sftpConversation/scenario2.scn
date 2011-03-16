@@ -1,0 +1,10 @@
+[language]
+javascript
+
+[when]
+users.user[0].name=='Bostan'
+
+[execute]
+users.user[0].name="Hi Bostan!";
+users;
+ 

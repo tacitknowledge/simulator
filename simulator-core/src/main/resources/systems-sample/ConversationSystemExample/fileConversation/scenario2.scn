@@ -1,0 +1,9 @@
+[language]
+javascript
+
+[when]
+users.user[0].name!='vasea'
+
+[execute]
+users.user[0].name="Where is Vasea?";
+users;
