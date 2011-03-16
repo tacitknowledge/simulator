@@ -1,9 +1,0 @@
-[language]
-javascript
-
-[when]
-users.user[0].name=='Marusea'
-
-[execute]
-users.user[0].name="Hi Marusea!";
-users;
