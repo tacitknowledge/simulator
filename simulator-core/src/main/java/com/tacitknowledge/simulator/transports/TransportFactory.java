@@ -21,6 +21,16 @@ public class TransportFactory
             return new FtpTransport(bound, ConfigurationUtil.getPropertiesMap(properties));
         }
 
+        if (TransportConstants.SFTP.equals(type))
+        {
+            return new SftpTransport(bound, ConfigurationUtil.getPropertiesMap(properties));
+        }
+        
+        if (TransportConstants.FTPS.equals(type))
+        {
+            return new FtpsTransport(bound, ConfigurationUtil.getPropertiesMap(properties));
+        }
+        
         if (TransportConstants.JMS.equals(type))
         {
             return new JmsTransport(bound, ConfigurationUtil.getPropertiesMap(properties));
