@@ -6,26 +6,34 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.apache.camel.Exchange;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.invocation.InvocationOnMock;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
 
 import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.Conversation;
 import com.tacitknowledge.simulator.ConversationManager;
 import com.tacitknowledge.simulator.ConversationScenario;
+import com.tacitknowledge.simulator.RouteManager;
 import com.tacitknowledge.simulator.ScenarioParsingException;
 import com.tacitknowledge.simulator.SimulatorCamelTestSupportBase;
 import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.configuration.EventDispatcher;
 import com.tacitknowledge.simulator.configuration.SimulatorEventListener;
 import com.tacitknowledge.simulator.configuration.loaders.ConversationLoader;
+import com.tacitknowledge.simulator.configuration.loaders.ConversationsLoader;
 import com.tacitknowledge.simulator.configuration.loaders.ScenarioLoader;
+import java.util.Date;
+import org.mockito.InOrder;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.stubbing.Answer;
+import org.mockito.stubbing.OngoingStubbing;
+import static org.mockito.Mockito.*;
 
 /**
  * Test class for ConversationManagerImpl
@@ -43,6 +51,8 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
     public static final String TEST_IMPL_2 = "com.tacitknowledge.simulator.impl.ConversationManagerImplTest$TestEventListenerImpl2";
 
     public static final String TEST_IMPL_3 = "com.tacitknowledge.simulator.impl.ConversationManagerImplTest$TestEventListenerImpl3";
+
+    private static final String CONV_PATH = "root/path";
 
     ConversationManagerImpl conversationManager;
 
@@ -106,6 +116,140 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         }
 
         assertTrue(impl1Found && impl2Found && impl3Found);
+    }
+
+    @Test
+    public void testFirstLoadConversations() throws Exception {
+        final Conversation conversation = createConversation();
+
+        ConversationsLoader conversationsLoader = createConversationsLoader(conversation);
+
+        RouteManager rManager = mock(RouteManager.class);
+        ConversationManager cManager = new ConversationManagerImpl(rManager, conversationsLoader);
+
+        cManager.loadConversations("root");
+
+        verify(rManager).activate(eq(conversation));
+    }
+
+    @Test
+    public void testTwiceLoadConversations() throws Exception {
+        final Conversation conversation = createConversation();
+
+        ConversationsLoader conversationsLoader = createConversationsLoader(conversation);
+
+        RouteManager rManager = mock(RouteManager.class);
+        ConversationManager cManager = new ConversationManagerImpl(rManager, conversationsLoader);
+
+        cManager.loadConversations("root");
+        verify(rManager).activate(eq(conversation));
+        reset(rManager);
+
+        cManager.loadConversations("root");
+        verify(rManager, never()).activate(eq(conversation));
+        verify(rManager, never()).deactivate(eq(conversation));
+        verify(rManager, never()).delete(eq(conversation));
+    }
+
+    @Test
+    public void testChangedConversation() throws Exception {
+        final Conversation conv1 = createConversation();
+        final Conversation conv2 = createConversation();
+
+        ConversationsLoader loader = mock(ConversationsLoader.class);
+
+        createConversationsLoader(loader, conv1);
+
+        RouteManager rManager = mock(RouteManager.class);
+        ConversationManager cManager = new ConversationManagerImpl(rManager,loader);
+
+        cManager.loadConversations("root");
+        verify(rManager).activate(eq(conv1));
+        reset(rManager);
+        createConversationsLoader(loader, conv2);
+        
+        cManager.loadConversations("root");
+        verify(rManager).deactivate(eq(conv1));
+        verify(rManager).activate(eq(conv2));
+    }
+
+    @Test
+    public void testDeletedConversation() throws Exception {
+        final Conversation conv1 = createConversation();
+
+        ConversationsLoader loader = mock(ConversationsLoader.class);
+
+        createConversationsLoader(loader, conv1);
+
+        RouteManager rManager = mock(RouteManager.class);
+        ConversationManager cManager = new ConversationManagerImpl(rManager,loader);
+
+        cManager.loadConversations("root");
+        verify(rManager).activate(eq(conv1));
+        reset(rManager);
+        createConversationsLoader(loader, null);
+
+        cManager.loadConversations("root");
+        verify(rManager).delete(eq(conv1));
+    }
+
+    @Test
+    public void testDeletedConversation2() throws Exception {
+        final Conversation conv1 = createConversation();
+        final Conversation conv2 = createConversation("conv1");
+
+        ConversationsLoader loader = mock(ConversationsLoader.class);
+
+        createConversationsLoader(loader, conv1);
+
+        RouteManager rManager = mock(RouteManager.class);
+        ConversationManager cManager = new ConversationManagerImpl(rManager,loader);
+
+        cManager.loadConversations("root");
+        verify(rManager).activate(eq(conv1));
+        reset(rManager);
+        createConversationsLoader(loader, conv2);
+
+        cManager.loadConversations("root");
+        verify(rManager).delete(eq(conv1));
+    }
+
+    private Conversation createConversation() {
+        return createConversation(CONV_PATH);
+    }
+
+    private Conversation createConversation(String path) {
+        Transport inputTransport = mock(Transport.class);
+        Transport outputTransport = mock(Transport.class);
+        Adapter inAdapter = mock(Adapter.class);
+        Adapter outAdapter = mock(Adapter.class);
+        Conversation conversation = mock(Conversation.class);
+
+        when(conversation.getId()).thenReturn(path);
+        when(conversation.getInboundTransport()).thenReturn(inputTransport);
+        when(conversation.getOutboundTransport()).thenReturn(outputTransport);
+        when(conversation.getInboundAdapter()).thenReturn(inAdapter);
+        when(conversation.getOutboundAdapter()).thenReturn(outAdapter);
+
+        long inboundDate = System.currentTimeMillis();
+        long outboundDate = System.currentTimeMillis();
+        when(conversation.getIboundModifiedDate()).thenReturn(inboundDate);
+        when(conversation.getOutboundModifiedDate()).thenReturn(outboundDate);
+
+        return conversation;
+    }
+
+    private ConversationsLoader createConversationsLoader(final Conversation conversation) throws IOException {
+        return createConversationsLoader(mock(ConversationsLoader.class), conversation);
+    }
+
+    private ConversationsLoader createConversationsLoader(ConversationsLoader mockLoader, final Conversation conversation) throws IOException {
+        Map<String, Conversation> answer = new HashMap<String, Conversation>();
+        if (conversation != null) {
+            answer.put(conversation.getId(), conversation);
+        }
+        when(mockLoader.loadConversations(anyString())).thenReturn(answer);
+        return mockLoader;
     }
 
     /**

@@ -118,7 +118,7 @@ public class ConversationManagerImpl implements ConversationManager
     /**
      * Activate given conversations
      * @param conversations conversations to be activated
-     * @throws Exception camael errors
+     * @throws Exception camel errors
      */
     private void activateConversations(Collection<Conversation> conversations) throws Exception
     {
