@@ -66,28 +66,6 @@ public class FtpTransportTest
     }
 
     @Test
-    public void testGetSftpUri()
-    {
-        // --- Try to get this URI: sftp://127.0.0.1
-        params.put(FtpTransport.PARAM_HOST, "127.0.0.1");
-        params.put(FtpTransport.PARAM_SFTP, "true");
-
-        transport.setParameters(params);
-
-        try
-        {
-            String uri = transport.toUriString();
-
-            assertTrue("Returned uri isn't as expected: " + uri,
-                uri.indexOf("sftp://127.0.0.1") > -1);
-        }
-        catch (Exception e)
-        {
-            fail("Shouldn't be getting an exception here: " + e.getMessage());
-        }
-    }
-
-    @Test
     public void testGetUriWithUserPasswordAndDirectory()
     {
         // --- Try to get this URI: ftp://meandmyself@127.0.0.1:2121/inbox?password=secret

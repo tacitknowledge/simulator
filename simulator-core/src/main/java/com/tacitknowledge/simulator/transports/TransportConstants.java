@@ -20,6 +20,17 @@ public final class TransportConstants
     public static final String FTP = "FTP";
 
     /**
+     * Constant for SFTP transport
+     */
+    public static final String SFTP = "SFTP";
+    
+    /**
+     * Constant for FTPS transport
+     */
+    public static final String FTPS = "FTPS";
+    
+    
+    /**
      * Constant for JMS transport
      */
     public static final String JMS = "JMS";

@@ -39,15 +39,11 @@ public class FtpTransport extends FileTransport implements Transport
      * Defaults to false (ASCII)
      */
     public static final String PARAM_BINARY = "binary";
+
     /**
      * Logger for this class.
      */
     private static Logger logger = LoggerFactory.getLogger(FtpTransport.class);
-
-    /**
-     * Flag to determine if this transport is FTP or SFTP. Defaults to FTP
-     */
-    private boolean sftp;
 
     /**
      * Flag to determine the file transfer mode, BINARY or ASCII. Defaults to ASCII
@@ -77,17 +73,18 @@ public class FtpTransport extends FileTransport implements Transport
     @Override
     protected String getUriString() throws ConfigurableException, TransportException
     {
+        return getUriString(TransportConstants.FTP.toLowerCase());
+    }
+
+    /**
+     * This method will be used by SftpTransport and FtpsTransport.
+     */
+    protected String getUriString(String protocol) throws ConfigurableException, TransportException
+    {
         StringBuilder sb = new StringBuilder();
 
         // --- Check the protocol
-        if (this.sftp)
-        {
-            sb.append("sftp");
-        }
-        else
-        {
-            sb.append("ftp");
-        }
+        sb.append(protocol);
         sb.append("://");
 
         // --- If we have username...
@@ -127,10 +124,9 @@ public class FtpTransport extends FileTransport implements Transport
 
         if (getParamValue(PARAM_POLLING_INTERVAL) != null)
         {
-            options.append("initialDelay=").append(
-                    getParamValue(PARAM_POLLING_INTERVAL)).append(AMP);
-            options.append("delay=").append(
-                    getParamValue(PARAM_POLLING_INTERVAL)).append(AMP);
+            options.append("initialDelay=").append(getParamValue(PARAM_POLLING_INTERVAL))
+                    .append(AMP);
+            options.append("delay=").append(getParamValue(PARAM_POLLING_INTERVAL)).append(AMP);
         }
 
         // --- If file transfer is binary
@@ -148,11 +144,9 @@ public class FtpTransport extends FileTransport implements Transport
         else if (getParamValue(PARAM_FILE_EXTENSION) != null)
         {
             // --- File extension is used as a RegEx filter for transport routing
-            options.append("include=^.*\\.(").
-                    append(getParamValue(PARAM_FILE_EXTENSION).toLowerCase()).
-                    append("|").
-                    append(getParamValue(PARAM_FILE_EXTENSION).toUpperCase()).
-                    append(")$");
+            options.append("include=^.*\\.(")
+                    .append(getParamValue(PARAM_FILE_EXTENSION).toLowerCase()).append("|")
+                    .append(getParamValue(PARAM_FILE_EXTENSION).toUpperCase()).append(")$");
         }
         else if (getParamValue(PARAM_REGEX_FILTER) != null)
         {
@@ -179,10 +173,6 @@ public class FtpTransport extends FileTransport implements Transport
     protected void validateParameters() throws ConfigurableException
     {
         // --- If passed, assign the boolean parameters to instance variables
-        if (getParamValue(PARAM_SFTP) != null)
-        {
-            this.sftp = Boolean.parseBoolean(getParamValue(PARAM_SFTP));
-        }
         if (getParamValue(PARAM_BINARY) != null)
         {
             this.binary = Boolean.parseBoolean(getParamValue(PARAM_BINARY));
