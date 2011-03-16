@@ -50,6 +50,16 @@ public class FtpTransport extends FileTransport implements Transport
      */
     private boolean binary;
 
+    public boolean isBinary()
+    {
+        return binary;
+    }
+
+    public void setBinary(boolean binary)
+    {
+        this.binary = binary;
+    }
+
     /**
      * @inheritDoc
      */
