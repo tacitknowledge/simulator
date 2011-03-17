@@ -1,0 +1,10 @@
+[language]
+javascript
+
+[when]
+payload.sayHello.firstName == 'Dude'
+
+[execute]
+payload.sayHello.greeting = 'HELLOW!';
+payload;
+
