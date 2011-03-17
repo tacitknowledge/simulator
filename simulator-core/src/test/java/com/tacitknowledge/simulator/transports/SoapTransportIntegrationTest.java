@@ -16,6 +16,8 @@ import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPMessage;
 
+import junit.framework.Assert;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -58,7 +60,7 @@ public class SoapTransportIntegrationTest {
     public void setup() throws Exception
     {
         inTransport = new SoapTransport();
-        outTransport = new MockOutTransport();
+        outTransport = new SoapTransport();
         inAdapter = new SoapAdapter();
         outAdapter = new SoapAdapter();
         routeManager = new RouteManagerImpl();

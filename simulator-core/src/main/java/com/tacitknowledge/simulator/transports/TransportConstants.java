@@ -44,7 +44,11 @@ public final class TransportConstants
      * Constant for SOAP IN transport
      */
     public static final String SOAP = "SOAP";
-
+    /**
+     * Constant for mock out transport( Request/Reply )
+     */
+    public static final String MOCKOUT = "MOCKOUT";
+    
     /**
      * Hidding the default constructor
      */

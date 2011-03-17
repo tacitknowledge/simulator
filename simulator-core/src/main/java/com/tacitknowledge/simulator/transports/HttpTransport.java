@@ -14,6 +14,7 @@ import com.tacitknowledge.simulator.TransportException;
  */
 public abstract class HttpTransport extends BaseTransport implements Transport
 {
+    public static final String MOCK_RESULT = "mock:result";
     /**
      * Resource URI parameter. REQUIRED
      */
@@ -26,6 +27,22 @@ public abstract class HttpTransport extends BaseTransport implements Transport
      * We use 0.0.0.0 instead of localhost to receive requests from any host.
      */
     private static final String HOST = "0.0.0.0";
+    /**
+     * http over ssl parameter
+     */
+    public static final String isSSL = "isSSL";
+    /**
+     * Path to the file containing X.509 certificate.
+     */
+    public static final String KEY_STORE_FILE = "keyStoreFile";
+    /**
+     * Store password.
+     */
+    public static final String STORE_PASSWORD = "storePassword";
+    /**
+     * Key password.
+     */
+    public static final String KEY_PASSWORD = "keyPassword";
     /**
      * Logger for this class.
      */
@@ -75,6 +92,29 @@ public abstract class HttpTransport extends BaseTransport implements Transport
         {
             throw new ConfigurableException("Resource URI parameter is required");
         }
+        int count = 0;
+        boolean ssl = false;
+        if(Boolean.parseBoolean(getParamValue(isSSL))){
+            ssl=true;
+            count++;
+        }
+        
+        if(getParamValue(KEY_PASSWORD)!=null){
+            count++;
+        }
+        
+        if(getParamValue(KEY_STORE_FILE)!=null){
+            count++;
+        }
+        
+        if(getParamValue(STORE_PASSWORD)!=null){
+            count++;
+        }
+        
+        if(ssl && count!=4){
+            throw new ConfigurableException( "Ssl requires all of the following parameters: " + 
+                    KEY_STORE_FILE + ", " + KEY_PASSWORD + ", " + STORE_PASSWORD);
+        }
     }
 
     /**
@@ -87,12 +127,19 @@ public abstract class HttpTransport extends BaseTransport implements Transport
         // so we return the result from the execution script as the HTTP response body
         if (this.isHttpOut)
         {
-            return "direct:end";
+            return MOCK_RESULT;
         }
 
         // --- 
-        StringBuilder sb = new StringBuilder("jetty:http://");
-
+        StringBuilder sb = new StringBuilder();
+        if(Boolean.parseBoolean(getParamValue(isSSL))){
+            sb.append("jetty:https://");
+        }
+        else
+        {
+            sb.append("jetty:http://");
+        }     
+        
         sb.append(HOST);
 
         if (getParamValue(PARAM_PORT) != null)
@@ -101,10 +148,25 @@ public abstract class HttpTransport extends BaseTransport implements Transport
         }
 
         sb.append(getParamValue(PARAM_RESOURCE_URI));
+        
         sb.append("?matchOnUriPrefix=true");
-
+        
+        // ssl parameters are set as system parameters 
+        if(getParamValue(KEY_PASSWORD)!=null){
+            System.setProperty("org.eclipse.jetty.ssl.keypassword", getParamValue(KEY_PASSWORD));
+        }
+        
+        if(getParamValue(KEY_STORE_FILE)!=null){
+            System.setProperty("org.eclipse.jetty.ssl.keystore", getParamValue(KEY_STORE_FILE));
+        }
+        
+        if(getParamValue(STORE_PASSWORD)!=null){
+            System.setProperty("org.eclipse.jetty.ssl.password", getParamValue(STORE_PASSWORD));
+        }
+        
         logger.info("Uri String: {}", sb.toString());
 
         return sb.toString();
     }
+    
 }

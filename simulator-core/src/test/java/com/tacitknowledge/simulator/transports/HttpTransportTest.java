@@ -103,7 +103,7 @@ public class HttpTransportTest
             fail("Shouldn't be getting an exception here: " + e.getMessage());
         }
     }
-
+    
     @Test
     public void testGetOutUri()
     {
@@ -116,7 +116,7 @@ public class HttpTransportTest
             String uri = transport.toUriString();
 
             assertEquals("Returned uri isn't as expected: " + uri,
-                "direct:end", uri);
+                HttpTransport.MOCK_RESULT, uri);
         }
         catch (Exception e)
         {
