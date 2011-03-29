@@ -48,21 +48,78 @@ public class ConversationManagerImpl implements ConversationManager
      */
     public void loadConversations(String systemsDirectoryPath) throws Exception
     {
-        Map<String, Conversation> conversations = conversationLoader
-                .loadAllConversationsInDirectory(systemsDirectoryPath);
+        Map<String, Conversation> conversations =
+            conversationLoader.loadAllConversationsInDirectory(systemsDirectoryPath);
 
         // the first time conversations are just loaded/activated.
-        if (activeConversations == null || activeConversations.isEmpty())
+        if (noConversationsActivated())
         {
             logger.debug("1st call of conversations load. Enabling all of them ...");
             activateConversations(conversations.values());
             activeConversations = conversations;
-            return;
+        }
+        else
+        {
+            boolean deletedAnyConversations =
+                checkAndDeleteConversationsThatDoNotExistAnymore(conversations);
+
+            boolean changedAnyConversations = checkAndReactivateConversationsChanged(conversations);
+
+            boolean addedNewConversations = checkAndActivateNewConversations(conversations);
+
+            boolean conversationChanged =
+                deletedAnyConversations || changedAnyConversations || addedNewConversations;
+
+            if (conversationChanged)
+            {
+                activeConversations = conversations;
+            }
+        }
+    }
+
+    /**
+     * Activate any new conversations that appeared since last reload.
+     *
+     * @param conversations all conversations found on FS at the moment
+     * @return true if any new ones found
+     * @throws Exception this is bad
+     */
+    private boolean checkAndActivateNewConversations(Map<String, Conversation> conversations)
+        throws Exception
+    {
+        boolean newConversations = false;
+
+        for (Conversation newConversation : conversations.values())
+        {
+            logger.debug("new conversation: " + newConversation.getId());
+
+            // check if it is a new conversation.
+            if (!activeConversations.containsKey(newConversation.getId()))
+            {
+                // This is a new conversation. Activate it!
+                logger.info(String.format("Detected new conversation '%s'. Activating it ...",
+                    newConversation.getId()));
+
+                routeManager.activate(newConversation);
+                newConversations = true;
+            }
         }
 
-        boolean hasChanges = false;
+        return newConversations;
+    }
 
-        // Verify each existing active conversation if it's needed to reload/reactivate or delete
+    /**
+     * Delete any conversations that do not exist on the FS anymore
+     *
+     * @param conversations all conversations found on FS at the moment
+     * @return true if any were deleted
+     * @throws Exception this is bad
+     */
+    private boolean checkAndDeleteConversationsThatDoNotExistAnymore(
+        Map<String, Conversation> conversations) throws Exception
+    {
+        boolean deletedAny = false;
+
         for (Conversation activeConversation : activeConversations.values())
         {
             // check if this conversation was deleted.
@@ -71,48 +128,53 @@ public class ConversationManagerImpl implements ConversationManager
                 // This active conversation doesn't exist anymore (was removed)
                 // just delete it.
                 logger.info(String.format(
-                        "Conversation '%s' has been removed from configurations. Deactivating ...",
-                        activeConversation.getId()));
-                routeManager.delete(activeConversation);
-                hasChanges = true;
-                continue;
-            }
+                    "Conversation '%s' has been removed from configurations. Deactivating ...",
+                    activeConversation.getId()));
 
+                routeManager.delete(activeConversation);
+                deletedAny = true;
+            }
+        }
+
+        return deletedAny;
+    }
+
+    /**
+     * Reactivate any conversations that have been updated
+     *
+     * @param conversations all conversations found on FS at the moment
+     * @return true if any were updated
+     * @throws Exception this is bad
+     */
+    private boolean checkAndReactivateConversationsChanged(Map<String, Conversation> conversations)
+        throws Exception
+    {
+        boolean reactivatedAny = false;
+
+        for (Conversation activeConversation : activeConversations.values())
+        {
             // Detect changes in conversation and reload if needed
             Conversation newConversation = conversations.get(activeConversation.getId());
-            if (hasDifferencesInConfiguration(activeConversation, newConversation))
+            if (newConversation != null &&
+                hasDifferencesInConfiguration(activeConversation, newConversation))
             {
                 logger.info(String.format("Conversation '%s' has changes. Reloading ...",
-                        activeConversation.getId()));
+                    activeConversation.getId()));
                 routeManager.deactivate(activeConversation);
                 routeManager.activate(newConversation);
-                hasChanges = true;
-            }
-        }
-        
-        logger.debug( "available conversations: " + activeConversations.keySet().toString());
-        
-        // every new conversation should be activated
-        for (Conversation newConversation : conversations.values())
-        {
-            logger.debug( "new conversation: " + newConversation.getId());
-            
-            // check if it is a new conversation.
-            if (!activeConversations.containsKey(newConversation.getId()))
-            {
-                // This is a new conversation. Activate it!
-                logger.info(String.format("Detected new conversation '%s'. Activating it ...",
-                        newConversation.getId()));
-                
-                routeManager.activate(newConversation);
-                hasChanges = true;
+                reactivatedAny = true;
             }
         }
 
-        if (hasChanges)
-        {
-            activeConversations = conversations;
-        }
+        return reactivatedAny;
+    }
+
+    /**
+     * @return true if there are no conversations activated in the system
+     */
+    private boolean noConversationsActivated()
+    {
+        return activeConversations == null || activeConversations.isEmpty();
     }
 
     /**
