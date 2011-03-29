@@ -24,8 +24,8 @@ public class ConversationLoaderTest
         ScenarioLoader scenarioLoader = new ScenarioLoader();
         ConversationLoader conversationLoader = new ConversationLoader(scenarioLoader);
 
-        Conversation conversation = conversationLoader.parseConversationFromPath(resource.getFile()
-                .getAbsolutePath());
+        Conversation conversation = conversationLoader.loadSingleConversationInDirectory(
+            resource.getFile().getAbsolutePath());
 
         Collection<ConversationScenario> scenarios = conversation.getScenarios().values();
 

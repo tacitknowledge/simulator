@@ -16,7 +16,6 @@ import com.tacitknowledge.simulator.BaseConfigurable;
 import com.tacitknowledge.simulator.Conversation;
 import com.tacitknowledge.simulator.RouteManager;
 import com.tacitknowledge.simulator.configuration.loaders.ConversationLoader;
-import com.tacitknowledge.simulator.configuration.loaders.ConversationsLoader;
 import com.tacitknowledge.simulator.configuration.loaders.ScenarioLoader;
 import com.tacitknowledge.simulator.transports.FileTransport;
 import com.tacitknowledge.simulator.utils.Configuration;
@@ -27,14 +26,11 @@ public class SimulatorWithConfigsFromFileTest
 
     private ConversationLoader conversationLoader;
 
-    private ConversationsLoader conversationsLoader;
-
     @Before
     public void setUp()
     {
         scenarioLoader = new ScenarioLoader();
         conversationLoader = new ConversationLoader(scenarioLoader);
-        conversationsLoader = new ConversationsLoader(conversationLoader);
     }
 
     @Test
@@ -42,8 +38,8 @@ public class SimulatorWithConfigsFromFileTest
     {
         Resource resource = new ClassPathResource(
                 Configuration.getPropertyAsString(Configuration.SYSTEMS_DIRECTORY_NAME));
-        Map<String, Conversation> conversations = conversationsLoader.loadConversations(resource
-                .getFile().getAbsolutePath());
+        Map<String, Conversation> conversations = conversationLoader.loadAllConversationsInDirectory(
+            resource.getFile().getAbsolutePath());
 
         RouteManager routeManager = new RouteManagerImpl();
         routeManager.start();

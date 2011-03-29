@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 
+import com.tacitknowledge.simulator.configuration.loaders.ConversationLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +17,6 @@ import com.tacitknowledge.simulator.ConversationScenario;
 import com.tacitknowledge.simulator.RouteManager;
 import com.tacitknowledge.simulator.configuration.EventDispatcher;
 import com.tacitknowledge.simulator.configuration.SimulatorEventListener;
-import com.tacitknowledge.simulator.configuration.loaders.ConversationsLoader;
 
 /**
  * Conversation manager implementation.
@@ -32,15 +32,15 @@ public class ConversationManagerImpl implements ConversationManager
 
     private RouteManager routeManager;
 
-    private ConversationsLoader conversationsLoader;
+    private ConversationLoader conversationLoader;
 
     private Map<String, Conversation> activeConversations;
 
     public ConversationManagerImpl(RouteManager routeManager,
-            ConversationsLoader conversationsLoader)
+            ConversationLoader conversationsLoader)
     {
         this.routeManager = routeManager;
-        this.conversationsLoader = conversationsLoader;
+        this.conversationLoader = conversationsLoader;
     }
 
     /**
@@ -48,8 +48,8 @@ public class ConversationManagerImpl implements ConversationManager
      */
     public void loadConversations(String systemsDirectoryPath) throws Exception
     {
-        Map<String, Conversation> conversations = conversationsLoader
-                .loadConversations(systemsDirectoryPath);
+        Map<String, Conversation> conversations = conversationLoader
+                .loadAllConversationsInDirectory(systemsDirectoryPath);
 
         // the first time conversations are just loaded/activated.
         if (activeConversations == null || activeConversations.isEmpty())

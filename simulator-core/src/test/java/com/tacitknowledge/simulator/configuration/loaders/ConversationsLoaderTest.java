@@ -25,10 +25,9 @@ public class ConversationsLoaderTest
 
         ScenarioLoader scenarioLoader = new ScenarioLoader();
         ConversationLoader conversationLoader = new ConversationLoader(scenarioLoader);
-        ConversationsLoader conversationsLoader = new ConversationsLoader(conversationLoader);
 
-        Map<String, Conversation> conversations = conversationsLoader.loadConversations(resource
-                .getFile().getAbsolutePath());
+        Map<String, Conversation> conversations = conversationLoader.loadAllConversationsInDirectory(
+            resource.getFile().getAbsolutePath());
 
         assertNotNull(conversations);
 

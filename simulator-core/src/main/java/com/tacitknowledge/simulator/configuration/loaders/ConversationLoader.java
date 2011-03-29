@@ -5,8 +5,11 @@ import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
+import com.tacitknowledge.simulator.utils.OnlyDirectoriesFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
@@ -47,7 +50,8 @@ public class ConversationLoader
      * @return Conversation
      * @throws IOException
      */
-    public Conversation parseConversationFromPath(String conversationPath) throws IOException
+    public Conversation loadSingleConversationInDirectory(String conversationPath)
+        throws IOException
     {
         Transport inTransport = getTransport(Configurable.BOUND_IN, conversationPath);
         Transport outTransport = getTransport(Configurable.BOUND_OUT, conversationPath);
@@ -59,6 +63,52 @@ public class ConversationLoader
                 inTransport, outTransport, inAdapter, outAdapter);
         loadConversationScenarios(conversation, conversationPath);
         return conversation;
+    }
+
+    /**
+     * Iterates through systems and each system conversations and returns a list of parsed
+     * conversations (which contains scenarios)
+     *
+     * @param systemsPath - system path (usually /systems)
+     * @return a map with (path,conversation)
+     * @throws IOException
+     */
+    public Map<String, Conversation> loadAllConversationsInDirectory(String systemsPath)
+        throws IOException
+    {
+        Map<String, Conversation> conversations = new HashMap<String, Conversation>();
+
+        Resource resource = new FileSystemResource(systemsPath);
+
+        File[] systemDirs = resource.getFile().listFiles(new OnlyDirectoriesFilter());
+
+        // iterate through each system
+        for (File systemDir : systemDirs)
+        {
+            // find and iterate through each conversation directory
+            File[] conversationDirs = systemDir.listFiles(new OnlyDirectoriesFilter());
+
+            for (File conversationDir : conversationDirs)
+            {
+                try
+                {
+                    String path = conversationDir.getAbsolutePath();
+                    Conversation conversation = loadSingleConversationInDirectory(path);
+                    if (conversation != null)
+                    {
+                        conversations.put(path, conversation);
+                    }
+                }
+                catch (IOException ex)
+                {
+                    String msg = String.format("Could not parse conversation from '%s' directory",
+                            conversationDir.getAbsolutePath());
+                    logger.warn(msg, ex);
+                }
+            }
+        }
+
+        return conversations;
     }
 
     /**

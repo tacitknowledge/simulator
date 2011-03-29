@@ -11,7 +11,6 @@ import org.apache.camel.Exchange;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.invocation.InvocationOnMock;
 import org.springframework.core.io.ClassPathResource;
 
 import com.tacitknowledge.simulator.Adapter;
@@ -25,12 +24,8 @@ import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.configuration.EventDispatcher;
 import com.tacitknowledge.simulator.configuration.SimulatorEventListener;
 import com.tacitknowledge.simulator.configuration.loaders.ConversationLoader;
-import com.tacitknowledge.simulator.configuration.loaders.ConversationsLoader;
 import com.tacitknowledge.simulator.configuration.loaders.ScenarioLoader;
-import java.util.Date;
-import org.mockito.InOrder;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.OngoingStubbing;
 import static org.mockito.Mockito.*;
@@ -122,10 +117,10 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
     public void testFirstLoadConversations() throws Exception {
         final Conversation conversation = createConversation();
 
-        ConversationsLoader conversationsLoader = createConversationsLoader(conversation);
+        ConversationLoader conversationLoader = createConversationsLoader(conversation);
 
         RouteManager rManager = mock(RouteManager.class);
-        ConversationManager cManager = new ConversationManagerImpl(rManager, conversationsLoader);
+        ConversationManager cManager = new ConversationManagerImpl(rManager, conversationLoader);
 
         cManager.loadConversations("root");
 
@@ -136,10 +131,10 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
     public void testTwiceLoadConversations() throws Exception {
         final Conversation conversation = createConversation();
 
-        ConversationsLoader conversationsLoader = createConversationsLoader(conversation);
+        ConversationLoader conversationLoader = createConversationsLoader(conversation);
 
         RouteManager rManager = mock(RouteManager.class);
-        ConversationManager cManager = new ConversationManagerImpl(rManager, conversationsLoader);
+        ConversationManager cManager = new ConversationManagerImpl(rManager, conversationLoader);
 
         cManager.loadConversations("root");
         verify(rManager).activate(eq(conversation));
@@ -156,7 +151,7 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         final Conversation conv1 = createConversation();
         final Conversation conv2 = createConversation();
 
-        ConversationsLoader loader = mock(ConversationsLoader.class);
+        ConversationLoader loader = mock(ConversationLoader.class);
 
         createConversationsLoader(loader, conv1);
 
@@ -177,7 +172,7 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
     public void testDeletedConversation() throws Exception {
         final Conversation conv1 = createConversation();
 
-        ConversationsLoader loader = mock(ConversationsLoader.class);
+        ConversationLoader loader = mock(ConversationLoader.class);
 
         createConversationsLoader(loader, conv1);
 
@@ -198,7 +193,7 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         final Conversation conv1 = createConversation();
         final Conversation conv2 = createConversation("conv1");
 
-        ConversationsLoader loader = mock(ConversationsLoader.class);
+        ConversationLoader loader = mock(ConversationLoader.class);
 
         createConversationsLoader(loader, conv1);
 
@@ -239,16 +234,16 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         return conversation;
     }
 
-    private ConversationsLoader createConversationsLoader(final Conversation conversation) throws IOException {
-        return createConversationsLoader(mock(ConversationsLoader.class), conversation);
+    private ConversationLoader createConversationsLoader(final Conversation conversation) throws IOException {
+        return createConversationsLoader(mock(ConversationLoader.class), conversation);
     }
 
-    private ConversationsLoader createConversationsLoader(ConversationsLoader mockLoader, final Conversation conversation) throws IOException {
+    private ConversationLoader createConversationsLoader(ConversationLoader mockLoader, final Conversation conversation) throws IOException {
         Map<String, Conversation> answer = new HashMap<String, Conversation>();
         if (conversation != null) {
             answer.put(conversation.getId(), conversation);
         }
-        when(mockLoader.loadConversations(anyString())).thenReturn(answer);
+        when(mockLoader.loadAllConversationsInDirectory(anyString())).thenReturn(answer);
         return mockLoader;
     }
 
@@ -389,8 +384,8 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         ScenarioLoader scenarioLoader = new ScenarioLoader();
         try
         {
-            conversation1 = conversationLoader.parseConversationFromPath(folderPath);
-            conversation2 = conversationLoader.parseConversationFromPath(folderPath);
+            conversation1 = conversationLoader.loadSingleConversationInDirectory(folderPath);
+            conversation2 = conversationLoader.loadSingleConversationInDirectory(folderPath);
             ConversationScenario conversationScenario = scenarioLoader
                     .parseScenarioFromFile(scenarioPath);
             conversation2.addScenario(conversationScenario);
@@ -420,8 +415,10 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
 
         try
         {
-            conversation1 = new ConversationImpl1(conversationLoader.parseConversationFromPath(folderPath));
-            conversation2 = new ConversationImpl2(conversationLoader.parseConversationFromPath(folderPath));
+            conversation1 = new ConversationImpl1(conversationLoader.loadSingleConversationInDirectory(
+                folderPath));
+            conversation2 = new ConversationImpl2(conversationLoader.loadSingleConversationInDirectory(
+                folderPath));
         }
         catch (IOException e)
         {
@@ -445,8 +442,9 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
 
         try
         {
-            conversation1 = conversationLoader.parseConversationFromPath(folderPath);
-            conversation2 = new ConversationImpl3(conversationLoader.parseConversationFromPath(folderPath));
+            conversation1 = conversationLoader.loadSingleConversationInDirectory(folderPath);
+            conversation2 = new ConversationImpl3(conversationLoader.loadSingleConversationInDirectory(
+                folderPath));
         }
         catch (IOException e)
         {

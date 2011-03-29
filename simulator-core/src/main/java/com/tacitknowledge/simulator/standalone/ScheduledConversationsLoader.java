@@ -9,7 +9,6 @@ import com.tacitknowledge.simulator.ConversationManager;
 import com.tacitknowledge.simulator.RouteManager;
 import com.tacitknowledge.simulator.camel.RouteManagerImpl;
 import com.tacitknowledge.simulator.configuration.loaders.ConversationLoader;
-import com.tacitknowledge.simulator.configuration.loaders.ConversationsLoader;
 import com.tacitknowledge.simulator.configuration.loaders.ScenarioLoader;
 import com.tacitknowledge.simulator.impl.ConversationManagerImpl;
 import com.tacitknowledge.simulator.utils.Configuration;
@@ -41,8 +40,6 @@ public class ScheduledConversationsLoader extends Thread
 
     private ConversationLoader conversationLoader;
 
-    private ConversationsLoader conversationsLoader;
-
     private ConversationManager conversationManager;
 
     /**
@@ -53,9 +50,8 @@ public class ScheduledConversationsLoader extends Thread
         routeManager = new RouteManagerImpl();
         scenarioLoader = new ScenarioLoader();
         conversationLoader = new ConversationLoader(scenarioLoader);
-        conversationsLoader = new ConversationsLoader(conversationLoader);
 
-        conversationManager = new ConversationManagerImpl(routeManager, conversationsLoader);
+        conversationManager = new ConversationManagerImpl(routeManager, conversationLoader);
 
         startRouteManager();
     }
