@@ -1,0 +1,10 @@
+[language]
+javascript
+
+[when]
+postcoderequest.Address == 'none'
+
+[execute]
+postcoderequest.response = '[]';
+postcoderequest;
+
