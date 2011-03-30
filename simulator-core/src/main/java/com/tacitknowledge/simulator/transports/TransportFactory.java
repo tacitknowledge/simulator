@@ -46,6 +46,11 @@ public class TransportFactory
             return new SoapTransport(bound, ConfigurationUtil.getPropertiesMap(properties));
         }
 
+        if(TransportConstants.HTTP.equals(type))
+        {
+            return new HttpTransport(bound, TransportConstants.HTTP,
+                ConfigurationUtil.getPropertiesMap(properties));
+        }
         return null;
     }
 }

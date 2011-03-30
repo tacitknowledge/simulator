@@ -12,7 +12,7 @@ import com.tacitknowledge.simulator.TransportException;
 /**
  * @author galo
  */
-public abstract class HttpTransport extends BaseTransport implements Transport
+public class HttpTransport extends BaseTransport implements Transport
 {
     public static final String MOCK_RESULT = "mock:result";
     /**
@@ -59,7 +59,7 @@ public abstract class HttpTransport extends BaseTransport implements Transport
      *
      * @param type - Transport type
      */
-    protected HttpTransport(final String type)
+    public HttpTransport(final String type)
     {
         super(type);
     }
@@ -71,7 +71,7 @@ public abstract class HttpTransport extends BaseTransport implements Transport
      * @param type       - transport type
      * @param parameters @see #parameters
      */
-    protected HttpTransport(final int bound, final String type,
+    public HttpTransport(final int bound, final String type,
                             final Map<String, String> parameters)
     {
         super(bound, type, parameters);
@@ -81,7 +81,7 @@ public abstract class HttpTransport extends BaseTransport implements Transport
      * {@inheritDoc}
      */
     @Override
-    protected void validateParameters() throws ConfigurableException
+    public void validateParameters() throws ConfigurableException
     {
         if (getParamValue(PARAM_HTTP_OUT) != null)
         {
@@ -121,7 +121,7 @@ public abstract class HttpTransport extends BaseTransport implements Transport
      * {@inheritDoc}
      */
     @Override
-    protected String getUriString() throws ConfigurableException, TransportException
+    public String getUriString() throws ConfigurableException, TransportException
     {
         // --- If this transport is an HTTP OUT, we just end the Camel route,
         // so we return the result from the execution script as the HTTP response body
