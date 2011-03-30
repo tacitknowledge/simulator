@@ -52,6 +52,11 @@ public class AdapterFactory
             return new YamlAdapter(bound, ConfigurationUtil.getPropertiesMap(properties));
         }
 
+        if(FormatConstants.POST_CODE_ANYWHERE.equals(format))
+        {
+            return new PostCodeAnywhereAdapter(bound, ConfigurationUtil.getPropertiesMap(properties));
+        }
+
         return null;
     }
 
