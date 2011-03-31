@@ -1,0 +1,10 @@
+[language]
+javascript
+
+[when]
+obj.request.params.email == 'test@test.com'
+
+[execute]
+obj.response.body = 'Success'
+obj;
+
