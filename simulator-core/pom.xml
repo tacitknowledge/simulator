@@ -237,8 +237,31 @@
 	        </archive>
 	          </configuration>
 	      </plugin>
+            <plugin>
+                <groupId>org.dstovall</groupId>
+                <artifactId>onejar-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <configuration>
+                            <attachToBuild>true</attachToBuild>
+                            <classifier>onejar</classifier>
+                        </configuration>
+                        <goals>
+                            <goal>one-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
+    <pluginRepositories>
+            <pluginRepository>
+                <id>onejar-maven-plugin.googlecode.com</id>
+                <url>http://onejar-maven-plugin.googlecode.com/svn/mavenrepo</url>
+            </pluginRepository>
+        </pluginRepositories>
+
     <reporting>
         <plugins>
             <plugin>
