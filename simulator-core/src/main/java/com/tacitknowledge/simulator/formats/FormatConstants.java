@@ -48,12 +48,6 @@ public final class FormatConstants
      */
     public static final String SOAP = "SOAP";
 
-
-    /**
-     * Name for "Post Code Anywhere" format
-     */
-    public static final String POST_CODE_ANYWHERE = "POSTCODEANYWHERE";
-
     /**
      * Hiding the default constructor
      */

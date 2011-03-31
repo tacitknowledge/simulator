@@ -2,9 +2,9 @@
 javascript
 
 [when]
-postcoderequest.Address == 'TW9 1EP'
+obj.request.params.Address == 'TW9 1EP'
 
 [execute]
-postcoderequest.response = '[{"Udprn":"52214799","Company":"Pearl Group","Department":"","Line1":"Hill House","Line2":"2 Heron Square","Line3":"","Line4":"","Line5":"","PostTown":"Richmond","County":"","Postcode":"TW9 1EP","Mailsort":"81234","Barcode":"(TW91EP1QI)","Type":"SmallBusiness","DeliveryPointSuffix":"1Q","SubBuilding":"","BuildingName":"Hill House","BuildingNumber":"2","PrimaryStreet":"Heron Square","SecondaryStreet":"","DoubleDependentLocality":"","DependentLocality":"","PoBox":"","PrimaryStreetName":"Heron","PrimaryStreetType":"Square","SecondaryStreetName":"","SecondaryStreetType":"","CountryName":"England","Confidence":"0.66"}]!';
-postcoderequest;
+obj.response.body = '[{"Udprn":"52214799","Company":"Pearl Group","Department":"","Line1":"Hill House","Line2":"2 Heron Square","Line3":"","Line4":"","Line5":"","PostTown":"Richmond","County":"","Postcode":"TW9 1EP","Mailsort":"81234","Barcode":"(TW91EP1QI)","Type":"SmallBusiness","DeliveryPointSuffix":"1Q","SubBuilding":"","BuildingName":"Hill House","BuildingNumber":"2","PrimaryStreet":"Heron Square","SecondaryStreet":"","DoubleDependentLocality":"","DependentLocality":"","PoBox":"","PrimaryStreetName":"Heron","PrimaryStreetType":"Square","SecondaryStreetName":"","SecondaryStreetType":"","CountryName":"England","Confidence":"0.66"}]!';
+obj;
 

@@ -2,9 +2,9 @@
 javascript
 
 [when]
-postcoderequest.Address == 'none'
+obj.request.params.Address == 'none'
 
 [execute]
-postcoderequest.response = '[]';
-postcoderequest;
+obj.response.body = '[]';
+obj;
 
