@@ -366,9 +366,11 @@ public class DefaultPackageScanClassResolver implements PackageScanClassResolver
         String packagePath = urlPath.substring(urlPath.lastIndexOf("!/") + 2);
 
         //System.out.println("libJarPath = " + libJarPath);
+        JarInputStream jarInput = null;
+
         try
         {
-            JarInputStream jarInput = new JarInputStream(new FileInputStream(topLevelJarPath));
+            jarInput = new JarInputStream(new FileInputStream(topLevelJarPath));
             JarFile topLevelJar = new JarFile(topLevelJarPath);
 
             JarEntry topLevelJarEntry = null;
@@ -376,26 +378,66 @@ public class DefaultPackageScanClassResolver implements PackageScanClassResolver
             {
                 if (topLevelJarEntry.getName().equals("lib/" + dependencyJarPath))
                 {
-                    JarInputStream libJarInputStream =
-                        new JarInputStream(topLevelJar.getInputStream(topLevelJarEntry));
-                    JarEntry childJarEntry = null;
-
-                    while ((childJarEntry = libJarInputStream.getNextJarEntry()) != null)
-                    {
-                        String childJarEntryName = childJarEntry.getName();
-
-                        if (childJarEntryName.startsWith(packagePath) && childJarEntryName
-                            .endsWith(".class"))
-                        {
-                            addIfMatching(test, childJarEntryName, classes);
-                        }
-                    }
+                    discoverInInternalJar(test, classes, packagePath, topLevelJar,
+                        topLevelJarEntry);
                 }
             }
         }
         catch (IOException e)
         {
             e.printStackTrace();
+        }
+        finally
+        {
+            try
+            {
+                jarInput.close();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void discoverInInternalJar(PackageScanFilter test, Set classes, String packagePath,
+                                       JarFile topLevelJar, JarEntry topLevelJarEntry)
+    {
+        JarInputStream libJarInputStream = null;
+        try
+        {
+            libJarInputStream =
+                new JarInputStream(topLevelJar.getInputStream(topLevelJarEntry));
+            JarEntry childJarEntry = null;
+
+            while ((childJarEntry = libJarInputStream.getNextJarEntry()) != null)
+            {
+                String childJarEntryName = childJarEntry.getName();
+
+                if (childJarEntryName.startsWith(packagePath) && childJarEntryName
+                    .endsWith(".class"))
+                {
+                    addIfMatching(test, childJarEntryName, classes);
+                }
+            }
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+        }
+        finally
+        {
+            if(libJarInputStream != null)
+            {
+                try
+                {
+                    libJarInputStream.close();
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
