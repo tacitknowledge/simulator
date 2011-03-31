@@ -8,6 +8,6 @@ public class OnlyDirectoriesFilter implements FileFilter
 {
     public boolean accept(File pathname)
     {
-        return pathname.isDirectory();
+        return pathname.isDirectory() && !pathname.getName().startsWith(".");
     }
 }
