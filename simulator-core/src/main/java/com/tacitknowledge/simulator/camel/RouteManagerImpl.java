@@ -53,7 +53,7 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager
     public RouteManagerImpl()
     {
         DefaultCamelContext defaultCamelContext = new DefaultCamelContext();
-        defaultCamelContext.setPackageScanClassResolver(new OneJarClassResolver());
+        defaultCamelContext.setPackageScanClassResolver(new OneJarPackageScanResolver());
         setContext(defaultCamelContext);
 
     }

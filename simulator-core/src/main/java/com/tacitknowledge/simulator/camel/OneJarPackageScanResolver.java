@@ -35,7 +35,7 @@ import java.util.jar.JarInputStream;
  *
  * @author Adrian Neaga
  */
-public class OneJarClassResolver extends DefaultPackageScanClassResolver
+public class OneJarPackageScanResolver extends DefaultPackageScanClassResolver
 {
 
     /**
