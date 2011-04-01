@@ -26,11 +26,6 @@ public class Configuration
     public static final String DEFAULT_CLOSE_PORT = "8080";
 
     /**
-     * Config file name.
-     */
-    public static final String CONFIG_FILE_NAME = "config.properties";
-
-    /**
      * Close port property name.
      */
     public static final String CLOSE_PORT_NAME = "closePort";
@@ -82,37 +77,23 @@ public class Configuration
      */
     private static Logger logger = LoggerFactory.getLogger(Simulator.class);
 
-    /**
-     * 
-     * @param configurationFileName - file name containing configurations.
-     * @return ResourceBundle - containing configurations
-     */
-    private static void loadConfigurationFile()
-    {
-        configurationProperties = new Properties();
-        try
-        {
-            configurationProperties.load(new ClassPathResource(Configuration.CONFIG_FILE_NAME).getInputStream());
-        }
-        catch (IOException e)
-        {
-            logger.error(e.getMessage());
-        }
-    }
-    
+
+
     /**
      * Fetch property value as String.
+     *
      * @param propertyName - configured property name
      * @return property value as string
      */
     public static String getPropertyAsString(String propertyName)
     {
-        loadConfigurationFile();
-        String value = configurationProperties.getProperty(propertyName);
+        String value = System.getProperty(propertyName);
+
         if (value == null)
         {
             value = getDefaultValue(propertyName);
         }
+
         return value;
     }
 
