@@ -1,7 +1,9 @@
 package com.tacitknowledge.simulator.camel;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -128,6 +130,7 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager
         
         String id = conversation.getId();
         stopRoute(id);
+        removeRoute(id);
     }
 
     private void stopRoute(String id) throws Exception
@@ -135,13 +138,12 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager
         ensureThatContextIsStarted();
         
         CamelContext context = getContext();
-        RouteDefinition definition = routes.remove(id);
+        RouteDefinition definition = routes.get(id);
 
         if (definition != null)
         {
             context.stopRoute(definition);
-            activeRoutes.remove(id);
-            logger.info("Route : {} was stopped in the context : {}", 
+            logger.info("Route : {} was stopped in the context : {}",
                         definition.getId(),
                         context.getName());
         }
@@ -149,6 +151,12 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager
         {
             logger.warn("Trying to deactivate route which is not active ");
         }
+    }
+
+    private void removeRoute(String id)
+    {
+        routes.remove(id);
+        activeRoutes.remove(id);
     }
 
     /**
@@ -185,14 +193,31 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager
         }
     }
 
-    private void stopAllActiveRoutes() throws Exception
+    private void stopAllActiveRoutes()
     {
-        for(String id : activeRoutes)
+        List<String> stoppedRoutes = new ArrayList<String>();
+
+        try
         {
-            stopRoute(id);
+            for (String id : activeRoutes)
+            {
+                stopRoute(id);
+                stoppedRoutes.add(id);
+            }
+        }
+        catch (Exception e)
+        {
+            logger.error(e.getMessage());
+        }
+        finally
+        {
+            for (String id : stoppedRoutes)
+            {
+                removeRoute(id);
+            }
         }
     }
-    
+
     private void ensureThatContextIsStarted()
     {
         if(!contextStarted)
