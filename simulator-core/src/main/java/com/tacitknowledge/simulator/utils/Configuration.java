@@ -92,6 +92,8 @@ public class Configuration
         if (value == null)
         {
             value = getDefaultValue(propertyName);
+            logger.warn("Property '" + propertyName + "' was not provider as a system parameter,"
+                + " using default value '" + value + "'");
         }
 
         return value;
