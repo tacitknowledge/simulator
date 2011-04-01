@@ -1,13 +1,12 @@
 package com.tacitknowledge.simulator.utils;
 
-import java.io.IOException;
-import java.util.Properties;
-
+import com.tacitknowledge.simulator.standalone.Simulator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 
-import com.tacitknowledge.simulator.standalone.StandAloneStopper;
+import java.io.IOException;
+import java.util.Properties;
 
 /**
  * Configurations reading logic, constants definitions.
@@ -81,7 +80,7 @@ public class Configuration
     /**
      * class logger.
      */
-    private static Logger logger = LoggerFactory.getLogger(StandAloneStopper.class);
+    private static Logger logger = LoggerFactory.getLogger(Simulator.class);
 
     /**
      * 

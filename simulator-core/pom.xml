@@ -227,7 +227,7 @@
 	          <configuration>
 	        <archive>
 	          <manifest>
-	            <mainClass>com.tacitknowledge.simulator.standalone.StandAloneStarter</mainClass>
+	            <mainClass>com.tacitknowledge.simulator.standalone.Simulator</mainClass>
 	            <packageName>com.tacitknowledge.simulator.standalone</packageName>
 	            <addClasspath>true</addClasspath>
 	          </manifest>
