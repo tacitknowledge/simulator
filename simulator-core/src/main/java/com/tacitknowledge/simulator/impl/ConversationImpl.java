@@ -94,8 +94,8 @@ public class ConversationImpl implements Conversation
     public ConversationScenario addScenario(final String scenarioConfigFilePath,
             final String language, final String criteria, final String transformation)
     {
-        ConversationScenario scenario = new ConversationScenarioImpl(scenarioConfigFilePath,
-                language, criteria, transformation);
+        ConversationScenario scenario = ConversationScenarioFactory.createConversationScenario(
+                scenarioConfigFilePath, language, criteria, transformation);
         scenarios.add(scenario);
 
         logger.info("Added new conversation scenario to the conversation located at : {}",

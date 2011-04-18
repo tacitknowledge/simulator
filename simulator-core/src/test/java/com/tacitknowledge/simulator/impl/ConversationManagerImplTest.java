@@ -1,5 +1,13 @@
 package com.tacitknowledge.simulator.impl;
 
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -25,10 +33,6 @@ import com.tacitknowledge.simulator.configuration.EventDispatcher;
 import com.tacitknowledge.simulator.configuration.SimulatorEventListener;
 import com.tacitknowledge.simulator.configuration.loaders.ConversationLoader;
 import com.tacitknowledge.simulator.configuration.loaders.ScenarioLoader;
-import org.mockito.Mock;
-import org.mockito.stubbing.Answer;
-import org.mockito.stubbing.OngoingStubbing;
-import static org.mockito.Mockito.*;
 
 /**
  * Test class for ConversationManagerImpl

@@ -28,7 +28,6 @@ public final class ConversationFactory
      * @param inboundAdapter    inbound adapter
      * @param outboundAdapter   outbound adapter
      * @return The created Conversation
-     * @throws SimulatorException in case of an error
      */
     public static Conversation createConversation(
         final String id,

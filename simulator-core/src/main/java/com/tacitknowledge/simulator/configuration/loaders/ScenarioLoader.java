@@ -10,16 +10,24 @@ import java.util.regex.Pattern;
 
 import com.tacitknowledge.simulator.ConversationScenario;
 import com.tacitknowledge.simulator.ScenarioParsingException;
-import com.tacitknowledge.simulator.impl.ConversationScenarioImpl;
+import com.tacitknowledge.simulator.impl.ConversationScenarioFactory;
 
 public class ScenarioLoader
 {
     private static final int FLAGS = Pattern.CASE_INSENSITIVE | Pattern.DOTALL | Pattern.MULTILINE;
 
     private static final int SCENARIO_SECTIONS_COUNT = 3;
+    
+    private static final int LANGUAGE_SECTION_INDEX = 1;
+    
+    private static final int CONDITION_SECTION_INDEX = 2;
+    
+    private static final int EXECUTE_SECTION_INDEX = 3;
 
     private static final Pattern SCENARIO_REGEX = Pattern.compile(
             "\\s*\\[language\\](.+)\\[when\\](.+)\\[execute\\](.+)", FLAGS);
+    
+    private static final String NEW_LINE = "\n";
 
     /**
      * Parses scenario from given '.scn' file and returns ConversationScenario object
@@ -36,30 +44,18 @@ public class ScenarioLoader
 
         try
         {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-            String line = null;
-            StringBuilder sb = new StringBuilder();
-
-            while ((line = reader.readLine()) != null)
-            {
-                sb.append(line + "\n");
-            }
-
-            Matcher m = SCENARIO_REGEX.matcher(sb.toString());
-            if (!m.matches() || m.groupCount() != SCENARIO_SECTIONS_COUNT)
-            {
-                String msg = String.format("Unable to parse scenario from '%s'", fileName);
-                throw new ScenarioParsingException(msg);
-            }
-
-            String language = m.group(1).trim().toLowerCase();
-            String condition = m.group(2).trim();
-            String execute = m.group(3).trim();
-
-            ConversationScenario scenario = new ConversationScenarioImpl(fileName, language,
-                    condition, execute);
-
-            return scenario;
+            String scriptText = readWholeInputStream(is);
+            Matcher matcher = matchScriptStructure(scriptText);
+            String language = matcher.group(LANGUAGE_SECTION_INDEX).trim().toLowerCase();
+            String condition = matcher.group(CONDITION_SECTION_INDEX).trim();
+            String execute = matcher.group(EXECUTE_SECTION_INDEX).trim();
+            ConversationScenario result = ConversationScenarioFactory.createConversationScenario(
+                    fileName, language, condition, execute);
+            return result;
+        }
+        catch (IllegalArgumentException e)
+        {
+            throw new ScenarioParsingException("Scenario " + fileName + "could not be parsed", e);
         }
         finally
         {
@@ -67,4 +63,27 @@ public class ScenarioLoader
         }
     }
 
+    private String readWholeInputStream(InputStream is) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        String line = null;
+        StringBuilder result = new StringBuilder();
+
+        while ((line = reader.readLine()) != null)
+        {
+            result.append(line + NEW_LINE);
+        }
+        
+        return result.toString();
+    }
+    
+    private Matcher matchScriptStructure(String scriptText) throws ScenarioParsingException {
+        Matcher matcher = SCENARIO_REGEX.matcher(scriptText);
+        
+        if (!matcher.matches() || matcher.groupCount() != SCENARIO_SECTIONS_COUNT)
+        {
+            throw new IllegalArgumentException("Unable to parse the scenario" + scriptText);
+        }
+        
+        return matcher;
+    }
 }
