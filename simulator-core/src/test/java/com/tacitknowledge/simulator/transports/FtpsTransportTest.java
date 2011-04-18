@@ -89,7 +89,7 @@ public class FtpsTransportTest
 
         try
         {
-            String uri = transport.toUriString();
+            transport.toUriString();
             fail(FAILED_BAD_VALIDATION_MESSAGE);
         }
         catch (Exception e)

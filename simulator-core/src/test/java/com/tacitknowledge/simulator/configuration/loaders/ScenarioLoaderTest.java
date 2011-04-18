@@ -10,11 +10,13 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 import com.tacitknowledge.simulator.ScenarioParsingException;
+import com.tacitknowledge.simulator.impl.ConversationScenarioFactory;
 import com.tacitknowledge.simulator.impl.ConversationScenarioImpl;
 
 public class ScenarioLoaderTest
 {
-    private ScenarioLoader scenarioLoader = new ScenarioLoader();
+    private ConversationScenarioFactory scenarioFactory = new ConversationScenarioFactory();
+    private ScenarioLoader scenarioLoader = new ScenarioLoader(scenarioFactory);
 
     @Test
     public void loadScenario() throws IOException, ScenarioParsingException

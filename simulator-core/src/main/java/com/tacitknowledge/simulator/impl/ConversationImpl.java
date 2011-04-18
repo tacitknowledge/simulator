@@ -37,6 +37,8 @@ public class ConversationImpl implements Conversation
      * Conversation configuration directory (as identifier)
      */
     private String conversationPath;
+    
+    private ConversationScenarioFactory scenarioFactory;
 
     /**
      * Wrapper for inbound transport configuration
@@ -73,11 +75,15 @@ public class ConversationImpl implements Conversation
      */
     private List<ConversationScenario> scenarios = new ArrayList<ConversationScenario>();
 
-    public ConversationImpl(final String conversationPath, final Transport inboundTransport,
-            final Transport outboundTransport, final Adapter inboundAdapter,
-            final Adapter outboundAdapter)
+    public ConversationImpl(final String conversationPath,
+                            final ConversationScenarioFactory scenarioFactory,
+                            final Transport inboundTransport,
+                            final Transport outboundTransport,
+                            final Adapter inboundAdapter,
+                            final Adapter outboundAdapter)
     {
         this.conversationPath = conversationPath;
+        this.scenarioFactory = scenarioFactory;
         this.inboundTransport = inboundTransport;
         this.outboundTransport = outboundTransport;
         this.inboundAdapter = inboundAdapter;
@@ -94,7 +100,7 @@ public class ConversationImpl implements Conversation
     public ConversationScenario addScenario(final String scenarioConfigFilePath,
             final String language, final String criteria, final String transformation)
     {
-        ConversationScenario scenario = ConversationScenarioFactory.createConversationScenario(
+        ConversationScenario scenario = scenarioFactory.createConversationScenario(
                 scenarioConfigFilePath, language, criteria, transformation);
         scenarios.add(scenario);
 

@@ -20,7 +20,8 @@ import com.tacitknowledge.simulator.Conversation;
 import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.camel.RouteManagerImpl;
 import com.tacitknowledge.simulator.formats.XmlAdapter;
-import com.tacitknowledge.simulator.impl.ConversationImpl;
+import com.tacitknowledge.simulator.impl.ConversationFactory;
+import com.tacitknowledge.simulator.impl.ConversationScenarioFactory;
 
 /**
  * Test class for FtpTransportIntegration
@@ -70,7 +71,9 @@ public class FtpTransportIntegrationTest extends CamelTestSupport
     @Test
     public void testSimple() throws Exception
     {
-        Conversation conversation = new ConversationImpl("somepath", 
+        ConversationScenarioFactory scenarioFactory = new ConversationScenarioFactory();
+        ConversationFactory conversationFactory = new ConversationFactory(scenarioFactory);
+        Conversation conversation = conversationFactory.createConversation("somepath", 
                                                          ftpInTransport, 
                                                          fileOutTransport, 
                                                          new XmlAdapter(), 

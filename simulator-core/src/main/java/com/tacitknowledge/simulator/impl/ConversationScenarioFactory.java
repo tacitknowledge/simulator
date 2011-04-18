@@ -5,13 +5,6 @@ import com.tacitknowledge.simulator.ConversationScenario;
 public class ConversationScenarioFactory
 {
     /**
-     * Hiding the default constructor
-     */
-    private ConversationScenarioFactory()
-    {
-    }
-
-    /**
      * Creates a new ConversationScenario
      * 
      * @param fileName
@@ -21,7 +14,7 @@ public class ConversationScenarioFactory
      * @return A new conversation scenario
      */
      
-    public static ConversationScenario createConversationScenario(
+    public ConversationScenario createConversationScenario(
         final String fileName,
         final String language,
         final String condition,

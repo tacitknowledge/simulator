@@ -29,6 +29,13 @@ public class ScenarioLoader
     
     private static final String NEW_LINE = "\n";
 
+    private ConversationScenarioFactory scenarioFactory;
+    
+    public ScenarioLoader(ConversationScenarioFactory scenarioFactory)
+    {
+        this.scenarioFactory = scenarioFactory;
+    }
+    
     /**
      * Parses scenario from given '.scn' file and returns ConversationScenario object
      * 
@@ -49,7 +56,7 @@ public class ScenarioLoader
             String language = matcher.group(LANGUAGE_SECTION_INDEX).trim().toLowerCase();
             String condition = matcher.group(CONDITION_SECTION_INDEX).trim();
             String execute = matcher.group(EXECUTE_SECTION_INDEX).trim();
-            ConversationScenario result = ConversationScenarioFactory.createConversationScenario(
+            ConversationScenario result = scenarioFactory.createConversationScenario(
                     fileName, language, condition, execute);
             return result;
         }

@@ -45,10 +45,10 @@ public class OneJarPackageScanResolver extends DefaultPackageScanClassResolver
      *
      * @inheritDoc
      */
-    protected void find(PackageScanFilter test, String packageName, ClassLoader loader, Set classes)
+    protected void find(PackageScanFilter test, String packageName, ClassLoader loader, Set<Class<?>> classes)
     {
 
-        Enumeration urls;
+        Enumeration<URL> urls;
 
         try
         {
@@ -113,7 +113,7 @@ public class OneJarPackageScanResolver extends DefaultPackageScanClassResolver
      * @param url
      * @param urlPath
      */
-    private void discoverPackageClassesInOneJarPackage(PackageScanFilter test, Set classes,
+    private void discoverPackageClassesInOneJarPackage(PackageScanFilter test, Set<Class<?>> classes,
                                                        String urlPath)
     {
         String topLevelJarPath = urlPath.substring(5, urlPath.indexOf("!"));
@@ -160,7 +160,7 @@ public class OneJarPackageScanResolver extends DefaultPackageScanClassResolver
         }
     }
 
-    private void discoverInInternalJar(PackageScanFilter test, Set classes, String packagePath,
+    private void discoverInInternalJar(PackageScanFilter test, Set<Class<?>> classes, String packagePath,
                                        JarFile topLevelJar, JarEntry topLevelJarEntry)
     {
         JarInputStream libJarInputStream = null;

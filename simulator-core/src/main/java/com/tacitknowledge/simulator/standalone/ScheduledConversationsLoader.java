@@ -10,7 +10,9 @@ import com.tacitknowledge.simulator.RouteManager;
 import com.tacitknowledge.simulator.camel.RouteManagerImpl;
 import com.tacitknowledge.simulator.configuration.loaders.ConversationLoader;
 import com.tacitknowledge.simulator.configuration.loaders.ScenarioLoader;
+import com.tacitknowledge.simulator.impl.ConversationFactory;
 import com.tacitknowledge.simulator.impl.ConversationManagerImpl;
+import com.tacitknowledge.simulator.impl.ConversationScenarioFactory;
 import com.tacitknowledge.simulator.utils.Configuration;
 
 /**
@@ -22,6 +24,11 @@ import com.tacitknowledge.simulator.utils.Configuration;
 public class ScheduledConversationsLoader extends Thread
 {
     /**
+     * class logger.
+     */
+    private static Logger logger = LoggerFactory.getLogger(ScheduledConversationsLoader.class);
+    
+    /**
      *  stop flag.
      */
     private Boolean toStop = Boolean.FALSE;
@@ -30,16 +37,7 @@ public class ScheduledConversationsLoader extends Thread
      * Route manager for camel context. 
      */
     private RouteManager routeManager;
-
-    /**
-     * class logger.
-     */
-    private static Logger logger = LoggerFactory.getLogger(ScheduledConversationsLoader.class);
-
-    private ScenarioLoader scenarioLoader;
-
-    private ConversationLoader conversationLoader;
-
+  
     private ConversationManager conversationManager;
 
     /**
@@ -47,12 +45,13 @@ public class ScheduledConversationsLoader extends Thread
      */
     public ScheduledConversationsLoader()
     {
+        ConversationScenarioFactory scenarioFactory = new ConversationScenarioFactory();
+        ScenarioLoader scenarioLoader = new ScenarioLoader(scenarioFactory);
+        ConversationFactory conversationFactory = new ConversationFactory(scenarioFactory);
+        ConversationLoader conversationLoader = new ConversationLoader(conversationFactory, scenarioLoader);
+        
         routeManager = new RouteManagerImpl();
-        scenarioLoader = new ScenarioLoader();
-        conversationLoader = new ConversationLoader(scenarioLoader);
-
         conversationManager = new ConversationManagerImpl(routeManager, conversationLoader);
-
         startRouteManager();
     }
 

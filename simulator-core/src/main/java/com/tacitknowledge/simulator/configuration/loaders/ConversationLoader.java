@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import com.tacitknowledge.simulator.utils.OnlyDirectoriesFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
@@ -24,6 +23,7 @@ import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.formats.AdapterFactory;
 import com.tacitknowledge.simulator.impl.ConversationFactory;
 import com.tacitknowledge.simulator.transports.TransportFactory;
+import com.tacitknowledge.simulator.utils.OnlyDirectoriesFilter;
 
 public class ConversationLoader
 {
@@ -36,10 +36,14 @@ public class ConversationLoader
      */
     private static Logger logger = LoggerFactory.getLogger(ConversationLoader.class);
 
+    private ConversationFactory conversationFactory;
+    
     private ScenarioLoader scenarioLoader;
 
-    public ConversationLoader(ScenarioLoader scenarioLoader)
+    public ConversationLoader(final ConversationFactory conversationFactory,
+                              final ScenarioLoader scenarioLoader)
     {
+        this.conversationFactory = conversationFactory;
         this.scenarioLoader = scenarioLoader;
     }
 
@@ -59,7 +63,7 @@ public class ConversationLoader
         Adapter inAdapter = getAdapter(Configurable.BOUND_IN, conversationPath);
         Adapter outAdapter = getAdapter(Configurable.BOUND_OUT, conversationPath);
 
-        Conversation conversation = ConversationFactory.createConversation(conversationPath,
+        Conversation conversation = conversationFactory.createConversation(conversationPath,
                 inTransport, outTransport, inAdapter, outAdapter);
         loadConversationScenarios(conversation, conversationPath);
         return conversation;

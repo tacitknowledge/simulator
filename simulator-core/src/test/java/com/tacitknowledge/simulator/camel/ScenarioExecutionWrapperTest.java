@@ -24,10 +24,14 @@ import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.Configurable;
 import com.tacitknowledge.simulator.Conversation;
 import com.tacitknowledge.simulator.TestHelper;
+import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.formats.JsonAdapter;
 import com.tacitknowledge.simulator.formats.PlainTextAdapter;
 import com.tacitknowledge.simulator.formats.XmlAdapter;
-import com.tacitknowledge.simulator.impl.ConversationImpl;
+import com.tacitknowledge.simulator.impl.ConversationFactory;
+import com.tacitknowledge.simulator.impl.ConversationScenarioFactory;
+import com.tacitknowledge.simulator.transports.MockInTransport;
+import com.tacitknowledge.simulator.transports.MockOutTransport;
 
 /**
  * Test class for ScenarioExecutionWrapper
@@ -36,12 +40,21 @@ import com.tacitknowledge.simulator.impl.ConversationImpl;
  */
 public class ScenarioExecutionWrapperTest
 {
+    private Transport inTransport = new MockInTransport();
+    
+    private Transport outTransport = new MockOutTransport();
+    
     private Conversation conversation;
 
+    private ConversationScenarioFactory scenarioFactory = new ConversationScenarioFactory();
+    
+    private ConversationFactory conversationFactory = new ConversationFactory(scenarioFactory);
+    
     @Test
     public void testWithoutScenarios() throws Exception
     {
-        conversation = new ConversationImpl("Conversation1", null, null, new PlainTextAdapter(), new PlainTextAdapter());
+        
+        conversation = conversationFactory.createConversation("Conversation1", inTransport, outTransport, new PlainTextAdapter(), new PlainTextAdapter());
         conversation.addScenario("file.scn", "javascript", "true", "text");
 
         ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(conversation);
@@ -64,7 +77,7 @@ public class ScenarioExecutionWrapperTest
         String criteria = "employees.employee[0].name=='John';";
         String execution = "employees.employee[0].name='John12345';employees";
 
-        conversation = new ConversationImpl("Conversation1", null, null, new XmlAdapter(), new XmlAdapter());
+        conversation = conversationFactory.createConversation("Conversation1", inTransport, outTransport, new XmlAdapter(), new XmlAdapter());
         conversation.addScenario("file.scn", "javascript", criteria, execution);
 
         ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(conversation);
@@ -82,7 +95,7 @@ public class ScenarioExecutionWrapperTest
     @Test
     public void testTreeScenarios() throws Exception
     {
-        conversation = new ConversationImpl("Conversation2", null, null, new XmlAdapter(), new XmlAdapter());
+        conversation = conversationFactory.createConversation("Conversation2", inTransport, outTransport, new XmlAdapter(), new XmlAdapter());
 
         String criteria1 = "employees.employee[0].name=='John12345';"; //false
         String execution1 = "employees.employee[0].name='Johnffff';employees";
@@ -126,7 +139,7 @@ public class ScenarioExecutionWrapperTest
         param.put(JsonAdapter.PARAM_JSON_CONTENT, "employees");
         JsonAdapter outAdapter = new JsonAdapter(Configurable.BOUND_OUT, param);
 
-        conversation = new ConversationImpl("Conversation2", null, null, new XmlAdapter(), outAdapter);
+        conversation = conversationFactory.createConversation("Conversation2", inTransport, outTransport, new XmlAdapter(), outAdapter);
 
         conversation.addScenario("file.scn", "javascript", criteria2, execution2);
 
@@ -160,7 +173,7 @@ public class ScenarioExecutionWrapperTest
     public void testRubyScenario() throws Exception
     {
 
-        conversation = new ConversationImpl("Conversation2", null, null, new XmlAdapter(), new XmlAdapter());
+        conversation = conversationFactory.createConversation("Conversation2", inTransport, outTransport, new XmlAdapter(), new XmlAdapter());
 
         conversation.addScenario("file.scn", "ruby", "require 'java'\n$employees.employee[0].name == 'John';", "$employees.employee[0].name='John12345';" +
                 "$employees" );
@@ -181,7 +194,7 @@ public class ScenarioExecutionWrapperTest
     @Test
     public void testReturnDifferentObject() throws Exception
     {
-        conversation = new ConversationImpl("Conversation2", null, null, new XmlAdapter(), new PlainTextAdapter());
+        conversation = conversationFactory.createConversation("Conversation2", inTransport, outTransport, new XmlAdapter(), new PlainTextAdapter());
 
         conversation.addScenario("file.scn", "ruby", "require 'java'\n$employees.employee[0].name == 'John';",
             "$employees.employee[0].name='John12345'; return 'Success'");
@@ -204,7 +217,7 @@ public class ScenarioExecutionWrapperTest
     @Test
     public void testReturnRubyEmptyHash() throws Exception
     {
-        conversation = new ConversationImpl("Conversation2", null, null, new XmlAdapter(), new XmlAdapter());
+        conversation = conversationFactory.createConversation("Conversation2", inTransport, outTransport, new XmlAdapter(), new XmlAdapter());
 
         conversation.addScenario("file.scn", "ruby", "require 'java'\n$employees.employee[0].name == 'John';",
             "$employees.employee[0].name='John12345';" +
@@ -229,7 +242,7 @@ public class ScenarioExecutionWrapperTest
         params.put(XmlAdapter.PARAM_ROOT_TAG_NAME, "root");
         Adapter outAdapter = new XmlAdapter(Configurable.BOUND_OUT, params);
 
-        conversation = new ConversationImpl("Conversation2", null, null, new XmlAdapter(), outAdapter);
+        conversation = conversationFactory.createConversation("Conversation2", inTransport, outTransport, new XmlAdapter(), outAdapter);
 
         conversation.addScenario("file.scn", "ruby", "require 'java'\n$employees.employee[0].name == 'John';",
             "$employees.employee[0].name='John12345';" +
@@ -272,7 +285,7 @@ public class ScenarioExecutionWrapperTest
             "}\n" +
             "xxx";
 
-        conversation = new ConversationImpl("Conversation2", null, null, new XmlAdapter(), new XmlAdapter());
+        conversation = conversationFactory.createConversation("Conversation2", inTransport, outTransport, new XmlAdapter(), new XmlAdapter());
 
         conversation.addScenario("file.scn", "javascript", criteria, execution);
 

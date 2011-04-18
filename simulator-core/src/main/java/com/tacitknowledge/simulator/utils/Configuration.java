@@ -1,12 +1,9 @@
 package com.tacitknowledge.simulator.utils;
 
-import com.tacitknowledge.simulator.standalone.Simulator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
 
-import java.io.IOException;
-import java.util.Properties;
+import com.tacitknowledge.simulator.standalone.Simulator;
 
 /**
  * Configurations reading logic, constants definitions.
@@ -64,11 +61,6 @@ public class Configuration
      * Property name for reading frequency.
      */
     public static final String CONVERSATIONS_READING_FREQUENCY_NAME = "conversationsReadingFrequency";
-
-    /**
-     * Configuration properties will be loaded only one time.
-     */
-    private static Properties configurationProperties = null;
 
     public static String path = "";
 

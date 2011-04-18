@@ -16,8 +16,6 @@ import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPMessage;
 
-import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,6 +29,7 @@ import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.camel.RouteManagerImpl;
 import com.tacitknowledge.simulator.formats.SoapAdapter;
 import com.tacitknowledge.simulator.impl.ConversationFactory;
+import com.tacitknowledge.simulator.impl.ConversationScenarioFactory;
 
 /**
  * @author Daniel Valencia (mailto:dvalencia@tacitknowledge.com)
@@ -251,8 +250,10 @@ public class SoapTransportIntegrationTest {
             throws Exception
     {
         setupTransportsAndFormats(wsdlFile);
-
-        conv = ConversationFactory.createConversation("Soap conversation",
+        ConversationScenarioFactory scenarioFactory = new ConversationScenarioFactory();
+        ConversationFactory conversationFactory = new ConversationFactory(scenarioFactory);
+        
+        conv = conversationFactory.createConversation("Soap conversation",
                                                       inTransport,
                                                       outTransport,
                                                       inAdapter,

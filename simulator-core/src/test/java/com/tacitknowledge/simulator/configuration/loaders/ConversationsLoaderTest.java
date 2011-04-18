@@ -14,6 +14,8 @@ import org.springframework.core.io.Resource;
 
 import com.tacitknowledge.simulator.Conversation;
 import com.tacitknowledge.simulator.ConversationScenario;
+import com.tacitknowledge.simulator.impl.ConversationFactory;
+import com.tacitknowledge.simulator.impl.ConversationScenarioFactory;
 
 public class ConversationsLoaderTest
 {
@@ -23,8 +25,10 @@ public class ConversationsLoaderTest
     {
         Resource resource = new ClassPathResource("systems");
 
-        ScenarioLoader scenarioLoader = new ScenarioLoader();
-        ConversationLoader conversationLoader = new ConversationLoader(scenarioLoader);
+        ConversationScenarioFactory scenarioFactory = new ConversationScenarioFactory();
+        ConversationFactory conversationFactory = new ConversationFactory(scenarioFactory);
+        ScenarioLoader scenarioLoader = new ScenarioLoader(scenarioFactory);
+        ConversationLoader conversationLoader = new ConversationLoader(conversationFactory, scenarioLoader);
 
         Map<String, Conversation> conversations = conversationLoader.loadAllConversationsInDirectory(
             resource.getFile().getAbsolutePath());

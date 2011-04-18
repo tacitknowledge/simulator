@@ -2,7 +2,6 @@ package com.tacitknowledge.simulator.impl;
 
 import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.Conversation;
-import com.tacitknowledge.simulator.SimulatorException;
 import com.tacitknowledge.simulator.Transport;
 
 /**
@@ -12,13 +11,14 @@ import com.tacitknowledge.simulator.Transport;
  */
 public final class ConversationFactory
 {
-    /**
-     * Hiding the default constructor
-     */
-    private ConversationFactory()
+    
+    private ConversationScenarioFactory scenarioFactory;
+    
+    public ConversationFactory(ConversationScenarioFactory scenarioFactory)
     {
+        this.scenarioFactory = scenarioFactory;
     }
-
+    
     /**
      * Creates a new Conversation from the given transports and adapters.
      *
@@ -29,7 +29,7 @@ public final class ConversationFactory
      * @param outboundAdapter   outbound adapter
      * @return The created Conversation
      */
-    public static Conversation createConversation(
+    public Conversation createConversation(
         final String id,
         final Transport inboundTransport,
         final Transport outboundTransport,
@@ -46,6 +46,6 @@ public final class ConversationFactory
             throw new IllegalArgumentException(errorMessage);
         }
 
-        return new ConversationImpl(id, inboundTransport, outboundTransport, inboundAdapter, outboundAdapter);
+        return new ConversationImpl(id, scenarioFactory, inboundTransport, outboundTransport, inboundAdapter, outboundAdapter);
     }
 }
