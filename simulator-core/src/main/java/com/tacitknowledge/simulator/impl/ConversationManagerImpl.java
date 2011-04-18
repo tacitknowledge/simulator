@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import com.tacitknowledge.simulator.Conversation;
 import com.tacitknowledge.simulator.ConversationManager;
-import com.tacitknowledge.simulator.ConversationScenario;
+import com.tacitknowledge.simulator.Scenario;
 import com.tacitknowledge.simulator.RouteManager;
 import com.tacitknowledge.simulator.configuration.EventDispatcher;
 import com.tacitknowledge.simulator.configuration.SimulatorEventListener;
@@ -217,8 +217,8 @@ public class ConversationManagerImpl implements ConversationManager
             return true;
         }
 
-        Map<String, ConversationScenario> conv1Scenarios = conv1.getScenarios();
-        Map<String, ConversationScenario> conv2Scenarios = conv2.getScenarios();
+        Map<String, Scenario> conv1Scenarios = conv1.getScenarios();
+        Map<String, Scenario> conv2Scenarios = conv2.getScenarios();
 
         // If the number of scenario differs return true
         // Case when new scenario appeared or an scenario was removed
@@ -232,7 +232,7 @@ public class ConversationManagerImpl implements ConversationManager
         }
 
         // Compare last modified date of each scenario
-        for (ConversationScenario scenario1 : conv1Scenarios.values())
+        for (Scenario scenario1 : conv1Scenarios.values())
         {
             if (!conv2Scenarios.containsKey(scenario1.getConfigurationFilePath()))
             {
@@ -243,7 +243,7 @@ public class ConversationManagerImpl implements ConversationManager
                 return true;
             }
 
-            ConversationScenario scenario2 = conv2Scenarios.get(scenario1
+            Scenario scenario2 = conv2Scenarios.get(scenario1
                     .getConfigurationFilePath());
 
             if (scenario1.getLastModifiedDate() != scenario2.getLastModifiedDate())

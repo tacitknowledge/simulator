@@ -11,7 +11,7 @@ import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.TransportException;
 import com.tacitknowledge.simulator.formats.PlainTextAdapter;
 import com.tacitknowledge.simulator.impl.ConversationFactory;
-import com.tacitknowledge.simulator.impl.ConversationScenarioFactory;
+import com.tacitknowledge.simulator.impl.ScenarioFactory;
 
 /**
  * Test class for RouteManager
@@ -26,7 +26,7 @@ public class RouteManagerTest extends SimulatorCamelTestSupportBase
      */
     private static final int TIMEOUT = 500;
 
-    private ConversationScenarioFactory scenarioFactory = new ConversationScenarioFactory();
+    private ScenarioFactory scenarioFactory = new ScenarioFactory();
     
     private ConversationFactory conversationFactory = new ConversationFactory(scenarioFactory); 
     

@@ -12,9 +12,9 @@ import com.tacitknowledge.simulator.Transport;
 public final class ConversationFactory
 {
     
-    private ConversationScenarioFactory scenarioFactory;
+    private ScenarioFactory scenarioFactory;
     
-    public ConversationFactory(ConversationScenarioFactory scenarioFactory)
+    public ConversationFactory(ScenarioFactory scenarioFactory)
     {
         this.scenarioFactory = scenarioFactory;
     }

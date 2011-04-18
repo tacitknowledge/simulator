@@ -18,7 +18,7 @@ import com.tacitknowledge.simulator.RouteManager;
 import com.tacitknowledge.simulator.configuration.loaders.ConversationLoader;
 import com.tacitknowledge.simulator.configuration.loaders.ScenarioLoader;
 import com.tacitknowledge.simulator.impl.ConversationFactory;
-import com.tacitknowledge.simulator.impl.ConversationScenarioFactory;
+import com.tacitknowledge.simulator.impl.ScenarioFactory;
 import com.tacitknowledge.simulator.transports.FileTransport;
 import com.tacitknowledge.simulator.utils.Configuration;
 
@@ -31,7 +31,7 @@ public class SimulatorWithConfigsFromFileTest
     @Before
     public void setUp()
     {
-        ConversationScenarioFactory scenarioFactory = new ConversationScenarioFactory();
+        ScenarioFactory scenarioFactory = new ScenarioFactory();
         ConversationFactory conversationFactory = new ConversationFactory(scenarioFactory);
         scenarioLoader = new ScenarioLoader(scenarioFactory);
         conversationLoader = new ConversationLoader(conversationFactory, scenarioLoader);

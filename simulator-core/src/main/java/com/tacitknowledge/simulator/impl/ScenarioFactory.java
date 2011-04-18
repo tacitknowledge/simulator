@@ -1,8 +1,8 @@
 package com.tacitknowledge.simulator.impl;
 
-import com.tacitknowledge.simulator.ConversationScenario;
+import com.tacitknowledge.simulator.Scenario;
 
-public class ConversationScenarioFactory
+public class ScenarioFactory
 {
     /**
      * Creates a new ConversationScenario
@@ -14,7 +14,7 @@ public class ConversationScenarioFactory
      * @return A new conversation scenario
      */
      
-    public ConversationScenario createConversationScenario(
+    public Scenario createConversationScenario(
         final String fileName,
         final String language,
         final String condition,
@@ -29,6 +29,6 @@ public class ConversationScenarioFactory
             throw new IllegalArgumentException(errorMessage);
         }
 
-        return new ConversationScenarioImpl(fileName, language, condition, execute);
+        return new ScenarioImpl(fileName, language, condition, execute);
     }
 }

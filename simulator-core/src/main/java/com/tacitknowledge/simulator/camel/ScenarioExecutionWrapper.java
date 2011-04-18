@@ -2,7 +2,7 @@ package com.tacitknowledge.simulator.camel;
 
 import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.Conversation;
-import com.tacitknowledge.simulator.ConversationScenario;
+import com.tacitknowledge.simulator.Scenario;
 import com.tacitknowledge.simulator.configuration.EventDispatcher;
 import com.tacitknowledge.simulator.configuration.SimulatorEventType;
 import org.apache.camel.Exchange;
@@ -39,7 +39,7 @@ public class ScenarioExecutionWrapper
     /**
      * Container of the scenarios to run
      */
-    private Collection<ConversationScenario> scenarios;
+    private Collection<Scenario> scenarios;
 
     /**
      * The conversation related to this execution.
@@ -85,7 +85,7 @@ public class ScenarioExecutionWrapper
 
         Object result = null;
         // here we are looking for first matching scenario and ignore all other scenarios
-        for (ConversationScenario scenario : scenarios)
+        for (Scenario scenario : scenarios)
         {
             synchronized (scenario)
             {

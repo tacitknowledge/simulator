@@ -17,7 +17,7 @@ import org.springframework.core.io.Resource;
 import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.Configurable;
 import com.tacitknowledge.simulator.Conversation;
-import com.tacitknowledge.simulator.ConversationScenario;
+import com.tacitknowledge.simulator.Scenario;
 import com.tacitknowledge.simulator.ScenarioParsingException;
 import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.formats.AdapterFactory;
@@ -139,7 +139,7 @@ public class ConversationLoader
         {
             try
             {
-                ConversationScenario scenario = scenarioLoader.parseScenarioFromFile(scenarioFile
+                Scenario scenario = scenarioLoader.parseScenarioFromFile(scenarioFile
                         .getAbsolutePath());
 
                 conversation.addScenario(scenario);

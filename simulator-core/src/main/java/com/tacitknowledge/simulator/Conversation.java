@@ -43,7 +43,7 @@ public interface Conversation
      * @param transformation transformation script to be executed by the simulator
      * @return ConversationScenario conversation scenario added to the conversation
      */
-    ConversationScenario addScenario(final String scenarioConfigFilePath, final String language,
+    Scenario addScenario(final String scenarioConfigFilePath, final String language,
             final String criteria, final String transformation);
 
     /**
@@ -51,7 +51,7 @@ public interface Conversation
      * 
      * @param scenario scenario
      */
-    void addScenario(ConversationScenario scenario);
+    void addScenario(Scenario scenario);
 
     /**
      * Returns this conversation inbound transport
@@ -86,5 +86,5 @@ public interface Conversation
      *
      * @return a list of ConversationScenarios
      */
-    Map<String, ConversationScenario> getScenarios();
+    Map<String, Scenario> getScenarios();
 }

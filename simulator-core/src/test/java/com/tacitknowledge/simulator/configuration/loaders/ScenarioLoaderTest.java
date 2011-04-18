@@ -10,12 +10,13 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 import com.tacitknowledge.simulator.ScenarioParsingException;
-import com.tacitknowledge.simulator.impl.ConversationScenarioFactory;
-import com.tacitknowledge.simulator.impl.ConversationScenarioImpl;
+import com.tacitknowledge.simulator.impl.ScenarioFactory;
+import com.tacitknowledge.simulator.impl.ScenarioImpl;
 
 public class ScenarioLoaderTest
 {
-    private ConversationScenarioFactory scenarioFactory = new ConversationScenarioFactory();
+    private ScenarioFactory scenarioFactory = new ScenarioFactory();
+    
     private ScenarioLoader scenarioLoader = new ScenarioLoader(scenarioFactory);
 
     @Test
@@ -23,7 +24,7 @@ public class ScenarioLoaderTest
     {
         Resource resource = new ClassPathResource("systems/sys1/conv1/scenario1.scn");
 
-        ConversationScenarioImpl scenario = (ConversationScenarioImpl) scenarioLoader
+        ScenarioImpl scenario = (ScenarioImpl) scenarioLoader
                 .parseScenarioFromFile(resource.getFile().getAbsolutePath());
 
         assertTrue(scenario.getCriteriaScript().startsWith("1==1"));

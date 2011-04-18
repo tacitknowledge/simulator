@@ -24,7 +24,7 @@ import org.springframework.core.io.ClassPathResource;
 import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.Conversation;
 import com.tacitknowledge.simulator.ConversationManager;
-import com.tacitknowledge.simulator.ConversationScenario;
+import com.tacitknowledge.simulator.Scenario;
 import com.tacitknowledge.simulator.RouteManager;
 import com.tacitknowledge.simulator.ScenarioParsingException;
 import com.tacitknowledge.simulator.SimulatorCamelTestSupportBase;
@@ -65,7 +65,7 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
      */
     private String scenarioPath;
     
-    private ConversationScenarioFactory scenarioFactory;
+    private ScenarioFactory scenarioFactory;
     
     private ConversationFactory conversationFactory;
 
@@ -87,7 +87,7 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
                 .getAbsolutePath();
         scenarioPath = new ClassPathResource(SCENARIO_PATH).getFile().getAbsolutePath();
         
-        scenarioFactory = new ConversationScenarioFactory();
+        scenarioFactory = new ScenarioFactory();
         conversationFactory = new ConversationFactory(scenarioFactory);
     }
 
@@ -397,7 +397,7 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         {
             conversation1 = conversationLoader.loadSingleConversationInDirectory(folderPath);
             conversation2 = conversationLoader.loadSingleConversationInDirectory(folderPath);
-            ConversationScenario conversationScenario = scenarioLoader
+            Scenario conversationScenario = scenarioLoader
                     .parseScenarioFromFile(scenarioPath);
             conversation2.addScenario(conversationScenario);
         }
@@ -476,13 +476,13 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
     static class ConversationImpl1 extends ConversationImpl{
         Conversation conversation;
         
-        public ConversationImpl1(ConversationScenarioFactory scenarioFactory, Conversation conversation)
+        public ConversationImpl1(ScenarioFactory scenarioFactory, Conversation conversation)
         {
             super(null, scenarioFactory, null, null, null, null);
             this.conversation = conversation;
         }
         
-        public ConversationImpl1(final String conversationPath, final ConversationScenarioFactory scenarioFactory, final Transport inboundTransport,
+        public ConversationImpl1(final String conversationPath, final ScenarioFactory scenarioFactory, final Transport inboundTransport,
                 final Transport outboundTransport, final Adapter inboundAdapter,
                 final Adapter outboundAdapter)
         {
@@ -500,9 +500,9 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         /**
          * This method will return all scenarios without the first one.
          */
-        public Map<String, ConversationScenario> getScenarios(){
-            Map<String, ConversationScenario> localeScenarios = new HashMap<String, ConversationScenario>();
-            Iterator<Entry<String, ConversationScenario>> scenariosIterator = conversation.getScenarios().entrySet().iterator();
+        public Map<String, Scenario> getScenarios(){
+            Map<String, Scenario> localeScenarios = new HashMap<String, Scenario>();
+            Iterator<Entry<String, Scenario>> scenariosIterator = conversation.getScenarios().entrySet().iterator();
             int count = 0;
             while(scenariosIterator.hasNext()){
                 if (count==0) {
@@ -510,7 +510,7 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
                     ++count;
                     continue;
                 } else {
-                    Entry<String, ConversationScenario> entry = scenariosIterator.next();
+                    Entry<String, Scenario> entry = scenariosIterator.next();
                     localeScenarios.put(entry.getKey(), entry.getValue());
                     ++count;
                 }
@@ -526,13 +526,13 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
     static class ConversationImpl2 extends ConversationImpl{
         Conversation conversation;
         
-        public ConversationImpl2(ConversationScenarioFactory scenarioFactory, Conversation conversation)
+        public ConversationImpl2(ScenarioFactory scenarioFactory, Conversation conversation)
         {
             super(null, scenarioFactory, null, null, null, null);
             this.conversation = conversation;
         }
         
-        public ConversationImpl2(final String conversationPath, final ConversationScenarioFactory scenarioFactory, final Transport inboundTransport,
+        public ConversationImpl2(final String conversationPath, final ScenarioFactory scenarioFactory, final Transport inboundTransport,
                 final Transport outboundTransport, final Adapter inboundAdapter,
                 final Adapter outboundAdapter)
         {
@@ -550,9 +550,9 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         /**
          * This method will return all scenarios without the last.
          */
-        public Map<String, ConversationScenario> getScenarios(){
-            Map<String, ConversationScenario> localeScenarios = new HashMap<String, ConversationScenario>();
-            Iterator<Entry<String, ConversationScenario>> scenariosIterator = conversation.getScenarios().entrySet().iterator();
+        public Map<String, Scenario> getScenarios(){
+            Map<String, Scenario> localeScenarios = new HashMap<String, Scenario>();
+            Iterator<Entry<String, Scenario>> scenariosIterator = conversation.getScenarios().entrySet().iterator();
             int count = 0;
             while(scenariosIterator.hasNext()){
                 if (count==(conversation.getScenarios().size()-1)) {
@@ -560,7 +560,7 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
                     ++count;
                     continue;
                 } else {
-                    Entry<String, ConversationScenario> entry = scenariosIterator.next();
+                    Entry<String, Scenario> entry = scenariosIterator.next();
                     localeScenarios.put(entry.getKey(), entry.getValue());
                     ++count;
                 }
@@ -576,13 +576,13 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
     static class ConversationImpl3 extends ConversationImpl{
         Conversation conversation;
         
-        public ConversationImpl3(ConversationScenarioFactory scenarioFactory, Conversation conversation)
+        public ConversationImpl3(ScenarioFactory scenarioFactory, Conversation conversation)
         {
             super(null, scenarioFactory, null, null, null, null);
             this.conversation = conversation;
         }
         
-        public ConversationImpl3(final String conversationPath, final ConversationScenarioFactory scenarioFactory, final Transport inboundTransport,
+        public ConversationImpl3(final String conversationPath, final ScenarioFactory scenarioFactory, final Transport inboundTransport,
                 final Transport outboundTransport, final Adapter inboundAdapter,
                 final Adapter outboundAdapter)
         {
@@ -600,19 +600,19 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         /**
          * This method will return all scenarios without the last.
          */
-        public Map<String, ConversationScenario> getScenarios(){
-            Map<String, ConversationScenario> localeScenarios = new HashMap<String, ConversationScenario>();
-            Iterator<Entry<String, ConversationScenario>> scenariosIterator = conversation.getScenarios().entrySet().iterator();
+        public Map<String, Scenario> getScenarios(){
+            Map<String, Scenario> localeScenarios = new HashMap<String, Scenario>();
+            Iterator<Entry<String, Scenario>> scenariosIterator = conversation.getScenarios().entrySet().iterator();
             int count = 0;
             while(scenariosIterator.hasNext()){
                 if (count==(conversation.getScenarios().size()-1)) {
-                    ConversationScenario scenario = scenariosIterator.next().getValue();
-                    ConversationScenario newScenario = new ConversationScenarioImplDateModifier(scenario);
+                    Scenario scenario = scenariosIterator.next().getValue();
+                    Scenario newScenario = new ConversationScenarioImplDateModifier(scenario);
                     localeScenarios.put(scenario.getConfigurationFilePath(), newScenario);
                     ++count;
                     continue;
                 } else {
-                    Entry<String, ConversationScenario> entry = scenariosIterator.next();
+                    Entry<String, Scenario> entry = scenariosIterator.next();
                     localeScenarios.put(entry.getKey(), entry.getValue());
                     ++count;
                 }
@@ -625,9 +625,9 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
      * @author ociobanu
      *
      */
-    static class ConversationScenarioImplDateModifier extends ConversationScenarioImpl{
-        ConversationScenario scenario;
-        public ConversationScenarioImplDateModifier(ConversationScenario scenario){
+    static class ConversationScenarioImplDateModifier extends ScenarioImpl{
+        Scenario scenario;
+        public ConversationScenarioImplDateModifier(Scenario scenario){
             super(scenario.getConfigurationFilePath(), scenario.getScriptLanguage(), scenario.getCriteriaScript(), scenario.getTransformationScript());
             this.scenario = scenario;
         }

@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.Conversation;
-import com.tacitknowledge.simulator.ConversationScenario;
+import com.tacitknowledge.simulator.Scenario;
 import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.utils.ConversationUtil;
 
@@ -38,7 +38,7 @@ public class ConversationImpl implements Conversation
      */
     private String conversationPath;
     
-    private ConversationScenarioFactory scenarioFactory;
+    private ScenarioFactory scenarioFactory;
 
     /**
      * Wrapper for inbound transport configuration
@@ -73,10 +73,10 @@ public class ConversationImpl implements Conversation
     /**
      * List of configured scenarios for this conversation
      */
-    private List<ConversationScenario> scenarios = new ArrayList<ConversationScenario>();
+    private List<Scenario> scenarios = new ArrayList<Scenario>();
 
     public ConversationImpl(final String conversationPath,
-                            final ConversationScenarioFactory scenarioFactory,
+                            final ScenarioFactory scenarioFactory,
                             final Transport inboundTransport,
                             final Transport outboundTransport,
                             final Adapter inboundAdapter,
@@ -97,10 +97,10 @@ public class ConversationImpl implements Conversation
     /**
      * {@inheritDoc}
      */
-    public ConversationScenario addScenario(final String scenarioConfigFilePath,
+    public Scenario addScenario(final String scenarioConfigFilePath,
             final String language, final String criteria, final String transformation)
     {
-        ConversationScenario scenario = scenarioFactory.createConversationScenario(
+        Scenario scenario = scenarioFactory.createConversationScenario(
                 scenarioConfigFilePath, language, criteria, transformation);
         scenarios.add(scenario);
 
@@ -112,7 +112,7 @@ public class ConversationImpl implements Conversation
     /**
      * {@inheritDoc}
      */
-    public void addScenario(ConversationScenario scenario)
+    public void addScenario(Scenario scenario)
     {
         scenarios.add(scenario);
         logger.info("Added new conversation scenario to the conversation located at : {}",
@@ -178,11 +178,11 @@ public class ConversationImpl implements Conversation
     /**
      * {@inheritDoc}
      */
-    public Map<String, ConversationScenario> getScenarios()
+    public Map<String, Scenario> getScenarios()
     {
-        Map<String, ConversationScenario> map = new HashMap<String, ConversationScenario>();
+        Map<String, Scenario> map = new HashMap<String, Scenario>();
         
-        for (ConversationScenario scenario : scenarios)
+        for (Scenario scenario : scenarios)
         {
             map.put(scenario.getConfigurationFilePath(), scenario);
         }

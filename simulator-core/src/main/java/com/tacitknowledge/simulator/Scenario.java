@@ -9,7 +9,7 @@ import java.util.Map;
  *
  * @author Alexandru Dereveanco (adereveanco@tacitknowledge.com)
  */
-public interface ConversationScenario
+public interface Scenario
 {
     /**
      * Starts this scenario execution with the provided entry data

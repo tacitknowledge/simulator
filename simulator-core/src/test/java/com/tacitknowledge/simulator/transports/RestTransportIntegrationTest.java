@@ -20,7 +20,7 @@ import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.camel.RouteManagerImpl;
 import com.tacitknowledge.simulator.formats.RestAdapter;
 import com.tacitknowledge.simulator.impl.ConversationFactory;
-import com.tacitknowledge.simulator.impl.ConversationScenarioFactory;
+import com.tacitknowledge.simulator.impl.ScenarioFactory;
 
 /**
  * @author Daniel Valencia (mailto:dvalencia@tacitknowledge.com)
@@ -61,7 +61,7 @@ public class RestTransportIntegrationTest {
         pars.put(HttpTransport.PARAM_HTTP_OUT, "true");
         outTransport.setParameters(pars);
 
-        ConversationScenarioFactory scenarioFactory = new ConversationScenarioFactory();
+        ScenarioFactory scenarioFactory = new ScenarioFactory();
         ConversationFactory conversationFactory = new ConversationFactory(scenarioFactory);
         Conversation conv = conversationFactory.createConversation("Rest conversation", inTransport, outTransport, inAdapter, outAdapter);
         String criteriaScript       = "obj1.request.params['id']=='89'";

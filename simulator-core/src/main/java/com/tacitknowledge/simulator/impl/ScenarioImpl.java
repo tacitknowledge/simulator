@@ -2,7 +2,7 @@ package com.tacitknowledge.simulator.impl;
 
 import java.util.Map;
 
-import com.tacitknowledge.simulator.ConversationScenario;
+import com.tacitknowledge.simulator.Scenario;
 import com.tacitknowledge.simulator.SimulatorException;
 import com.tacitknowledge.simulator.scripting.ScriptException;
 import com.tacitknowledge.simulator.scripting.ScriptExecutionService;
@@ -13,7 +13,7 @@ import com.tacitknowledge.simulator.utils.ConversationUtil;
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class ConversationScenarioImpl implements ConversationScenario
+public class ScenarioImpl implements Scenario
 {
     /**
      * Prime number to be used in the hashcode method.
@@ -57,7 +57,7 @@ public class ConversationScenarioImpl implements ConversationScenario
      * @param criteriaScript       the criteria script to match
      * @param transformationScript the transformation script for the scenario.
      */
-    public ConversationScenarioImpl(final String configFilePath, final String scriptLanguage,
+    public ScenarioImpl(final String configFilePath, final String scriptLanguage,
             final String criteriaScript, final String transformationScript)
     {
         this.scriptLanguage = scriptLanguage;
@@ -139,7 +139,7 @@ public class ConversationScenarioImpl implements ConversationScenario
             result = false;
         }
 
-        ConversationScenarioImpl that = (ConversationScenarioImpl) o;
+        ScenarioImpl that = (ScenarioImpl) o;
 
         if (!criteriaScript.equals(that.criteriaScript)
                 || !scriptLanguage.equals(that.scriptLanguage)

@@ -29,7 +29,7 @@ import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.camel.RouteManagerImpl;
 import com.tacitknowledge.simulator.formats.SoapAdapter;
 import com.tacitknowledge.simulator.impl.ConversationFactory;
-import com.tacitknowledge.simulator.impl.ConversationScenarioFactory;
+import com.tacitknowledge.simulator.impl.ScenarioFactory;
 
 /**
  * @author Daniel Valencia (mailto:dvalencia@tacitknowledge.com)
@@ -250,7 +250,7 @@ public class SoapTransportIntegrationTest {
             throws Exception
     {
         setupTransportsAndFormats(wsdlFile);
-        ConversationScenarioFactory scenarioFactory = new ConversationScenarioFactory();
+        ScenarioFactory scenarioFactory = new ScenarioFactory();
         ConversationFactory conversationFactory = new ConversationFactory(scenarioFactory);
         
         conv = conversationFactory.createConversation("Soap conversation",

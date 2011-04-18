@@ -8,9 +8,9 @@ import java.io.InputStreamReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.tacitknowledge.simulator.ConversationScenario;
+import com.tacitknowledge.simulator.Scenario;
 import com.tacitknowledge.simulator.ScenarioParsingException;
-import com.tacitknowledge.simulator.impl.ConversationScenarioFactory;
+import com.tacitknowledge.simulator.impl.ScenarioFactory;
 
 public class ScenarioLoader
 {
@@ -29,9 +29,9 @@ public class ScenarioLoader
     
     private static final String NEW_LINE = "\n";
 
-    private ConversationScenarioFactory scenarioFactory;
+    private ScenarioFactory scenarioFactory;
     
-    public ScenarioLoader(ConversationScenarioFactory scenarioFactory)
+    public ScenarioLoader(ScenarioFactory scenarioFactory)
     {
         this.scenarioFactory = scenarioFactory;
     }
@@ -44,7 +44,7 @@ public class ScenarioLoader
      * @throws IOException
      * @throws ScenarioParsingException 
      */
-    public ConversationScenario parseScenarioFromFile(String fileName) throws IOException,
+    public Scenario parseScenarioFromFile(String fileName) throws IOException,
             ScenarioParsingException
     {
         InputStream is = new FileInputStream(fileName);
@@ -56,7 +56,7 @@ public class ScenarioLoader
             String language = matcher.group(LANGUAGE_SECTION_INDEX).trim().toLowerCase();
             String condition = matcher.group(CONDITION_SECTION_INDEX).trim();
             String execute = matcher.group(EXECUTE_SECTION_INDEX).trim();
-            ConversationScenario result = scenarioFactory.createConversationScenario(
+            Scenario result = scenarioFactory.createConversationScenario(
                     fileName, language, condition, execute);
             return result;
         }

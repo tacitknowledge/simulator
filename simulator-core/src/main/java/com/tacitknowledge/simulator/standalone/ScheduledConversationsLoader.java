@@ -12,7 +12,7 @@ import com.tacitknowledge.simulator.configuration.loaders.ConversationLoader;
 import com.tacitknowledge.simulator.configuration.loaders.ScenarioLoader;
 import com.tacitknowledge.simulator.impl.ConversationFactory;
 import com.tacitknowledge.simulator.impl.ConversationManagerImpl;
-import com.tacitknowledge.simulator.impl.ConversationScenarioFactory;
+import com.tacitknowledge.simulator.impl.ScenarioFactory;
 import com.tacitknowledge.simulator.utils.Configuration;
 
 /**
@@ -45,7 +45,7 @@ public class ScheduledConversationsLoader extends Thread
      */
     public ScheduledConversationsLoader()
     {
-        ConversationScenarioFactory scenarioFactory = new ConversationScenarioFactory();
+        ScenarioFactory scenarioFactory = new ScenarioFactory();
         ScenarioLoader scenarioLoader = new ScenarioLoader(scenarioFactory);
         ConversationFactory conversationFactory = new ConversationFactory(scenarioFactory);
         ConversationLoader conversationLoader = new ConversationLoader(conversationFactory, scenarioLoader);

@@ -29,7 +29,7 @@ import com.tacitknowledge.simulator.formats.JsonAdapter;
 import com.tacitknowledge.simulator.formats.PlainTextAdapter;
 import com.tacitknowledge.simulator.formats.XmlAdapter;
 import com.tacitknowledge.simulator.impl.ConversationFactory;
-import com.tacitknowledge.simulator.impl.ConversationScenarioFactory;
+import com.tacitknowledge.simulator.impl.ScenarioFactory;
 import com.tacitknowledge.simulator.transports.MockInTransport;
 import com.tacitknowledge.simulator.transports.MockOutTransport;
 
@@ -46,7 +46,7 @@ public class ScenarioExecutionWrapperTest
     
     private Conversation conversation;
 
-    private ConversationScenarioFactory scenarioFactory = new ConversationScenarioFactory();
+    private ScenarioFactory scenarioFactory = new ScenarioFactory();
     
     private ConversationFactory conversationFactory = new ConversationFactory(scenarioFactory);
     
