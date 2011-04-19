@@ -34,19 +34,6 @@ public interface Conversation
     long getOutboundModifiedDate();
 
     /**
-     * Adds a Scenario to this Conversation
-     * 
-     * @param scenarioConfigFilePath scenario configuration file path
-     * @param language       The scripting language to be used.
-     *                      if scenario already exists - will be ignored???
-     * @param criteria       criteria script to be executed by the simulator
-     * @param transformation transformation script to be executed by the simulator
-     * @return ConversationScenario conversation scenario added to the conversation
-     */
-    Scenario addScenario(final String scenarioConfigFilePath, final String language,
-            final String criteria, final String transformation);
-
-    /**
      * Adds a Scenario to this conversation
      * 
      * @param scenario scenario

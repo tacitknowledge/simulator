@@ -17,16 +17,7 @@ public class StructuredSimulatorPojo implements SimulatorPojo
      * structure data as fitting to its format.
      * The Map's contents can be other containing objects (either Map or List) or String attributes
      */
-    private Map<String, Object> root;
-
-    /**
-     * Constructor for the StructuredSimulatorPojo
-     */
-    public StructuredSimulatorPojo()
-    {
-        root = new HashMap<String, Object>();
-    }
-
+    private Map<String, Object> root = new HashMap<String, Object>();
 
     /**
      * {@inheritDoc}
@@ -40,18 +31,16 @@ public class StructuredSimulatorPojo implements SimulatorPojo
     public String toString()
     {
         StringBuilder sb = new StringBuilder();
-        if (root != null)
+        
+        for (Map.Entry<String, Object> entry : root.entrySet())
         {
-            for (Map.Entry<String, Object> entry : root.entrySet())
-            {
-                sb.append("{").append(entry.getKey() + ": " + entry.getValue().toString() + "}");
-
-            }
+            sb.append("{");
+            sb.append(entry.getKey());
+            sb.append(": ");
+            sb.append(entry.getValue());
+            sb.append("}");
         }
-        else
-        {
-            sb.append("EMPTY POJO");
-        }
+       
         return sb.toString();
     }
 }

@@ -191,7 +191,7 @@ public class ScenarioImpl implements Scenario
     @Override
     public String toString()
     {
-        return "ConversationScenarioImpl{" + ", scriptLanguage='" + scriptLanguage + '\''
+        return "ScenarioImpl{" + ", scriptLanguage='" + scriptLanguage + '\''
                 + ", criteriaScript='" + criteriaScript + '\'' + ", transformationScript='"
                 + transformationScript + '\'' + ", execServ=" + execServ + "}";
     }

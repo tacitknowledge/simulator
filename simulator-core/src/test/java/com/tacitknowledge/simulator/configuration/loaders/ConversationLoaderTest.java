@@ -26,7 +26,7 @@ public class ConversationLoaderTest
         Resource resource = new ClassPathResource("systems/sys1/conv1");
         
         ScenarioFactory scenarioFactory = new ScenarioFactory();
-        ConversationFactory conversationFactory = new ConversationFactory(scenarioFactory);
+        ConversationFactory conversationFactory = new ConversationFactory();
         ScenarioLoader scenarioLoader = new ScenarioLoader(scenarioFactory);
         ConversationLoader conversationLoader = new ConversationLoader(conversationFactory, scenarioLoader);
 
@@ -54,7 +54,7 @@ public class ConversationLoaderTest
         Resource resource = new ClassPathResource("systems");
 
         ScenarioFactory scenarioFactory = new ScenarioFactory();
-        ConversationFactory conversationFactory = new ConversationFactory(scenarioFactory);
+        ConversationFactory conversationFactory = new ConversationFactory();
         ScenarioLoader scenarioLoader = new ScenarioLoader(scenarioFactory);
         ConversationLoader conversationLoader = new ConversationLoader(conversationFactory, scenarioLoader);
 

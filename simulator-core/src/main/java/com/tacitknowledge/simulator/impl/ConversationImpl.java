@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.camel.Exchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,6 +14,8 @@ import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.Conversation;
 import com.tacitknowledge.simulator.Scenario;
 import com.tacitknowledge.simulator.Transport;
+import com.tacitknowledge.simulator.configuration.EventDispatcher;
+import com.tacitknowledge.simulator.configuration.SimulatorEventType;
 import com.tacitknowledge.simulator.utils.ConversationUtil;
 
 /**
@@ -38,8 +41,6 @@ public class ConversationImpl implements Conversation
      */
     private String conversationPath;
     
-    private ScenarioFactory scenarioFactory;
-
     /**
      * Wrapper for inbound transport configuration
      */
@@ -76,14 +77,12 @@ public class ConversationImpl implements Conversation
     private List<Scenario> scenarios = new ArrayList<Scenario>();
 
     public ConversationImpl(final String conversationPath,
-                            final ScenarioFactory scenarioFactory,
                             final Transport inboundTransport,
                             final Transport outboundTransport,
                             final Adapter inboundAdapter,
                             final Adapter outboundAdapter)
     {
         this.conversationPath = conversationPath;
-        this.scenarioFactory = scenarioFactory;
         this.inboundTransport = inboundTransport;
         this.outboundTransport = outboundTransport;
         this.inboundAdapter = inboundAdapter;
@@ -97,26 +96,49 @@ public class ConversationImpl implements Conversation
     /**
      * {@inheritDoc}
      */
-    public Scenario addScenario(final String scenarioConfigFilePath,
-            final String language, final String criteria, final String transformation)
-    {
-        Scenario scenario = scenarioFactory.createConversationScenario(
-                scenarioConfigFilePath, language, criteria, transformation);
-        scenarios.add(scenario);
-
-        logger.info("Added new conversation scenario to the conversation located at : {}",
-                this.conversationPath);
-        return scenario;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public void addScenario(Scenario scenario)
     {
         scenarios.add(scenario);
         logger.info("Added new conversation scenario to the conversation located at : {}",
                 this.conversationPath);
+    }
+    
+    public void process(final Exchange exchange) throws Exception
+    {
+        dispatchEvent(SimulatorEventType.NEW_MESSAGE, exchange);
+        
+        Map<String, Object> scriptExecutionBeans = inboundAdapter.generateBeans(exchange);
+
+        Object result = null;
+        // here we are looking for first matching scenario and ignore all other scenarios
+        for (Scenario scenario : scenarios)
+        {
+            synchronized (scenario)
+            {
+                logger.info("Evaluating scenario : {}", scenario.toString());
+
+                boolean matchesCondition = scenario.matchesCondition(scriptExecutionBeans);
+                logger.info("matches condition: {}", matchesCondition);
+                
+                if (matchesCondition)
+                {
+                    dispatchEvent(SimulatorEventType.SCENARIO_MATCHED, exchange);
+
+                    logger.info("Executing the transformation script.");
+                    result = scenario.executeTransformation(scriptExecutionBeans);
+                    
+                    dispatchEvent(SimulatorEventType.RESPONSE_BUILT, exchange);
+                    break;
+                }
+            }
+        }
+        
+        Object exchangeBody = outboundAdapter.adaptTo(result, exchange);
+        exchange.getOut().setBody(exchangeBody);
+    }
+
+    private void dispatchEvent(SimulatorEventType eventType, Exchange exchange) {
+        EventDispatcher.getInstance().dispatchEvent(eventType, this, exchange);
     }
 
     /**

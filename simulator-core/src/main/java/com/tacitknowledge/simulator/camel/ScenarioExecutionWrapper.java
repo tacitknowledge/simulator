@@ -26,22 +26,6 @@ public class ScenarioExecutionWrapper
     private static Logger logger  = LoggerFactory.getLogger(ScenarioExecutionWrapper.class);
     
     /**
-     * inAdapter adapter which will take the information from the exchange
-     * and adapt it to SimulatorPojo for scenario execution. *
-     */
-    private Adapter inAdapter;
-    /**
-     * outAdapter adapter which will take the information from the SimulatorPojo
-     * and adapt it to the desired format. *
-     */
-    private Adapter outAdapter;
-
-    /**
-     * Container of the scenarios to run
-     */
-    private Collection<Scenario> scenarios;
-
-    /**
      * The conversation related to this execution.
      */
     private Conversation conversation;
@@ -49,21 +33,11 @@ public class ScenarioExecutionWrapper
     /**
      * Constructor for the ScenarioExecutionWrapper.
      *
-     * @param conv Conversation
+     * @param conversation Conversation
      */
-    public ScenarioExecutionWrapper(final Conversation conv)
+    public ScenarioExecutionWrapper(final Conversation conversation)
     {
-        this.conversation = conv;
-
-        this.inAdapter = conv.getInboundAdapter();
-        this.outAdapter = conv.getOutboundAdapter();
-        this.scenarios = conv.getScenarios().values();
-
-        if (this.inAdapter == null || this.outAdapter == null || this.scenarios == null)
-        {
-            logger.warn("Something is probably wrong: One of the adapters or scenarios "
-                    + "list is null");
-        }
+        this.conversation = conversation;
     }
 
     /**
@@ -76,11 +50,11 @@ public class ScenarioExecutionWrapper
      */
     public void process(final Exchange exchange) throws Exception
     {
-        EventDispatcher.getInstance().dispatchEvent(SimulatorEventType.NEW_MESSAGE,
-                this.conversation, exchange);
-        /**
-         * Beans needed for the script executions service to run the simulation against *
-         */
+        dispatchEvent(SimulatorEventType.NEW_MESSAGE, exchange);
+        
+        Adapter inAdapter = conversation.getInboundAdapter();
+        Adapter outAdapter = conversation.getOutboundAdapter();
+        Collection<Scenario> scenarios = conversation.getScenarios().values();
         Map<String, Object> scriptExecutionBeans = inAdapter.generateBeans(exchange);
 
         Object result = null;
@@ -93,21 +67,24 @@ public class ScenarioExecutionWrapper
 
                 boolean matchesCondition = scenario.matchesCondition(scriptExecutionBeans);
                 logger.info("matches condition: {}", matchesCondition);
+                
                 if (matchesCondition)
                 {
-                    EventDispatcher.getInstance().dispatchEvent(SimulatorEventType.SCENARIO_MATCHED,
-                            this.conversation, exchange);
+                    dispatchEvent(SimulatorEventType.SCENARIO_MATCHED, exchange);
 
                     logger.info("Executing the transformation script.");
                     result = scenario.executeTransformation(scriptExecutionBeans);
-                    EventDispatcher.getInstance().dispatchEvent(SimulatorEventType.RESPONSE_BUILT,
-                            this.conversation, exchange);
+                    
+                    dispatchEvent(SimulatorEventType.RESPONSE_BUILT, exchange);
                     break;
                 }
             }
         }
+        
         exchange.getOut().setBody(outAdapter.adaptTo(result, exchange));
     }
 
-
+    private void dispatchEvent(SimulatorEventType eventType, Exchange exchange) {
+        EventDispatcher.getInstance().dispatchEvent(eventType, conversation, exchange);
+    }
 }

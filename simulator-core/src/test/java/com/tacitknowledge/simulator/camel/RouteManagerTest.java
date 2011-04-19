@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import com.tacitknowledge.simulator.ConfigurableException;
 import com.tacitknowledge.simulator.Conversation;
+import com.tacitknowledge.simulator.Scenario;
 import com.tacitknowledge.simulator.SimulatorCamelTestSupportBase;
 import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.TransportException;
@@ -28,7 +29,7 @@ public class RouteManagerTest extends SimulatorCamelTestSupportBase
 
     private ScenarioFactory scenarioFactory = new ScenarioFactory();
     
-    private ConversationFactory conversationFactory = new ConversationFactory(scenarioFactory); 
+    private ConversationFactory conversationFactory = new ConversationFactory(); 
     
     /**
      * A transport to use in tests
@@ -54,8 +55,9 @@ public class RouteManagerTest extends SimulatorCamelTestSupportBase
             "conversation2", inTransport1, outTransport1, new PlainTextAdapter(),
             new PlainTextAdapter());
     {
-        conversation1.addScenario("file.scn", "javascript", "true", "text");
-        conversation1.addScenario("file.scn", "javascript", "true", "text");
+        Scenario scenario = scenarioFactory.createConversationScenario("file.scn", "javascript", "true", "text");
+        conversation1.addScenario(scenario);
+        conversation1.addScenario(scenario);
     }
 
     /**

@@ -47,7 +47,7 @@ public class ScheduledConversationsLoader extends Thread
     {
         ScenarioFactory scenarioFactory = new ScenarioFactory();
         ScenarioLoader scenarioLoader = new ScenarioLoader(scenarioFactory);
-        ConversationFactory conversationFactory = new ConversationFactory(scenarioFactory);
+        ConversationFactory conversationFactory = new ConversationFactory();
         ConversationLoader conversationLoader = new ConversationLoader(conversationFactory, scenarioLoader);
         
         routeManager = new RouteManagerImpl();

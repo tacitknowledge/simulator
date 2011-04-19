@@ -16,6 +16,7 @@ import org.junit.Test;
 import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.Conversation;
 import com.tacitknowledge.simulator.RouteManager;
+import com.tacitknowledge.simulator.Scenario;
 import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.camel.RouteManagerImpl;
 import com.tacitknowledge.simulator.formats.RestAdapter;
@@ -62,19 +63,23 @@ public class RestTransportIntegrationTest {
         outTransport.setParameters(pars);
 
         ScenarioFactory scenarioFactory = new ScenarioFactory();
-        ConversationFactory conversationFactory = new ConversationFactory(scenarioFactory);
+        ConversationFactory conversationFactory = new ConversationFactory();
         Conversation conv = conversationFactory.createConversation("Rest conversation", inTransport, outTransport, inAdapter, outAdapter);
         String criteriaScript       = "obj1.request.params['id']=='89'";
         String transformationScript = "obj1.response.body='<html><body>ID=89</body></html>';" +
                                       "obj1.response.statusCode='201';" +
                                       "obj1;";
-        conv.addScenario("file1.scn", "javascript", criteriaScript, transformationScript);
+        
+        Scenario scenario = scenarioFactory.createConversationScenario("file1.scn", "javascript", criteriaScript, transformationScript);
+        conv.addScenario(scenario);
 
         String criteriaScript2       = "obj1.request.params.id=='90'";
         String transformationScript2 = "obj1.response.body='<html><body>ID=90</body></html>';" +
                                        "obj1.response.statusCode='200';" +
                                        "obj1;";
-        conv.addScenario("file2.scn", "javascript", criteriaScript2, transformationScript2);
+        
+        scenario = scenarioFactory.createConversationScenario("file2.scn", "javascript", criteriaScript2, transformationScript2);
+        conv.addScenario(scenario);
 
 
 

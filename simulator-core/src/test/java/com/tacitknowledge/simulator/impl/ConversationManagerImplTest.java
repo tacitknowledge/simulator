@@ -88,7 +88,7 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         scenarioPath = new ClassPathResource(SCENARIO_PATH).getFile().getAbsolutePath();
         
         scenarioFactory = new ScenarioFactory();
-        conversationFactory = new ConversationFactory(scenarioFactory);
+        conversationFactory = new ConversationFactory();
     }
 
     @Test
@@ -328,7 +328,7 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         final long date1 = System.currentTimeMillis();
         final long date2 = date1 + 100;
         
-        Conversation conversation1 = new ConversationImpl(folderPath, scenarioFactory, null, null, null, null)
+        Conversation conversation1 = new ConversationImpl(folderPath, null, null, null, null)
         {
             @Override
             public long getIboundModifiedDate()
@@ -338,7 +338,7 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
             }
         };
 
-        Conversation conversation2 = new ConversationImpl(folderPath, scenarioFactory, null, null, null, null)
+        Conversation conversation2 = new ConversationImpl(folderPath, null, null, null, null)
         {
             @Override
             public long getIboundModifiedDate()
@@ -361,7 +361,7 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         final long date1 = System.currentTimeMillis();
         final long date2 = date1 + 100;
         
-        Conversation conversation1 = new ConversationImpl(folderPath, scenarioFactory, null, null, null, null)
+        Conversation conversation1 = new ConversationImpl(folderPath, null, null, null, null)
         {
             @Override
             public long getOutboundModifiedDate()
@@ -370,7 +370,7 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
             }
         };
 
-        Conversation conversation2 = new ConversationImpl(folderPath, scenarioFactory, null, null, null, null)
+        Conversation conversation2 = new ConversationImpl(folderPath, null, null, null, null)
         {
             @Override
             public long getOutboundModifiedDate()
@@ -478,7 +478,7 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         
         public ConversationImpl1(ScenarioFactory scenarioFactory, Conversation conversation)
         {
-            super(null, scenarioFactory, null, null, null, null);
+            super(null, null, null, null, null);
             this.conversation = conversation;
         }
         
@@ -486,7 +486,7 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
                 final Transport outboundTransport, final Adapter inboundAdapter,
                 final Adapter outboundAdapter)
         {
-            super(conversationPath, scenarioFactory, inboundTransport, outboundTransport, inboundAdapter, outboundAdapter);
+            super(conversationPath, inboundTransport, outboundTransport, inboundAdapter, outboundAdapter);
         }
         
         public long getIboundModifiedDate()
@@ -528,7 +528,7 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         
         public ConversationImpl2(ScenarioFactory scenarioFactory, Conversation conversation)
         {
-            super(null, scenarioFactory, null, null, null, null);
+            super(null, null, null, null, null);
             this.conversation = conversation;
         }
         
@@ -536,7 +536,7 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
                 final Transport outboundTransport, final Adapter inboundAdapter,
                 final Adapter outboundAdapter)
         {
-            super(conversationPath, scenarioFactory, inboundTransport, outboundTransport, inboundAdapter, outboundAdapter);
+            super(conversationPath, inboundTransport, outboundTransport, inboundAdapter, outboundAdapter);
         }
         
         public long getIboundModifiedDate()
@@ -578,7 +578,7 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         
         public ConversationImpl3(ScenarioFactory scenarioFactory, Conversation conversation)
         {
-            super(null, scenarioFactory, null, null, null, null);
+            super(null, null, null, null, null);
             this.conversation = conversation;
         }
         
@@ -586,7 +586,7 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
                 final Transport outboundTransport, final Adapter inboundAdapter,
                 final Adapter outboundAdapter)
         {
-            super(conversationPath, scenarioFactory, inboundTransport, outboundTransport, inboundAdapter, outboundAdapter);
+            super(conversationPath, inboundTransport, outboundTransport, inboundAdapter, outboundAdapter);
         }
         
         public long getIboundModifiedDate()

@@ -150,12 +150,4 @@ public class ScriptExecutionService
             }
         }
     }
-
-    /**
-     * @return Returns the language.
-     */
-    public String getLanguage()
-    {
-        return language;
-    }
 }

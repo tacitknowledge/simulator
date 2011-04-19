@@ -17,6 +17,7 @@ import org.junit.Test;
 
 import com.tacitknowledge.simulator.Configurable;
 import com.tacitknowledge.simulator.Conversation;
+import com.tacitknowledge.simulator.Scenario;
 import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.camel.RouteManagerImpl;
 import com.tacitknowledge.simulator.formats.XmlAdapter;
@@ -72,15 +73,15 @@ public class FtpTransportIntegrationTest extends CamelTestSupport
     public void testSimple() throws Exception
     {
         ScenarioFactory scenarioFactory = new ScenarioFactory();
-        ConversationFactory conversationFactory = new ConversationFactory(scenarioFactory);
+        ConversationFactory conversationFactory = new ConversationFactory();
         Conversation conversation = conversationFactory.createConversation("somepath", 
                                                          ftpInTransport, 
                                                          fileOutTransport, 
                                                          new XmlAdapter(), 
                                                          new XmlAdapter());
 
-        conversation.addScenario("file.scn", "javascript", "true", "employees.employee[0].name='Mike';employees");
-
+        Scenario scenario = scenarioFactory.createConversationScenario("file.scn", "javascript", "true", "employees.employee[0].name='Mike';employees");
+        conversation.addScenario(scenario);
         
         routeManager.activate(conversation);
         

@@ -24,6 +24,7 @@ import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.Configurable;
 import com.tacitknowledge.simulator.Conversation;
 import com.tacitknowledge.simulator.RouteManager;
+import com.tacitknowledge.simulator.Scenario;
 import com.tacitknowledge.simulator.TestHelper;
 import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.camel.RouteManagerImpl;
@@ -251,15 +252,15 @@ public class SoapTransportIntegrationTest {
     {
         setupTransportsAndFormats(wsdlFile);
         ScenarioFactory scenarioFactory = new ScenarioFactory();
-        ConversationFactory conversationFactory = new ConversationFactory(scenarioFactory);
+        ConversationFactory conversationFactory = new ConversationFactory();
         
         conv = conversationFactory.createConversation("Soap conversation",
                                                       inTransport,
                                                       outTransport,
                                                       inAdapter,
                                                       outAdapter);
-
-        conv.addScenario("file.scn", "javascript", criteriaScript, executionScript);
+        Scenario scenario = scenarioFactory.createConversationScenario("file.scn", "javascript", criteriaScript, executionScript);
+        conv.addScenario(scenario);
 
         //Activate the route
         routeManager.activate(conv);

@@ -11,14 +11,6 @@ import com.tacitknowledge.simulator.Transport;
  */
 public final class ConversationFactory
 {
-    
-    private ScenarioFactory scenarioFactory;
-    
-    public ConversationFactory(ScenarioFactory scenarioFactory)
-    {
-        this.scenarioFactory = scenarioFactory;
-    }
-    
     /**
      * Creates a new Conversation from the given transports and adapters.
      *
@@ -46,6 +38,6 @@ public final class ConversationFactory
             throw new IllegalArgumentException(errorMessage);
         }
 
-        return new ConversationImpl(id, scenarioFactory, inboundTransport, outboundTransport, inboundAdapter, outboundAdapter);
+        return new ConversationImpl(id, inboundTransport, outboundTransport, inboundAdapter, outboundAdapter);
     }
 }

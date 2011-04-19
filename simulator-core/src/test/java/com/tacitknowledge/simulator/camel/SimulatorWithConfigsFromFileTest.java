@@ -32,7 +32,7 @@ public class SimulatorWithConfigsFromFileTest
     public void setUp()
     {
         ScenarioFactory scenarioFactory = new ScenarioFactory();
-        ConversationFactory conversationFactory = new ConversationFactory(scenarioFactory);
+        ConversationFactory conversationFactory = new ConversationFactory();
         scenarioLoader = new ScenarioLoader(scenarioFactory);
         conversationLoader = new ConversationLoader(conversationFactory, scenarioLoader);
     }
