@@ -14,7 +14,7 @@ public class ScenarioFactory
      * @return A new conversation scenario
      */
      
-    public Scenario createConversationScenario(
+    public Scenario createScenario(
         final String fileName,
         final String language,
         final String condition,

@@ -38,7 +38,7 @@ public class ScenarioImpl implements Scenario
     /**
      * Script Execution service which will run the actual simulation on the data received *
      */
-    private ScriptExecutionService execServ;
+    private ScriptExecutionService executionService;
 
     /**
      * last modified date of this scenario file
@@ -64,7 +64,7 @@ public class ScenarioImpl implements Scenario
         this.criteriaScript = criteriaScript;
         this.transformationScript = transformationScript;
 
-        this.execServ = new ScriptExecutionService(scriptLanguage);
+        this.executionService = new ScriptExecutionService(scriptLanguage);
 
         this.configFilePath = configFilePath;
         this.lastModifiedDate = ConversationUtil.getFileModifiedDate(configFilePath);
@@ -95,7 +95,7 @@ public class ScenarioImpl implements Scenario
     public Object executeTransformation(final Map<String, Object> scriptExecutionBeans)
             throws ScriptException, SimulatorException
     {
-        return execServ.eval(transformationScript, "Transformation Script", scriptExecutionBeans);
+        return executionService.eval(transformationScript, "Transformation Script", scriptExecutionBeans);
     }
 
     /**
@@ -108,7 +108,7 @@ public class ScenarioImpl implements Scenario
             throws ScriptException
     {
 
-        Object result = execServ.eval(criteriaScript, "Criteria Script", scriptExecutionBeans);
+        Object result = executionService.eval(criteriaScript, "Criteria Script", scriptExecutionBeans);
 
         if (result != null && result instanceof Boolean)
         {
@@ -193,6 +193,6 @@ public class ScenarioImpl implements Scenario
     {
         return "ScenarioImpl{" + ", scriptLanguage='" + scriptLanguage + '\''
                 + ", criteriaScript='" + criteriaScript + '\'' + ", transformationScript='"
-                + transformationScript + '\'' + ", execServ=" + execServ + "}";
+                + transformationScript + '\'' + ", execServ=" + executionService + "}";
     }
 }

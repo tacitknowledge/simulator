@@ -55,7 +55,7 @@ public class RouteManagerTest extends SimulatorCamelTestSupportBase
             "conversation2", inTransport1, outTransport1, new PlainTextAdapter(),
             new PlainTextAdapter());
     {
-        Scenario scenario = scenarioFactory.createConversationScenario("file.scn", "javascript", "true", "text");
+        Scenario scenario = scenarioFactory.createScenario("file.scn", "javascript", "true", "text");
         conversation1.addScenario(scenario);
         conversation1.addScenario(scenario);
     }

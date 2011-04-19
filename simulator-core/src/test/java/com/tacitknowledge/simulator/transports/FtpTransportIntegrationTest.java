@@ -80,7 +80,7 @@ public class FtpTransportIntegrationTest extends CamelTestSupport
                                                          new XmlAdapter(), 
                                                          new XmlAdapter());
 
-        Scenario scenario = scenarioFactory.createConversationScenario("file.scn", "javascript", "true", "employees.employee[0].name='Mike';employees");
+        Scenario scenario = scenarioFactory.createScenario("file.scn", "javascript", "true", "employees.employee[0].name='Mike';employees");
         conversation.addScenario(scenario);
         
         routeManager.activate(conversation);

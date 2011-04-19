@@ -17,8 +17,6 @@ import org.slf4j.LoggerFactory;
 import com.tacitknowledge.simulator.Conversation;
 import com.tacitknowledge.simulator.RouteManager;
 import com.tacitknowledge.simulator.SimulatorException;
-import com.tacitknowledge.simulator.configuration.SimulatorEventType;
-import com.tacitknowledge.simulator.configuration.beans.EventBean;
 
 /**
  * Manages Camel routes based on the provided conversation objects.
@@ -57,7 +55,6 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager
         DefaultCamelContext defaultCamelContext = new DefaultCamelContext();
         defaultCamelContext.setPackageScanClassResolver(new OneJarPackageScanResolver());
         setContext(defaultCamelContext);
-
     }
 
     /**
@@ -97,10 +94,9 @@ public class RouteManagerImpl extends RouteBuilder implements RouteManager
             String outboundTransportURI = conversation.getOutboundTransport().toUriString();
 
             definition = from(inboundTransportURI);
-            definition.bean(new ScenarioExecutionWrapper(conversation));
+            definition.bean(conversation);
             definition.to(outboundTransportURI);
-            definition.bean(new EventBean(SimulatorEventType.RESPONSE_SENT, conversation));
-            definition.setId(conversationId.toString());
+            definition.setId(conversationId);
 
             routes.put(conversationId, definition);
 

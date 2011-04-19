@@ -2,6 +2,8 @@ package com.tacitknowledge.simulator;
 
 import java.util.Map;
 
+import org.apache.camel.Exchange;
+
 /**
  * Defines the contract for the Conversation.
  *
@@ -39,6 +41,8 @@ public interface Conversation
      * @param scenario scenario
      */
     void addScenario(Scenario scenario);
+    
+    void process(Exchange exchange) throws Exception;
 
     /**
      * Returns this conversation inbound transport

@@ -259,7 +259,7 @@ public class SoapTransportIntegrationTest {
                                                       outTransport,
                                                       inAdapter,
                                                       outAdapter);
-        Scenario scenario = scenarioFactory.createConversationScenario("file.scn", "javascript", criteriaScript, executionScript);
+        Scenario scenario = scenarioFactory.createScenario("file.scn", "javascript", criteriaScript, executionScript);
         conv.addScenario(scenario);
 
         //Activate the route

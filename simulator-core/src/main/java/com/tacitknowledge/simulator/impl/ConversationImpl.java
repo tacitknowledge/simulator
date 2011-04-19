@@ -1,21 +1,15 @@
 package com.tacitknowledge.simulator.impl;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.camel.Exchange;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.Conversation;
 import com.tacitknowledge.simulator.Scenario;
 import com.tacitknowledge.simulator.Transport;
-import com.tacitknowledge.simulator.configuration.EventDispatcher;
-import com.tacitknowledge.simulator.configuration.SimulatorEventType;
 import com.tacitknowledge.simulator.utils.ConversationUtil;
 
 /**
@@ -26,11 +20,6 @@ import com.tacitknowledge.simulator.utils.ConversationUtil;
  */
 public class ConversationImpl implements Conversation
 {
-    /**
-     * Logger for this class.
-     */
-    private static Logger logger = LoggerFactory.getLogger(ConversationImpl.class);
-
     /**
      * Prime number to be used in the hashcode method.
      */
@@ -74,7 +63,7 @@ public class ConversationImpl implements Conversation
     /**
      * List of configured scenarios for this conversation
      */
-    private List<Scenario> scenarios = new ArrayList<Scenario>();
+    private Map<String, Scenario> scenarios = new HashMap<String, Scenario>();
 
     public ConversationImpl(final String conversationPath,
                             final Transport inboundTransport,
@@ -98,38 +87,23 @@ public class ConversationImpl implements Conversation
      */
     public void addScenario(Scenario scenario)
     {
-        scenarios.add(scenario);
-        logger.info("Added new conversation scenario to the conversation located at : {}",
-                this.conversationPath);
+        scenarios.put(scenario.getConfigurationFilePath(), scenario);        
     }
     
     public void process(final Exchange exchange) throws Exception
     {
-        dispatchEvent(SimulatorEventType.NEW_MESSAGE, exchange);
-        
         Map<String, Object> scriptExecutionBeans = inboundAdapter.generateBeans(exchange);
-
         Object result = null;
-        // here we are looking for first matching scenario and ignore all other scenarios
-        for (Scenario scenario : scenarios)
+        
+        for (Scenario scenario : scenarios.values())
         {
-            synchronized (scenario)
+            boolean matchesCondition = scenario.matchesCondition(scriptExecutionBeans);
+            
+            
+            if (matchesCondition)
             {
-                logger.info("Evaluating scenario : {}", scenario.toString());
-
-                boolean matchesCondition = scenario.matchesCondition(scriptExecutionBeans);
-                logger.info("matches condition: {}", matchesCondition);
-                
-                if (matchesCondition)
-                {
-                    dispatchEvent(SimulatorEventType.SCENARIO_MATCHED, exchange);
-
-                    logger.info("Executing the transformation script.");
-                    result = scenario.executeTransformation(scriptExecutionBeans);
-                    
-                    dispatchEvent(SimulatorEventType.RESPONSE_BUILT, exchange);
-                    break;
-                }
+                result = scenario.executeTransformation(scriptExecutionBeans);
+                break;
             }
         }
         
@@ -137,9 +111,6 @@ public class ConversationImpl implements Conversation
         exchange.getOut().setBody(exchangeBody);
     }
 
-    private void dispatchEvent(SimulatorEventType eventType, Exchange exchange) {
-        EventDispatcher.getInstance().dispatchEvent(eventType, this, exchange);
-    }
 
     /**
      * {@inheritDoc}
@@ -201,15 +172,8 @@ public class ConversationImpl implements Conversation
      * {@inheritDoc}
      */
     public Map<String, Scenario> getScenarios()
-    {
-        Map<String, Scenario> map = new HashMap<String, Scenario>();
-        
-        for (Scenario scenario : scenarios)
-        {
-            map.put(scenario.getConfigurationFilePath(), scenario);
-        }
-        
-        return Collections.unmodifiableMap(map);
+    {       
+        return Collections.unmodifiableMap(scenarios);
     }
 
     /**

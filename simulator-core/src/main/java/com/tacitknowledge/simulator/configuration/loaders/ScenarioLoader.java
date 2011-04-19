@@ -56,7 +56,7 @@ public class ScenarioLoader
             String language = matcher.group(LANGUAGE_SECTION_INDEX).trim().toLowerCase();
             String condition = matcher.group(CONDITION_SECTION_INDEX).trim();
             String execute = matcher.group(EXECUTE_SECTION_INDEX).trim();
-            Scenario result = scenarioFactory.createConversationScenario(
+            Scenario result = scenarioFactory.createScenario(
                     fileName, language, condition, execute);
             return result;
         }

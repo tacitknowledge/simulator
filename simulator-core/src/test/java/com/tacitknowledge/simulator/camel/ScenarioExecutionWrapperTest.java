@@ -58,14 +58,12 @@ public class ScenarioExecutionWrapperTest
         conversation = conversationFactory.createConversation("Conversation1", inTransport, outTransport, new PlainTextAdapter(), new PlainTextAdapter());
         conversation.addScenario(createScenario("file.scn", "javascript", "true", "text"));
 
-        ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(conversation);
-
         String testString = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><xxxxxx/>";
         Exchange exchange = new DefaultExchange(new DefaultCamelContext());
         Message message = new DefaultMessage();
         message.setBody(testString);
         exchange.setIn(message);
-        wrapper.process(exchange);
+        conversation.process(exchange);
         String s = exchange.getOut().getBody(String.class);
         Assert.assertNotNull(s);
         Assert.assertSame(testString, s);
@@ -81,14 +79,12 @@ public class ScenarioExecutionWrapperTest
         conversation = conversationFactory.createConversation("Conversation1", inTransport, outTransport, new XmlAdapter(), new XmlAdapter());
         conversation.addScenario(createScenario("file.scn", "javascript", criteria, execution));
 
-        ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(conversation);
-
         CamelContext context = new DefaultCamelContext();
         Exchange exchange = new DefaultExchange(context);
         Message message = new DefaultMessage();
         message.setBody(TestHelper.XML_DATA);
         exchange.setIn(message);
-        wrapper.process(exchange);
+        conversation.process(exchange);
         String s = exchange.getOut().getBody(String.class);
         Assert.assertTrue(s.contains("John12345"));
     }
@@ -111,15 +107,13 @@ public class ScenarioExecutionWrapperTest
         conversation.addScenario(createScenario("file2.scn", "javascript", criteria2, execution2));
         conversation.addScenario(createScenario("file3.scn", "javascript", criteria3, execution3));
 
-        ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(conversation);
-
         CamelContext context = new DefaultCamelContext();
         Exchange exchange = new DefaultExchange(context);
         Message message = new DefaultMessage();
         message.setBody(TestHelper.XML_DATA);
         exchange.setIn(message);
 
-        wrapper.process(exchange);
+        conversation.process(exchange);
         String s = exchange.getOut().getBody(String.class);
         Assert.assertFalse(s.contains("Johnffff"));
         Assert.assertFalse(s.contains("John12345"));
@@ -131,8 +125,6 @@ public class ScenarioExecutionWrapperTest
     @Test
     public void testDifferentAdapters() throws Exception
     {
-
-
         String criteria2 = "employees.employee[0].name=='John';";      //true
         String execution2 = "employees.employee[0].name='Johnaaaa';employees";  //this script should be executed
 
@@ -144,15 +136,13 @@ public class ScenarioExecutionWrapperTest
 
         conversation.addScenario(createScenario("file.scn", "javascript", criteria2, execution2));
 
-        ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(conversation);
-
         CamelContext context = new DefaultCamelContext();
         Exchange exchange = new DefaultExchange(context);
         Message message = new DefaultMessage();
         message.setBody(TestHelper.XML_DATA);
         exchange.setIn(message);
 
-        wrapper.process(exchange);
+        conversation.process(exchange);
         String s = exchange.getOut().getBody(String.class);
         Assert.assertFalse(s.contains("Johnffff"));
         Assert.assertFalse(s.contains("John12345"));
@@ -179,15 +169,13 @@ public class ScenarioExecutionWrapperTest
         conversation.addScenario(createScenario("file.scn", "ruby", "require 'java'\n$employees.employee[0].name == 'John';", "$employees.employee[0].name='John12345';" +
                 "$employees" ));
 
-        ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(conversation);
-
         CamelContext context = new DefaultCamelContext();
         Exchange exchange = new DefaultExchange(context);
         Message message = new DefaultMessage();
         message.setBody(TestHelper.XML_DATA);
         exchange.setIn(message);
 
-        wrapper.process(exchange);
+        conversation.process(exchange);
         String s = exchange.getOut().getBody(String.class);
         Assert.assertTrue(s.contains("John12345"));
     }
@@ -200,15 +188,13 @@ public class ScenarioExecutionWrapperTest
         conversation.addScenario(createScenario("file.scn", "ruby", "require 'java'\n$employees.employee[0].name == 'John';",
             "$employees.employee[0].name='John12345'; return 'Success'"));
 
-        ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(conversation);
-
         CamelContext context = new DefaultCamelContext();
         Exchange exchange = new DefaultExchange(context);
         Message message = new DefaultMessage();
         message.setBody(TestHelper.XML_DATA);
         exchange.setIn(message);
 
-        wrapper.process(exchange);
+        conversation.process(exchange);
         String s = exchange.getOut().getBody(String.class);
 
         Assert.assertTrue(s.contains("Success"));
@@ -230,8 +216,7 @@ public class ScenarioExecutionWrapperTest
         message.setBody(TestHelper.XML_DATA);
         exchange.setIn(message);
 
-        ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(conversation);
-        wrapper.process(exchange);
+        conversation.process(exchange);
         String s = exchange.getOut().getBody(String.class);
         Assert.assertTrue(s.contains("rubyhash"));
     }
@@ -254,16 +239,13 @@ public class ScenarioExecutionWrapperTest
                 "" +
                 "}"));
 
-
-        ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(conversation);
-
         CamelContext context = new DefaultCamelContext();
         Exchange exchange = new DefaultExchange(context);
         Message message = new DefaultMessage();
         message.setBody(TestHelper.XML_DATA);
         exchange.setIn(message);
 
-        wrapper.process(exchange);
+        conversation.process(exchange);
         String s = exchange.getOut().getBody(String.class);
         Assert.assertTrue(s.contains("root"));
     }
@@ -290,15 +272,13 @@ public class ScenarioExecutionWrapperTest
 
         conversation.addScenario(createScenario("file.scn", "javascript", criteria, execution));
 
-        ScenarioExecutionWrapper wrapper = new ScenarioExecutionWrapper(conversation);
-
         CamelContext context = new DefaultCamelContext();
         Exchange exchange = new DefaultExchange(context);
         Message message = new DefaultMessage();
         message.setBody(TestHelper.XML_DATA);
         exchange.setIn(message);
         
-        wrapper.process(exchange);
+        conversation.process(exchange);
         String s = exchange.getOut().getBody(String.class);
         System.out.println("s = " + s);
 
@@ -326,6 +306,6 @@ public class ScenarioExecutionWrapperTest
     }
     
     private Scenario createScenario(String fileName, String language, String condition, String execute) {
-        return scenarioFactory.createConversationScenario(fileName, language, condition, execute);
+        return scenarioFactory.createScenario(fileName, language, condition, execute);
     }
 }
