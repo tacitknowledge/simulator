@@ -52,6 +52,11 @@ public class AdapterFactory
             return new YamlAdapter(bound, ConfigurationUtil.getPropertiesMap(properties));
         }
 
+        if (FormatConstants.DOC_LITERAL_SOAP.equals(format))
+        {
+            return new DocLiteralWrappedSoapAdapter(bound, ConfigurationUtil.getPropertiesMap(properties));
+        }
+
         return null;
     }
 

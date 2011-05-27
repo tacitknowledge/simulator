@@ -28,6 +28,12 @@ public final class FormatConstants
      * Constant for YAML format
      */
     public static final String YAML = "YAML";
+
+    /**
+     * Constant for DOC_LITERAL_SOAP format
+     */
+    public static final String DOC_LITERAL_SOAP = "DOCLITERALSOAP";
+
     /**
      * Constant for YAML format
      */
