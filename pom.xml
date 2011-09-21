@@ -7,17 +7,14 @@
     <name>Simulator System</name>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
+    
     <properties>
-        <jruby.home>/opt/jruby</jruby.home>
-        <lib.output.directory>../web-ui/src/main/rubyapp/lib/</lib.output.directory>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	<standalone.lib.output.directory>../simulator-core/target/</standalone.lib.output.directory>
+        <standalone.lib.output.directory>../simulator-core/target/</standalone.lib.output.directory>
     </properties>
 
     <modules>
-        <module>simulator-dependencies</module>
         <module>simulator-core</module>
-        <module>test-system</module>
     </modules>
         
     <repositories>
