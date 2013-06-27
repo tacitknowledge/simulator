@@ -22,17 +22,17 @@
     <dependencies>
         <!-- TODO - there is a Camel and Jackson conflict related to jersey.  I put the jackson stuff first, but this may not
             work in the single jar.  May need to find another Map to JSON converter -->
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-core-asl</artifactId>
-            <version>1.9.12</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.codehaus.jackson</groupId>-->
+            <!--<artifactId>jackson-core-asl</artifactId>-->
+            <!--<version>1.9.12</version>-->
+        <!--</dependency>-->
 
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
-            <version>1.9.12</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.codehaus.jackson</groupId>-->
+            <!--<artifactId>jackson-mapper-asl</artifactId>-->
+            <!--<version>1.9.12</version>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>org.apache.camel</groupId>
@@ -127,9 +127,13 @@
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
-            <version>20080701</version>
+            <version>20090211</version>
         </dependency>
-
+<dependency>
+	<groupId>com.google.code.gson</groupId>
+	<artifactId>gson</artifactId>
+	<version>2.2.4</version>
+</dependency>
         <dependency>
             <groupId>org.jyaml</groupId>
             <artifactId>jyaml</artifactId>

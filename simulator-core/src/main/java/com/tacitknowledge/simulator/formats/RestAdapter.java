@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.bsf.BSFException;
 import org.apache.bsf.BSFManager;
 import org.apache.camel.Exchange;
-import org.codehaus.jackson.map.ObjectMapper;
+//import org.codehaus.jackson.map.ObjectMapper;
 import org.mozilla.javascript.NativeObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

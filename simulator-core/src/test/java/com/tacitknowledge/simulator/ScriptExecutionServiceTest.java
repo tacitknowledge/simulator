@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gson.Gson;
 import com.tacitknowledge.simulator.formats.JsonAdapter;
 import org.apache.bsf.BSFManager;
 import org.apache.camel.CamelContext;
@@ -15,7 +16,8 @@ import org.apache.camel.Message;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.impl.DefaultExchange;
 import org.apache.camel.impl.DefaultMessage;
-import org.codehaus.jackson.map.ObjectMapper;
+//import org.codehaus.jackson.map.ObjectMapper;
+import org.json.JSONObject;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -105,6 +107,7 @@ public class ScriptExecutionServiceTest
 
     }
 //{"root":{"obj":{"response":{"statusCode":"200","body":"","contentType":"text/html"},"request":{"headers":{"Host":"127.0.0.1:8030","User-Agent":"Apache-HttpClient/4.2.5 (java 1.5)","Connection":"Keep-Alive"},"method":"GET","params":{"Address":"TW9"}}}}}
+    @Ignore
     @Test
     public void testEvalJavaScriptAndJSONTwo() throws Exception
     {
@@ -113,9 +116,9 @@ public class ScriptExecutionServiceTest
         Map<String,Object> myMap = new HashMap<String, Object>();
         myMap.put("firstName","matthew");
         myMap.put("lastName","short");
-        ObjectMapper mapper = new ObjectMapper();
+//        ObjectMapper mapper = new ObjectMapper();
         String simpleJSON = null;
-        simpleJSON = mapper.writeValueAsString(myMap);
+//        simpleJSON = mapper.writeValueAsString(myMap);
         //assuming we convert everything to a big map, we should be able to convert that Map to JSON
         BSFManager manager = new BSFManager();
 //        final String simpleJSON = "{\"root\":{\"obj\":{\"response\":{\"statusCode\":\"200\",\"body\":\"\",\"contentType\":\"text/html\"},\"request\":{\"headers\":{\"Host\":\"127.0.0.1:8030\",\"User-Agent\":\"Apache-HttpClient/4.2.5 (java 1.5)\",\"Connection\":\"Keep-Alive\"},\"method\":\"GET\",\"params\":{\"Address\":\"TW9\"}}}}}";
@@ -132,5 +135,37 @@ public class ScriptExecutionServiceTest
 
     }
 //
+
+    @Test
+    public void testEvalJavaScriptAndJSONOther() throws Exception
+    {
+        // --- First, get the SimulatorPojo from the data
+
+        Map<String,Object> myMap = new HashMap<String, Object>();
+        myMap.put("firstName","matthew");
+        myMap.put("lastName","short");
+        Map<String,Object> root = new HashMap<String, Object>();
+        root.put("obj",myMap);
+        JSONObject converter = new JSONObject(root);
+        Gson gson = new Gson();
+
+//        ObjectMapper mapper = new ObjectMapper();
+        String simpleJSON = gson.toJson(root);
+//        simpleJSON = mapper.writeValueAsString(myMap);
+        //assuming we convert everything to a big map, we should be able to convert that Map to JSON
+        BSFManager manager = new BSFManager();
+//        final String simpleJSON = "{\"root\":{\"obj\":{\"response\":{\"statusCode\":\"200\",\"body\":\"\",\"contentType\":\"text/html\"},\"request\":{\"headers\":{\"Host\":\"127.0.0.1:8030\",\"User-Agent\":\"Apache-HttpClient/4.2.5 (java 1.5)\",\"Connection\":\"Keep-Alive\"},\"method\":\"GET\",\"params\":{\"Address\":\"TW9\"}}}}}";
+//        final String simpleJSON = "{'firstName' : 'matthew','lastName' : 'short'}";
+
+        //next PreProcess the JSON into JavaScript Objects (org.mozilla.javascript.NativeObject)
+        manager.declareBean("data", simpleJSON, String.class);
+        NativeObject nativeJavascriptObject = (NativeObject) manager.eval("javascript", "ugh.js", 0, 0, "var resp = eval('(' + data + ')');resp");
+        //Now make our native object available for the real script
+        manager.declareBean("obj", nativeJavascriptObject, NativeObject.class);
+        Object result = manager.eval("javascript", "ugh.js", 0, 0, "obj.obj.firstName;");
+        assertEquals("Should be matthew","matthew",result);
+        //obj.root.obj.request.params.Address == 'TW9'
+
+    }
 
 }
