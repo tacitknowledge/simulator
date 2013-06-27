@@ -55,6 +55,11 @@ public final class FormatConstants
     public static final String SOAP = "SOAP";
 
     /**
+     * Constant for working with full SOAP response format
+     */
+    public static final String SOAP_FULL_RESPONSE = "SOAPFULLRESPONSE";
+
+    /**
      * Hiding the default constructor
      */
     private FormatConstants()

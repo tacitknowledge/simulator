@@ -57,6 +57,11 @@ public class AdapterFactory
             return new DocLiteralWrappedSoapAdapter(bound, ConfigurationUtil.getPropertiesMap(properties));
         }
 
+        if (FormatConstants.SOAP_FULL_RESPONSE.equals(format))
+        {
+            return new FullResponseSoapAdapter(bound, ConfigurationUtil.getPropertiesMap(properties));
+        }
+
         return null;
     }
 

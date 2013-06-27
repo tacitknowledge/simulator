@@ -47,7 +47,7 @@ public class SoapAdapter extends XmlAdapter implements Adapter
     /**
      * WSDL URL parameter. OPTIONAL.
      */
-    public static final String PARAM_WSDL_URL = "wdslURL";
+    public static final String PARAM_WSDL_URL = "wsdlURL";
 
     /**
      * Default key to identify PAYLOAD Map withing SimulatorPojo's root
