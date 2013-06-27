@@ -28,7 +28,7 @@ import com.tacitknowledge.simulator.StructuredSimulatorPojo;
  * @author Raul Huerta (rhuerta@tacitknowledge.com)
  */
 
-public class RestAdapter extends BaseAdapter implements Adapter
+public class RestAdapter extends NativeObjectScriptingAdapter implements Adapter
 {
 
     /**
@@ -100,42 +100,6 @@ public class RestAdapter extends BaseAdapter implements Adapter
         super();
     }
 
-
-    /**
-     * @param exchange The Camel exchange
-     * @return A Map of custom-generated beans generated from the input data
-     * @throws ConfigurableException  If any required parameter is missing.
-     * @throws FormatAdapterException If any other error occurs.
-     */
-    public Map<String, Object> generateBeans(final Exchange exchange)
-        throws ConfigurableException, FormatAdapterException
-    {
-        validateParameters();
-
-        SimulatorPojo pojo = createSimulatorPojo(exchange);
-        //here get the NativeObject
-        BSFManager manager = new BSFManager();
-        ObjectMapper mapper = new ObjectMapper();
-        NativeObject nativeJavascriptObject = null;
-        String simpleJSON = null;
-        String key = null;
-        try {
-            //check the entry map. should have one value with a single String key as root
-            Map.Entry<String,Object> myEntry = pojo.getRoot().entrySet().iterator().next();
-            key = myEntry.getKey();
-            simpleJSON = mapper.writeValueAsString(pojo.getRoot().get(key));
-            manager.declareBean("data", simpleJSON, String.class);
-            nativeJavascriptObject =
-                    (NativeObject) manager.eval("javascript", "ugh.js", 0, 0, "var resp = eval('(' + data + ')');resp");
-        } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (BSFException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-        Map<String,Object> result = new HashMap<String, Object>();
-        result.put(key,nativeJavascriptObject);
-        return result;
-    }
 
 
     /**
