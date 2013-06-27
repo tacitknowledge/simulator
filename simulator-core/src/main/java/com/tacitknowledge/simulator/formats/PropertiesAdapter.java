@@ -30,7 +30,7 @@ import com.tacitknowledge.simulator.StructuredSimulatorPojo;
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class PropertiesAdapter extends BaseAdapter implements Adapter
+public class PropertiesAdapter extends NativeObjectScriptingAdapter implements Adapter
 {
     // --- Adapter parameters
     /**

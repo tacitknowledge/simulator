@@ -15,10 +15,10 @@ import com.tacitknowledge.simulator.SimulatorPojo;
  *
  * @author Nikita Belenkiy (nbelenkiy@tacitknowledge.com)
  */
-public class PlainTextAdapter extends BaseAdapter
+public class PlainTextAdapter extends NativeObjectScriptingAdapter
 {
     /**
-     * Structured pojo root is 'text'
+     * Structured pojo root is 'text'  This does not need conversion to NativeObject
      *
      * @param exchange text String
      * @return The generated custom beans map

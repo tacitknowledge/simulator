@@ -24,7 +24,7 @@ import com.tacitknowledge.simulator.StructuredSimulatorPojo;
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class YamlAdapter extends BaseAdapter implements Adapter
+public class YamlAdapter extends NativeObjectScriptingAdapter implements Adapter
 {
     /**
      * String describing what are the YAML contents. REQUIRED.

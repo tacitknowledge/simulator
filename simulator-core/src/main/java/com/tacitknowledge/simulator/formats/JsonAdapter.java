@@ -24,7 +24,7 @@ import com.tacitknowledge.simulator.StructuredSimulatorPojo;
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class JsonAdapter extends BaseAdapter implements Adapter
+public class JsonAdapter extends NativeObjectScriptingAdapter implements Adapter
 {
     /**
      * JSON content parameter. Describes what are the JSON contents. REQUIRED.

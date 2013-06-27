@@ -22,7 +22,7 @@ import com.tacitknowledge.simulator.StructuredSimulatorPojo;
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class CsvAdapter extends BaseAdapter implements Adapter
+public class CsvAdapter extends NativeObjectScriptingAdapter implements Adapter
 {
     // --- Adapter parameters
     /**
