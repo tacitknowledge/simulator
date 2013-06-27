@@ -223,9 +223,6 @@
         <!-- profile for tomcat builds, this is the default one -->
         <profile>
             <id>tomcat</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
             <dependencies>
                 <dependency>
                     <groupId>com.tacitknowledge.simulator</groupId>
