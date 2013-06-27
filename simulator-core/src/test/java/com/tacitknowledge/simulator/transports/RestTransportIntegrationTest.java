@@ -11,6 +11,7 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.tacitknowledge.simulator.Adapter;
@@ -44,6 +45,7 @@ public class RestTransportIntegrationTest {
         routeManager.start();
     }
 
+//    @Ignore
     @Test
     public void succesfulRestTest() throws Exception{
 
@@ -92,6 +94,7 @@ public class RestTransportIntegrationTest {
 
         int statusCode = client.executeMethod(requestMethod);
 
+        assertEquals("201",HttpStatus.SC_CREATED,statusCode);
         if (statusCode == HttpStatus.SC_CREATED)
         {
             byte[] responseBody = requestMethod.getResponseBody();
@@ -103,7 +106,7 @@ public class RestTransportIntegrationTest {
 
         requestMethod = new GetMethod("http://0.0.0.0:9001/collection/90");
         statusCode = client.executeMethod(requestMethod);
-
+        assertEquals("200",HttpStatus.SC_OK,statusCode);
         if (statusCode == HttpStatus.SC_OK)
         {
             byte[] responseBody = requestMethod.getResponseBody();

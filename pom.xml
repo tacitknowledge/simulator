@@ -16,7 +16,7 @@
     <modules>
         <module>simulator-core</module>
     </modules>
-        
+
     <repositories>
         <repository>
             <id>tk-public</id>
@@ -32,7 +32,7 @@
         </repository>
         <repository>
             <id>jboss</id>
-            <url>http://repository.jboss.com/maven2</url>
+            <url>http://repository.jboss.org/nexus/content/groups/public-jboss/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>

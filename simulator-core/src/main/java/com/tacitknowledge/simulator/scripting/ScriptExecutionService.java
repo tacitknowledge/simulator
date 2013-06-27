@@ -74,7 +74,8 @@ public class ScriptExecutionService
     {
         try
         {
-            return initBSFManager(globals).eval(language, scriptName, 0, 0, script);
+            final BSFManager bsfManager = initBSFManager(globals);
+            return bsfManager.eval(language, scriptName, 0, 0, script);
         }
         catch (BSFException e)
         {
@@ -121,7 +122,7 @@ public class ScriptExecutionService
      * @param beans   the map of bean names-to-beans
      * @throws ScriptException if there was a problem adding a bean to the interpreter
      */
-    private void bindObjectToEngineRuntime(
+    private void bindObjectToEngineRuntimeOld(
         final BSFManager manager,
         final Map<String, Object> beans)
         throws ScriptException
@@ -149,5 +150,32 @@ public class ScriptExecutionService
                 }
             }
         }
+    }
+
+    /**
+     * Binds each object in the given map to the script engine's runtime state.
+     *
+     * @param manager the BSFManager instance
+     * @param beans   the map of bean names-to-beans
+     * @throws ScriptException if there was a problem adding a bean to the interpreter
+     */
+    protected void bindObjectToEngineRuntime(
+        final BSFManager manager,
+        final Map<String, Object> beans)
+        throws ScriptException
+    {
+        if (beans == null)
+        {
+            return;
+        }
+        try {
+            Map.Entry<String,Object> myEntry = beans.entrySet().iterator().next();
+            String key = myEntry.getKey();
+
+            manager.declareBean(key,beans.get(key),beans.get(key).getClass());
+        } catch (BSFException e) {
+            throw new ScriptException("Error binding variable  ", e);
+        }
+
     }
 }

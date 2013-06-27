@@ -13,17 +13,37 @@
     <groupId>com.tacitknowledge.simulator</groupId>
     <artifactId>simulator-core</artifactId>
     <packaging>jar</packaging>
-    
+
     <properties>
         <camel.version>2.6.0</camel.version>
         <activemq.version>5.3.0</activemq.version>
     </properties>
 
-	<dependencies>
-		<dependency>
+    <dependencies>
+        <!-- TODO - there is a Camel and Jackson conflict related to jersey.  I put the jackson stuff first, but this may not
+            work in the single jar.  May need to find another Map to JSON converter -->
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-core-asl</artifactId>
+            <version>1.9.12</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>1.9.12</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-core</artifactId>
             <version>${camel.version}</version>
+            <!--<exclusions>-->
+            <!--<exclusion>-->
+            <!--<groupId>org.codehaus.jackson</groupId>-->
+            <!--<artifactId>jackson-asl</artifactId>-->
+            <!--</exclusion>-->
+            <!--</exclusions>-->
         </dependency>
 
         <dependency>
@@ -116,7 +136,7 @@
             <version>1.3</version>
         </dependency>
 
-         <dependency>
+        <dependency>
             <groupId>javassist</groupId>
             <artifactId>javassist</artifactId>
             <version>3.11.0.GA</version>
@@ -127,19 +147,19 @@
             <artifactId>axis</artifactId>
             <version>1.4</version>
         </dependency>
-        
-		<dependency>
-			<groupId>wsdl4j</groupId>
-			<artifactId>wsdl4j</artifactId>
-			<version>1.6.2</version>
-		</dependency>
+
+        <dependency>
+            <groupId>wsdl4j</groupId>
+            <artifactId>wsdl4j</artifactId>
+            <version>1.6.2</version>
+        </dependency>
 
         <dependency>
             <groupId>commons-discovery</groupId>
             <artifactId>commons-discovery</artifactId>
             <version>0.4</version>
         </dependency>
-        
+
         <dependency>
             <groupId>javax.xml.soap</groupId>
             <artifactId>saaj-api</artifactId>
@@ -156,15 +176,15 @@
             <artifactId>axis-jaxrpc</artifactId>
             <version>1.4</version>
         </dependency>
-	
-		<!-- For test -->
+
+        <!-- For test -->
         <dependency>
             <groupId>jdom</groupId>
             <artifactId>jdom</artifactId>
             <version>1.1</version>
             <scope>test</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-test</artifactId>
@@ -191,15 +211,69 @@
                 </exclusion>
             </exclusions>
         </dependency>
-		
-		<dependency>
-		  	<groupId>org.mockito</groupId>
-		  	<artifactId>mockito-all</artifactId>
-		  	<version>1.8.5</version>
-	       	<scope>test</scope>
-	 	</dependency>
-	</dependencies>
-        
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.8.5</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <!-- profile for tomcat builds, this is the default one -->
+        <profile>
+            <id>tomcat</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>com.tacitknowledge.simulator</groupId>
+                    <artifactId>simulator-dependencies-tomcat</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <type>pom</type>
+                    <exclusions>
+                        <exclusion>
+                            <artifactId>mockito-core</artifactId>
+                            <groupId>org.mockito</groupId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+            </dependencies>
+        </profile>
+        <!-- profile for jboss builds. Activated if passing -Pjboss -->
+        <profile>
+            <id>jboss</id>
+            <dependencies>
+                <!--<dependency>-->
+                <!--<groupId>com.tacitknowledge.simulator</groupId>-->
+                <!--<artifactId>simulator-dependencies-jboss</artifactId>-->
+                <!--<version>1.0-SNAPSHOT</version>-->
+                <!--<type>pom</type>-->
+                <!--</dependency>-->
+                <!-- I wish I could move these dependencies to simulator-dependencies-jboss but it doesn't work with the exclusions declared there-->
+                <dependency>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                    <version>1.5.6</version>
+                    <scope>provided</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                    <version>1.5.6</version>
+                    <scope>provided</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.mortbay.jetty</groupId>
+                    <artifactId>servlet-api</artifactId>
+                    <version>2.5-20081211</version>
+                    <scope>provided</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
@@ -211,24 +285,33 @@
                     <source>1.5</source>
                 </configuration>
             </plugin>
-            
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-surefire-plugin</artifactId>-->
+                <!--<version>2.15</version>-->
+                <!--<configuration>-->
+                    <!--<includes>-->
+                        <!--<include>**/RestTransportIntegrationTest.java</include>-->
+                    <!--</includes>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
             <plugin>
-	          	<groupId>org.apache.maven.plugins</groupId>
-	          	<artifactId>maven-jar-plugin</artifactId>
-	          	<configuration>
-			        <archive>
-			          <manifest>
-			            <mainClass>com.tacitknowledge.simulator.standalone.Simulator</mainClass>
-			            <packageName>com.tacitknowledge.simulator.standalone</packageName>
-			            <addClasspath>true</addClasspath>
-			          </manifest>
-			          <manifestEntries>
-					    <Class-Path>../config/</Class-Path>
-		  			  </manifestEntries>
-			        </archive>
-		        </configuration>
-	      	</plugin>
-            
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.tacitknowledge.simulator.standalone.Simulator</mainClass>
+                            <packageName>com.tacitknowledge.simulator.standalone</packageName>
+                            <addClasspath>true</addClasspath>
+                        </manifest>
+                        <manifestEntries>
+                            <Class-Path>../config/</Class-Path>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.dstovall</groupId>
                 <artifactId>onejar-maven-plugin</artifactId>
@@ -247,12 +330,12 @@
 
         </plugins>
     </build>
-    
+
     <pluginRepositories>
-	    <pluginRepository>
-	        <id>onejar-maven-plugin.googlecode.com</id>
-	        <url>http://onejar-maven-plugin.googlecode.com/svn/mavenrepo</url>
-	    </pluginRepository>
+        <pluginRepository>
+            <id>onejar-maven-plugin.googlecode.com</id>
+            <url>http://onejar-maven-plugin.googlecode.com/svn/mavenrepo</url>
+        </pluginRepository>
     </pluginRepositories>
 
     <reporting>
@@ -318,7 +401,7 @@
                     </check>
                 </configuration>
             </plugin>
-            
+
         </plugins>
     </reporting>
 </project>

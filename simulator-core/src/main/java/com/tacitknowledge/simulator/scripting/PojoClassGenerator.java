@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * This class deals with dynamically generating POJO classes
@@ -75,6 +76,8 @@ import java.util.Map.Entry;
  */
 public class PojoClassGenerator
 {
+    private static AtomicLong generationCounter = new AtomicLong(0L);
+
     /**
      * Base (and fake) default package for temporary simulator JavaBeans
      */
@@ -153,6 +156,8 @@ public class PojoClassGenerator
      *                                with the criteria.
      */
     @SuppressWarnings("unchecked")
+
+
     public Map<String, Object> generateBeansMap(final SimulatorPojo pojo)
         throws CannotCompileException, NotFoundException, ScriptException, SimulatorException
     {
@@ -186,7 +191,43 @@ public class PojoClassGenerator
                     populateClassIntanceFromMap(getPackClassName(className), bean));
             }
         }
+//        return pojo.getRoot();
+        return beansMap;
+    }
+    public Map<String, Object> generateBeansMapOld(final SimulatorPojo pojo)
+        throws CannotCompileException, NotFoundException, ScriptException, SimulatorException
+    {
+        // --- The SimulatorPojo's root must contain only one entry
+        // --- Beans Map should only contain ONE entry
+        if (pojo.getRoot().isEmpty() || pojo.getRoot().size() > 1)
+        {
+            throw new SimulatorException(
+                "beansMap should be neither empty nor contain more than 1 entry.");
+        }
 
+        // --- First, generate the temporary classes for the SimulatorPojo contents
+        generateClassFromMap(null, pojo.getRoot());
+
+        // --- Now populate the beans contained in the SimulatorPojo
+        Map<String, Object> beansMap = new HashMap<String, Object>();
+        for (Entry<String, Object> entry : pojo.getRoot().entrySet())
+        {
+            String className = getValidClassName(entry.getKey());
+
+            Object beanValue = entry.getValue();
+            // We should only cast the beanValue to map if it is map
+            // Sometimes it can be other type such as String, for example
+            // the xml we use in the tests.
+            if (beanValue instanceof Map)
+            {
+                Map<String, Object> bean = (Map<String, Object>) beanValue;
+
+                beansMap.put(
+                    entry.getKey(),
+                    populateClassIntanceFromMap(getPackClassName(className), bean));
+            }
+        }
+//        return pojo.getRoot();
         return beansMap;
     }
 
@@ -577,6 +618,6 @@ public class PojoClassGenerator
      */
     private String getPackTimeClassName(final String name)
     {
-        return generatedClassesPackage + "q" + new Date().getTime() + "." + name;
+        return generatedClassesPackage + "q" + generationCounter.getAndIncrement() + "." + name;
     }
 }

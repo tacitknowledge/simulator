@@ -1,0 +1,16 @@
+<employees>
+    <employee>
+        <name>John</name>
+        <title>Manager</title>
+    </employee>
+    <employee>
+        <name>Sara</name>
+        <title>Clerk</title>
+    </employee>
+    <reportDate>2009-11-05</reportDate>
+    <roles>
+        <role>Clerk</role>
+        <role>Manager</role>
+        <role>Accountant</role>
+    </roles>
+</employees>
