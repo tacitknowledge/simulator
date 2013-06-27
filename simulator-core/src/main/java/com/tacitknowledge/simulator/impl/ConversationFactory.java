@@ -33,7 +33,9 @@ public final class ConversationFactory
                 || outboundTransport == null)
         {
             String errorMessage = "Inbound and outbound"
-                    + " adapters and transports are required for creating new conversation.";
+                    + " adapters and transports are required for creating new conversation. ITransport="
+            		+ inboundTransport + ", OTransport=" + outboundTransport + ", IAdapter=" + inboundAdapter
+            		+ ", OAdapter=" + outboundAdapter;
 
             throw new IllegalArgumentException(errorMessage);
         }
