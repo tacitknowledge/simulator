@@ -94,7 +94,7 @@ public abstract class BaseAdapter extends BaseConfigurable implements Adapter
      * @return SimulatorPojo containing the sctructured representation of the incoming Object
      * @throws ObjectMapperException If an error mapping the Object into the SimulatorPojo occurs
      */
-    private SimulatorPojo getSimulatorPojo(final Object object) throws ObjectMapperException
+    protected SimulatorPojo getSimulatorPojo(final Object object) throws ObjectMapperException
     {
         return SimulatorPojoPopulatorImpl.getInstance().populateSimulatorPojoFromBean(object);
     }
@@ -115,13 +115,17 @@ public abstract class BaseAdapter extends BaseConfigurable implements Adapter
         SimulatorPojo getSimulatorPojo;
         try
         {
+
+            //currently returns "nativeobject" as root.  needs "payload" as root
             getSimulatorPojo = getSimulatorPojo(scriptExecutionResult);
+
         }
         catch (ObjectMapperException e)
         {
             throw new FormatAdapterException("Error trying to generate temporary classes", e);
         }
-        return getString(getSimulatorPojo, exchange);
+        final String result = getString(getSimulatorPojo, exchange);
+        return result;
     }
 
     /**

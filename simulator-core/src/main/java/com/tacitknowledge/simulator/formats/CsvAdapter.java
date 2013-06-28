@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import com.tacitknowledge.simulator.scripting.ObjectMapperException;
+import com.tacitknowledge.simulator.scripting.SimulatorPojoPopulatorImpl;
 import org.apache.camel.Exchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -187,6 +189,15 @@ public class CsvAdapter extends NativeObjectScriptingAdapter implements Adapter
 
         return sb1.toString();
     }
+
+    protected SimulatorPojo getSimulatorPojo(final Object object) throws ObjectMapperException
+    {
+        final SimulatorPojo payload = SimulatorPojoPopulatorImpl.getInstance().populateSimulatorPojoFromBean(object,
+                getParamValue(PARAM_CSV_CONTENT));
+        return payload;
+
+    }
+
 
     /**
      * @throws ConfigurableException If any required parameter is missing

@@ -18,6 +18,7 @@ import org.jdom.input.SAXBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.tacitknowledge.simulator.Adapter;
@@ -160,6 +161,7 @@ public class ScenarioExecutionWrapperTest
         }
     }
 
+    @Ignore("Ruby Unsupported Temporarily")
     @Test
     public void testRubyScenario() throws Exception
     {
@@ -180,6 +182,7 @@ public class ScenarioExecutionWrapperTest
         Assert.assertTrue(s.contains("John12345"));
     }
 
+    @Ignore("Ruby Unsupported Temporarily")
     @Test
     public void testReturnDifferentObject() throws Exception
     {
@@ -200,7 +203,7 @@ public class ScenarioExecutionWrapperTest
         Assert.assertTrue(s.contains("Success"));
     }
 
-
+    @Ignore("Ruby Unsupported Temporarily")
     @Test
     public void testReturnRubyEmptyHash() throws Exception
     {
@@ -221,6 +224,7 @@ public class ScenarioExecutionWrapperTest
         Assert.assertTrue(s.contains("rubyhash"));
     }
 
+    @Ignore("Ruby Unsupported Temporarily")
     @Test
     public void testReturnRubyNotEmptyHash() throws Exception
     {

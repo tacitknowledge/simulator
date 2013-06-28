@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.tacitknowledge.simulator.scripting.ObjectMapperException;
+import com.tacitknowledge.simulator.scripting.SimulatorPojoPopulatorImpl;
 import org.apache.camel.Exchange;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -75,6 +77,12 @@ public class JsonAdapter extends NativeObjectScriptingAdapter implements Adapter
     public JsonAdapter(final int bound, final Map<String, String> parameters)
     {
         super(bound, parameters);
+    }
+    protected SimulatorPojo getSimulatorPojo(final Object object) throws ObjectMapperException
+    {
+        final SimulatorPojo payload = SimulatorPojoPopulatorImpl.getInstance().populateSimulatorPojoFromBean(object,
+                getParamValue(PARAM_JSON_CONTENT));
+        return payload;
     }
 
     /**

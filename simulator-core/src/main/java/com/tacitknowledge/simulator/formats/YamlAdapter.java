@@ -7,6 +7,8 @@ import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.tacitknowledge.simulator.scripting.ObjectMapperException;
+import com.tacitknowledge.simulator.scripting.SimulatorPojoPopulatorImpl;
 import org.apache.camel.Exchange;
 import org.ho.yaml.YamlDecoder;
 import org.ho.yaml.YamlEncoder;
@@ -144,6 +146,14 @@ public class YamlAdapter extends NativeObjectScriptingAdapter implements Adapter
         enc.close();
 
         return os.toString();
+    }
+
+    protected SimulatorPojo getSimulatorPojo(final Object object) throws ObjectMapperException
+    {
+        final SimulatorPojo payload = SimulatorPojoPopulatorImpl.getInstance().populateSimulatorPojoFromBean(object,
+                getParamValue(PARAM_YAML_CONTENT));
+        return payload;
+
     }
 
     /**

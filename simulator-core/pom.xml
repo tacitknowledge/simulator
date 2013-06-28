@@ -123,7 +123,11 @@
             <artifactId>js</artifactId>
             <version>1.6R7</version>
         </dependency>
-
+<dependency>
+        <groupId>com.jcraft</groupId>
+        <artifactId>jsch</artifactId>
+        <version>0.1.31</version>
+      </dependency>
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>

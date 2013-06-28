@@ -24,6 +24,7 @@ public final class SimulatorPojoPopulatorImpl
      * Singleton instance
      */
     private static SimulatorPojoPopulatorImpl aINSTANCE;
+    public static final String NATIVEOBJECT = "nativeobject";
 
     /**
      * Hide default constructor
@@ -102,6 +103,15 @@ public final class SimulatorPojoPopulatorImpl
         pojo.getRoot().put(simpleName, stringObjectMap);
 
         return pojo;
+    }
+
+    public SimulatorPojo populateSimulatorPojoFromBean(final Object bean, String rootOverride) throws ObjectMapperException {
+        StructuredSimulatorPojo pojo = (StructuredSimulatorPojo) populateSimulatorPojoFromBean(bean);
+        Map map = (Map) pojo.getRoot().get(NATIVEOBJECT);
+        pojo.getRoot().put(rootOverride,map);
+        pojo.getRoot().remove(NATIVEOBJECT);
+        return pojo;
+
     }
 
 

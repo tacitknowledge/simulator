@@ -27,6 +27,8 @@ import javax.xml.soap.SOAPFactory;
 import javax.xml.soap.SOAPFault;
 import javax.xml.soap.SOAPMessage;
 
+import com.tacitknowledge.simulator.scripting.ObjectMapperException;
+import com.tacitknowledge.simulator.scripting.SimulatorPojoPopulatorImpl;
 import org.apache.camel.Exchange;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -161,7 +163,8 @@ public class SoapAdapter extends XmlAdapter implements Adapter
     protected SimulatorPojo createSimulatorPojo(final Exchange exchange) throws
             FormatAdapterException
     {
-        return createSimulatorPojo(exchange.getIn().getBody(String.class));
+        final String body = exchange.getIn().getBody(String.class);
+        return createSimulatorPojo(body);
     }
 
     /**
@@ -302,6 +305,13 @@ public class SoapAdapter extends XmlAdapter implements Adapter
 
         logger.debug("Finished generating SOAP content from SimulatorPojo");
         return outputStream.toString();
+    }
+    protected SimulatorPojo getSimulatorPojo(final Object object) throws ObjectMapperException
+    {
+        final SimulatorPojo payload = SimulatorPojoPopulatorImpl.getInstance().populateSimulatorPojoFromBean(object,
+                DEFAULT_PAYLOAD_KEY);
+        return payload;
+
     }
 
     /**

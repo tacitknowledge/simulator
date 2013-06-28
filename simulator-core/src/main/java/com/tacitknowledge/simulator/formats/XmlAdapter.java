@@ -39,7 +39,7 @@ import com.tacitknowledge.simulator.StructuredSimulatorPojo;
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public class XmlAdapter extends BaseAdapter implements Adapter
+public class XmlAdapter extends NativeObjectScriptingAdapter implements Adapter
 {
     /**
      * Validate parameter. If the XML text should DTD validated. OPTIONAL.
