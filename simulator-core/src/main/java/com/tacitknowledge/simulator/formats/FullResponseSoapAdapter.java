@@ -258,7 +258,7 @@ public class FullResponseSoapAdapter extends XmlAdapter implements Adapter
     @SuppressWarnings("unchecked")
     private void getAvailableOperations(Definition definition)
     {
-        Map<QName, Binding> bindings = definition.getBindings();
+        Map<QName, Binding> bindings = definition.getAllBindings();
 
         for (Map.Entry<QName, Binding> entry : bindings.entrySet())
         {
