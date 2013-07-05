@@ -37,7 +37,7 @@ import java.util.jar.JarInputStream;
  */
 public class OneJarPackageScanResolver extends DefaultPackageScanClassResolver {
 
-    public static final int FILE_LENGTH = 6;
+    public static final String FILE_PREFIX = "file:/";
 
     /**
      * Overridden to handle the URLs returned by One-Jar custom class loader which looks like:
@@ -148,7 +148,7 @@ public class OneJarPackageScanResolver extends DefaultPackageScanClassResolver {
      */
     String extractTopLevelPath(String urlPath) {
 
-        final String urlPathWithoutFile = urlPath.substring(FILE_LENGTH, urlPath.indexOf("!"));
+        final String urlPathWithoutFile = urlPath.substring(FILE_PREFIX.length(), urlPath.indexOf("!"));
         log.info("Searching main one jar: " + urlPathWithoutFile);
 
         return urlPathWithoutFile;
