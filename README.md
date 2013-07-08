@@ -2,6 +2,9 @@
 As of svn commit 2235, the simulator should be entering functional testing for the BB project.  This module
 lacked a README until now.  I'm not going to focus on usage here, but next steps in refactoring
 
+The XML and SOAP adapters need stronger unit tests for responses.  They *might* benefit from XSD and DTD support to
+aid in generating proper responses with tools like JAXB.
+
 Currently, the BaseAdapter and its many subclasses needs decomposition into delegates.  Its handling too many
 responsibilities and has become difficult to extend.
 
