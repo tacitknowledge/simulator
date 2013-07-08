@@ -1,5 +1,8 @@
 package com.tacitknowledge.simulator.transports;
 
+import com.tacitknowledge.simulator.BaseConfigurable;
+import com.tacitknowledge.simulator.Configurable;
+
 import java.util.Map;
 
 /**
@@ -16,7 +19,7 @@ public class SoapTransport extends HttpTransport
      */
     public SoapTransport()
     {
-        super(TransportConstants.SOAP);
+        this(new BaseConfigurable());
     }
 
     /**
@@ -25,8 +28,8 @@ public class SoapTransport extends HttpTransport
      * @param bound      Configurable bound
      * @param parameters - Map of String, String values
      */
-    public SoapTransport(final int bound, final Map<String, String> parameters)
+    public SoapTransport(final Configurable configurable)
     {
-        super(bound, TransportConstants.SOAP, parameters);
+        super(TransportConstants.SOAP, configurable);
     }
 }

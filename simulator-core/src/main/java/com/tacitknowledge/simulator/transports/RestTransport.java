@@ -1,5 +1,8 @@
 package com.tacitknowledge.simulator.transports;
 
+import com.tacitknowledge.simulator.BaseConfigurable;
+import com.tacitknowledge.simulator.Configurable;
+
 import java.util.Map;
 
 /**
@@ -16,7 +19,7 @@ public class RestTransport extends HttpTransport
      */
     public RestTransport()
     {
-        super(TransportConstants.REST);
+        this(new BaseConfigurable());
     }
 
 
@@ -26,8 +29,8 @@ public class RestTransport extends HttpTransport
      * @param bound      Configurable bound
      * @param parameters - Map of String, String values
      */
-    public RestTransport(final int bound, final Map<String, String> parameters)
+    public RestTransport(final Configurable configurable)
     {
-        super(bound, TransportConstants.REST, parameters);
+        super(TransportConstants.REST, configurable);
     }
 }

@@ -1,13 +1,11 @@
 package com.tacitknowledge.simulator.transports;
 
+import java.util.HashMap;
 import java.util.Map;
 
+import com.tacitknowledge.simulator.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.tacitknowledge.simulator.ConfigurableException;
-import com.tacitknowledge.simulator.Transport;
-import com.tacitknowledge.simulator.TransportException;
 
 /**
  * Transport implementation for File endpoints.
@@ -69,7 +67,7 @@ public class FileTransport extends BaseTransport implements Transport
      */
     public FileTransport()
     {
-        super(TransportConstants.FILE);
+        this(TransportConstants.FILE);
     }
 
     /**
@@ -77,42 +75,29 @@ public class FileTransport extends BaseTransport implements Transport
      *
      * @param type @see #type
      */
-    protected FileTransport(final String type)
+    public FileTransport(final String type)
     {
-        super(type);
+        this(type, new BaseConfigurable(Configurable.BOUND_IN,new HashMap<String, String>()));
     }
 
     /**
      * Contructor that initialize the File Transport with parameters
-     * @param parameters - transport parameters
+     * @param configurable - transport parameters
      */
-    public FileTransport(final Map<String, String> parameters)
+    public FileTransport(Configurable configurable)
     {
-        super(TransportConstants.FILE, parameters);
-    }
-
-    /**
-     * Constructor
-     *
-     * @param bound Configurable bound
-     * @param parameters @see #parameters
-     */
-    public FileTransport(final int bound, final Map<String, String> parameters)
-    {
-        super(bound, TransportConstants.FILE, parameters);
+        this(TransportConstants.FILE, configurable);
     }
 
     /**
      * Used only for inheriting Transports
      *
-     * @param bound      Configurable bound
      * @param type       @see #type
-     * @param parameters @see #parameters
+     * @param configurable @see #configurable
      */
-    protected FileTransport(final int bound, final String type,
-                            final Map<String, String> parameters)
+    protected FileTransport(final String type,final Configurable configurable)
     {
-        super(bound, type, parameters);
+        super(type, configurable);
     }
 
     /**
@@ -123,16 +108,16 @@ public class FileTransport extends BaseTransport implements Transport
         StringBuilder sb = new StringBuilder("file://");
 
         // --- directory name
-        sb.append(getParamValue(PARAM_DIRECTORY_NAME));
+        sb.append(configurable.getParamValue(PARAM_DIRECTORY_NAME));
 
         // --- Options
         StringBuilder options = new StringBuilder();
-        if (getParamValue(PARAM_POLLING_INTERVAL) != null)
+        if (configurable.getParamValue(PARAM_POLLING_INTERVAL) != null)
         {
             options.append("initialDelay=").append(
-                    getParamValue(PARAM_POLLING_INTERVAL)).append(AMP);
+                    configurable.getParamValue(PARAM_POLLING_INTERVAL)).append(AMP);
             options.append("delay=").append(
-                    getParamValue(PARAM_POLLING_INTERVAL)).append(AMP);
+                    configurable.getParamValue(PARAM_POLLING_INTERVAL)).append(AMP);
         }
 
         if (this.deleteFile)
@@ -141,24 +126,24 @@ public class FileTransport extends BaseTransport implements Transport
         }
 
         // --- fileName, fileExtension & Regex filter should be mutually exclusive options
-        if (getParamValue(PARAM_FILE_NAME) != null)
+        if (configurable.getParamValue(PARAM_FILE_NAME) != null)
         {
-            options.append("fileName=").append(getParamValue(PARAM_FILE_NAME));
+            options.append("fileName=").append(configurable.getParamValue(PARAM_FILE_NAME));
         }
-        else if (getParamValue(PARAM_FILE_EXTENSION) != null)
+        else if (configurable.getParamValue(PARAM_FILE_EXTENSION) != null)
         {
             // --- File extension is used as a RegEx filter for transport routing
             options.append("include=^.*\\.(").
-                append(getParamValue(PARAM_FILE_EXTENSION).toLowerCase()).
+                append(configurable.getParamValue(PARAM_FILE_EXTENSION).toLowerCase()).
                 append("|").
-                append(getParamValue(PARAM_FILE_EXTENSION).toUpperCase()).
+                append(configurable.getParamValue(PARAM_FILE_EXTENSION).toUpperCase()).
                 append(")$");
         }
-        else if (getParamValue(PARAM_REGEX_FILTER) != null)
+        else if (configurable.getParamValue(PARAM_REGEX_FILTER) != null)
         {
             // --- Regex filter is the last filter to be applied, only if neither of the other 2
             // were provided.
-            options.append("include=").append(getParamValue(PARAM_REGEX_FILTER));
+            options.append("include=").append(configurable.getParamValue(PARAM_REGEX_FILTER));
         }
 
         // --- If there are options set, append to the current URI
@@ -178,13 +163,13 @@ public class FileTransport extends BaseTransport implements Transport
     @Override
     public void validateParameters() throws ConfigurableException
     {
-        if (getParamValue(PARAM_DELETE_FILE) != null)
+        if (configurable.getParamValue(PARAM_DELETE_FILE) != null)
         {
-            this.deleteFile = Boolean.parseBoolean(getParamValue(PARAM_DELETE_FILE));
+            this.deleteFile = Boolean.parseBoolean(configurable.getParamValue(PARAM_DELETE_FILE));
         }
 
         // ---
-        if (getParamValue(PARAM_DIRECTORY_NAME) == null)
+        if (configurable.getParamValue(PARAM_DIRECTORY_NAME) == null)
         {
             throw new ConfigurableException("Directory Name parameter is required");
         }

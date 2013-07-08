@@ -48,7 +48,8 @@ public class RestTransportIntegrationTest {
         Map<String, String> transportParams = new HashMap<String, String>();
         transportParams.put(HttpTransport.PARAM_RESOURCE_URI, "/collection");
         transportParams.put(HttpTransport.PARAM_PORT, "9001");
-        inTransport.setParameters(transportParams);
+        BaseConfigurable inTConfigurable = new BaseConfigurable(transportParams);
+        inTransport = new RestTransport(inTConfigurable);
 
 
         BaseConfigurable configurable = new BaseConfigurable();
@@ -60,7 +61,7 @@ public class RestTransportIntegrationTest {
 
         Map<String, String> pars = new HashMap<String, String>();
         pars.put(HttpTransport.PARAM_HTTP_OUT, "true");
-        outTransport.setParameters(pars);
+        outTransport = new RestTransport(new BaseConfigurable(Configurable.BOUND_OUT,pars));
 
         ScenarioFactory scenarioFactory = new ScenarioFactory();
         ConversationFactory conversationFactory = new ConversationFactory();

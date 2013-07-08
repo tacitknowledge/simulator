@@ -27,6 +27,7 @@ public class BaseConfigurable implements Configurable
      */
     public BaseConfigurable()
     {
+        this(Configurable.BOUND_IN,new HashMap<String, String>());
     }
 
     /**
@@ -34,7 +35,7 @@ public class BaseConfigurable implements Configurable
      * This should be the prefered constructor method from within JAVA.
      * @param parameters Parameter values
      */
-    protected BaseConfigurable(final Map<String, String> parameters)
+    public BaseConfigurable(final Map<String, String> parameters)
     {
         this.bound = Configurable.BOUND_IN;
         this.parameters = parameters;
@@ -45,7 +46,7 @@ public class BaseConfigurable implements Configurable
      * @param bound Configurable bound
      * @param parameters Parameter values
      */
-    protected BaseConfigurable(final int bound, final Map<String, String> parameters)
+    public BaseConfigurable(final int bound, final Map<String, String> parameters)
     {
         this.bound = bound;
         this.parameters = parameters;

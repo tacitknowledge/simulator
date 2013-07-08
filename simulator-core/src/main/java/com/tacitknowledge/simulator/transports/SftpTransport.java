@@ -3,6 +3,8 @@ package com.tacitknowledge.simulator.transports;
 import java.lang.annotation.Inherited;
 import java.util.Map;
 
+import com.tacitknowledge.simulator.BaseConfigurable;
+import com.tacitknowledge.simulator.Configurable;
 import com.tacitknowledge.simulator.ConfigurableException;
 import com.tacitknowledge.simulator.TransportException;
 
@@ -12,7 +14,7 @@ public class SftpTransport extends FtpTransport
      * {@link Inherited}
      */
     SftpTransport(){
-        super();
+        this(new BaseConfigurable());
     }
     
     /**
@@ -20,9 +22,9 @@ public class SftpTransport extends FtpTransport
      * @param bound Inbound or Outbound
      * @param parameters - transport parameters
      */
-    public SftpTransport(final int bound, final Map<String, String> parameters)
+    public SftpTransport(final Configurable configurable)
     {
-        super(bound, parameters);
+        super(configurable);
     }
     
     /**

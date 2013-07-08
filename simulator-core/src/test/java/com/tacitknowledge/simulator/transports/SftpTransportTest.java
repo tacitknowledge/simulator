@@ -6,6 +6,7 @@ import static org.junit.Assert.fail;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.tacitknowledge.simulator.BaseConfigurable;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,8 +29,10 @@ public class SftpTransportTest
     {
         // --- Try to get this URI: sftp://127.0.0.1
         params.put(FtpTransport.PARAM_HOST, "127.0.0.1");
+        BaseConfigurable configurable = new BaseConfigurable(params);
 
-        transport.setParameters(params);
+
+        transport = new SftpTransport(configurable);
 
         try
         {

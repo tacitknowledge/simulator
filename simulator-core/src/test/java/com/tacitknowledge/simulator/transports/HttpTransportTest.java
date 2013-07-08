@@ -7,6 +7,7 @@ import static org.junit.Assert.fail;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.tacitknowledge.simulator.BaseConfigurable;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -68,7 +69,7 @@ public class HttpTransportTest
     {
         // --- Try to get this URI: jetty:http://localhost/mytestapp/myservices
         params.put(HttpTransport.PARAM_RESOURCE_URI, "/mytestapp/myservices");
-        transport.setBoundAndParameters(Configurable.BOUND_IN, params);
+        transport = new HttpTransport(new BaseConfigurable(Configurable.BOUND_IN,params));
 
         try
         {
@@ -89,7 +90,7 @@ public class HttpTransportTest
         // --- Try to get this URI: jetty:http://localhost:8080/mytestapp/myservices
         params.put(HttpTransport.PARAM_PORT, "8080");
         params.put(HttpTransport.PARAM_RESOURCE_URI, "/mytestapp/myservices");
-        transport.setParameters(params);
+        transport = new HttpTransport(new BaseConfigurable(params));
 
         try
         {
@@ -109,7 +110,7 @@ public class HttpTransportTest
     {
         // --- Try to get this URI: direct:end
         params.put(HttpTransport.PARAM_HTTP_OUT, "true");
-        transport.setParameters(params);
+        transport = new HttpTransport(new BaseConfigurable(Configurable.BOUND_OUT,params));
 
         try
         {
@@ -120,6 +121,7 @@ public class HttpTransportTest
         }
         catch (Exception e)
         {
+            e.printStackTrace();
             fail("Shouldn't be getting an exception here: " + e.getMessage());
         }
     }
@@ -129,12 +131,12 @@ public class HttpTransportTest
     {
         params.put(HttpTransport.PARAM_PORT, "9696");
         params.put(HttpTransport.PARAM_RESOURCE_URI, "/mytestapp");
-        transport.setParameters(params);
+        transport = new HttpTransport(new BaseConfigurable(Configurable.BOUND_IN,params));
 
         Transport outTransport = new MockOutTransport();
         Map<String, String> pars = new HashMap<String, String>();
         pars.put(HttpTransport.PARAM_HTTP_OUT, "true");
-        outTransport.setParameters(pars);
+        transport = new HttpTransport(new BaseConfigurable(Configurable.BOUND_IN,params));
 
         try
         {

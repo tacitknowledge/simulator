@@ -1,5 +1,6 @@
 package com.tacitknowledge.simulator.transports;
 
+import com.tacitknowledge.simulator.BaseConfigurable;
 import com.tacitknowledge.simulator.Transport;
 
 import java.util.HashMap;
@@ -59,7 +60,7 @@ public class JmsTransportTest
         // --- Try to get this URI: activemq:foo.bar?brokerURL=tcp://localhost:61616
         params.put(JmsTransport.PARAM_DESTINATION_NAME, "foo.bar");
         params.put(JmsTransport.PARAM_BROKER_URL, "tcp://localhost:61616");
-        Transport transport = new JmsTransport(params);
+        Transport transport = new JmsTransport(new BaseConfigurable(params));
 
         try
         {
@@ -82,8 +83,7 @@ public class JmsTransportTest
         params.put(JmsTransport.PARAM_DESTINATION_NAME, "foo.bar");
         params.put(JmsTransport.PARAM_IS_TOPIC, "true");
         params.put(JmsTransport.PARAM_BROKER_URL, "tcp://localhost:61616");
-        Transport transport = new JmsTransport(params);
-
+        Transport transport = new JmsTransport(new BaseConfigurable(params));
         try
         {
             String uri = transport.toUriString();

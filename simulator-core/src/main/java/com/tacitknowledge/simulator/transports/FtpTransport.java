@@ -2,6 +2,7 @@ package com.tacitknowledge.simulator.transports;
 
 import java.util.Map;
 
+import com.tacitknowledge.simulator.Configurable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,12 +70,12 @@ public class FtpTransport extends FileTransport implements Transport
     }
 
     /**
-     * @param parameters @see #parameters
+     * @param configurable @see #parameters
      * {@inheritDoc}
      */
-    public FtpTransport(final int bound, final Map<String, String> parameters)
+    public FtpTransport(Configurable configurable)
     {
-        super(bound, TransportConstants.FTP, parameters);
+        super(TransportConstants.FTP, configurable);
     }
 
     /**
@@ -98,32 +99,32 @@ public class FtpTransport extends FileTransport implements Transport
         sb.append("://");
 
         // --- If we have username...
-        if (getParamValue(PARAM_USERNAME) != null)
+        if (configurable.getParamValue(PARAM_USERNAME) != null)
         {
-            sb.append(getParamValue(PARAM_USERNAME)).append("@");
+            sb.append(configurable.getParamValue(PARAM_USERNAME)).append("@");
         }
 
         // ---
-        sb.append(getParamValue(PARAM_HOST));
+        sb.append(configurable.getParamValue(PARAM_HOST));
 
         // --- If we have port
-        if (getParamValue(PARAM_PORT) != null)
+        if (configurable.getParamValue(PARAM_PORT) != null)
         {
-            sb.append(":").append(getParamValue(PARAM_PORT));
+            sb.append(":").append(configurable.getParamValue(PARAM_PORT));
         }
 
         // --- If we have directory name
-        if (getParamValue(PARAM_DIRECTORY_NAME) != null)
+        if (configurable.getParamValue(PARAM_DIRECTORY_NAME) != null)
         {
-            sb.append("/").append(getParamValue(PARAM_DIRECTORY_NAME));
+            sb.append("/").append(configurable.getParamValue(PARAM_DIRECTORY_NAME));
         }
 
         // --- Options...
         StringBuilder options = new StringBuilder();
         // --- If we have password
-        if (getParamValue(PARAM_PASSWORD) != null)
+        if (configurable.getParamValue(PARAM_PASSWORD) != null)
         {
-            options.append("password=").append(getParamValue(PARAM_PASSWORD)).append(AMP);
+            options.append("password=").append(configurable.getParamValue(PARAM_PASSWORD)).append(AMP);
         }
 
         // ---
@@ -132,11 +133,11 @@ public class FtpTransport extends FileTransport implements Transport
             options.append("delete=true").append(AMP);
         }
 
-        if (getParamValue(PARAM_POLLING_INTERVAL) != null)
+        if (configurable.getParamValue(PARAM_POLLING_INTERVAL) != null)
         {
-            options.append("initialDelay=").append(getParamValue(PARAM_POLLING_INTERVAL))
+            options.append("initialDelay=").append(configurable.getParamValue(PARAM_POLLING_INTERVAL))
                     .append(AMP);
-            options.append("delay=").append(getParamValue(PARAM_POLLING_INTERVAL)).append(AMP);
+            options.append("delay=").append(configurable.getParamValue(PARAM_POLLING_INTERVAL)).append(AMP);
         }
 
         // --- If file transfer is binary
@@ -147,22 +148,22 @@ public class FtpTransport extends FileTransport implements Transport
 
         // --- fileName, fileExtension & Regex filter should be mutually exclusive options.
         // fileName takes priority, Regex filter having the lowest.
-        if (getParamValue(PARAM_FILE_NAME) != null)
+        if (configurable.getParamValue(PARAM_FILE_NAME) != null)
         {
-            options.append("fileName=").append(getParamValue(PARAM_FILE_NAME));
+            options.append("fileName=").append(configurable.getParamValue(PARAM_FILE_NAME));
         }
-        else if (getParamValue(PARAM_FILE_EXTENSION) != null)
+        else if (configurable.getParamValue(PARAM_FILE_EXTENSION) != null)
         {
             // --- File extension is used as a RegEx filter for transport routing
             options.append("include=^.*\\.(")
-                    .append(getParamValue(PARAM_FILE_EXTENSION).toLowerCase()).append("|")
-                    .append(getParamValue(PARAM_FILE_EXTENSION).toUpperCase()).append(")$");
+                    .append(configurable.getParamValue(PARAM_FILE_EXTENSION).toLowerCase()).append("|")
+                    .append(configurable.getParamValue(PARAM_FILE_EXTENSION).toUpperCase()).append(")$");
         }
-        else if (getParamValue(PARAM_REGEX_FILTER) != null)
+        else if (configurable.getParamValue(PARAM_REGEX_FILTER) != null)
         {
             // --- Regex filter is the last filter to be applied, only if neither of the other 2
             // were provided.
-            options.append("include=").append(getParamValue(PARAM_REGEX_FILTER));
+            options.append("include=").append(configurable.getParamValue(PARAM_REGEX_FILTER));
         }
 
         // --- If there are options set, append to the current URI
@@ -183,16 +184,16 @@ public class FtpTransport extends FileTransport implements Transport
     public void validateParameters() throws ConfigurableException
     {
         // --- If passed, assign the boolean parameters to instance variables
-        if (getParamValue(PARAM_BINARY) != null)
+        if (configurable.getParamValue(PARAM_BINARY) != null)
         {
-            this.binary = Boolean.parseBoolean(getParamValue(PARAM_BINARY));
+            this.binary = Boolean.parseBoolean(configurable.getParamValue(PARAM_BINARY));
         }
-        if (getParamValue(PARAM_DELETE_FILE) != null)
+        if (configurable.getParamValue(PARAM_DELETE_FILE) != null)
         {
-            setDeleteFile(Boolean.parseBoolean(getParamValue(PARAM_DELETE_FILE)));
+            setDeleteFile(Boolean.parseBoolean(configurable.getParamValue(PARAM_DELETE_FILE)));
         }
 
-        if (getParamValue(PARAM_HOST) == null)
+        if (configurable.getParamValue(PARAM_HOST) == null)
         {
             throw new ConfigurableException("Host name parameter is required");
         }

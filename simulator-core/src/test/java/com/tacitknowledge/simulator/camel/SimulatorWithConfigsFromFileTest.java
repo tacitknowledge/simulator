@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.tacitknowledge.simulator.Transport;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
@@ -54,8 +55,8 @@ public class SimulatorWithConfigsFromFileTest
 
             // TODO: refactor this
             // Workaround: relative paths don't work from junit and camel :) Don't know why yet.
-            workaroundAbsolutePaths((BaseConfigurable) conversation.getInboundTransport());
-            workaroundAbsolutePaths((BaseConfigurable) conversation.getOutboundTransport());
+            workaroundAbsolutePaths(conversation.getInboundTransport());
+            workaroundAbsolutePaths(conversation.getOutboundTransport());
 
             routeManager.activate(conversation);
         }
@@ -67,12 +68,13 @@ public class SimulatorWithConfigsFromFileTest
         assertTrue(resultFile.exists());
     }
 
-    private void workaroundAbsolutePaths(BaseConfigurable transport) throws IOException
+    private void workaroundAbsolutePaths(Transport transport) throws IOException
     {
+        //TODO - mws - this is use of file IO rather than classloading needs fixing.
         if (transport instanceof FileTransport)
         {
-            String dir = transport.getParamValue("directoryName");
-            transport.setParamValue("directoryName", getTestsDirectory() + "/" + dir);
+            String dir = transport.getConfigurable().getParamValue("directoryName");
+            transport.getConfigurable().setParamValue("directoryName", getTestsDirectory() + "/" + dir);
         }
     }
 

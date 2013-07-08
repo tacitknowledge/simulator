@@ -1,5 +1,6 @@
 package com.tacitknowledge.simulator.camel;
 
+import com.tacitknowledge.simulator.BaseConfigurable;
 import com.tacitknowledge.simulator.TestHelper;
 import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.transports.FileTransport;
@@ -47,13 +48,13 @@ public class SimpleCamelTest
         it_params.put(FileTransport.PARAM_DIRECTORY_NAME,
             INBOX);
         it_params.put(FileTransport.PARAM_FILE_EXTENSION, "xml");
-        final Transport in_t = new FileTransport(it_params);
+        final Transport in_t = new FileTransport(new BaseConfigurable(it_params));
 
         // --- Out transport & format
         Map<String, String> ot_params = new HashMap<String, String>();
         ot_params.put(FileTransport.PARAM_DIRECTORY_NAME, OUTBOX);
         //ot_params.put(FileTransport.PARAM_FILE_NAME, "regex_result.xml");
-        final Transport out_t = new FileTransport(ot_params);
+        final Transport out_t = new FileTransport(new BaseConfigurable(ot_params));
 
         try
         {

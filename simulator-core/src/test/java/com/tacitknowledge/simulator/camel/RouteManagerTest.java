@@ -2,14 +2,9 @@ package com.tacitknowledge.simulator.camel;
 
 import java.util.Map;
 
+import com.tacitknowledge.simulator.*;
 import org.junit.Test;
 
-import com.tacitknowledge.simulator.ConfigurableException;
-import com.tacitknowledge.simulator.Conversation;
-import com.tacitknowledge.simulator.Scenario;
-import com.tacitknowledge.simulator.SimulatorCamelTestSupportBase;
-import com.tacitknowledge.simulator.Transport;
-import com.tacitknowledge.simulator.TransportException;
 import com.tacitknowledge.simulator.formats.PlainTextAdapter;
 import com.tacitknowledge.simulator.impl.ConversationFactory;
 import com.tacitknowledge.simulator.impl.ScenarioFactory;
@@ -178,6 +173,10 @@ public class RouteManagerTest extends SimulatorCamelTestSupportBase
 
         public void validateParameters() throws ConfigurableException {
             //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public Configurable getConfigurable() {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
         }
     }
 }

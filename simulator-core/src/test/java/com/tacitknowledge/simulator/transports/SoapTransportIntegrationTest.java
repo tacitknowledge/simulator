@@ -84,14 +84,6 @@ public class SoapTransportIntegrationTest {
     @Test
     public void successfulSoapTest() throws Exception
     {
-
-/*
-/Users/mshort/code/tk/trunk/simulator/src/test/resources/original_files/soap_test.xml
-/Users/mshort/code/tk/trunk/simulator/simulator-core/src/test/resources/original_files/soap_test.xml
-         */
-
-
-
         String criteriaScript  = "payload.sayHello.firstName == 'Dude'";
         String executionScript = "payload.sayHello.greeting = '" +
                 RESPONSE_GREETING + "'; payload;";
@@ -236,18 +228,21 @@ public class SoapTransportIntegrationTest {
         Map<String, String> transportParams = new HashMap<String, String>();
         transportParams.put(HttpTransport.PARAM_RESOURCE_URI, "/soapService");
         transportParams.put(HttpTransport.PARAM_PORT, "7000");
-        inTransport.setParameters(transportParams);
+        BaseConfigurable inTconfigurable = new BaseConfigurable(transportParams);
+        inTransport = new SoapTransport(inTconfigurable);
 
-        BaseConfigurable configurable = new BaseConfigurable();
+        BaseConfigurable inAdapterConfigurable = new BaseConfigurable();
         Map<String, String> adapterParams = new HashMap<String, String>();
         adapterParams.put(SoapAdapter.PARAM_WSDL_URL, wsdlFile);
-        configurable.setParameters(adapterParams);
-        inAdapter = new SoapAdapter(configurable);
+        inAdapterConfigurable.setParameters(adapterParams);
+        inAdapter = new SoapAdapter(inAdapterConfigurable);
 
 
         Map<String, String> pars = new HashMap<String, String>();
+//        pars.putAll(transportParams);
         pars.put(HttpTransport.PARAM_HTTP_OUT, "true");
-        outTransport.setParameters(pars);
+        BaseConfigurable outTransportConfigurable = new BaseConfigurable(Configurable.BOUND_OUT,pars);
+        outTransport = new SoapTransport(outTransportConfigurable);
 
         BaseConfigurable outConfiguration = new BaseConfigurable();
         outConfiguration.setBoundAndParameters(Configurable.BOUND_OUT, adapterParams);

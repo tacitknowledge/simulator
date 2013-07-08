@@ -1,5 +1,6 @@
 package com.tacitknowledge.simulator.transports;
 
+import com.tacitknowledge.simulator.BaseConfigurable;
 import com.tacitknowledge.simulator.Configurable;
 import com.tacitknowledge.simulator.ConfigurableException;
 import com.tacitknowledge.simulator.Transport;
@@ -17,7 +18,7 @@ public class MockOutTransport extends BaseTransport implements Transport
      */
     public MockOutTransport()
     {
-        super(Configurable.BOUND_OUT, "mockOutTransport", null);
+        super("mockOutTransport", new BaseConfigurable());
     }
 
     /**

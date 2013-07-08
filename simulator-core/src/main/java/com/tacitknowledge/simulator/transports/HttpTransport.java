@@ -1,7 +1,7 @@
 package com.tacitknowledge.simulator.transports;
 
-import java.util.Map;
 
+import com.tacitknowledge.simulator.Configurable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +51,7 @@ public class HttpTransport extends BaseTransport implements Transport
     /**
      * Checks if http transport is used for output
      */
-    private boolean isHttpOut = false;
+    protected boolean isHttpOut = false;
 
     /**
      * Constructor
@@ -67,14 +67,23 @@ public class HttpTransport extends BaseTransport implements Transport
     /**
      * Constructor.
      *
-     * @param bound      - specifies if transport is for in or out
-     * @param type       - transport type
-     * @param parameters @see #parameters
+     * @param configurable @see Configurable
      */
-    public HttpTransport(final int bound, final String type,
-                            final Map<String, String> parameters)
+    public HttpTransport(final Configurable configurable)
     {
-        super(bound, type, parameters);
+        this(null,configurable);
+    }
+
+
+    /**
+     * Constructor.
+     *
+     * @param type       - transport type
+     * @param configurable @see Configurable
+     */
+    public HttpTransport(final String type, final Configurable configurable)
+    {
+        super(type, configurable);
     }
 
     /**
@@ -83,31 +92,41 @@ public class HttpTransport extends BaseTransport implements Transport
     @Override
     public void validateParameters() throws ConfigurableException
     {
-        if (getParamValue(PARAM_HTTP_OUT) != null)
+        if (configurable.getParamValue(PARAM_HTTP_OUT) != null)
         {
-            this.isHttpOut = Boolean.parseBoolean(getParamValue(PARAM_HTTP_OUT));
+            this.isHttpOut = Boolean.parseBoolean(configurable.getParamValue(PARAM_HTTP_OUT));
         }
 
-        if (!this.isHttpOut && getParamValue(PARAM_RESOURCE_URI) == null)
+        if (!this.isHttpOut && configurable.getParamValue(PARAM_RESOURCE_URI) == null
+                && configurable.getBound() == Configurable.BOUND_OUT)
         {
             throw new ConfigurableException("Resource URI parameter is required");
         }
+        if (configurable.getParamValue(PARAM_RESOURCE_URI) == null
+                && configurable.getBound() == Configurable.BOUND_IN)
+        {
+            throw new ConfigurableException("Resource URI parameter is required ["
+                    + (configurable.getBound() == Configurable.BOUND_IN)
+                    + ","
+                    + configurable.getParamValue(PARAM_RESOURCE_URI) );
+        }
+
         int count = 0;
         boolean ssl = false;
-        if(Boolean.parseBoolean(getParamValue(isSSL))){
+        if(Boolean.parseBoolean(configurable.getParamValue(isSSL))){
             ssl=true;
             count++;
         }
         
-        if(getParamValue(KEY_PASSWORD)!=null){
+        if(configurable.getParamValue(KEY_PASSWORD)!=null){
             count++;
         }
         
-        if(getParamValue(KEY_STORE_FILE)!=null){
+        if(configurable.getParamValue(KEY_STORE_FILE)!=null){
             count++;
         }
         
-        if(getParamValue(STORE_PASSWORD)!=null){
+        if(configurable.getParamValue(STORE_PASSWORD)!=null){
             count++;
         }
         
@@ -132,7 +151,7 @@ public class HttpTransport extends BaseTransport implements Transport
 
         // --- 
         StringBuilder sb = new StringBuilder();
-        if(Boolean.parseBoolean(getParamValue(isSSL))){
+        if(Boolean.parseBoolean(configurable.getParamValue(isSSL))){
             sb.append("jetty:https://");
         }
         else
@@ -142,26 +161,26 @@ public class HttpTransport extends BaseTransport implements Transport
         
         sb.append(HOST);
 
-        if (getParamValue(PARAM_PORT) != null)
+        if (configurable.getParamValue(PARAM_PORT) != null)
         {
-            sb.append(":").append(getParamValue(PARAM_PORT));
+            sb.append(":").append(configurable.getParamValue(PARAM_PORT));
         }
 
-        sb.append(getParamValue(PARAM_RESOURCE_URI));
+        sb.append(configurable.getParamValue(PARAM_RESOURCE_URI));
         
         sb.append("?matchOnUriPrefix=true");
         
         // ssl parameters are set as system parameters 
-        if(getParamValue(KEY_PASSWORD)!=null){
-            System.setProperty("org.eclipse.jetty.ssl.keypassword", getParamValue(KEY_PASSWORD));
+        if(configurable.getParamValue(KEY_PASSWORD)!=null){
+            System.setProperty("org.eclipse.jetty.ssl.keypassword", configurable.getParamValue(KEY_PASSWORD));
         }
         
-        if(getParamValue(KEY_STORE_FILE)!=null){
-            System.setProperty("org.eclipse.jetty.ssl.keystore", getParamValue(KEY_STORE_FILE));
+        if(configurable.getParamValue(KEY_STORE_FILE)!=null){
+            System.setProperty("org.eclipse.jetty.ssl.keystore", configurable.getParamValue(KEY_STORE_FILE));
         }
         
-        if(getParamValue(STORE_PASSWORD)!=null){
-            System.setProperty("org.eclipse.jetty.ssl.password", getParamValue(STORE_PASSWORD));
+        if(configurable.getParamValue(STORE_PASSWORD)!=null){
+            System.setProperty("org.eclipse.jetty.ssl.password", configurable.getParamValue(STORE_PASSWORD));
         }
         
         logger.info("Uri String: {}", sb.toString());

@@ -5,7 +5,7 @@ package com.tacitknowledge.simulator;
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public interface Transport extends Configurable
+public interface Transport
 {
     /**
      * Returns the Transport type
@@ -25,4 +25,7 @@ public interface Transport extends Configurable
     String toUriString() throws ConfigurableException, TransportException;
 
     void validateParameters() throws ConfigurableException;
+
+    //todo - mws - currently ONLY supports unit testing for Files.  Remove when unit test uses class loader
+    Configurable getConfigurable();
 }

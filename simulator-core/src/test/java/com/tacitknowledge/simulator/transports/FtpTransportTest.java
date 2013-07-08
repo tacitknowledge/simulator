@@ -1,5 +1,6 @@
 package com.tacitknowledge.simulator.transports;
 
+import com.tacitknowledge.simulator.BaseConfigurable;
 import com.tacitknowledge.simulator.Transport;
 
 import java.util.HashMap;
@@ -50,7 +51,7 @@ public class FtpTransportTest
     {
         // --- Try to get this URI: ftp://127.0.0.1
         params.put(FtpTransport.PARAM_HOST, "127.0.0.1");
-        transport.setParameters(params);
+        transport = new FtpTransport(new BaseConfigurable(params));
 
         try
         {
@@ -75,8 +76,7 @@ public class FtpTransportTest
         params.put(FtpTransport.PARAM_PASSWORD, "secret");
         params.put(FtpTransport.PARAM_DIRECTORY_NAME, "inbox");
 
-        transport.setParameters(params);
-
+        transport = new FtpTransport(new BaseConfigurable(params));
         try
         {
             String uri = transport.toUriString();
@@ -99,8 +99,7 @@ public class FtpTransportTest
         params.put(FtpTransport.PARAM_FILE_EXTENSION, "csv");
         params.put(FtpTransport.PARAM_BINARY, "true");
 
-        transport.setParameters(params);
-
+        transport = new FtpTransport(new BaseConfigurable(params));
         try
         {
             String uri = transport.toUriString();
@@ -122,8 +121,7 @@ public class FtpTransportTest
         params.put(FtpTransport.PARAM_DIRECTORY_NAME, "inbox/csv");
         params.put(FtpTransport.PARAM_REGEX_FILTER, "(.*)(something)(.*)");
 
-        transport.setParameters(params);
-
+        transport = new FtpTransport(new BaseConfigurable(params));
         try
         {
             String uri = transport.toUriString();
@@ -146,8 +144,7 @@ public class FtpTransportTest
         params.put(FtpTransport.PARAM_DIRECTORY_NAME, "inbox");
         params.put(FtpTransport.PARAM_POLLING_INTERVAL, "10000");
 
-        transport.setParameters(params);
-
+        transport = new FtpTransport(new BaseConfigurable(params));
         try
         {
             String uri = transport.toUriString();

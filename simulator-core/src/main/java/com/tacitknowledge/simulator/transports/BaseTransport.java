@@ -1,10 +1,8 @@
 package com.tacitknowledge.simulator.transports;
 
-import com.tacitknowledge.simulator.BaseConfigurable;
-import com.tacitknowledge.simulator.ConfigurableException;
-import com.tacitknowledge.simulator.Transport;
-import com.tacitknowledge.simulator.TransportException;
+import com.tacitknowledge.simulator.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -12,7 +10,7 @@ import java.util.Map;
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public abstract class BaseTransport extends BaseConfigurable implements Transport
+public abstract class BaseTransport implements Transport
 {
     // --- Common Transport parameters
     /**
@@ -45,40 +43,26 @@ public abstract class BaseTransport extends BaseConfigurable implements Transpor
      */
     private String type;
 
+    protected Configurable configurable;
+
     /**
      * Default Constructor
      * @param type type
      */
     protected BaseTransport(final String type)
     {
-        this.type = type;
+        this(type,new BaseConfigurable(Configurable.BOUND_IN,new HashMap<String, String>()));
     }
 
     /**
      * Constructor
      * @param type TYpe
-     * @param parameters base parameters
+     * @param configurable BaseConfigurable implementation
      */
-    protected BaseTransport(final String type, final Map<String, String> parameters)
-    {
-        super(parameters);
+    protected BaseTransport(String type, Configurable configurable) {
         this.type = type;
+        this.configurable = configurable;
     }
-
-    /**
-     * Constructor.
-     *
-     * @param type       @see #type
-     * @param bound in or out
-     * @param parameters @see #parameters
-     */
-    protected BaseTransport(final int bound, final String type,
-                            final Map<String, String> parameters)
-    {
-        super(bound, parameters);
-        this.type = type;
-    }
-
 
     /**
      * Getter for @see #type
@@ -98,7 +82,7 @@ public abstract class BaseTransport extends BaseConfigurable implements Transpor
     public String toString()
     {
         return "BaseTransport{"
-            + "parameters=" + getParameters()
+            + "parameters=" + configurable.getParameters()
             + ", type='" + type + '\''
             + '}';
     }
@@ -125,4 +109,8 @@ public abstract class BaseTransport extends BaseConfigurable implements Transpor
         throws ConfigurableException, TransportException;
 
     public abstract void validateParameters() throws ConfigurableException;
+
+    public Configurable getConfigurable() {
+        return configurable;
+    }
 }

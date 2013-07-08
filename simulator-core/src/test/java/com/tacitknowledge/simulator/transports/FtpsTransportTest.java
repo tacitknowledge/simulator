@@ -6,6 +6,7 @@ import static org.junit.Assert.fail;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.tacitknowledge.simulator.BaseConfigurable;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -40,7 +41,7 @@ public class FtpsTransportTest
         // --- Try to get this URI: sftp://127.0.0.1
         params.put(FtpTransport.PARAM_HOST, LOCALHOST_IP);
 
-        transport.setParameters(params);
+        transport = new FtpsTransport(new BaseConfigurable(params));
 
         try
         {
@@ -63,7 +64,8 @@ public class FtpsTransportTest
         params.put(FtpsTransport.KEY_STORE_PASSWORD, PASSWORD);
         params.put(FtpsTransport.KEY_STORE_KEY_PASSWORD, PASSWORD);
 
-        transport.setParameters(params);
+        transport = new FtpsTransport(new BaseConfigurable(params));
+
 
         try
         {
@@ -85,7 +87,7 @@ public class FtpsTransportTest
         params.put(FtpsTransport.KEY_STORE_FILE, KEY_FILE_NAME);
         params.put(FtpsTransport.KEY_STORE_PASSWORD, PASSWORD);
 
-        transport.setParameters(params);
+        transport = new FtpsTransport(new BaseConfigurable(params));
 
         try
         {

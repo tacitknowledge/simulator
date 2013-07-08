@@ -1,5 +1,6 @@
 package com.tacitknowledge.simulator.transports;
 
+import com.tacitknowledge.simulator.BaseConfigurable;
 import com.tacitknowledge.simulator.Transport;
 
 import java.util.HashMap;
@@ -54,7 +55,7 @@ public class FileTransportTest
         params.put(FileTransport.PARAM_DELETE_FILE, "true");
 
         // ---
-        Transport transport = new FileTransport(params);
+        Transport transport = new FileTransport(new BaseConfigurable(params));
 
         // --- Get the URI
         try
@@ -78,7 +79,7 @@ public class FileTransportTest
         params.put(FileTransport.PARAM_DIRECTORY_NAME, "inbox/csv");
         params.put(FileTransport.PARAM_FILE_EXTENSION, "csv");
 
-        Transport transport = new FileTransport(params);
+        Transport transport = new FileTransport(new BaseConfigurable(params));
 
         try
         {
@@ -101,7 +102,7 @@ public class FileTransportTest
         params.put(FileTransport.PARAM_DIRECTORY_NAME, "inbox/csv");
         params.put(FileTransport.PARAM_REGEX_FILTER, "(.*)(something)(.*)");
 
-        Transport transport = new FileTransport(params);
+        Transport transport = new FileTransport(new BaseConfigurable(params));
 
         try
         {
@@ -124,7 +125,7 @@ public class FileTransportTest
         params.put(FileTransport.PARAM_DIRECTORY_NAME, "inbox");
         params.put(FileTransport.PARAM_POLLING_INTERVAL, "10000");
 
-        Transport transport = new FileTransport(params);
+        Transport transport = new FileTransport(new BaseConfigurable(params));
 
         try
         {

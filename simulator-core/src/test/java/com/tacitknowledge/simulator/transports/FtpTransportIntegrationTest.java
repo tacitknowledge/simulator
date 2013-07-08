@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.tacitknowledge.simulator.*;
 import org.apache.camel.test.junit4.CamelTestSupport;
 import org.apache.ftpserver.FtpServer;
 import org.apache.ftpserver.FtpServerFactory;
@@ -15,10 +16,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.tacitknowledge.simulator.Configurable;
-import com.tacitknowledge.simulator.Conversation;
-import com.tacitknowledge.simulator.Scenario;
-import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.camel.RouteManagerImpl;
 import com.tacitknowledge.simulator.formats.XmlAdapter;
 import com.tacitknowledge.simulator.impl.ConversationFactory;
@@ -115,15 +112,13 @@ public class FtpTransportIntegrationTest extends CamelTestSupport
     
     private Transport createFtpTransport(Map<String, String> parameters)
     {
-        Transport result = new FtpTransport();
-        result.setParameters(parameters);
+        Transport result = new FtpTransport(new BaseConfigurable(parameters));
         return result;
     }
     
     private Transport createFileTransport(Map<String, String> parameters)
     {
-        Transport result = new FileTransport();
-        result.setBoundAndParameters(Configurable.BOUND_OUT, parameters);
+        Transport result = new FileTransport(new BaseConfigurable(Configurable.BOUND_OUT, parameters));
         return result;
     }
 }

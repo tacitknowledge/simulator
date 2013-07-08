@@ -1,13 +1,11 @@
 package com.tacitknowledge.simulator.transports;
 
+import java.util.HashMap;
 import java.util.Map;
 
+import com.tacitknowledge.simulator.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.tacitknowledge.simulator.ConfigurableException;
-import com.tacitknowledge.simulator.Transport;
-import com.tacitknowledge.simulator.TransportException;
 
 /**
  * Transport implementation for Jms endpoints.
@@ -66,27 +64,19 @@ public class JmsTransport extends BaseTransport implements Transport
      */
     public JmsTransport()
     {
-        super(TransportConstants.JMS);
+        this(new BaseConfigurable(Configurable.BOUND_IN,new HashMap<String, String>()));
     }
 
-    /**
-     * @inheritDoc
-     * @param parameters parameters
-     */
-    public JmsTransport(final Map<String, String> parameters)
-    {
-        super(TransportConstants.JMS, parameters);
-    }
 
     /**
-     * @param parameters @see #parameters
-     * @param bound in or out
+     * @param configurable in or out
      * @inheritDoc
      */
-    public JmsTransport(final int bound, final Map<String, String> parameters)
+    public JmsTransport(final Configurable configurable)
     {
-        super(bound, TransportConstants.JMS, parameters);
+        super(TransportConstants.JMS, configurable);
     }
+
 
     /**
      * {@inheritDoc}
@@ -112,17 +102,17 @@ public class JmsTransport extends BaseTransport implements Transport
             sb.append("topic:");
         }
 
-        sb.append(getParamValue(PARAM_DESTINATION_NAME));
+        sb.append(configurable.getParamValue(PARAM_DESTINATION_NAME));
 
-        sb.append("?brokerURL=").append(getParamValue(PARAM_BROKER_URL));
+        sb.append("?brokerURL=").append(configurable.getParamValue(PARAM_BROKER_URL));
 
-        if (getParamValue(PARAM_USER_NAME) != null)
+        if (configurable.getParamValue(PARAM_USER_NAME) != null)
         {
-            sb.append(AMP).append("username=").append(getParamValue(PARAM_USER_NAME));
+            sb.append(AMP).append("username=").append(configurable.getParamValue(PARAM_USER_NAME));
         }
-        if (getParamValue(PARAM_PASSWORD) != null)
+        if (configurable.getParamValue(PARAM_PASSWORD) != null)
         {
-            sb.append(AMP).append("password=").append(getParamValue(PARAM_PASSWORD));
+            sb.append(AMP).append("password=").append(configurable.getParamValue(PARAM_PASSWORD));
         }
 
         logger.info("Uri String: {}", sb.toString());
@@ -136,20 +126,20 @@ public class JmsTransport extends BaseTransport implements Transport
     @Override
     public void validateParameters() throws ConfigurableException
     {
-        if (getParamValue(PARAM_ACTIVE_MQ) != null)
+        if (configurable.getParamValue(PARAM_ACTIVE_MQ) != null)
         {
-            this.activeMQ = Boolean.parseBoolean(getParamValue(PARAM_ACTIVE_MQ));
+            this.activeMQ = Boolean.parseBoolean(configurable.getParamValue(PARAM_ACTIVE_MQ));
         }
-        if (getParamValue(PARAM_IS_TOPIC) != null)
+        if (configurable.getParamValue(PARAM_IS_TOPIC) != null)
         {
-            this.isTopic = Boolean.parseBoolean(getParamValue(PARAM_IS_TOPIC));
+            this.isTopic = Boolean.parseBoolean(configurable.getParamValue(PARAM_IS_TOPIC));
         }
 
-        if (getParamValue(PARAM_DESTINATION_NAME) == null)
+        if (configurable.getParamValue(PARAM_DESTINATION_NAME) == null)
         {
             throw new ConfigurableException("Destination name parameter is required");
         }
-        if (getParamValue(PARAM_BROKER_URL) == null)
+        if (configurable.getParamValue(PARAM_BROKER_URL) == null)
         {
             throw new ConfigurableException("Broker URL is required.");
         }
