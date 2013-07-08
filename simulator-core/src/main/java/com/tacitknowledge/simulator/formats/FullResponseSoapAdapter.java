@@ -166,9 +166,9 @@ public class FullResponseSoapAdapter extends XmlAdapter implements Adapter
         {
         	return "";
         }
-        Map<String, Map<String, Object>> operationMap = payload.values().iterator().next();
-        Map<String, Object> portMap = operationMap.values().iterator().next();
-        return (String) portMap.get(RESPONSE_CONTENT_KEY);
+        Map<String, Map<String, Map<String, Object>>> operationMap = payload.values().iterator().next();
+        Map<String, Map<String, Object>> portMap = operationMap.values().iterator().next();
+        return (String) portMap.values().iterator().next().get(RESPONSE_CONTENT_KEY);
     }
    
    /**
