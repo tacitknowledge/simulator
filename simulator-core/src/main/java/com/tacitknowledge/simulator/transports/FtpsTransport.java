@@ -187,6 +187,8 @@ public class FtpsTransport extends FtpTransport
     public void validateParameters() throws ConfigurableException
     {
         boolean activeMode = false;
+        //todo - mws - okay, this is just strange.  Next 20 or so lines need fixing.  I see this stuff in JUnit but
+        // todo - mws - not production code
         int count = 0;
         // --- If passed, assign the boolean parameters to instance variables
         if (configurable.getParamValue(KEY_STORE_FILE) != null)
