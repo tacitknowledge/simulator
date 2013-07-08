@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.tacitknowledge.simulator.*;
 import com.tacitknowledge.simulator.scripting.ObjectMapperException;
 import com.tacitknowledge.simulator.scripting.SimulatorPojoPopulatorImpl;
 import org.apache.camel.Exchange;
@@ -14,12 +15,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.tacitknowledge.simulator.Adapter;
-import com.tacitknowledge.simulator.ConfigurableException;
-import com.tacitknowledge.simulator.FormatAdapterException;
-import com.tacitknowledge.simulator.SimulatorPojo;
-import com.tacitknowledge.simulator.StructuredSimulatorPojo;
 
 /**
  * Implementation of the Adapter interface for the JSON format
@@ -55,10 +50,6 @@ public class JsonAdapter extends NativeObjectScriptingAdapter implements Adapter
      */
     private static Logger logger = LoggerFactory.getLogger(JsonAdapter.class);
 
-    /**
-     * @see #PARAM_IS_ARRAY
-     */
-    private boolean isArray = false;
 
     /**
      * Constructor
@@ -67,21 +58,26 @@ public class JsonAdapter extends NativeObjectScriptingAdapter implements Adapter
     {
     }
 
-    /**
-     * Constructor
-     *
-     * @param bound Configurable bound
-     * @param parameters @see Adapter#parameters
-     * @inheritDoc
-     */
-    public JsonAdapter(final int bound, final Map<String, String> parameters)
-    {
-        super(bound, parameters);
+//    /**
+//     * Constructor
+//     *
+//     * @param bound Configurable bound
+//     * @param parameters @see Adapter#parameters
+//     * @inheritDoc
+//     */
+//    public JsonAdapter(final int bound, final Map<String, String> parameters)
+//    {
+//        super(bound, parameters);
+//    }
+
+    public JsonAdapter(Configurable configurable) {
+        super(configurable);
     }
+
     protected SimulatorPojo getSimulatorPojo(final Object object) throws ObjectMapperException
     {
         final SimulatorPojo payload = SimulatorPojoPopulatorImpl.getInstance().populateSimulatorPojoFromBean(object,
-                getParamValue(PARAM_JSON_CONTENT));
+                configuration.getParamValue(PARAM_JSON_CONTENT));
         return payload;
     }
 
@@ -105,31 +101,32 @@ public class JsonAdapter extends NativeObjectScriptingAdapter implements Adapter
 
         try
         {
-            if (this.isArray)
+            if (this.isArray())
             {
                 logger.debug("Expecting JSON array in content. Processing as such.");
 
                 // --- If the JSON content is an array, build the root Map a little different
                 Map<String, Object> mapFromJsonList = new HashMap<String, Object>();
                 mapFromJsonList.put(
-                    getParamValue(PARAM_JSON_ARRAY_CONTENT),
+                    configuration.getParamValue(PARAM_JSON_ARRAY_CONTENT),
                     getListFomJsonArray(new JSONArray(o))
                 );
 
                 pojo.getRoot().put(
-                    getParamValue(PARAM_JSON_CONTENT),
+                    configuration.getParamValue(PARAM_JSON_CONTENT),
                     mapFromJsonList
                 );
             }
             else
             {
                 pojo.getRoot().put(
-                    getParamValue(PARAM_JSON_CONTENT),
+                    configuration.getParamValue(PARAM_JSON_CONTENT),
                     getMapFromJsonObj(new JSONObject(o)));
             }
         }
         catch (JSONException je)
         {
+
             String errorMsg =
                 "Unexpected error trying to parse String into JSON: ";
             throw new FormatAdapterException(errorMsg, je);
@@ -165,14 +162,14 @@ public class JsonAdapter extends NativeObjectScriptingAdapter implements Adapter
 
         // --- The pojo's root should only contain an entry with key PARAM_JSON_CONTENT
         Map<String, Object> map =
-            (Map<String, Object>) simulatorPojo.getRoot().get(getParamValue(PARAM_JSON_CONTENT));
+            (Map<String, Object>) simulatorPojo.getRoot().get(configuration.getParamValue(PARAM_JSON_CONTENT));
 
         // --- If the JSON content is an array...
-        if (this.isArray)
+        if (this.isArray())
         {
             // ...generate a JSONArray from the pojo's root entry
             // (key should be #PARAM_JSON_ARRAY_CONTENT)
-            List items = (List) map.get(getParamValue(PARAM_JSON_ARRAY_CONTENT));
+            List items = (List) map.get(configuration.getParamValue(PARAM_JSON_ARRAY_CONTENT));
             JSONArray jsonArray = new JSONArray(items);
             jsonString = jsonArray.toString();
         }
@@ -304,23 +301,19 @@ public class JsonAdapter extends NativeObjectScriptingAdapter implements Adapter
      * @throws ConfigurableException If a required parameter is missing
      * @inheritDoc
      */
-    @Override
-    protected void validateParameters() throws ConfigurableException
+    public void validateParameters() throws ConfigurableException
     {
-        if (getParamValue(PARAM_IS_ARRAY) != null)
-        {
-            this.isArray = Boolean.parseBoolean(getParamValue(PARAM_IS_ARRAY));
-        }
 
-        if (getParamValue(PARAM_JSON_CONTENT) == null)
+        if (configuration.getParamValue(PARAM_JSON_CONTENT) == null)
         {
             throw new ConfigurableException("JSON Content parameter is required.");
         }
-        // --- If JSON content is array, PARAM_JSON_ARRAY_CONTENT is required
-        if (this.isArray && getParamValue(PARAM_IS_ARRAY) == null)
-        {
-            throw new ConfigurableException(
-                "JSON Array Content parameter is required if JSON content is an array");
-        }
+    }
+
+    private Boolean isArray() {
+
+        return (configuration.getParamValue(PARAM_IS_ARRAY) != null)
+                ? Boolean.parseBoolean(configuration.getParamValue(PARAM_IS_ARRAY))
+                : false;
     }
 }

@@ -7,6 +7,7 @@ import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.tacitknowledge.simulator.*;
 import com.tacitknowledge.simulator.scripting.ObjectMapperException;
 import com.tacitknowledge.simulator.scripting.SimulatorPojoPopulatorImpl;
 import org.apache.camel.Exchange;
@@ -14,12 +15,6 @@ import org.ho.yaml.YamlDecoder;
 import org.ho.yaml.YamlEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.tacitknowledge.simulator.Adapter;
-import com.tacitknowledge.simulator.ConfigurableException;
-import com.tacitknowledge.simulator.FormatAdapterException;
-import com.tacitknowledge.simulator.SimulatorPojo;
-import com.tacitknowledge.simulator.StructuredSimulatorPojo;
 
 /**
  * Implementation of the Adapter interface for the YAML format
@@ -67,14 +62,8 @@ public class YamlAdapter extends NativeObjectScriptingAdapter implements Adapter
     {
     }
 
-    /**
-     * @param bound - in or out format
-     * @param parameters @see Adapter#parameters
-     * @inheritDoc
-     */
-    public YamlAdapter(final int bound, final Map<String, String> parameters)
-    {
-        super(bound, parameters);
+    public YamlAdapter(Configurable configurable) {
+        super(configurable);
     }
 
     /**
@@ -103,12 +92,12 @@ public class YamlAdapter extends NativeObjectScriptingAdapter implements Adapter
                 logger.debug("Expecting YAML array in content. Processing as such.");
 
                 Map<String, Object> map = new HashMap<String, Object>();
-                map.put(getParamValue(PARAM_YAML_ARRAY_CONTENT), yaml);
-                pojo.getRoot().put(getParamValue(PARAM_YAML_CONTENT), map);
+                map.put(configuration.getParamValue(PARAM_YAML_ARRAY_CONTENT), yaml);
+                pojo.getRoot().put(configuration.getParamValue(PARAM_YAML_CONTENT), map);
             }
             else
             {
-                pojo.getRoot().put(getParamValue(PARAM_YAML_CONTENT), yaml);
+                pojo.getRoot().put(configuration.getParamValue(PARAM_YAML_CONTENT), yaml);
             }
         }
         catch (EOFException e)
@@ -142,7 +131,7 @@ public class YamlAdapter extends NativeObjectScriptingAdapter implements Adapter
         OutputStream os = new ByteArrayOutputStream();
         YamlEncoder enc = new YamlEncoder(os);
 
-        enc.writeObject(pojo.getRoot().get(getParamValue(PARAM_YAML_CONTENT)));
+        enc.writeObject(pojo.getRoot().get(configuration.getParamValue(PARAM_YAML_CONTENT)));
         enc.close();
 
         return os.toString();
@@ -151,7 +140,7 @@ public class YamlAdapter extends NativeObjectScriptingAdapter implements Adapter
     protected SimulatorPojo getSimulatorPojo(final Object object) throws ObjectMapperException
     {
         final SimulatorPojo payload = SimulatorPojoPopulatorImpl.getInstance().populateSimulatorPojoFromBean(object,
-                getParamValue(PARAM_YAML_CONTENT));
+                configuration.getParamValue(PARAM_YAML_CONTENT));
         return payload;
 
     }
@@ -160,19 +149,18 @@ public class YamlAdapter extends NativeObjectScriptingAdapter implements Adapter
      * @throws ConfigurableException if any required parameter is missing
      * @inheritDoc
      */
-    @Override
-    protected void validateParameters() throws ConfigurableException
+    public void validateParameters() throws ConfigurableException
     {
-        if (getParamValue(PARAM_IS_ARRAY) != null)
+        if (configuration.getParamValue(PARAM_IS_ARRAY) != null)
         {
-            this.isArray = Boolean.parseBoolean(getParamValue(PARAM_IS_ARRAY));
+            this.isArray = Boolean.parseBoolean(configuration.getParamValue(PARAM_IS_ARRAY));
         }
 
-        if (getParamValue(PARAM_YAML_CONTENT) == null)
+        if (configuration.getParamValue(PARAM_YAML_CONTENT) == null)
         {
             throw new ConfigurableException("YAML content is required");
         }
-        if (this.isArray && getParamValue(PARAM_YAML_ARRAY_CONTENT) == null)
+        if (this.isArray && configuration.getParamValue(PARAM_YAML_ARRAY_CONTENT) == null)
         {
             throw new ConfigurableException(
                 "YAML Array Content parameter is required if YAML content is an array");

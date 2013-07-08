@@ -1,5 +1,6 @@
 package com.tacitknowledge.simulator.formats;
 
+import com.tacitknowledge.simulator.BaseConfigurable;
 import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
 import com.tacitknowledge.simulator.TestHelper;
@@ -62,9 +63,11 @@ public class YamlAdapterTest
     public void testSuccessfulAdaptFrom()
     {
         // --- Provide the required configuration
+        BaseConfigurable configurable = new BaseConfigurable();
         Map<String, String> params = new HashMap<String, String>();
         params.put(YamlAdapter.PARAM_YAML_CONTENT, "employee");
-        adapter.setParameters(params);
+        configurable.setParameters(params);
+        adapter = new YamlAdapter(configurable);
 
         try
         {
@@ -96,11 +99,13 @@ public class YamlAdapterTest
     public void testSuccessfulAdaptFromSequence() throws FormatAdapterException
     {
         // --- Provide the required configuration
+        BaseConfigurable configurable = new BaseConfigurable();
         Map<String, String> params = new HashMap<String, String>();
         params.put(YamlAdapter.PARAM_YAML_CONTENT, "persons");
         params.put(YamlAdapter.PARAM_IS_ARRAY, "true");
         params.put(YamlAdapter.PARAM_YAML_ARRAY_CONTENT, "person");
-        adapter.setParameters(params);
+        configurable.setParameters(params);
+        adapter = new YamlAdapter(configurable);
 
         try
         {

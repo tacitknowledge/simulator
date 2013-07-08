@@ -23,4 +23,6 @@ public interface Transport extends Configurable
      * @throws TransportException If any other error occurs
      */
     String toUriString() throws ConfigurableException, TransportException;
+
+    void validateParameters() throws ConfigurableException;
 }

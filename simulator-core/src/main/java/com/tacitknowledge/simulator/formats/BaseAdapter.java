@@ -1,11 +1,6 @@
 package com.tacitknowledge.simulator.formats;
 
-import com.tacitknowledge.simulator.Adapter;
-import com.tacitknowledge.simulator.BaseConfigurable;
-import com.tacitknowledge.simulator.ConfigurableException;
-import com.tacitknowledge.simulator.FormatAdapterException;
-import com.tacitknowledge.simulator.SimulatorException;
-import com.tacitknowledge.simulator.SimulatorPojo;
+import com.tacitknowledge.simulator.*;
 import com.tacitknowledge.simulator.scripting.ObjectMapperException;
 import com.tacitknowledge.simulator.scripting.PojoClassGenerator;
 import com.tacitknowledge.simulator.scripting.ScriptException;
@@ -22,40 +17,41 @@ import java.util.Map;
  *
  * @author galo
  */
-public abstract class BaseAdapter extends BaseConfigurable implements Adapter
+public abstract class BaseAdapter implements Adapter
 {
     /**
      * Line separator constant. Available for all adapters
      */
     protected static final String LINE_SEP = System.getProperty("line.separator");
+    protected Configurable configuration;
 
     /**
      * Constructor
      */
     public BaseAdapter()
     {
-        super();
+        this(new BaseConfigurable());
     }
 
     /**
-     * @param parameters - parameters
+     * @param configurable - parameters
      * @inheritDoc
      */
-    public BaseAdapter(final Map<String, String> parameters)
+    public BaseAdapter(Configurable configurable)
     {
-        super(parameters);
+        this.configuration = configurable;
     }
 
-    /**
-     * This should be the second prefered constructor method from within JAVA.
-     *
-     * @param bound      Configurable bound
-     * @param parameters Parameter values
-     */
-    protected BaseAdapter(final int bound, final Map<String, String> parameters)
-    {
-        super(bound, parameters);
-    }
+//    /**
+//     * This should be the second prefered constructor method from within JAVA.
+//     *
+//     * @param bound      Configurable bound
+//     * @param parameters Parameter values
+//     */
+//    protected BaseAdapter(final int bound, final Map<String, String> parameters)
+//    {
+//        super(bound, parameters);
+//    }
 
     /**
      * @param exchange The Camel exchange
@@ -66,7 +62,8 @@ public abstract class BaseAdapter extends BaseConfigurable implements Adapter
     public Map<String, Object> generateBeans(final Exchange exchange)
         throws ConfigurableException, FormatAdapterException
     {
-        validateParameters();
+        //todo - mws - figure out where to handle validations
+//        configuration.validateParameters();
 
         SimulatorPojo pojo = createSimulatorPojo(exchange);
         return generateClasses(pojo);
@@ -110,7 +107,8 @@ public abstract class BaseAdapter extends BaseConfigurable implements Adapter
     public Object adaptTo(final Object scriptExecutionResult, final Exchange exchange)
         throws ConfigurableException, FormatAdapterException
     {
-        validateParameters();
+        //todo - mws - figure out where to handle validations
+//        configuration.validateParameters();
 
         SimulatorPojo getSimulatorPojo;
         try

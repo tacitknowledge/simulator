@@ -7,17 +7,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import com.tacitknowledge.simulator.*;
 import com.tacitknowledge.simulator.scripting.ObjectMapperException;
 import com.tacitknowledge.simulator.scripting.SimulatorPojoPopulatorImpl;
 import org.apache.camel.Exchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.tacitknowledge.simulator.Adapter;
-import com.tacitknowledge.simulator.ConfigurableException;
-import com.tacitknowledge.simulator.FormatAdapterException;
-import com.tacitknowledge.simulator.SimulatorPojo;
-import com.tacitknowledge.simulator.StructuredSimulatorPojo;
 
 /**
  * Implementation of the Adapter interface for the CSV format
@@ -76,16 +71,11 @@ public class CsvAdapter extends NativeObjectScriptingAdapter implements Adapter
      */
     public CsvAdapter()
     {
+        super();
     }
 
-    /**
-     * @param parameters @see Adapter#parameters
-     * @param bound in or out 
-     * @inheritDoc
-     */
-    public CsvAdapter(final int bound, final Map<String, String> parameters)
-    {
-        super(bound, parameters);
+    public CsvAdapter(Configurable configurable) {
+        super(configurable);
     }
 
     /**
@@ -132,13 +122,13 @@ public class CsvAdapter extends NativeObjectScriptingAdapter implements Adapter
             for (String rowString : rows)
             {
                 Map<String, List<String>> row = new HashMap<String, List<String>>();
-                row.put(getParamValue(PARAM_ROW_CONTENT), getRowAsList(rowString));
+                row.put(configuration.getParamValue(PARAM_ROW_CONTENT), getRowAsList(rowString));
                 rowObjects.add(row);
             }
         }
 
         // --- Set the resulting list in the SimulatorPojo root
-        pojo.getRoot().put(getParamValue(PARAM_CSV_CONTENT), rowObjects);
+        pojo.getRoot().put(configuration.getParamValue(PARAM_CSV_CONTENT), rowObjects);
 
         logger.debug("Finished generating SimulatorPojo from CSV content");
         return pojo;
@@ -168,7 +158,7 @@ public class CsvAdapter extends NativeObjectScriptingAdapter implements Adapter
         // --- Use the CsvContent parameter to get the only object, which should be a List
         List<Map<String, Object>> list =
             (List<Map<String, Object>>) simulatorPojo.getRoot()
-                        .get(getParamValue(PARAM_CSV_CONTENT));
+                        .get(configuration.getParamValue(PARAM_CSV_CONTENT));
 
         // --- If using first row as headers, get the headers from the first row's keys
         if (this.firstRowHeader)
@@ -193,7 +183,7 @@ public class CsvAdapter extends NativeObjectScriptingAdapter implements Adapter
     protected SimulatorPojo getSimulatorPojo(final Object object) throws ObjectMapperException
     {
         final SimulatorPojo payload = SimulatorPojoPopulatorImpl.getInstance().populateSimulatorPojoFromBean(object,
-                getParamValue(PARAM_CSV_CONTENT));
+                configuration.getParamValue(PARAM_CSV_CONTENT));
         return payload;
 
     }
@@ -203,25 +193,24 @@ public class CsvAdapter extends NativeObjectScriptingAdapter implements Adapter
      * @throws ConfigurableException If any required parameter is missing
      * @inheritDoc
      */
-    @Override
-    protected void validateParameters() throws ConfigurableException
+    public void validateParameters() throws ConfigurableException
     {
         // --- Check that if firstRowHeader is false, that rowContent has been provided
         this.firstRowHeader =
-            getParamValue(PARAM_FIRST_ROW_HEADER) == null
-                || Boolean.parseBoolean(getParamValue(PARAM_FIRST_ROW_HEADER));
+            configuration.getParamValue(PARAM_FIRST_ROW_HEADER) == null
+                || Boolean.parseBoolean(configuration.getParamValue(PARAM_FIRST_ROW_HEADER));
         // --- Override the default column separator if it has been set
-        if (getParamValue(PARAM_COLUMN_SEPARATOR) != null)
+        if (configuration.getParamValue(PARAM_COLUMN_SEPARATOR) != null)
         {
-            this.columnSeparator = getParamValue(PARAM_COLUMN_SEPARATOR);
+            this.columnSeparator = configuration.getParamValue(PARAM_COLUMN_SEPARATOR);
         }
 
         // ---
-        if (getParamValue(PARAM_CSV_CONTENT) == null)
+        if (configuration.getParamValue(PARAM_CSV_CONTENT) == null)
         {
             throw new ConfigurableException("CSV Content parameter is required.");
         }
-        if (!firstRowHeader && getParamValue(PARAM_ROW_CONTENT) == null)
+        if (!firstRowHeader && configuration.getParamValue(PARAM_ROW_CONTENT) == null)
         {
             String errorMsg = "RowContent parameter is required if CSV has no headers.";
             throw new ConfigurableException(errorMsg);
@@ -324,7 +313,7 @@ public class CsvAdapter extends NativeObjectScriptingAdapter implements Adapter
         else
         {
             // --- ...otherwise, just pump the values as they come from the contained List
-            List<String> list = (List<String>) row.get(getParamValue(PARAM_ROW_CONTENT));
+            List<String> list = (List<String>) row.get(configuration.getParamValue(PARAM_ROW_CONTENT));
             boolean firstCol = true;
             for (String value : list)
             {

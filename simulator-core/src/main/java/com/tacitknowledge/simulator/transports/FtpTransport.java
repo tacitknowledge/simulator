@@ -180,7 +180,7 @@ public class FtpTransport extends FileTransport implements Transport
      * {@inheritDoc}
      */
     @Override
-    protected void validateParameters() throws ConfigurableException
+    public void validateParameters() throws ConfigurableException
     {
         // --- If passed, assign the boolean parameters to instance variables
         if (getParamValue(PARAM_BINARY) != null)

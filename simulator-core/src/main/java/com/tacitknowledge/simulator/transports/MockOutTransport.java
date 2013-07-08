@@ -32,7 +32,7 @@ public class MockOutTransport extends BaseTransport implements Transport
      * {@inheritDoc}
      */
     @Override
-    protected void validateParameters() throws ConfigurableException
+    public void validateParameters() throws ConfigurableException
     {
 
     }

@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * @author galo
  */
-public abstract class BaseConfigurable implements Configurable
+public class BaseConfigurable implements Configurable
 {
     /**
      * Bounding of the extending instance.
@@ -25,7 +25,7 @@ public abstract class BaseConfigurable implements Configurable
     /**
      * Constructor
      */
-    protected BaseConfigurable()
+    public BaseConfigurable()
     {
     }
 
@@ -59,12 +59,6 @@ public abstract class BaseConfigurable implements Configurable
         return this.bound;
     }
 
-    /**
-     * Validate that all the required parameters have been provided.
-     *
-     * @throws ConfigurableException If any required parameter has not been set.
-     */
-    protected abstract void validateParameters() throws ConfigurableException;
 
     /**
      * @inheritDoc
@@ -104,7 +98,7 @@ public abstract class BaseConfigurable implements Configurable
      *
      * @return The provided parameters
      */
-    protected Map<String, String> getParameters()
+    public Map<String, String> getParameters()
     {
         return parameters;
     }

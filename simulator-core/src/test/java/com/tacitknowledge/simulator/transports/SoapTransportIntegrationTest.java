@@ -16,17 +16,11 @@ import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPMessage;
 
+import com.tacitknowledge.simulator.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.tacitknowledge.simulator.Adapter;
-import com.tacitknowledge.simulator.Configurable;
-import com.tacitknowledge.simulator.Conversation;
-import com.tacitknowledge.simulator.RouteManager;
-import com.tacitknowledge.simulator.Scenario;
-import com.tacitknowledge.simulator.TestHelper;
-import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.camel.RouteManagerImpl;
 import com.tacitknowledge.simulator.formats.SoapAdapter;
 import com.tacitknowledge.simulator.impl.ConversationFactory;
@@ -90,6 +84,14 @@ public class SoapTransportIntegrationTest {
     @Test
     public void successfulSoapTest() throws Exception
     {
+
+/*
+/Users/mshort/code/tk/trunk/simulator/src/test/resources/original_files/soap_test.xml
+/Users/mshort/code/tk/trunk/simulator/simulator-core/src/test/resources/original_files/soap_test.xml
+         */
+
+
+
         String criteriaScript  = "payload.sayHello.firstName == 'Dude'";
         String executionScript = "payload.sayHello.greeting = '" +
                 RESPONSE_GREETING + "'; payload;";
@@ -98,6 +100,7 @@ public class SoapTransportIntegrationTest {
         //Make web service call
         SOAPMessage reply = connection.call(createMessage(SOAP_FILE), DESTINATION);
 
+        //Test Validation Section
         SOAPBody body = reply.getSOAPBody();
         Iterator iter = body.getChildElements();
         SOAPElement element;
@@ -235,16 +238,20 @@ public class SoapTransportIntegrationTest {
         transportParams.put(HttpTransport.PARAM_PORT, "7000");
         inTransport.setParameters(transportParams);
 
-
+        BaseConfigurable configurable = new BaseConfigurable();
         Map<String, String> adapterParams = new HashMap<String, String>();
         adapterParams.put(SoapAdapter.PARAM_WSDL_URL, wsdlFile);
-        inAdapter.setParameters(adapterParams);
+        configurable.setParameters(adapterParams);
+        inAdapter = new SoapAdapter(configurable);
+
 
         Map<String, String> pars = new HashMap<String, String>();
         pars.put(HttpTransport.PARAM_HTTP_OUT, "true");
         outTransport.setParameters(pars);
 
-        outAdapter.setBoundAndParameters(Configurable.BOUND_OUT, adapterParams);
+        BaseConfigurable outConfiguration = new BaseConfigurable();
+        outConfiguration.setBoundAndParameters(Configurable.BOUND_OUT, adapterParams);
+        outAdapter = new SoapAdapter(outConfiguration);
     }
 
     private void setupConversation(String wsdlFile, String criteriaScript, String executionScript)

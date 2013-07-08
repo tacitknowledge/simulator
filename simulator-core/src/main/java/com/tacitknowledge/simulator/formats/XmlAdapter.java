@@ -18,6 +18,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import com.tacitknowledge.simulator.*;
 import org.apache.camel.Exchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,12 +28,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
-import com.tacitknowledge.simulator.Adapter;
-import com.tacitknowledge.simulator.ConfigurableException;
-import com.tacitknowledge.simulator.FormatAdapterException;
-import com.tacitknowledge.simulator.SimulatorPojo;
-import com.tacitknowledge.simulator.StructuredSimulatorPojo;
 
 /**
  * Implementation of the Adapter interface for the XML format
@@ -89,44 +84,20 @@ public class XmlAdapter extends NativeObjectScriptingAdapter implements Adapter
      * @param useFullyQualifiedNames - true if fully qualified names is required
      * @inheritDoc
      */
-    protected XmlAdapter(final boolean useFullyQualifiedNames)
+    public XmlAdapter(final boolean useFullyQualifiedNames)
     {
         this.useFullyQualifiedNodeNames = useFullyQualifiedNames;
     }
 
-    /**
-     * @param parameters - XML format parameters
-     * @inheritDoc
-     */
-    public XmlAdapter(final Map<String, String> parameters)
-    {
-        super(parameters);
+    public XmlAdapter(Configurable configurable) {
+        super(configurable);
     }
 
-    /**
-     * @param parameters @see Adapter#parameters
-     *                   <p/>
-     *                   {@inheritDoc}
-     */
-    public XmlAdapter(final int bound, final Map<String, String> parameters)
-    {
-        super(bound, parameters);
+    public XmlAdapter(Configurable configurable, boolean useFullyQualifiedNodeNames) {
+        super(configurable);
+        this.useFullyQualifiedNodeNames = useFullyQualifiedNodeNames;
     }
 
-    /**
-     * @param bound                  - Set the bounds
-     * @param parameters             - Set parameters
-     * @param useFullyQualifiedNames - true if fully qualified names is required
-     * @inheritDoc
-     */
-    protected XmlAdapter(
-            final int bound,
-            final Map<String, String> parameters,
-            final boolean useFullyQualifiedNames)
-    {
-        this(bound, parameters);
-        this.useFullyQualifiedNodeNames = useFullyQualifiedNames;
-    }
 
 
     /**
@@ -215,9 +186,9 @@ public class XmlAdapter extends NativeObjectScriptingAdapter implements Adapter
             {
                 String rootTagName = entry.getKey();
                 // --- Override the default root name is one was provided
-                if (getParamValue(PARAM_ROOT_TAG_NAME) != null)
+                if (configuration.getParamValue(PARAM_ROOT_TAG_NAME) != null)
                 {
-                    rootTagName = getParamValue(PARAM_ROOT_TAG_NAME);
+                    rootTagName = configuration.getParamValue(PARAM_ROOT_TAG_NAME);
                 }
 
                 doc.appendChild(
@@ -499,12 +470,11 @@ public class XmlAdapter extends NativeObjectScriptingAdapter implements Adapter
      * @throws ConfigurableException If any required parameter is missing
      * @inheritDoc
      */
-    @Override
-    protected void validateParameters() throws ConfigurableException
+    public void validateParameters() throws ConfigurableException
     {
-        if (getParamValue(PARAM_VALIDATE) != null)
+        if (configuration.getParamValue(PARAM_VALIDATE) != null)
         {
-            this.validate = Boolean.parseBoolean(getParamValue(PARAM_VALIDATE));
+            this.validate = Boolean.parseBoolean(configuration.getParamValue(PARAM_VALIDATE));
         }
     }
 }

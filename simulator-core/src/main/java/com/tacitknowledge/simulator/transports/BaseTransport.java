@@ -123,4 +123,6 @@ public abstract class BaseTransport extends BaseConfigurable implements Transpor
      */
     protected abstract String getUriString()
         throws ConfigurableException, TransportException;
+
+    public abstract void validateParameters() throws ConfigurableException;
 }

@@ -6,6 +6,7 @@ import static org.junit.Assert.fail;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.tacitknowledge.simulator.*;
 import org.apache.camel.CamelContext;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
@@ -14,11 +15,6 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.tacitknowledge.simulator.Adapter;
-import com.tacitknowledge.simulator.Conversation;
-import com.tacitknowledge.simulator.RouteManager;
-import com.tacitknowledge.simulator.Scenario;
-import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.camel.RouteManagerImpl;
 import com.tacitknowledge.simulator.formats.RestAdapter;
 import com.tacitknowledge.simulator.impl.ConversationFactory;
@@ -55,10 +51,12 @@ public class RestTransportIntegrationTest {
         inTransport.setParameters(transportParams);
 
 
+        BaseConfigurable configurable = new BaseConfigurable();
         Map<String, String> adapterParams = new HashMap<String, String>();
         adapterParams.put(RestAdapter.PARAM_EXTRACTION_PATTERN, "/collection/:id" );
         adapterParams.put(RestAdapter.PARAM_OBJECT_NAME, "obj1");
-        inAdapter.setParameters(adapterParams);
+        configurable.setParameters(adapterParams);
+        inAdapter = new RestAdapter(configurable);
 
         Map<String, String> pars = new HashMap<String, String>();
         pars.put(HttpTransport.PARAM_HTTP_OUT, "true");

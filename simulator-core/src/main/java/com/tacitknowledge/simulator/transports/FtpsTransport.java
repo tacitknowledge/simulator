@@ -184,7 +184,7 @@ public class FtpsTransport extends FtpTransport
      * {@inheritDoc}
      */
     @Override
-    protected void validateParameters() throws ConfigurableException
+    public void validateParameters() throws ConfigurableException
     {
         boolean activeMode = false;
         int count = 0;

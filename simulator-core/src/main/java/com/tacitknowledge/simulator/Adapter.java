@@ -10,7 +10,7 @@ import java.util.Map;
  *
  * @author Jorge Galindo (jgalindo@tacitknowledge.com)
  */
-public interface Adapter extends Configurable
+public interface Adapter
 {
     /**
      * Adapts the data from the inbound transport format to the SimulatorPojo object graph.
@@ -38,4 +38,12 @@ public interface Adapter extends Configurable
      */
     Object adaptTo(Object scriptExecutionResult, Exchange exchange)
         throws ConfigurableException, FormatAdapterException;
+
+    /**
+     * Validate that all the required parameters have been provided.
+     *
+     * @throws ConfigurableException If any required parameter has not been set.
+     */
+    void validateParameters() throws ConfigurableException;
+
 }

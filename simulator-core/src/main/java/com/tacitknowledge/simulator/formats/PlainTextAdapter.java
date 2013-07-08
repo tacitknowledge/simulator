@@ -47,8 +47,8 @@ public class PlainTextAdapter extends NativeObjectScriptingAdapter
      *
      * @throws ConfigurableException If any required parameter is missing
      */
-    @Override
-    protected void validateParameters() throws ConfigurableException
+
+    public void validateParameters() throws ConfigurableException
     {
 
     }

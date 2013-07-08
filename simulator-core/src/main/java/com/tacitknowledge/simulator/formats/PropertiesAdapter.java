@@ -7,15 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import com.tacitknowledge.simulator.*;
 import org.apache.camel.Exchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.tacitknowledge.simulator.Adapter;
-import com.tacitknowledge.simulator.ConfigurableException;
-import com.tacitknowledge.simulator.FormatAdapterException;
-import com.tacitknowledge.simulator.SimulatorPojo;
-import com.tacitknowledge.simulator.StructuredSimulatorPojo;
 
 /**
  * Implementation of the Adapter interface for the Properties format.
@@ -56,14 +51,8 @@ public class PropertiesAdapter extends NativeObjectScriptingAdapter implements A
     {
     }
 
-    /**
-     * @param bound Configurable bound
-     * @param parameters @see Adapter#parameters
-     * @inheritDoc
-     */
-    public PropertiesAdapter(final int bound, final Map<String, String> parameters)
-    {
-        super(bound, parameters);
+    public PropertiesAdapter(Configurable configurable) {
+        super(configurable);
     }
 
     /**
@@ -134,12 +123,11 @@ public class PropertiesAdapter extends NativeObjectScriptingAdapter implements A
      * @throws ConfigurableException if any required parameter is missing
      * @inheritDoc
      */
-    @Override
-    protected void validateParameters() throws ConfigurableException
+    public void validateParameters() throws ConfigurableException
     {
-        if (getParamValue(PARAM_PROPERTY_SEPARATOR) != null)
+        if (configuration.getParamValue(PARAM_PROPERTY_SEPARATOR) != null)
         {
-            this.propertySeparator = getParamValue(PARAM_PROPERTY_SEPARATOR);
+            this.propertySeparator = configuration.getParamValue(PARAM_PROPERTY_SEPARATOR);
         }
     }
 

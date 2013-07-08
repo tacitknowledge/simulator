@@ -30,16 +30,12 @@ import javax.xml.soap.SOAPFactory;
 import javax.xml.soap.SOAPFault;
 import javax.xml.soap.SOAPMessage;
 
+import com.tacitknowledge.simulator.*;
 import org.apache.camel.Exchange;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tacitknowledge.simulator.Adapter;
-import com.tacitknowledge.simulator.ConfigurableException;
-import com.tacitknowledge.simulator.FormatAdapterException;
-import com.tacitknowledge.simulator.SimulatorPojo;
-import com.tacitknowledge.simulator.StructuredSimulatorPojo;
 import com.tacitknowledge.simulator.configuration.beans.ScriptObjectsBuilder;
 import com.tacitknowledge.simulator.configuration.beans.XmlObjectWrapper;
 
@@ -165,15 +161,12 @@ public class DocLiteralWrappedSoapAdapter extends XmlAdapter implements Adapter
         super(false);
     }
 
-    /**
-     * Constructor
-     *
-     * @param bound Configurable bound
-     * @param parameters @see #parameters
-     */
-    public DocLiteralWrappedSoapAdapter(final int bound, final Map<String, String> parameters)
-    {
-        super(bound, parameters, false);
+    public DocLiteralWrappedSoapAdapter(Configurable configurable) {
+        super(configurable, false);
+    }
+
+    public DocLiteralWrappedSoapAdapter(Configurable configurable, boolean useFullyQualifiedNodeNames) {
+        super(configurable, useFullyQualifiedNodeNames);
     }
 
     /**
@@ -197,9 +190,9 @@ public class DocLiteralWrappedSoapAdapter extends XmlAdapter implements Adapter
      *          If any required parameter is missing or incorrect
      */
     @Override
-    protected void validateParameters() throws ConfigurableException
+    public void validateParameters() throws ConfigurableException
     {
-        if (getParamValue(PARAM_WSDL_URL) == null)
+        if (configuration.getParamValue(PARAM_WSDL_URL) == null)
         {
             throw new ConfigurableException("WSDL URL parameter is required");
         }
@@ -563,12 +556,12 @@ public class DocLiteralWrappedSoapAdapter extends XmlAdapter implements Adapter
             WSDLFactory wsdlFactory = WSDLFactory.newInstance();
             WSDLReader wsdlReader = wsdlFactory.newWSDLReader();
 
-            definition = wsdlReader.readWSDL(getParamValue(PARAM_WSDL_URL));
+            definition = wsdlReader.readWSDL(configuration.getParamValue(PARAM_WSDL_URL));
             if (definition == null)
             {
                 throw new ConfigurableException(
                         "Definition element is null for WSDL URL: "
-                                + getParamValue(PARAM_WSDL_URL));
+                                + configuration.getParamValue(PARAM_WSDL_URL));
             }
 
             String targetNS = definition.getTargetNamespace();

@@ -106,7 +106,8 @@ public class ConversationImpl implements Conversation
                 break;
             }
         }
-        
+
+        //result seems odd
         Object exchangeBody = outboundAdapter.adaptTo(result, exchange);
         exchange.getOut().setBody(exchangeBody);
     }

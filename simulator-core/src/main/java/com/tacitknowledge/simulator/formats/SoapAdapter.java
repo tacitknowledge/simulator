@@ -145,12 +145,12 @@ public class SoapAdapter extends XmlAdapter implements Adapter
     /**
      * Constructor
      *
-     * @param bound Configurable bound
-     * @param parameters @see #parameters
+     * @param configurable
+     *
      */
-    public SoapAdapter(final int bound, final Map<String, String> parameters)
+    public SoapAdapter(Configurable configurable)
     {
-        super(bound, parameters, false);
+        super(configurable, false);
     }
 
     /**
@@ -175,9 +175,9 @@ public class SoapAdapter extends XmlAdapter implements Adapter
      *          If any required parameter is missing or incorrect
      */
     @Override
-    protected void validateParameters() throws ConfigurableException
+    public void validateParameters() throws ConfigurableException
     {
-        if (getParamValue(PARAM_WSDL_URL) == null)
+        if (configuration.getParamValue(PARAM_WSDL_URL) == null)
         {
             throw new ConfigurableException("WSDL URL parameter is required");
         }
@@ -432,12 +432,12 @@ public class SoapAdapter extends XmlAdapter implements Adapter
             WSDLFactory wsdlFactory = WSDLFactory.newInstance();
             WSDLReader wsdlReader = wsdlFactory.newWSDLReader();
 
-            definition = wsdlReader.readWSDL(getParamValue(PARAM_WSDL_URL));
+            definition = wsdlReader.readWSDL(configuration.getParamValue(PARAM_WSDL_URL));
             if (definition == null)
             {
                 throw new ConfigurableException(
                         "Definition element is null for WSDL URL: "
-                                + getParamValue(PARAM_WSDL_URL));
+                                + configuration.getParamValue(PARAM_WSDL_URL));
             }
 
             String targetNS = definition.getTargetNamespace();
@@ -467,7 +467,7 @@ public class SoapAdapter extends XmlAdapter implements Adapter
     @SuppressWarnings("unchecked")
     private void getAvailableOperations()
     {
-        Map<QName, Binding> bindings = definition.getBindings();
+        Map<QName, Binding> bindings = definition.getAllBindings();
 
         for (Map.Entry<QName, Binding> entry : bindings.entrySet())
         {
@@ -490,9 +490,15 @@ public class SoapAdapter extends XmlAdapter implements Adapter
     private boolean validateOperationsAndParameters(final Map<String, Map> payload)
         throws FormatAdapterException, SOAPException
     {
+        try {
+            validateParameters();
+        } catch (ConfigurableException e) {
+            throw new FormatAdapterException("could not validate. probably wsdl download issue",e);
+        }
         // --- Review all Methods passed in the SOAP message
         for (Map.Entry<String, Map> operationEntry : payload.entrySet())
         {
+
             // --- We ignore the fault object
             if (operationEntry.getKey().equals(FAULT))
             {
@@ -514,7 +520,7 @@ public class SoapAdapter extends XmlAdapter implements Adapter
             Map<String, Part> partsInAvailableOp =
                     availableOp.getOperation().getInput().getMessage().getParts();
             // --- If the operationEntry is output, get the parts from the output message
-            if (getBound() == Configurable.BOUND_OUT)
+            if (configuration.getBound() == Configurable.BOUND_OUT)
             {
                 partsInAvailableOp =
                         availableOp.getOperation().getOutput().getMessage().getParts();
@@ -528,7 +534,7 @@ public class SoapAdapter extends XmlAdapter implements Adapter
             {
                 if (!opParameters.containsKey(partInOp.getName()))
                 {
-                    String bound = getBound() == Configurable.BOUND_IN ? "inbound" : "outbound";
+                    String bound = configuration.getBound() == Configurable.BOUND_IN ? "inbound" : "outbound";
                     // --- If the defined method part is not in the message, throw an error
                     String errorMsg = "Missing required " + bound
                             + " parameter (" + partInOp.getName()
@@ -536,7 +542,7 @@ public class SoapAdapter extends XmlAdapter implements Adapter
 
                     // --- If this is an outbound adapter, return a FAULT message in case of
                     // missing params/parts
-                    if (getBound() == Configurable.BOUND_OUT)
+                    if (configuration.getBound() == Configurable.BOUND_OUT)
                     {
                         addFaultToResponse("Sender", errorMsg, null);
                         return false;

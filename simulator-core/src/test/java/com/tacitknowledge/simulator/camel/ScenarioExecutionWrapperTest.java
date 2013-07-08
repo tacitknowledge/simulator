@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.tacitknowledge.simulator.*;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
@@ -21,12 +22,6 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.tacitknowledge.simulator.Adapter;
-import com.tacitknowledge.simulator.Configurable;
-import com.tacitknowledge.simulator.Conversation;
-import com.tacitknowledge.simulator.Scenario;
-import com.tacitknowledge.simulator.TestHelper;
-import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.formats.JsonAdapter;
 import com.tacitknowledge.simulator.formats.PlainTextAdapter;
 import com.tacitknowledge.simulator.formats.XmlAdapter;
@@ -131,7 +126,9 @@ public class ScenarioExecutionWrapperTest
 
         Map<String, String> param = new HashMap<String, String>();
         param.put(JsonAdapter.PARAM_JSON_CONTENT, "employees");
-        JsonAdapter outAdapter = new JsonAdapter(Configurable.BOUND_OUT, param);
+        BaseConfigurable configurable = new BaseConfigurable();
+        configurable.setBoundAndParameters(Configurable.BOUND_OUT,param);
+        JsonAdapter outAdapter = new JsonAdapter(configurable);
 
         conversation = conversationFactory.createConversation("Conversation2", inTransport, outTransport, new XmlAdapter(), outAdapter);
 
@@ -230,7 +227,9 @@ public class ScenarioExecutionWrapperTest
     {
         Map<String, String> params = new HashMap<String, String>();
         params.put(XmlAdapter.PARAM_ROOT_TAG_NAME, "root");
-        Adapter outAdapter = new XmlAdapter(Configurable.BOUND_OUT, params);
+        BaseConfigurable configurable = new BaseConfigurable();
+        configurable.setBoundAndParameters(Configurable.BOUND_OUT, params);
+        Adapter outAdapter = new XmlAdapter(configurable);
 
         conversation = conversationFactory.createConversation("Conversation2", inTransport, outTransport, new XmlAdapter(), outAdapter);
 

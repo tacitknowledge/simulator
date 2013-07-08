@@ -40,5 +40,19 @@ public interface Configurable
      * @return The bounding (IN or OUT) of the configurable instance
      */
     int getBound();
-    
+
+    /**
+     * @param name The parameter name. Parameter names should be defined by each implementation.
+     * @return The parameter value or null if not defined.
+     */
+    String getParamValue(final String name);
+
+    void setParamValue(final String name, final String value);
+
+    /**
+     *
+     * @return The provided parameters
+     */
+    Map<String, String> getParameters();
+
 }

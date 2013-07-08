@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.tacitknowledge.simulator.BaseConfigurable;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
@@ -42,8 +43,9 @@ public class RestAdapterTest {
     public void testCreateSimulatorPojo() throws FormatAdapterException {
         Map<String, String> params = new HashMap<String, String>();
         params.put(RestAdapter.PARAM_EXTRACTION_PATTERN, "/system/:system_id/conversation/:conv_id");
-
-        adapter.setParameters(params);
+        BaseConfigurable configurable = new BaseConfigurable();
+        configurable.setParameters(params);
+        adapter = new RestAdapter(configurable);
 
         //Mocking HTTP Request
         HttpServletRequest request = mock(HttpServletRequest.class);

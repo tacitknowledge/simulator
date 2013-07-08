@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.tacitknowledge.simulator.*;
 import org.apache.bsf.BSFException;
 import org.apache.bsf.BSFManager;
 import org.apache.camel.Exchange;
@@ -15,12 +16,6 @@ import org.apache.camel.Exchange;
 import org.mozilla.javascript.NativeObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.tacitknowledge.simulator.Adapter;
-import com.tacitknowledge.simulator.ConfigurableException;
-import com.tacitknowledge.simulator.FormatAdapterException;
-import com.tacitknowledge.simulator.SimulatorPojo;
-import com.tacitknowledge.simulator.StructuredSimulatorPojo;
 
 /**
  * Implementation of the Adapter interface for the REST format
@@ -101,15 +96,8 @@ public class RestAdapter extends NativeObjectScriptingAdapter implements Adapter
     }
 
 
-
-    /**
-     * Constructor
-     * @param bound specifies if adapter is inbound or outbound
-     * @param parameters base parameters for this adapter
-     */
-    public RestAdapter(final int bound, final Map<String, String> parameters)
-    {
-        super(bound, parameters);
+    public RestAdapter(Configurable configurable) {
+        super(configurable);
     }
 
     /**
@@ -117,7 +105,7 @@ public class RestAdapter extends NativeObjectScriptingAdapter implements Adapter
      * @throws ConfigurableException If any required parameter has not been set.
      *
      */
-    @Override
+
     public void validateParameters() throws ConfigurableException
     {
 
@@ -140,16 +128,16 @@ public class RestAdapter extends NativeObjectScriptingAdapter implements Adapter
 
         Map attributes = new HashMap<String, Object>();
         String parameterExtractionPattern =
-                getParamValue(PARAM_EXTRACTION_PATTERN) == null
+                configuration.getParamValue(PARAM_EXTRACTION_PATTERN) == null
                         ? DEFAULT_EXTRACTION_PATTERN
-                        : getParamValue(PARAM_EXTRACTION_PATTERN);
+                        : configuration.getParamValue(PARAM_EXTRACTION_PATTERN);
         attributes.put(REQUEST, populateRequestAttributes(request, parameterExtractionPattern));
         attributes.put(RESPONSE, populateResponseAttributes());
 
         String parameterObjectName =
-                getParamValue(PARAM_OBJECT_NAME) == null
+                configuration.getParamValue(PARAM_OBJECT_NAME) == null
                         ? DEFAULT_OBJECT_NAME
-                        : getParamValue(PARAM_OBJECT_NAME);
+                        : configuration.getParamValue(PARAM_OBJECT_NAME);
         pojo.getRoot().put(parameterObjectName, attributes);
 
         logger.debug("Finished generating SimulatorPojo from REST content");

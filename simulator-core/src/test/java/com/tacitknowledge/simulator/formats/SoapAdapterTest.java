@@ -1,11 +1,6 @@
 package com.tacitknowledge.simulator.formats;
 
-import com.tacitknowledge.simulator.Configurable;
-import com.tacitknowledge.simulator.ConfigurableException;
-import com.tacitknowledge.simulator.FormatAdapterException;
-import com.tacitknowledge.simulator.SimulatorPojo;
-import com.tacitknowledge.simulator.StructuredSimulatorPojo;
-import com.tacitknowledge.simulator.TestHelper;
+import com.tacitknowledge.simulator.*;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
@@ -62,9 +57,12 @@ public class SoapAdapterTest
     @Test
     public void testShouldFailWithWrongWsdlUri()
     {
+
         params = new HashMap<String, String>();
         params.put(SoapAdapter.PARAM_WSDL_URL, "noWSDLFileHere.wsdl");
-        adapter.setParameters(params);
+        BaseConfigurable configurable = new BaseConfigurable();
+        configurable.setParameters(params);
+        adapter = new SoapAdapter(configurable);
 
         try
         {
@@ -279,7 +277,9 @@ public class SoapAdapterTest
         // --- Flag the adapter as outbound
         params = new HashMap<String, String>();
         params.put(SoapAdapter.PARAM_WSDL_URL, wsdlFile);
-        adapter.setBoundAndParameters(bound, params);
+        BaseConfigurable configurable = new BaseConfigurable();
+        configurable.setBoundAndParameters(bound,params);
+        adapter = new SoapAdapter(configurable);
 
         adapter.validateParameters();
     }

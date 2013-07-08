@@ -163,5 +163,21 @@ public class RouteManagerTest extends SimulatorCamelTestSupportBase
         {
             return uri;
         }
+
+        public String getParamValue(String name) {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public void setParamValue(String name, String value) {
+            //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public Map<String, String> getParameters() {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public void validateParameters() throws ConfigurableException {
+            //To change body of implemented methods use File | Settings | File Templates.
+        }
     }
 }

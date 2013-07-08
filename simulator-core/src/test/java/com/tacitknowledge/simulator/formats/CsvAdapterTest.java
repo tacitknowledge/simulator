@@ -1,9 +1,6 @@
 package com.tacitknowledge.simulator.formats;
 
-import com.tacitknowledge.simulator.ConfigurableException;
-import com.tacitknowledge.simulator.FormatAdapterException;
-import com.tacitknowledge.simulator.SimulatorPojo;
-import com.tacitknowledge.simulator.TestHelper;
+import com.tacitknowledge.simulator.*;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -48,8 +45,9 @@ public class CsvAdapterTest
         // (only CSV_CONTENT is required if using headers)
         Map<String, String> params = new HashMap<String, String>();
         params.put(CsvAdapter.PARAM_CSV_CONTENT, "Words");
-
-        adapter.setParameters(params);
+        BaseConfigurable configurable = new BaseConfigurable();
+        configurable.setParameters(params);
+        adapter = new CsvAdapter(configurable);
 
         CamelContext context = new DefaultCamelContext();
         Exchange exchange = new DefaultExchange(context);
@@ -83,8 +81,9 @@ public class CsvAdapterTest
         params.put(CsvAdapter.PARAM_CSV_CONTENT, "Words");
         params.put(CsvAdapter.PARAM_FIRST_ROW_HEADER, "false");
         params.put(CsvAdapter.PARAM_ROW_CONTENT, "wordSet");
-
-        adapter.setParameters(params);
+        BaseConfigurable configurable = new BaseConfigurable();
+        configurable.setParameters(params);
+        adapter = new CsvAdapter(configurable);
         adapter.validateParameters();
 
         CamelContext context = new DefaultCamelContext();
@@ -119,8 +118,9 @@ public class CsvAdapterTest
             // --- Provide the required configuration
             Map<String, String> params = new HashMap<String, String>();
             params.put(CsvAdapter.PARAM_CSV_CONTENT, "Words");
-
-            adapter.setParameters(params);
+            BaseConfigurable configurable = new BaseConfigurable();
+            configurable.setParameters(params);
+            adapter = new CsvAdapter(configurable);
             adapter.validateParameters();
 
             CamelContext context = new DefaultCamelContext();

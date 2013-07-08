@@ -1,6 +1,7 @@
 package com.tacitknowledge.simulator.formats;
 
 import com.google.gson.Gson;
+import com.tacitknowledge.simulator.Configurable;
 import com.tacitknowledge.simulator.ConfigurableException;
 import com.tacitknowledge.simulator.FormatAdapterException;
 import com.tacitknowledge.simulator.SimulatorPojo;
@@ -29,13 +30,13 @@ abstract public class NativeObjectScriptingAdapter extends BaseAdapter{
         super();    //To change body of overridden methods use File | Settings | File Templates.
     }
 
-    public NativeObjectScriptingAdapter(Map<String, String> parameters) {
-        super(parameters);    //To change body of overridden methods use File | Settings | File Templates.
+    public NativeObjectScriptingAdapter(Configurable configurable) {
+        super(configurable);
     }
 
-    protected NativeObjectScriptingAdapter(int bound, Map<String, String> parameters) {
-        super(bound, parameters);    //To change body of overridden methods use File | Settings | File Templates.
-    }
+//    protected NativeObjectScriptingAdapter(int bound, Map<String, String> parameters) {
+//        super(bound, parameters);
+//    }
 
 
     /**
@@ -47,6 +48,7 @@ abstract public class NativeObjectScriptingAdapter extends BaseAdapter{
     public Map<String, Object> generateBeans(final Exchange exchange)
         throws ConfigurableException, FormatAdapterException
     {
+        //todo - mws - fix this
         validateParameters();
 
         SimulatorPojo pojo = createSimulatorPojo(exchange);

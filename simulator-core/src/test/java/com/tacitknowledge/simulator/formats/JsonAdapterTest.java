@@ -1,9 +1,6 @@
 package com.tacitknowledge.simulator.formats;
 
-import com.tacitknowledge.simulator.ConfigurableException;
-import com.tacitknowledge.simulator.FormatAdapterException;
-import com.tacitknowledge.simulator.SimulatorPojo;
-import com.tacitknowledge.simulator.TestHelper;
+import com.tacitknowledge.simulator.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,12 +28,11 @@ import java.util.Map;
  */
 public class JsonAdapterTest
 {
-    private JsonAdapter adapter;
 
     @Before
     public void setUp()
     {
-        adapter = new JsonAdapter();
+
     }
 
     @Test
@@ -44,11 +40,13 @@ public class JsonAdapterTest
     {
         try
         {
+            JsonAdapter adapter = new JsonAdapter();
             CamelContext context = new DefaultCamelContext();
             Exchange exchange = new DefaultExchange(context);
             Message message = new DefaultMessage();
             message.setBody(TestHelper.JSON_DATA);
             exchange.setIn(message);
+
             adapter.generateBeans(exchange);
             fail("JSON Adapter should throw exception if the required parameters are not provided.");
         }
@@ -63,10 +61,11 @@ public class JsonAdapterTest
     public void testSuccessfulAdaptFrom()
     {
         // --- Provide required configuration
+        BaseConfigurable configurable = new BaseConfigurable();
         Map<String, String> params = new HashMap<String, String>();
         params.put(JsonAdapter.PARAM_JSON_CONTENT, "person");
-        adapter.setParameters(params);
-
+        configurable.setParameters(params);
+        JsonAdapter adapter = new JsonAdapter(configurable);
         try
         {
             CamelContext context = new DefaultCamelContext();
@@ -108,11 +107,14 @@ public class JsonAdapterTest
     @Test
     public void testSuccessfulAdaptTo()
     {
-        // ---
+
+
         // --- Provide required configuration
+        BaseConfigurable configurable = new BaseConfigurable();
         Map<String, String> params = new HashMap<String, String>();
         params.put(JsonAdapter.PARAM_JSON_CONTENT, "person");
-        adapter.setParameters(params);
+        configurable.setParameters(params);
+        JsonAdapter adapter = new JsonAdapter(configurable);
 
         try
         {
@@ -161,14 +163,17 @@ public class JsonAdapterTest
     public void testSuccessfulAdaptToWithOnlyArrays()
             throws FormatAdapterException, JSONException, ConfigurableException
     {
-        // ---
+
         // --- Provide required configuration
+        BaseConfigurable configurable = new BaseConfigurable();
         Map<String, String> params = new HashMap<String, String>();
         params.put(JsonAdapter.PARAM_JSON_CONTENT, "stuff");
         params.put(JsonAdapter.PARAM_IS_ARRAY, "true");
         params.put(JsonAdapter.PARAM_JSON_ARRAY_CONTENT, "anArray");
-        adapter.setParameters(params);
-        adapter.validateParameters();
+        configurable.setParameters(params);
+
+        JsonAdapter adapter = new JsonAdapter(configurable);
+
 
         CamelContext context = new DefaultCamelContext();
             Exchange exchange = new DefaultExchange(context);
