@@ -56,11 +56,6 @@ public class FileTransport extends BaseTransport implements Transport
      */
     private static Logger logger = LoggerFactory.getLogger(FileTransport.class);
 
-    /**
-     * If true, the processed file will be deleted.
-     * Defaults to false.
-     */
-    private boolean deleteFile = false;
 
     /**
      * @inheritDoc
@@ -120,7 +115,7 @@ public class FileTransport extends BaseTransport implements Transport
                     configurable.getParamValue(PARAM_POLLING_INTERVAL)).append(AMP);
         }
 
-        if (this.deleteFile)
+        if (this.isDeleteFile())
         {
             options.append("delete=true").append(AMP);
         }
@@ -163,12 +158,6 @@ public class FileTransport extends BaseTransport implements Transport
     @Override
     public void validateParameters() throws ConfigurableException
     {
-        if (configurable.getParamValue(PARAM_DELETE_FILE) != null)
-        {
-            this.deleteFile = Boolean.parseBoolean(configurable.getParamValue(PARAM_DELETE_FILE));
-        }
-
-        // ---
         if (configurable.getParamValue(PARAM_DIRECTORY_NAME) == null)
         {
             throw new ConfigurableException("Directory Name parameter is required");
@@ -180,14 +169,8 @@ public class FileTransport extends BaseTransport implements Transport
      */
     protected boolean isDeleteFile()
     {
-        return deleteFile;
-    }
-
-    /**
-     * @param deleteFile @see #deleteFile
-     */
-    protected void setDeleteFile(final boolean deleteFile)
-    {
-        this.deleteFile = deleteFile;
+        return (configurable.getParamValue(PARAM_DELETE_FILE) != null)
+                ? Boolean.parseBoolean(configurable.getParamValue(PARAM_DELETE_FILE))
+                : false;
     }
 }

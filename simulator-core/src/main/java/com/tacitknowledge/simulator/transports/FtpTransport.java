@@ -49,17 +49,17 @@ public class FtpTransport extends FileTransport implements Transport
     /**
      * Flag to determine the file transfer mode, BINARY or ASCII. Defaults to ASCII
      */
-    private boolean binary;
 
     public boolean isBinary()
     {
-        return binary;
+        if (configurable.getParamValue(PARAM_BINARY) != null)
+        {
+            return Boolean.parseBoolean(configurable.getParamValue(PARAM_BINARY));
+        } else {
+            return false;
+        }
     }
 
-    public void setBinary(boolean binary)
-    {
-        this.binary = binary;
-    }
 
     /**
      * @inheritDoc
@@ -141,7 +141,7 @@ public class FtpTransport extends FileTransport implements Transport
         }
 
         // --- If file transfer is binary
-        if (this.binary)
+        if (this.isBinary())
         {
             options.append("binary=true").append(AMP);
         }
@@ -184,15 +184,6 @@ public class FtpTransport extends FileTransport implements Transport
     public void validateParameters() throws ConfigurableException
     {
         // --- If passed, assign the boolean parameters to instance variables
-        if (configurable.getParamValue(PARAM_BINARY) != null)
-        {
-            this.binary = Boolean.parseBoolean(configurable.getParamValue(PARAM_BINARY));
-        }
-        if (configurable.getParamValue(PARAM_DELETE_FILE) != null)
-        {
-            setDeleteFile(Boolean.parseBoolean(configurable.getParamValue(PARAM_DELETE_FILE)));
-        }
-
         if (configurable.getParamValue(PARAM_HOST) == null)
         {
             throw new ConfigurableException("Host name parameter is required");
