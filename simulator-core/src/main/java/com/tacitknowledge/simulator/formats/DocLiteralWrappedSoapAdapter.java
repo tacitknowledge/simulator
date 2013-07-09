@@ -58,7 +58,7 @@ import com.tacitknowledge.simulator.configuration.beans.XmlObjectWrapper;
  * 4. Change the UI to be able to specify whether messages follow SOAP1.1 or SOAP1.2 protocol.
  * Current implementation uses 1.1 only
  */
-public class DocLiteralWrappedSoapAdapter extends XmlAdapter implements Adapter
+public class DocLiteralWrappedSoapAdapter extends SoapAdapter implements Adapter
 {
     /**
      * WSDL URL parameter. OPTIONAL.
@@ -128,12 +128,6 @@ public class DocLiteralWrappedSoapAdapter extends XmlAdapter implements Adapter
      * Key for the root where to contain the SOAP message's payload
      */
     private String payloadKey = DEFAULT_PAYLOAD_KEY;
-
-    /**
-     * WSDL service definition.
-     * Will be generated from the provided WSDL.
-     */
-    private Definition definition;
     /**
      *  Payload NS
      */
@@ -148,39 +142,23 @@ public class DocLiteralWrappedSoapAdapter extends XmlAdapter implements Adapter
      */
     private SOAPMessage soapMessage;
 
-    /**
-     * Available operations defined in the provided WSDL.
-     */
-    private Map<String, BindingOperation> availableOps = new HashMap<String, BindingOperation>();
 
     /**
      * Constructor
      */
     public DocLiteralWrappedSoapAdapter()
     {
-        super(false);
+        this(new BaseConfigurable(),false);
     }
 
     public DocLiteralWrappedSoapAdapter(Configurable configurable) {
-        super(configurable, false);
+        this(configurable, false);
     }
 
     public DocLiteralWrappedSoapAdapter(Configurable configurable, boolean useFullyQualifiedNodeNames) {
         super(configurable, useFullyQualifiedNodeNames);
     }
 
-    /**
-     * @inheritDoc
-     * @param exchange Exchange message
-     * @return SimulatorPojo object
-     * @throws FormatAdapterException if an error occurs
-     */
-    @Override
-    protected SimulatorPojo createSimulatorPojo(final Exchange exchange) throws
-            FormatAdapterException
-    {
-        return createSimulatorPojo(exchange.getIn().getBody(String.class));
-    }
 
     /**
      * Sets and/or overrides instance variables from provided parameters and validates that
@@ -197,7 +175,6 @@ public class DocLiteralWrappedSoapAdapter extends XmlAdapter implements Adapter
             throw new ConfigurableException("WSDL URL parameter is required");
         }
 
-        getWSDLDefinition();
     }
 
 
@@ -215,6 +192,7 @@ public class DocLiteralWrappedSoapAdapter extends XmlAdapter implements Adapter
         throws FormatAdapterException
     {
         logger.debug("Attempting to generate SOAP message from SimulatorPojo:\n   ", pojo);
+        initWSDL();
         Map<String, Map> payload = null;
 
         // --- First, check we got a "payload" in POJO's root.
@@ -230,7 +208,8 @@ public class DocLiteralWrappedSoapAdapter extends XmlAdapter implements Adapter
         	// --- Grab the PAYLOAD results Map
         	payload = (Map<String, Map>) (Object) pojo.getRoot();
         }
-        
+
+
         // --- Will need it to get the SOAPMessage as a String
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
@@ -545,65 +524,6 @@ public class DocLiteralWrappedSoapAdapter extends XmlAdapter implements Adapter
     }
 
     /**
-     * Downloads and reads a WSDL from the provided URI
-     * @throws ConfigurableException If the WSDL file is not in the provided URI or is wrong
-     */
-    @SuppressWarnings("unchecked")
-    private void getWSDLDefinition() throws ConfigurableException
-    {
-        try
-        {
-            WSDLFactory wsdlFactory = WSDLFactory.newInstance();
-            WSDLReader wsdlReader = wsdlFactory.newWSDLReader();
-
-            definition = wsdlReader.readWSDL(configuration.getParamValue(PARAM_WSDL_URL));
-            if (definition == null)
-            {
-                throw new ConfigurableException(
-                        "Definition element is null for WSDL URL: "
-                                + configuration.getParamValue(PARAM_WSDL_URL));
-            }
-
-            String targetNS = definition.getTargetNamespace();
-            Map<String, String> namespaces = definition.getNamespaces();
-
-            for (Map.Entry<String, String> ns : namespaces.entrySet())
-            {
-                if (ns.getValue().equals(targetNS))
-                {
-                    payloadNS = ns.getKey();
-                    payloadNSUri = ns.getValue();
-                }
-            }
-
-            getAvailableOperations();
-        }
-        catch (WSDLException we)
-        {
-            String errorMsg = "Unexpected WSDL error: ";
-            throw new ConfigurableException(errorMsg, we);
-        }
-    }
-
-    /**
-     * Populates the list of available operations and their parts as defined in the provided WSDL
-     */
-    @SuppressWarnings("unchecked")
-    private void getAvailableOperations()
-    {
-        Map<QName, Binding> bindings = definition.getBindings();
-
-        for (Map.Entry<QName, Binding> entry : bindings.entrySet())
-        {
-            List<BindingOperation> operations = entry.getValue().getBindingOperations();
-            for (BindingOperation op : operations)
-            {
-                this.availableOps.put(op.getName(), op);
-            }
-        }
-    }
-
-    /**
      * 
      * @param payload Map containing SOAP message's payload
      * @return True if payload is valid. False otherwise.
@@ -614,6 +534,7 @@ public class DocLiteralWrappedSoapAdapter extends XmlAdapter implements Adapter
     private boolean validateOperationsAndParameters(final Map<String, Map> payload)
         throws FormatAdapterException, SOAPException
     {
+
         // --- Review all Methods passed in the SOAP message
         for (Map.Entry<String, Map> operationEntry : payload.entrySet())
         {

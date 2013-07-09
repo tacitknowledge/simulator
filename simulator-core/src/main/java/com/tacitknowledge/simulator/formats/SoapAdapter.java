@@ -114,7 +114,7 @@ public class SoapAdapter extends XmlAdapter implements Adapter
      * WSDL service definition.
      * Will be generated from the provided WSDL.
      */
-    private Definition definition;
+    protected Definition definition;
     /**
      *  Payload NS
      */
@@ -132,7 +132,7 @@ public class SoapAdapter extends XmlAdapter implements Adapter
     /**
      * Available operations defined in the provided WSDL.
      */
-    private Map<String, BindingOperation> availableOps = new HashMap<String, BindingOperation>();
+    protected Map<String, BindingOperation> availableOps = new HashMap<String, BindingOperation>();
 
     /**
      * Constructor
@@ -152,6 +152,16 @@ public class SoapAdapter extends XmlAdapter implements Adapter
     {
         super(configurable, false);
     }
+    /**
+     * Constructor
+     *
+     * @param configurable
+     *
+     */
+    public SoapAdapter(Configurable configurable, boolean useFullyQualifiedNames)
+    {
+        super(configurable, useFullyQualifiedNames);
+    }
 
     /**
      * @inheritDoc
@@ -163,6 +173,7 @@ public class SoapAdapter extends XmlAdapter implements Adapter
     protected SimulatorPojo createSimulatorPojo(final Exchange exchange) throws
             FormatAdapterException
     {
+        initWSDL();
         final String body = exchange.getIn().getBody(String.class);
         return createSimulatorPojo(body);
     }
@@ -182,7 +193,6 @@ public class SoapAdapter extends XmlAdapter implements Adapter
             throw new ConfigurableException("WSDL URL parameter is required");
         }
 
-        getWSDLDefinition();
     }
 
 
@@ -200,7 +210,7 @@ public class SoapAdapter extends XmlAdapter implements Adapter
         throws FormatAdapterException
     {
         logger.debug("Attempting to generate SOAP message from SimulatorPojo:\n   ", pojo);
-
+        initWSDL();
         // --- First, check we got a "payload"
         if (!pojo.getRoot().containsKey(DEFAULT_PAYLOAD_KEY))
         {
@@ -306,6 +316,16 @@ public class SoapAdapter extends XmlAdapter implements Adapter
         logger.debug("Finished generating SOAP content from SimulatorPojo");
         return outputStream.toString();
     }
+
+    protected void initWSDL() throws FormatAdapterException {
+        try {
+            definition = getWSDLDefinition();
+            availableOps = getAvailableOperations(definition);
+        } catch (ConfigurableException e) {
+            throw new FormatAdapterException("could not get WSDL",e);
+        }
+    }
+
     protected SimulatorPojo getSimulatorPojo(final Object object) throws ObjectMapperException
     {
         final SimulatorPojo payload = SimulatorPojoPopulatorImpl.getInstance().populateSimulatorPojoFromBean(object,
@@ -425,23 +445,23 @@ public class SoapAdapter extends XmlAdapter implements Adapter
      * @throws ConfigurableException If the WSDL file is not in the provided URI or is wrong
      */
     @SuppressWarnings("unchecked")
-    private void getWSDLDefinition() throws ConfigurableException
+    private Definition getWSDLDefinition() throws ConfigurableException
     {
         try
         {
             WSDLFactory wsdlFactory = WSDLFactory.newInstance();
             WSDLReader wsdlReader = wsdlFactory.newWSDLReader();
 
-            definition = wsdlReader.readWSDL(configuration.getParamValue(PARAM_WSDL_URL));
-            if (definition == null)
+            Definition result = wsdlReader.readWSDL(configuration.getParamValue(PARAM_WSDL_URL));
+            if (result == null)
             {
                 throw new ConfigurableException(
                         "Definition element is null for WSDL URL: "
                                 + configuration.getParamValue(PARAM_WSDL_URL));
             }
 
-            String targetNS = definition.getTargetNamespace();
-            Map<String, String> namespaces = definition.getNamespaces();
+            String targetNS = result.getTargetNamespace();
+            Map<String, String> namespaces = result.getNamespaces();
 
             for (Map.Entry<String, String> ns : namespaces.entrySet())
             {
@@ -451,8 +471,7 @@ public class SoapAdapter extends XmlAdapter implements Adapter
                     payloadNSUri = ns.getValue();
                 }
             }
-
-            getAvailableOperations();
+            return result;
         }
         catch (WSDLException we)
         {
@@ -462,21 +481,22 @@ public class SoapAdapter extends XmlAdapter implements Adapter
     }
 
     /**
-     * Populates the list of available operations and their parts as defined in the provided WSDL
+     * @return the list of available operations and their parts as defined in the provided WSDL
      */
     @SuppressWarnings("unchecked")
-    private void getAvailableOperations()
+    private Map<String, BindingOperation> getAvailableOperations(Definition definition)
     {
         Map<QName, Binding> bindings = definition.getAllBindings();
-
+        Map<String, BindingOperation> result = new HashMap<String, BindingOperation>();
         for (Map.Entry<QName, Binding> entry : bindings.entrySet())
         {
             List<BindingOperation> operations = entry.getValue().getBindingOperations();
             for (BindingOperation op : operations)
             {
-                this.availableOps.put(op.getName(), op);
+                result.put(op.getName(), op);
             }
         }
+        return result;
     }
 
     /**

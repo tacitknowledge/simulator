@@ -63,11 +63,6 @@ public class XmlAdapter extends NativeObjectScriptingAdapter implements Adapter
     private Document doc;
 
     /**
-     * @see #PARAM_VALIDATE
-     */
-    private boolean validate = false;
-
-    /**
      * Determines if when reading from the source XML document, namespace should be included
      * as part of the key names in the SimulatorPojo
      */
@@ -119,7 +114,7 @@ public class XmlAdapter extends NativeObjectScriptingAdapter implements Adapter
         {
             // --- First, parse the XML string into a document
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            dbf.setValidating(this.validate);
+            dbf.setValidating(shouldValidateXML());
 
             DocumentBuilder db = dbf.newDocumentBuilder();
             InputSource is = new InputSource();
@@ -472,9 +467,10 @@ public class XmlAdapter extends NativeObjectScriptingAdapter implements Adapter
      */
     public void validateParameters() throws ConfigurableException
     {
-        if (configuration.getParamValue(PARAM_VALIDATE) != null)
-        {
-            this.validate = Boolean.parseBoolean(configuration.getParamValue(PARAM_VALIDATE));
-        }
+    }
+
+    protected boolean shouldValidateXML() {
+        return configuration.getParamValue(PARAM_VALIDATE) != null &&
+            Boolean.parseBoolean(configuration.getParamValue(PARAM_VALIDATE));
     }
 }

@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
  * Add configuration to be able to specify whether messages follow SOAP1.1 or SOAP1.2 protocol.
  * Current implementation uses 1.1 only
  */
-public class FullResponseSoapAdapter extends XmlAdapter implements Adapter
+public class FullResponseSoapAdapter extends SoapAdapter implements Adapter
 {
 	/**
      * WSDL URL parameter. OPTIONAL.
@@ -68,17 +68,13 @@ public class FullResponseSoapAdapter extends XmlAdapter implements Adapter
      */
     private static Logger logger = LoggerFactory.getLogger(FullResponseSoapAdapter.class);
 
-    /**
-     * Available operations defined in the provided WSDL.
-     */
-    private Map<String, BindingOperation> availableOps = new HashMap<String, BindingOperation>();
 
     /**
      * Constructor
      */
     public FullResponseSoapAdapter()
     {
-        super(false);
+        this(new BaseConfigurable());
     }
 
     /**
@@ -100,6 +96,7 @@ public class FullResponseSoapAdapter extends XmlAdapter implements Adapter
     protected SimulatorPojo createSimulatorPojo(final Exchange exchange) throws
             FormatAdapterException
     {
+        initWSDL();
         return createSimulatorPojo(exchange.getIn().getBody(String.class));
     }
 
@@ -117,8 +114,6 @@ public class FullResponseSoapAdapter extends XmlAdapter implements Adapter
         {
             throw new ConfigurableException("WSDL URL parameter is required");
         }
-
-        getWSDLDefinition();
     }
 
     /**
@@ -135,6 +130,7 @@ public class FullResponseSoapAdapter extends XmlAdapter implements Adapter
         throws FormatAdapterException
     {
         logger.debug("Attempting to generate SOAP message from SimulatorPojo:\n   ", pojo);
+        initWSDL();
         Map<String, Map> payload = null;
 
         // --- First, check we got a "payload" in POJO's root.
@@ -216,52 +212,6 @@ public class FullResponseSoapAdapter extends XmlAdapter implements Adapter
         return pojo;
     }
 
-    /**
-     * Downloads and reads a WSDL from the provided URI
-     * @throws ConfigurableException If the WSDL file is not in the provided URI or is wrong
-     */
-    @SuppressWarnings("unchecked")
-    private void getWSDLDefinition() throws ConfigurableException
-    {
-        try
-        {
-            WSDLFactory wsdlFactory = WSDLFactory.newInstance();
-            WSDLReader wsdlReader = wsdlFactory.newWSDLReader();
-
-            Definition definition = wsdlReader.readWSDL(configuration.getParamValue(PARAM_WSDL_URL));
-            if (definition == null)
-            {
-                throw new ConfigurableException(
-                        "Definition element is null for WSDL URL: "
-                                + configuration.getParamValue(PARAM_WSDL_URL));
-            }
-
-            getAvailableOperations(definition);
-        }
-        catch (WSDLException we)
-        {
-            String errorMsg = "Unexpected WSDL error: ";
-            throw new ConfigurableException(errorMsg, we);
-        }
-    }
-
-    /**
-     * Populates the list of available operations and their parts as defined in the provided WSDL
-     */
-    @SuppressWarnings("unchecked")
-    private void getAvailableOperations(Definition definition)
-    {
-        Map<QName, Binding> bindings = definition.getAllBindings();
-
-        for (Map.Entry<QName, Binding> entry : bindings.entrySet())
-        {
-            List<BindingOperation> operations = entry.getValue().getBindingOperations();
-            for (BindingOperation op : operations)
-            {
-                this.availableOps.put(op.getName(), op);
-            }
-        }
-    }
 
     /**
      * 
