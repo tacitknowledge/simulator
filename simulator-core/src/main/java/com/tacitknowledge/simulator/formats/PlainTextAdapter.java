@@ -72,7 +72,7 @@ public class PlainTextAdapter extends NativeObjectScriptingAdapter
      * @return A String object in the requested format representing the script result
      */
     @Override
-    protected String getString(final SimulatorPojo scriptExecutionResult, final Exchange exchange)
+    protected String getConversationResponseAsString(final SimulatorPojo scriptExecutionResult, final Exchange exchange)
     {
         return null;
     }

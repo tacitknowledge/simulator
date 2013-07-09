@@ -143,10 +143,10 @@ public class SoapAdapterTest
                                 "Hello there, Dude!"))
         );
 
-        // --- Now invoke the getString method
+        // --- Now invoke the getConversationResponseAsString method
         try
         {
-            String soapMessage = adapter.getString(pojo, exchange);
+            String soapMessage = adapter.getConversationResponseAsString(pojo, exchange);
 
             System.out.println(soapMessage);
         }
@@ -172,10 +172,10 @@ public class SoapAdapterTest
                             "Missed you!"))
                 );
 
-        // --- Now invoke the getString method
+        // --- Now invoke the getConversationResponseAsString method
         try
         {
-            String soapMessage = adapter.getString(pojo, exchange);
+            String soapMessage = adapter.getConversationResponseAsString(pojo, exchange);
 
             System.out.println(soapMessage);
             assertTrue("Expecting env:Fault tag", soapMessage.indexOf("<env:Fault>") > -1);
@@ -250,7 +250,7 @@ public class SoapAdapterTest
     {
         try
         {
-            adapter.getString(pojo, exchange);
+            adapter.getConversationResponseAsString(pojo, exchange);
         }
         catch(FormatAdapterException fae)
         {

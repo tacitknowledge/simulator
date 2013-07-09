@@ -146,7 +146,7 @@ public class JsonAdapter extends NativeObjectScriptingAdapter implements Adapter
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
-    protected String getString(final SimulatorPojo simulatorPojo, final Exchange exchange)
+    protected String getConversationResponseAsString(final SimulatorPojo simulatorPojo, final Exchange exchange)
         throws FormatAdapterException
     {
         String jsonString;

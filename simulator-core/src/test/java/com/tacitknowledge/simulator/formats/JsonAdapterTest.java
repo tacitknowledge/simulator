@@ -128,7 +128,7 @@ public class JsonAdapterTest
             SimulatorPojo pojo = adapter.createSimulatorPojo(exchange);
 
             // --- Now, use the same pojo to generate a JSON string
-            String jsonString = (String) adapter.getString(pojo, exchange);
+            String jsonString = (String) adapter.getConversationResponseAsString(pojo, exchange);
 
             // --- Use the JSON parsers to compare the original and the output
             JSONObject original = new JSONObject(TestHelper.JSON_DATA);
@@ -186,7 +186,7 @@ public class JsonAdapterTest
         SimulatorPojo pojo = adapter.createSimulatorPojo(exchange);
 
         // --- Now, use the same pojo to generate a JSON string
-        String jsonString = (String) adapter.getString(pojo, exchange);
+        String jsonString = (String) adapter.getConversationResponseAsString(pojo, exchange);
 
         // --- Make sure string starts and ends with square brackets
         assertEquals(0, jsonString.indexOf("["));

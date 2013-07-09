@@ -103,7 +103,7 @@ public class PropertiesAdapter extends NativeObjectScriptingAdapter implements A
      * @throws FormatAdapterException If an exception occurs when converting a pojo into a string
      */
     @Override
-    protected String getString(final SimulatorPojo simulatorPojo, final Exchange exchange)
+    protected String getConversationResponseAsString(final SimulatorPojo simulatorPojo, final Exchange exchange)
         throws FormatAdapterException
     {
         if (simulatorPojo.getRoot().isEmpty())

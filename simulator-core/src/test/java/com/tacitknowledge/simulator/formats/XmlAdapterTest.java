@@ -63,7 +63,7 @@ public class XmlAdapterTest
 
             SimulatorPojo pojo = adapter.createSimulatorPojo(exchange);
 
-            String xml = (String) adapter.getString(pojo, exchange);
+            String xml = (String) adapter.getConversationResponseAsString(pojo, exchange);
 
             // --- Test some nodes, just to make sure the most important things are there
             assertTrue(

@@ -220,7 +220,7 @@ public class RestAdapter extends NativeObjectScriptingAdapter implements Adapter
      */
     @SuppressWarnings("unchecked")
     @Override
-    protected String getString(final SimulatorPojo scriptExecutionResult, final Exchange exchange)
+    protected String getConversationResponseAsString(final SimulatorPojo scriptExecutionResult, final Exchange exchange)
         throws FormatAdapterException
     {
 

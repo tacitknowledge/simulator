@@ -188,7 +188,7 @@ public class DocLiteralWrappedSoapAdapter extends SoapAdapter implements Adapter
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
-    protected String getString(final SimulatorPojo pojo, final Exchange exchange)
+    protected String getConversationResponseAsString(final SimulatorPojo pojo, final Exchange exchange)
         throws FormatAdapterException
     {
         logger.debug("Attempting to generate SOAP message from SimulatorPojo:\n   ", pojo);

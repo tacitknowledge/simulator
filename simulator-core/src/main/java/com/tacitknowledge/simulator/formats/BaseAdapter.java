@@ -82,7 +82,7 @@ public abstract class BaseAdapter implements Adapter
      * @return A String object in the requested format representing the script result
      * @throws FormatAdapterException If any other error occurs
      */
-    protected abstract String getString(SimulatorPojo scriptExecutionResult, Exchange exchange)
+    protected abstract String getConversationResponseAsString(SimulatorPojo scriptExecutionResult, Exchange exchange)
         throws FormatAdapterException;
 
     /**
@@ -122,7 +122,7 @@ public abstract class BaseAdapter implements Adapter
         {
             throw new FormatAdapterException("Error trying to generate temporary classes", e);
         }
-        final String result = getString(getSimulatorPojo, exchange);
+        final String result = getConversationResponseAsString(getSimulatorPojo, exchange);
         return result;
     }
 

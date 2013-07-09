@@ -155,7 +155,7 @@ public class XmlAdapter extends NativeObjectScriptingAdapter implements Adapter
      */
     @SuppressWarnings("unchecked")
     @Override
-    protected String getString(final SimulatorPojo pojo, final Exchange exchange)
+    protected String getConversationResponseAsString(final SimulatorPojo pojo, final Exchange exchange)
         throws FormatAdapterException
     {
         try

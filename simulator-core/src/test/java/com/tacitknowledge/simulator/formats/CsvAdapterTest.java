@@ -133,7 +133,7 @@ public class CsvAdapterTest
             SimulatorPojo pojo = adapter.createSimulatorPojo(exchange);
 
             // --- Now, go the other way around
-            Object o = (String) adapter.getString(pojo, exchange);
+            Object o = (String) adapter.getConversationResponseAsString(pojo, exchange);
             assertTrue(o instanceof String);
 
             String csvData = (String) o;

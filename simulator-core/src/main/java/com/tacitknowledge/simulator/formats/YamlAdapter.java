@@ -114,7 +114,7 @@ public class YamlAdapter extends NativeObjectScriptingAdapter implements Adapter
      * @throws FormatAdapterException if an error occurs
      */
     @Override
-    protected String getString(final SimulatorPojo pojo, final Exchange exchange)
+    protected String getConversationResponseAsString(final SimulatorPojo pojo, final Exchange exchange)
         throws FormatAdapterException
     {
         // --- Only one entry in the root should exist

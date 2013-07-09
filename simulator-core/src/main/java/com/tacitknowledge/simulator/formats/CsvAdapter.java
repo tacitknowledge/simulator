@@ -135,7 +135,7 @@ public class CsvAdapter extends NativeObjectScriptingAdapter implements Adapter
      */
     @SuppressWarnings("unchecked")
     @Override
-    protected String getString(final SimulatorPojo simulatorPojo, final Exchange exchange)
+    protected String getConversationResponseAsString(final SimulatorPojo simulatorPojo, final Exchange exchange)
         throws FormatAdapterException
     {
 
