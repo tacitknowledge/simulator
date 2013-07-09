@@ -34,10 +34,6 @@ abstract public class NativeObjectScriptingAdapter extends BaseAdapter{
         super(configurable);
     }
 
-//    protected NativeObjectScriptingAdapter(int bound, Map<String, String> parameters) {
-//        super(bound, parameters);
-//    }
-
 
     /**
      * @param exchange The Camel exchange
@@ -48,7 +44,6 @@ abstract public class NativeObjectScriptingAdapter extends BaseAdapter{
     public Map<String, Object> generateBeans(final Exchange exchange)
         throws ConfigurableException, FormatAdapterException
     {
-        //todo - mws - fix this
         validateParameters();
 
         SimulatorPojo pojo = createSimulatorPojo(exchange);

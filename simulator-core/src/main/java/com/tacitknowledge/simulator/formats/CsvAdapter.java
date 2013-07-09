@@ -33,7 +33,7 @@ public class CsvAdapter extends NativeObjectScriptingAdapter implements Adapter
      */
     public static final String PARAM_CSV_CONTENT = "csvContent";
     /**
-     * String describing what each row represents. REQUIRED if firstRowHeader is false.
+     * String describing what each row represents. REQUIRED if isFirstRowHeader is false.
      * This will be used as bean name during the simulation.
      * .e.g.: employee, order, product, etc.
      */
@@ -41,29 +41,21 @@ public class CsvAdapter extends NativeObjectScriptingAdapter implements Adapter
     /**
      * First row header parameter name.
      */
-    public static final String PARAM_FIRST_ROW_HEADER = "firstRowHeader";
+    public static final String PARAM_FIRST_ROW_HEADER = "isFirstRowHeader";
 
     /**
      * Logger for this class.
      */
     private static Logger logger = LoggerFactory.getLogger(CsvAdapter.class);
 
-    /**
-     * Column value separator. Defaults to comma (,)
-     */
-    private String columnSeparator = ",";
 
-    /**
-     * If true, the first row in the CSV will be treated as column names. Defaults to true.
-     * If so, each rowContent will be a map with attributes defined by the column names.
-     * Otherwise, each rowContent's attributes will be represented as a List.
-     */
-    private boolean firstRowHeader = true;
 
     /**
      * List of column names of the CSV being processed.
-     * Used only if firstRowHeader is true
+     * Used only if isFirstRowHeader is true
      */
+    //todo - mws - this doesn't seem threadsafe.  Not a high priority right now if using different instances
+    // todo - mws - gets set with values in two places, oddly.  probably for inbound and outbound
     private List<String> colNames;
 
     /**
@@ -103,7 +95,7 @@ public class CsvAdapter extends NativeObjectScriptingAdapter implements Adapter
         // --- For all rows, new line characters will be remove before calling getRowAs methods
 
         // --- If the first row will be treated as column names, get the list of col names
-        if (firstRowHeader)
+        if (isFirstRowHeader())
         {
             logger.debug("Expecting first row as headers. Getting header names");
 
@@ -161,7 +153,7 @@ public class CsvAdapter extends NativeObjectScriptingAdapter implements Adapter
                         .get(configuration.getParamValue(PARAM_CSV_CONTENT));
 
         // --- If using first row as headers, get the headers from the first row's keys
-        if (this.firstRowHeader)
+        if (isFirstRowHeader())
         {
             sb1.append(getHeadersFromKeys(list.get(0).keySet())).append(LINE_SEP);
         }
@@ -195,27 +187,33 @@ public class CsvAdapter extends NativeObjectScriptingAdapter implements Adapter
      */
     public void validateParameters() throws ConfigurableException
     {
-        // --- Check that if firstRowHeader is false, that rowContent has been provided
-        this.firstRowHeader =
-            configuration.getParamValue(PARAM_FIRST_ROW_HEADER) == null
-                || Boolean.parseBoolean(configuration.getParamValue(PARAM_FIRST_ROW_HEADER));
-        // --- Override the default column separator if it has been set
-        if (configuration.getParamValue(PARAM_COLUMN_SEPARATOR) != null)
-        {
-            this.columnSeparator = configuration.getParamValue(PARAM_COLUMN_SEPARATOR);
-        }
-
         // ---
         if (configuration.getParamValue(PARAM_CSV_CONTENT) == null)
         {
             throw new ConfigurableException("CSV Content parameter is required.");
         }
-        if (!firstRowHeader && configuration.getParamValue(PARAM_ROW_CONTENT) == null)
+        if (!isFirstRowHeader() && configuration.getParamValue(PARAM_ROW_CONTENT) == null)
         {
             String errorMsg = "RowContent parameter is required if CSV has no headers.";
             throw new ConfigurableException(errorMsg);
         }
     }
+    protected String getColumnSeparator() {
+        if (configuration.getParamValue(PARAM_COLUMN_SEPARATOR) != null)
+        {
+            return configuration.getParamValue(PARAM_COLUMN_SEPARATOR);
+        }
+        return ",";
+
+    }
+    protected boolean isFirstRowHeader() {
+        //defaults to true
+        boolean result = true;
+        if (configuration.getParamValue(PARAM_FIRST_ROW_HEADER) != null)
+            result = Boolean.parseBoolean(configuration.getParamValue(PARAM_FIRST_ROW_HEADER));
+        return result;
+    }
+
 
     /**
      * Returns a Map representing the given row. colNames will be used as keys.
@@ -227,7 +225,7 @@ public class CsvAdapter extends NativeObjectScriptingAdapter implements Adapter
     {
         Map<String, String> rowMap = new HashMap<String, String>();
 
-        String[] values = row.split(this.columnSeparator);
+        String[] values = row.split(getColumnSeparator());
         for (int i = 0; i < values.length; i++)
         {
             // --- Make sure we remove leading and trailing spaces from the actual value
@@ -247,7 +245,7 @@ public class CsvAdapter extends NativeObjectScriptingAdapter implements Adapter
     {
         List<String> rowList = new ArrayList<String>();
 
-        String[] values = row.split(this.columnSeparator);
+        String[] values = row.split(getColumnSeparator());
         for (String value : values)
         {
             // --- Make sure we remove leading and trailing spaces from the actual value
@@ -276,7 +274,7 @@ public class CsvAdapter extends NativeObjectScriptingAdapter implements Adapter
             }
             else
             {
-                sb.append(this.columnSeparator);
+                sb.append(getColumnSeparator());
             }
             colNames.add(key);
             sb.append(key);
@@ -294,7 +292,7 @@ public class CsvAdapter extends NativeObjectScriptingAdapter implements Adapter
     {
         StringBuilder sb = new StringBuilder();
         // --- If using first-row headers, use them for keeping columns in synch
-        if (this.firstRowHeader)
+        if (isFirstRowHeader())
         {
             boolean firstCol = true;
             for (String col : colNames)
@@ -305,7 +303,7 @@ public class CsvAdapter extends NativeObjectScriptingAdapter implements Adapter
                 }
                 else
                 {
-                    sb.append(this.columnSeparator);
+                    sb.append(getColumnSeparator());
                 }
                 sb.append(row.get(col));
             }
@@ -323,7 +321,7 @@ public class CsvAdapter extends NativeObjectScriptingAdapter implements Adapter
                 }
                 else
                 {
-                    sb.append(this.columnSeparator);
+                    sb.append(getColumnSeparator());
                 }
                 sb.append(value);
             }

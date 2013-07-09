@@ -50,10 +50,6 @@ public class YamlAdapter extends NativeObjectScriptingAdapter implements Adapter
      */
     private static Logger logger = LoggerFactory.getLogger(YamlAdapter.class);
 
-    /**
-     * @see #PARAM_IS_ARRAY
-     */
-    private boolean isArray = false;
 
     /**
      * @inheritDoc
@@ -87,7 +83,7 @@ public class YamlAdapter extends NativeObjectScriptingAdapter implements Adapter
         {
             Object yaml = dec.readObject();
 
-            if (this.isArray)
+            if (isArray())
             {
                 logger.debug("Expecting YAML array in content. Processing as such.");
 
@@ -151,19 +147,21 @@ public class YamlAdapter extends NativeObjectScriptingAdapter implements Adapter
      */
     public void validateParameters() throws ConfigurableException
     {
-        if (configuration.getParamValue(PARAM_IS_ARRAY) != null)
-        {
-            this.isArray = Boolean.parseBoolean(configuration.getParamValue(PARAM_IS_ARRAY));
-        }
 
         if (configuration.getParamValue(PARAM_YAML_CONTENT) == null)
         {
             throw new ConfigurableException("YAML content is required");
         }
-        if (this.isArray && configuration.getParamValue(PARAM_YAML_ARRAY_CONTENT) == null)
+        if (isArray() && configuration.getParamValue(PARAM_YAML_ARRAY_CONTENT) == null)
         {
             throw new ConfigurableException(
                 "YAML Array Content parameter is required if YAML content is an array");
         }
+    }
+
+    protected boolean isArray() {
+        return (configuration.getParamValue(PARAM_IS_ARRAY) != null)
+                && Boolean.parseBoolean(configuration.getParamValue(PARAM_IS_ARRAY));
+
     }
 }

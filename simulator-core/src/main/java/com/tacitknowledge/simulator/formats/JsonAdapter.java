@@ -101,7 +101,7 @@ public class JsonAdapter extends NativeObjectScriptingAdapter implements Adapter
 
         try
         {
-            if (this.isArray())
+            if (isArray())
             {
                 logger.debug("Expecting JSON array in content. Processing as such.");
 
@@ -310,10 +310,10 @@ public class JsonAdapter extends NativeObjectScriptingAdapter implements Adapter
         }
     }
 
-    private Boolean isArray() {
+    protected Boolean isArray() {
 
-        return (configuration.getParamValue(PARAM_IS_ARRAY) != null)
-                ? Boolean.parseBoolean(configuration.getParamValue(PARAM_IS_ARRAY))
-                : false;
+        return configuration.getParamValue(PARAM_IS_ARRAY) != null &&
+                Boolean.parseBoolean(configuration.getParamValue(PARAM_IS_ARRAY));
+
     }
 }

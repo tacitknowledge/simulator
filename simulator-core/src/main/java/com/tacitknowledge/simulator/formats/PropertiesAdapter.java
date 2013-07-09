@@ -40,11 +40,6 @@ public class PropertiesAdapter extends NativeObjectScriptingAdapter implements A
     private static Logger logger = LoggerFactory.getLogger(PropertiesAdapter.class);
 
     /**
-     * @see #PARAM_PROPERTY_SEPARATOR
-     */
-    private String propertySeparator = ".";
-
-    /**
      * @inheritDoc
      */
     public PropertiesAdapter()
@@ -82,10 +77,10 @@ public class PropertiesAdapter extends NativeObjectScriptingAdapter implements A
             String[] propNameValue = rowString.split("=");
 
             // --- Check the property separator in case we're using dot (.)
-            String splitterRegEx = this.propertySeparator;
-            if (this.propertySeparator.equals("."))
+            String splitterRegEx = getPropertySeparator();
+            if (getPropertySeparator().equals("."))
             {
-                splitterRegEx = "\\" + this.propertySeparator;
+                splitterRegEx = "\\" + getPropertySeparator();
             }
 
             List<String> propName =
@@ -125,10 +120,15 @@ public class PropertiesAdapter extends NativeObjectScriptingAdapter implements A
      */
     public void validateParameters() throws ConfigurableException
     {
+
+    }
+
+    private String getPropertySeparator() {
         if (configuration.getParamValue(PARAM_PROPERTY_SEPARATOR) != null)
         {
-            this.propertySeparator = configuration.getParamValue(PARAM_PROPERTY_SEPARATOR);
+            return configuration.getParamValue(PARAM_PROPERTY_SEPARATOR);
         }
+        return ".";
     }
 
     /**
@@ -222,7 +222,7 @@ public class PropertiesAdapter extends NativeObjectScriptingAdapter implements A
                 // --- If it's a Map, append the key to the current path and go down
                 sb.append(
                     getPropertiesAsString(
-                        fullPath + this.propertySeparator,
+                        fullPath + getPropertySeparator(),
                         (Map<String, Object>) value));
             }
             else
