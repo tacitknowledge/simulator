@@ -143,7 +143,7 @@ public class CsvAdapter extends NativeObjectScriptingAdapter implements Adapter
         // --- Only one entry in the root should exist
         if (simulatorPojo.getRoot().size() > 1)
         {
-            String errorMsg = "SimulatorPojo's root should only one Entry for CSV adaptTo";
+            String errorMsg = "SimulatorPojo's root should only one Entry for CSV adaptToOutput";
             throw new FormatAdapterException(errorMsg);
         }
 

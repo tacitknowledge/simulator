@@ -58,7 +58,7 @@ public class XmlAdapter extends NativeObjectScriptingAdapter implements Adapter
     private static Logger logger = LoggerFactory.getLogger(XmlAdapter.class);
 
     /**
-     * The Document object used for XML generation in adaptTo() and helper methods
+     * The Document object used for XML generation in adaptToOutput() and helper methods
      */
     private Document doc;
 

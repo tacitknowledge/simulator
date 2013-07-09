@@ -52,7 +52,7 @@ public class ScriptExecutionServiceTest
         exchange.setIn(message);
 
         // --- Get the data in a strcutured form as a SimulatorPojo
-        Map<String, Object> beans = adapter.generateBeans(exchange);
+        Map<String, Object> beans = adapter.adaptForInput(exchange);
 
         // --- Now, get a ScriptExecutionService and set the language (javascript)
         ScriptExecutionService execServ = new ScriptExecutionService("javascript");

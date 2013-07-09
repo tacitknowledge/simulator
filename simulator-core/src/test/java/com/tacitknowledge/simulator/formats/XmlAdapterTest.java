@@ -52,7 +52,7 @@ public class XmlAdapterTest
     {
         XmlAdapter adapter = new XmlAdapter();
 
-        // --- Lets use the same pojo generated in the generateBeans() method
+        // --- Lets use the same pojo generated in the adaptForInput() method
         try
         {
             CamelContext context = new DefaultCamelContext();

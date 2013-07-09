@@ -26,7 +26,7 @@ public class PlainTextAdapter extends NativeObjectScriptingAdapter
      */
 
     @Override
-    public Map<String, Object> generateBeans(final Exchange exchange) throws FormatAdapterException
+    public Map<String, Object> adaptForInput(final Exchange exchange) throws FormatAdapterException
     {
         String text = exchange.getIn().getBody(String.class);
         Map<String, Object> map = new HashMap<String, Object>();
@@ -36,7 +36,7 @@ public class PlainTextAdapter extends NativeObjectScriptingAdapter
 
 
     @Override
-    public String adaptTo(final Object scriptExecutionResult, final Exchange exchange) throws
+    public String adaptToOutput(final Object scriptExecutionResult, final Exchange exchange) throws
             FormatAdapterException
     {
         return scriptExecutionResult.toString();

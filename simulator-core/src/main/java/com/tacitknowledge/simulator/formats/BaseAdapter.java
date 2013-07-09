@@ -59,7 +59,7 @@ public abstract class BaseAdapter implements Adapter
      * @throws ConfigurableException  If any required parameter is missing.
      * @throws FormatAdapterException If any other error occurs.
      */
-    public Map<String, Object> generateBeans(final Exchange exchange)
+    public Map<String, Object> adaptForInput(final Exchange exchange)
         throws ConfigurableException, FormatAdapterException
     {
         //todo - mws - figure out where to handle validations
@@ -104,7 +104,7 @@ public abstract class BaseAdapter implements Adapter
      * @throws FormatAdapterException If any other error occurs.
      * @inheritDoc
      */
-    public Object adaptTo(final Object scriptExecutionResult, final Exchange exchange)
+    public Object adaptToOutput(final Object scriptExecutionResult, final Exchange exchange)
         throws ConfigurableException, FormatAdapterException
     {
         //todo - mws - figure out where to handle validations

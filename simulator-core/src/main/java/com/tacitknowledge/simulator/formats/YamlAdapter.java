@@ -120,7 +120,7 @@ public class YamlAdapter extends NativeObjectScriptingAdapter implements Adapter
         // --- Only one entry in the root should exist
         if (pojo.getRoot().isEmpty() || pojo.getRoot().size() > 1)
         {
-            String errorMsg = "SimulatorPojo's root should contain only one Entry for YAML adaptTo";
+            String errorMsg = "SimulatorPojo's root should contain only one Entry for YAML adaptToOutput";
             throw new FormatAdapterException(errorMsg);
         }
 

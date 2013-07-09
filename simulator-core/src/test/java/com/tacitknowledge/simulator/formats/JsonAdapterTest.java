@@ -47,7 +47,7 @@ public class JsonAdapterTest
             message.setBody(TestHelper.JSON_DATA);
             exchange.setIn(message);
 
-            adapter.generateBeans(exchange);
+            adapter.adaptForInput(exchange);
             fail("JSON Adapter should throw exception if the required parameters are not provided.");
         }
         catch (Exception fae)

@@ -41,7 +41,7 @@ abstract public class NativeObjectScriptingAdapter extends BaseAdapter{
      * @throws com.tacitknowledge.simulator.ConfigurableException  If any required parameter is missing.
      * @throws com.tacitknowledge.simulator.FormatAdapterException If any other error occurs.
      */
-    public Map<String, Object> generateBeans(final Exchange exchange)
+    public Map<String, Object> adaptForInput(final Exchange exchange)
         throws ConfigurableException, FormatAdapterException
     {
         validateParameters();

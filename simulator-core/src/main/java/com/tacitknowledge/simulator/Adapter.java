@@ -22,7 +22,7 @@ public interface Adapter
      * @throws ConfigurableException  If missing required parameters
      * @see com.tacitknowledge.simulator.formats.BaseAdapter
      */
-    Map<String, Object> generateBeans(Exchange exchange)
+    Map<String, Object> adaptForInput(Exchange exchange)
         throws ConfigurableException, FormatAdapterException;
 
     /**
@@ -36,7 +36,7 @@ public interface Adapter
      *                                or an error occurs during processing.
      * @throws ConfigurableException If any required parameter is missing
      */
-    Object adaptTo(Object scriptExecutionResult, Exchange exchange)
+    Object adaptToOutput(Object scriptExecutionResult, Exchange exchange)
         throws ConfigurableException, FormatAdapterException;
 
     /**

@@ -92,7 +92,7 @@ public class ConversationImpl implements Conversation
     
     public void process(final Exchange exchange) throws Exception
     {
-        Map<String, Object> scriptExecutionBeans = inboundAdapter.generateBeans(exchange);
+        Map<String, Object> scriptExecutionBeans = inboundAdapter.adaptForInput(exchange);
         Object result = null;
         
         for (Scenario scenario : scenarios.values())
@@ -108,7 +108,7 @@ public class ConversationImpl implements Conversation
         }
 
         //result seems odd
-        Object exchangeBody = outboundAdapter.adaptTo(result, exchange);
+        Object exchangeBody = outboundAdapter.adaptToOutput(result, exchange);
         exchange.getOut().setBody(exchangeBody);
     }
 
