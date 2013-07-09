@@ -25,8 +25,7 @@ public class SoapTransport extends HttpTransport
     /**
      * Constructor to initialize parameters
      *
-     * @param bound      Configurable bound
-     * @param parameters - Map of String, String values
+     * @param configurable - Map of String, String values
      */
     public SoapTransport(final Configurable configurable)
     {

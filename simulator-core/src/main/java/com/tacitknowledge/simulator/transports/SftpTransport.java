@@ -19,8 +19,7 @@ public class SftpTransport extends FtpTransport
     
     /**
      * 
-     * @param bound Inbound or Outbound
-     * @param parameters - transport parameters
+     * @param configurable -transport parameters
      */
     public SftpTransport(final Configurable configurable)
     {

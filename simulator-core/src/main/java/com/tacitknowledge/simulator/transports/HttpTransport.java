@@ -48,10 +48,6 @@ public class HttpTransport extends BaseTransport implements Transport
      */
     private static Logger logger = LoggerFactory.getLogger(HttpTransport.class);
 
-    /**
-     * Checks if http transport is used for output
-     */
-    protected boolean isHttpOut = false;
 
     /**
      * Constructor
@@ -92,12 +88,8 @@ public class HttpTransport extends BaseTransport implements Transport
     @Override
     public void validateParameters() throws ConfigurableException
     {
-        if (configurable.getParamValue(PARAM_HTTP_OUT) != null)
-        {
-            this.isHttpOut = Boolean.parseBoolean(configurable.getParamValue(PARAM_HTTP_OUT));
-        }
 
-        if (!this.isHttpOut && configurable.getParamValue(PARAM_RESOURCE_URI) == null
+        if (!this.isHttpOut() && configurable.getParamValue(PARAM_RESOURCE_URI) == null
                 && configurable.getBound() == Configurable.BOUND_OUT)
         {
             throw new ConfigurableException("Resource URI parameter is required");
@@ -111,29 +103,48 @@ public class HttpTransport extends BaseTransport implements Transport
                     + configurable.getParamValue(PARAM_RESOURCE_URI) );
         }
 
-        int count = 0;
-        boolean ssl = false;
-        if(Boolean.parseBoolean(configurable.getParamValue(isSSL))){
-            ssl=true;
-            count++;
-        }
-        
-        if(configurable.getParamValue(KEY_PASSWORD)!=null){
-            count++;
-        }
-        
-        if(configurable.getParamValue(KEY_STORE_FILE)!=null){
-            count++;
-        }
-        
-        if(configurable.getParamValue(STORE_PASSWORD)!=null){
-            count++;
-        }
-        
-        if(ssl && count!=4){
+        if(!isSSLCompletelySpecifiedOrNotAtAll()){
             throw new ConfigurableException( "Ssl requires all of the following parameters: " + 
                     KEY_STORE_FILE + ", " + KEY_PASSWORD + ", " + STORE_PASSWORD);
         }
+
+    }
+
+    private boolean isStorePasswordSpecified() {
+        return configurable.getParamValue(STORE_PASSWORD)!=null;
+    }
+
+    private boolean isKeyStoreFileSpecified() {
+        return configurable.getParamValue(KEY_STORE_FILE) != null;
+    }
+
+    private boolean isKeyPasswordSpecified() {
+        return configurable.getParamValue(KEY_PASSWORD) != null;
+    }
+
+    private boolean isSSL() {
+        return (configurable.getParamValue(isSSL) != null)
+            ? Boolean.parseBoolean(configurable.getParamValue(isSSL))
+            : false;
+    }
+
+    private boolean isSSLCompletelySpecifiedOrNotAtAll() {
+        return (
+                (isSSL() && isKeyPasswordSpecified() && isKeyStoreFileSpecified() && isStorePasswordSpecified())
+                ||
+                (!isSSL() && !isKeyPasswordSpecified() && !isKeyStoreFileSpecified() && !isStorePasswordSpecified())
+
+        );
+
+    }
+
+    protected boolean isHttpOut() {
+        if (configurable.getParamValue(PARAM_HTTP_OUT) != null)
+        {
+            return Boolean.parseBoolean(configurable.getParamValue(PARAM_HTTP_OUT));
+        }
+        return false;
+
     }
 
     /**
@@ -144,15 +155,16 @@ public class HttpTransport extends BaseTransport implements Transport
     {
         // --- If this transport is an HTTP OUT, we just end the Camel route,
         // so we return the result from the execution script as the HTTP response body
-        if (this.isHttpOut)
+        if (isHttpOut())
         {
             return MOCK_RESULT;
         }
 
         // --- 
         StringBuilder sb = new StringBuilder();
-        if(Boolean.parseBoolean(configurable.getParamValue(isSSL))){
+        if(isSSL()){
             sb.append("jetty:https://");
+            setSSLSystemProperties();
         }
         else
         {
@@ -169,23 +181,20 @@ public class HttpTransport extends BaseTransport implements Transport
         sb.append(configurable.getParamValue(PARAM_RESOURCE_URI));
         
         sb.append("?matchOnUriPrefix=true");
-        
-        // ssl parameters are set as system parameters 
-        if(configurable.getParamValue(KEY_PASSWORD)!=null){
-            System.setProperty("org.eclipse.jetty.ssl.keypassword", configurable.getParamValue(KEY_PASSWORD));
-        }
-        
-        if(configurable.getParamValue(KEY_STORE_FILE)!=null){
-            System.setProperty("org.eclipse.jetty.ssl.keystore", configurable.getParamValue(KEY_STORE_FILE));
-        }
-        
-        if(configurable.getParamValue(STORE_PASSWORD)!=null){
-            System.setProperty("org.eclipse.jetty.ssl.password", configurable.getParamValue(STORE_PASSWORD));
-        }
-        
+
+
+
         logger.info("Uri String: {}", sb.toString());
 
         return sb.toString();
     }
-    
+
+    private void setSSLSystemProperties() {
+        // ssl parameters are set as system parameters
+        //todo - mws - eclipse driven jetty only?
+        System.setProperty("org.eclipse.jetty.ssl.keypassword", configurable.getParamValue(KEY_PASSWORD));
+        System.setProperty("org.eclipse.jetty.ssl.keystore", configurable.getParamValue(KEY_STORE_FILE));
+        System.setProperty("org.eclipse.jetty.ssl.password", configurable.getParamValue(STORE_PASSWORD));
+    }
+
 }

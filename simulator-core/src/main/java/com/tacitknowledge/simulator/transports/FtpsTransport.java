@@ -1,7 +1,6 @@
 package com.tacitknowledge.simulator.transports;
 
 import java.lang.annotation.Inherited;
-import java.util.Map;
 
 import com.tacitknowledge.simulator.Configurable;
 import org.slf4j.Logger;
@@ -25,21 +24,6 @@ public class FtpsTransport extends FtpTransport
      * Logger for this class.
      */
     private static Logger logger = LoggerFactory.getLogger(FtpsTransport.class);
-
-    /**
-     * file path for certificate
-     */
-    private String keyFile;
-
-    /**
-     * key password
-     */
-    private String keyPassword;
-
-    /**
-     * private key password
-     */
-    private String privateKeyPassword;
 
     /**
      *  Key Store file.
@@ -133,19 +117,19 @@ public class FtpsTransport extends FtpTransport
         }
 
         // next three parameters are necessary for active mode ftps 
-        if (configurable.getParamValue(KEY_STORE_FILE) != null)
+        if (configSpecifiesKeyStoreFile())
         {
-            options.append(FTP_CLIENT_KEY_STORE_FILE + configurable.getParamValue(KEY_STORE_FILE)).append(AMP);
+            options.append(FTP_CLIENT_KEY_STORE_FILE + getKeyFile()).append(AMP);
         }
-        if (configurable.getParamValue(KEY_STORE_PASSWORD) != null)
+        if (configSpecifiesKeyStorePassword())
         {
-            options.append(FTP_CLIENT_KEY_STORE_PASSWORD + configurable.getParamValue(KEY_STORE_PASSWORD))
+            options.append(FTP_CLIENT_KEY_STORE_PASSWORD + getKeyPassword())
                     .append(AMP);
         }
-        if (configurable.getParamValue(KEY_STORE_KEY_PASSWORD) != null)
+        if (configSpecifiesKeyStoreKeyPassword())
         {
             options.append(
-                    FTP_CLIENT_KEY_STORE_KEY_PASSWORD + configurable.getParamValue(KEY_STORE_KEY_PASSWORD))
+                    FTP_CLIENT_KEY_STORE_KEY_PASSWORD + getPrivateKeyPassword())
                     .append(AMP);
         }
 
@@ -186,34 +170,51 @@ public class FtpsTransport extends FtpTransport
     @Override
     public void validateParameters() throws ConfigurableException
     {
-        boolean activeMode = false;
-        //todo - mws - okay, this is just strange.  Next 20 or so lines need fixing.  I see this stuff in JUnit but
-        // todo - mws - not production code
-        int count = 0;
-        // --- If passed, assign the boolean parameters to instance variables
-        if (configurable.getParamValue(KEY_STORE_FILE) != null)
-        {
-            activeMode = true;
-            ++count;
-        }
-
-        if (configurable.getParamValue(KEY_STORE_PASSWORD) != null)
-        {
-            activeMode = true;
-            ++count;
-        }
-
-        if (configurable.getParamValue(KEY_STORE_KEY_PASSWORD) != null)
-        {
-            activeMode = true;
-            ++count;
-        }
-
-        if (activeMode && count != 3)
+        if (!isKeyStoreInformationCompletelySpecifiedOrNotAtAll()
+        )
         {
             throw new ConfigurableException(REQUIRED_PARAMETERS_MESSAGE + KEY_STORE_FILE + ", "
                     + KEY_STORE_PASSWORD + ", " + KEY_STORE_KEY_PASSWORD);
         }
+
         super.validateParameters();
+
+    }
+
+    private boolean isKeyStoreInformationCompletelySpecifiedOrNotAtAll() {
+        return (//all true
+                configSpecifiesKeyStoreFile()
+                && configSpecifiesKeyStoreKeyPassword()
+                && configSpecifiesKeyStorePassword())
+
+                ||
+                //all false
+                (!configSpecifiesKeyStoreFile()
+                && !configSpecifiesKeyStoreKeyPassword()
+                && !configSpecifiesKeyStorePassword());
+    }
+
+    private boolean configSpecifiesKeyStoreKeyPassword() {
+        return configurable.getParamValue(KEY_STORE_KEY_PASSWORD) != null;
+    }
+
+    private boolean configSpecifiesKeyStorePassword() {
+        return configurable.getParamValue(KEY_STORE_PASSWORD) != null;
+    }
+
+    private boolean configSpecifiesKeyStoreFile() {
+        return configurable.getParamValue(KEY_STORE_FILE) != null;
+    }
+
+    public String getKeyFile() {
+        return configurable.getParamValue(KEY_STORE_FILE);
+    }
+
+    public String getKeyPassword() {
+        return configurable.getParamValue(KEY_STORE_PASSWORD);
+    }
+
+    public String getPrivateKeyPassword() {
+        return configurable.getParamValue(KEY_STORE_KEY_PASSWORD);
     }
 }
