@@ -1,7 +1,5 @@
 
-As of svn commit 2235, the simulator should be entering functional testing for the BB project.  This module
-lacked a README until now.  I'm not going to focus on usage here, but next steps in refactoring
-
+This README is more a generalized todo/next steps list
 Next Steps:
 1. Needs a FullResponseSoapAdapterIntegrationTest similar to what's used on Beaverbrooks
 2. Object lifecycle management and IoC needs review and changes.  This will alter the configuration system.
