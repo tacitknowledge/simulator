@@ -155,9 +155,20 @@ public class FullResponseSoapAdapter extends SoapAdapter implements Adapter
         {
         	return "";
         }
+        /*
+        todo - mws and rusnac - this code seemed buggy to mws, because some of the maps had multiple keys. needs review
+        todo - mws and rusnac - I can see the nesting metnioned in Andy's email, however.  Set a breakpoint
+                todo - and run the FullResponseSoapTransportIntegrationTest.java
         Map<String, Map<String, Map<String, Object>>> operationMap = payload.values().iterator().next();
         Map<String, Map<String, Object>> portMap = operationMap.values().iterator().next();
         return (String) portMap.values().iterator().next().get(RESPONSE_CONTENT_KEY);
+         */
+        //this returns a Map with the SOAP operation as its key.  For the unit test, key is GetBalance
+        Map<String, Map<String, Object>> operationMap = payload.values().iterator().next();
+        //In the unit test, we get 3 entries in the operationMap.  We want the 'response'
+        Map responseMap = operationMap.get("response");
+        //now get the response content
+        return (String) responseMap.get(RESPONSE_CONTENT_KEY);
     }
    
    /**

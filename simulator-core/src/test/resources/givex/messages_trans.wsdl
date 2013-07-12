@@ -1,0 +1,1226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="gapi"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+
+             targetNamespace="https://gapi.givex.com/1.0/messages_trans"
+             xmlns:tns="https://gapi.givex.com/1.0/messages_trans"
+
+             xmlns:gvxCommon="https://gapi.givex.com/1.0/types_common"
+             xmlns:gvxTrans="https://gapi.givex.com/1.0/types_trans">
+
+  <types>
+    <schema xmlns="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="https://gapi.givex.com/1.0/types_trans">
+
+      <import namespace="https://gapi.givex.com/1.0/types_common"
+              schemaLocation="types_common.xsd"/>
+
+      <complexType name="CertTransactionElement">
+        <sequence>
+          <element name="transId"      type="xsd:long" />
+          <element name="user"         type="xsd:string" />
+          <element name="oper"         type="xsd:string" />
+          <element name="transType"    type="xsd:string" />
+          <element name="date"         type="xsd:date" />
+          <element name="amount"       type="xsd:decimal" />
+          <element name="authCode"     type="xsd:string" />
+          <element name="activeFlag"   type="xsd:boolean" />
+          <element name="channelId"    type="xsd:long" />
+        </sequence>
+      </complexType>
+
+      <complexType name="PreAuthTransactionElement">
+        <sequence>
+          <element name="transId"      type="xsd:long" />
+          <element name="user"         type="xsd:string" />
+          <element name="oper"         type="xsd:string" />
+          <element name="date"         type="xsd:date" />
+          <element name="amount"       type="xsd:decimal" />
+          <element name="authCode"     type="xsd:string" />
+          <element name="activeFlag"   type="xsd:boolean" />
+          <element name="channelId"    type="xsd:long" />
+        </sequence>
+      </complexType>
+
+      <complexType name="PointsTransactionElement">
+        <sequence>
+          <element name="transId"      type="xsd:long" />
+          <element name="user"         type="xsd:string" />
+          <element name="oper"         type="xsd:string" />
+          <element name="transType"    type="xsd:string" />
+          <element name="date"         type="xsd:date" />
+          <element name="dateVisit"    type="xsd:date" />
+          <element name="amount"       type="xsd:decimal" />
+          <element name="units"        type="xsd:long" />
+          <element name="pointsBase"   type="xsd:long" />
+          <element name="pointsBonus1" type="xsd:long" />
+          <element name="pointsBonus2" type="xsd:long" />
+          <element name="promoCode"    type="xsd:string" />
+          <element name="tier"         type="xsd:string" />
+          <element name="authCode"     type="xsd:string" />
+          <element name="activeFlag"   type="xsd:boolean" />
+          <element name="channelId"    type="xsd:long" />
+        </sequence>
+      </complexType>
+  
+      <complexType name="OrderInfoElement">
+         <sequence>
+           <element name="orderAddressID"   type="xsd:int" />
+           <element name="orderAmount"      type="xsd:decimal" />
+         </sequence>
+      </complexType>
+     
+      <complexType name="OrderCertInfoElement">
+         <sequence>
+           <element name="orderAddressID"   type="xsd:int" />
+           <element name="givexNumber"      type="xsd:string" />
+           <element name="securityCode"     type="xsd:string" minOccurs="0" />
+         </sequence>
+      </complexType>
+     
+      <complexType name="OrderCertCancelInfoElement">
+          <sequence>
+           <element name="givexNumber"      type="xsd:string" />
+           <element name="certBalance"      type="xsd:decimal" />
+         </sequence>
+      </complexType>
+
+      <simpleType name="HistoryType">
+        <restriction base="xsd:string">
+          <enumeration value="Certificate" />
+          <enumeration value="PreAuth" />
+          <enumeration value="Events" />
+          <enumeration value="Points" />
+        </restriction>
+      </simpleType>
+
+      <element name="GetBalance">
+        <complexType>
+          <sequence>
+            <element name="id"           type="gvxCommon:Identification" />
+            <element name="givexNumber"  type="xsd:string" />
+            <element name="currency"     type="xsd:string" minOccurs="0" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="Balance">
+        <complexType>
+          <sequence>
+            <element name="certBalance"    type="xsd:decimal" />
+            <element name="pointsBalance"  type="xsd:long" />
+            <element name="expiryDate"     type="xsd:string" minOccurs="0" />
+            <element name="securityCode"   type="xsd:string" minOccurs="0" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="GetHistory">
+        <complexType>
+          <sequence>
+            <element name="id"           type="gvxCommon:Identification" />
+            <element name="givexNumber"  type="xsd:string" />
+            <element name="historyType"  type="gvxTrans:HistoryType" />
+            <element name="filter"       type="gvxCommon:FilterElement"
+                minOccurs="0" maxOccurs="unbounded" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="History">
+        <complexType>
+          <sequence>
+            <element name="certBalance"    type="xsd:decimal" />
+            <element name="currency"       type="xsd:string" />
+            <element name="pointsBalance"  type="xsd:long" />
+            <element name="certHist"       type="gvxTrans:CertTransactionElement"
+                minOccurs="0" maxOccurs="unbounded" />
+            <element name="preAuthHist"    type="gvxTrans:PreAuthTransactionElement"
+                minOccurs="0" maxOccurs="unbounded" />
+            <element name="eventHist"      type="gvxCommon:EventElement"
+                minOccurs="0" maxOccurs="unbounded" />
+            <element name="pointsHist"     type="gvxTrans:PointsTransactionElement"
+                minOccurs="0" maxOccurs="unbounded" />
+            <element name="totalRows"      type="xsd:int" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="Redeem">
+        <complexType>
+          <sequence>
+            <element name="id"               type="gvxCommon:Identification" />
+            <element name="reference"        type="xsd:string" />
+            <element name="givexNumber"      type="xsd:string" />
+            <element name="amount"           type="xsd:decimal" />
+            <element name="securityCode"     type="xsd:string" minOccurs="0" />
+            <element name="totalCheckAmount" type="xsd:decimal" minOccurs="0" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="RedeemResponse">
+        <complexType>
+          <sequence>
+            <element name="authCode"      type="xsd:long" />
+            <element name="certBalance"   type="xsd:decimal" />
+            <element name="expiryDate"    type="xsd:string" minOccurs="0" />
+            <element name="securityCode"  type="xsd:string" minOccurs="0" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="RedeemForced">
+        <complexType>
+          <sequence>
+            <element name="id"               type="gvxCommon:Identification" />
+            <element name="reference"        type="xsd:string" />
+            <element name="givexNumber"      type="xsd:string" />
+            <element name="amount"           type="xsd:decimal" />
+            <element name="securityCode"     type="xsd:string" minOccurs="0" />
+            <element name="totalCheckAmount" type="xsd:decimal" minOccurs="0" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="RedeemForcedResponse">
+        <complexType>
+          <sequence>
+            <element name="authCode"      type="xsd:long" />
+            <element name="amount"        type="xsd:decimal" />
+            <element name="certBalance"   type="xsd:decimal" />
+            <element name="expiryDate"    type="xsd:string" minOccurs="0" />
+            <element name="securityCode"  type="xsd:string" minOccurs="0" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="CashBack">
+        <complexType>
+          <sequence>
+            <element name="id"            type="gvxCommon:Identification" />
+            <element name="reference"     type="xsd:string" />
+            <element name="givexNumber"   type="xsd:string" />
+            <element name="amount"        type="xsd:decimal" />
+            <element name="securityCode"  type="xsd:string" minOccurs="0" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="CashBackResponse">
+        <complexType>
+          <sequence>
+            <element name="authCode"      type="xsd:long" />
+            <element name="certBalance"   type="xsd:decimal" />
+            <element name="expiryDate"    type="xsd:string" minOccurs="0" />
+            <element name="securityCode"  type="xsd:string" minOccurs="0" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="CashBackForced">
+        <complexType>
+          <sequence>
+            <element name="id"            type="gvxCommon:Identification" />
+            <element name="reference"     type="xsd:string" />
+            <element name="givexNumber"   type="xsd:string" />
+            <element name="amount"        type="xsd:decimal" />
+            <element name="securityCode"  type="xsd:string" minOccurs="0" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="CashBackForcedResponse">
+        <complexType>
+          <sequence>
+            <element name="authCode"      type="xsd:long" />
+            <element name="amount"        type="xsd:decimal" />
+            <element name="certBalance"   type="xsd:decimal" />
+            <element name="expiryDate"    type="xsd:string" minOccurs="0" />
+            <element name="securityCode"  type="xsd:string" minOccurs="0" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="PreAuth">
+        <complexType>
+          <sequence>
+            <element name="id"            type="gvxCommon:Identification" />
+            <element name="reference"     type="xsd:string" />
+            <element name="givexNumber"   type="xsd:string" />
+            <element name="amount"        type="xsd:decimal" />
+            <element name="securityCode"  type="xsd:string" minOccurs="0" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="PreAuthResponse">
+        <complexType>
+          <sequence>
+            <element name="authCode"      type="xsd:long" />
+            <element name="amount"        type="xsd:decimal" />
+            <element name="certBalance"   type="xsd:decimal" />
+            <element name="expiryDate"    type="xsd:string" minOccurs="0" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="PostAuth">
+        <complexType>
+          <sequence>
+            <element name="id"            type="gvxCommon:Identification" />
+            <element name="reference"     type="xsd:string" />
+            <element name="givexNumber"   type="xsd:string" />
+            <element name="amount"        type="xsd:decimal" />
+            <element name="authCode"      type="xsd:long" />
+            <element name="securityCode"  type="xsd:string" minOccurs="0" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="PostAuthResponse">
+        <complexType>
+          <sequence>
+            <element name="authCode"      type="xsd:long" />
+            <element name="amount"        type="xsd:decimal" />
+            <element name="certBalance"   type="xsd:decimal" />
+            <element name="expiryDate"    type="xsd:string" minOccurs="0" />
+            <element name="securityCode"  type="xsd:string" minOccurs="0" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="Register">
+        <complexType>
+          <sequence>
+            <element name="id"            type="gvxCommon:Identification" />
+            <element name="reference"     type="xsd:string" />
+            <element name="amount"        type="xsd:decimal" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="RegisterResponse">
+        <complexType>
+          <sequence>
+            <element name="authCode"      type="xsd:long" />
+            <element name="givexNumber"   type="xsd:string" />
+            <element name="certBalance"   type="xsd:decimal" />
+            <element name="expiryDate"    type="xsd:string" minOccurs="0" />
+            <element name="securityCode"  type="xsd:string" minOccurs="0" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="Activate">
+        <complexType>
+          <sequence>
+            <element name="id"               type="gvxCommon:Identification" />
+            <element name="reference"        type="xsd:string" />
+            <element name="givexNumber"      type="xsd:string" />
+            <element name="amount"           type="xsd:decimal" />
+            <element name="totalCheckAmount" type="xsd:decimal" minOccurs="0" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="ActivateResponse">
+        <complexType>
+          <sequence>
+            <element name="authCode"      type="xsd:long" />
+            <element name="certBalance"   type="xsd:decimal" />
+            <element name="expiryDate"    type="xsd:string" minOccurs="0" />
+            <element name="securityCode"  type="xsd:string" minOccurs="0" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="Increment">
+        <complexType>
+          <sequence>
+            <element name="id"               type="gvxCommon:Identification" />
+            <element name="reference"        type="xsd:string" />
+            <element name="givexNumber"      type="xsd:string" />
+            <element name="amount"           type="xsd:decimal" />
+            <element name="securityCode"     type="xsd:string" minOccurs="0" />
+            <element name="totalCheckAmount" type="xsd:decimal" minOccurs="0" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="IncrementResponse">
+        <complexType>
+          <sequence>
+            <element name="authCode"      type="xsd:long" />
+            <element name="certBalance"   type="xsd:decimal" />
+            <element name="expiryDate"    type="xsd:string" minOccurs="0" />
+            <element name="securityCode"  type="xsd:string" minOccurs="0" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="Adjust">
+        <complexType>
+          <sequence>
+            <element name="id"            type="gvxCommon:Identification" />
+            <element name="reference"     type="xsd:string" />
+            <element name="givexNumber"   type="xsd:string" />
+            <element name="amount"        type="xsd:decimal" />
+            <element name="securityCode"  type="xsd:string" minOccurs="0" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="AdjustResponse">
+        <complexType>
+          <sequence>
+            <element name="authCode"      type="xsd:long" />
+            <element name="certBalance"   type="xsd:decimal" />
+            <element name="expiryDate"    type="xsd:string" minOccurs="0" />
+            <element name="securityCode"  type="xsd:string" minOccurs="0" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="MerchandiseCredit">
+        <complexType>
+          <sequence>
+            <element name="id"            type="gvxCommon:Identification" />
+            <element name="reference"     type="xsd:string" />
+            <element name="givexNumber"   type="xsd:string" />
+            <element name="amount"        type="xsd:decimal" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="MerchandiseCreditResponse">
+        <complexType>
+          <sequence>
+            <element name="authCode"      type="xsd:long" />
+            <element name="certBalance"   type="xsd:decimal" />
+            <element name="expiryDate"    type="xsd:string" minOccurs="0" />
+            <element name="securityCode"  type="xsd:string" minOccurs="0" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="Cancel">
+        <complexType>
+          <sequence>
+            <element name="id"            type="gvxCommon:Identification" />
+            <element name="reference"     type="xsd:string" />
+            <element name="givexNumber"   type="xsd:string" />
+            <element name="amount"        type="xsd:decimal" />
+            <element name="authCode"      type="xsd:string" minOccurs="0" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="CancelResponse">
+        <complexType>
+          <sequence>
+            <element name="authCode"      type="xsd:long" />
+            <element name="certBalance"   type="xsd:decimal" />
+            <element name="expiryDate"    type="xsd:string" minOccurs="0" />
+            <element name="securityCode"  type="xsd:string" minOccurs="0" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="Reversal">
+        <complexType>
+          <sequence>
+            <element name="id"            type="gvxCommon:Identification" />
+            <element name="reference"     type="xsd:string" />
+            <element name="givexNumber"   type="xsd:string" />
+            <element name="amount"        type="xsd:decimal" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="ReversalResponse">
+        <complexType>
+          <sequence>
+            <element name="authCode"      type="xsd:long" />
+            <element name="certBalance"   type="xsd:decimal" />
+            <element name="expiryDate"    type="xsd:string" minOccurs="0" />
+            <element name="securityCode"  type="xsd:string" minOccurs="0" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="PointsIssue">
+        <complexType>
+          <sequence>
+            <element name="id"            type="gvxCommon:Identification" />
+            <element name="reference"     type="xsd:string" />
+            <element name="givexNumber"   type="xsd:string" />
+            <element name="amount"        type="xsd:decimal" />
+            <element name="units"         type="xsd:long" />
+            <element name="promoCode"     type="xsd:string" minOccurs="0" />
+            <element name="skuList"       type="gvxCommon:SKUElement"
+                minOccurs="0" maxOccurs="unbounded" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="PointsIssueResponse">
+        <complexType>
+          <sequence>
+            <element name="authCode"      type="xsd:long" />
+            <element name="points"        type="xsd:long" />
+            <element name="pointsBalance" type="xsd:long" />
+            <element name="certBalance"   type="xsd:decimal" />
+            <element name="expiryDate"    type="xsd:string" minOccurs="0" />
+            <element name="firstName"     type="xsd:string" minOccurs="0" />
+            <element name="middleName"    type="xsd:string" minOccurs="0" />
+            <element name="lastName"      type="xsd:string" minOccurs="0" />
+            <element name="securityCode"  type="xsd:string" minOccurs="0" />
+            <element name="skuList"       type="gvxCommon:SKUElement" minOccurs="0" maxOccurs="unbounded" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="PointsRedeem">
+        <complexType>
+          <sequence>
+            <element name="id"            type="gvxCommon:Identification" />
+            <element name="reference"     type="xsd:string" />
+            <element name="givexNumber"   type="xsd:string" />
+            <element name="points"        type="xsd:long" />
+            <element name="securityCode"  type="xsd:string" minOccurs="0" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="PointsRedeemResponse">
+        <complexType>
+          <sequence>
+            <element name="authCode"      type="xsd:long" />
+            <element name="pointsBalance" type="xsd:long" />
+            <element name="certBalance"   type="xsd:decimal" />
+            <element name="expiryDate"    type="xsd:string" minOccurs="0" />
+            <element name="firstName"     type="xsd:string" minOccurs="0" />
+            <element name="middleName"    type="xsd:string" minOccurs="0" />
+            <element name="lastName"      type="xsd:string" minOccurs="0" />
+            <element name="securityCode"  type="xsd:string" minOccurs="0" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="PointsCancel">
+        <complexType>
+          <sequence>
+            <element name="id"            type="gvxCommon:Identification" />
+            <element name="reference"     type="xsd:string" />
+            <element name="givexNumber"   type="xsd:string" />
+            <element name="amount"        type="xsd:decimal" />
+            <element name="units"         type="xsd:long" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="PointsCancelResponse">
+        <complexType>
+          <sequence>
+            <element name="authCode"      type="xsd:long" />
+            <element name="points"        type="xsd:long" />
+            <element name="pointsBalance" type="xsd:long" />
+            <element name="certBalance"   type="xsd:decimal" />
+            <element name="expiryDate"    type="xsd:string" minOccurs="0" />
+            <element name="firstName"     type="xsd:string" minOccurs="0" />
+            <element name="middleName"    type="xsd:string" minOccurs="0" />
+            <element name="lastName"      type="xsd:string" minOccurs="0" />
+            <element name="securityCode"  type="xsd:string" minOccurs="0" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="BalanceTransfer">
+        <complexType>
+          <sequence>
+            <element name="id"              type="gvxCommon:Identification" />
+            <element name="reference"       type="xsd:string" />
+            <element name="givexNumberFrom" type="xsd:string" />
+            <element name="givexNumberTo"   type="xsd:string" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="BalanceTransferResponse">
+        <complexType>
+          <sequence>
+            <element name="pointsAuthCodeFrom" type="xsd:long" />
+            <element name="pointsAuthCodeTo"   type="xsd:long" />
+            <element name="certAuthCodeFrom"   type="xsd:long" />
+            <element name="certAuthCodeTo"     type="xsd:long" />
+            <element name="pointsBalance"      type="xsd:long" />
+            <element name="certBalance"        type="xsd:decimal" />
+            <element name="expiryDate"         type="xsd:string" minOccurs="0" />
+            <element name="securityCode"       type="xsd:string" minOccurs="0" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="TerminalRegister">
+        <complexType>
+          <sequence>
+            <element name="id"            type="gvxCommon:Identification" />
+            <element name="serialNumber"  type="xsd:string" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="TerminalRegisterResponse">
+        <complexType>
+          <sequence>
+            <element name="attributes"    type="gvxCommon:AttributeElement"
+                minOccurs="0" maxOccurs="unbounded" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="CashOut">
+        <complexType>
+          <sequence>
+            <element name="id"            type="gvxCommon:Identification" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="CashOutResponse">
+        <complexType>
+          <sequence>
+            <element name="cashOutId"     type="xsd:long" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="VerifyCustomer">
+        <complexType>
+          <sequence>
+            <element name="id"            type="gvxCommon:Identification" />
+            <element name="givexNumber"   type="xsd:string" />
+            <element name="emailAddress"  type="xsd:string" minOccurs="0" />
+            <element name="firstName"     type="xsd:string" minOccurs="0" />
+            <element name="lastName"      type="xsd:string" minOccurs="0" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="Customer">
+        <complexType>
+          <sequence>
+            <element name="verifyResponse"     type="xsd:long" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="CWSNewAccount">
+        <complexType>
+          <sequence>
+            <element name="id"                  type="gvxCommon:Identification" />
+            <element name="givexNumber"         type="xsd:string" />
+            <element name="customerType"        type="xsd:string" />
+            <element name="customerLogin"       type="xsd:string" />
+            <element name="customerTitle"       type="xsd:string" />
+            <element name="customerFirstName"   type="xsd:string" />
+            <element name="customerMiddleName"  type="xsd:string" />
+            <element name="customerLastName"    type="xsd:string" />
+            <element name="customerGender"      type="xsd:string" />
+            <element name="customerBirthdate"   type="xsd:date" />
+            <element name="customerAddress"     type="xsd:string" />
+            <element name="customerCity"        type="xsd:string" />
+            <element name="customerProvince"    type="xsd:string" minOccurs="0" />
+            <element name="customerCounty"      type="xsd:string" />
+            <element name="customerCountry"     type="xsd:string" />
+            <element name="customerPostalCode"  type="xsd:string" />
+            <element name="customerPhone"       type="xsd:string" />
+            <element name="customerDiscount"    type="xsd:decimal" />
+            <element name="promotionOptIn"      type="xsd:boolean" />
+            <element name="customerEmail"       type="xsd:string" minOccurs="0" />
+            <element name="customerPassword"    type="xsd:string" minOccurs="0" />
+            <element name="customerMobile"      type="xsd:string" minOccurs="0" />
+            <element name="customerCompany"     type="xsd:string" minOccurs="0" />
+            <element name="securityCode"        type="xsd:string" minOccurs="0" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="CWSNewAccountResponse">
+        <complexType>
+          <sequence>
+            <element name="customerId"          type="xsd:int" />
+            <element name="customerFirstName"   type="xsd:string" />
+            <element name="customerLastName"    type="xsd:string" />
+            <element name="customerRegDate"     type="xsd:date" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="CWSUpdateAccount">
+        <complexType>
+          <sequence>
+            <element name="id"                  type="gvxCommon:Identification" />
+            <element name="customerLogin"       type="xsd:string" />
+            <element name="customerNewLogin"    type="xsd:string" minOccurs="0" />
+            <element name="customerPassword"    type="xsd:string" />
+            <element name="customerTitle"       type="xsd:string" />
+            <element name="customerFirstName"   type="xsd:string" />
+            <element name="customerMiddleName"  type="xsd:string" />
+            <element name="customerLastName"    type="xsd:string" />
+            <element name="customerGender"      type="xsd:string" />
+            <element name="customerBirthdate"   type="xsd:date" />
+            <element name="customerAddress"     type="xsd:string" />
+            <element name="customerCity"        type="xsd:string" />
+            <element name="customerProvince"    type="xsd:string" minOccurs="0" />
+            <element name="customerCounty"      type="xsd:string" />
+            <element name="customerCountry"     type="xsd:string" />
+            <element name="customerPostalCode"  type="xsd:string" />
+            <element name="customerEmail"       type="xsd:string" />
+            <element name="customerPhone"       type="xsd:string" />
+            <element name="customerDiscount"    type="xsd:decimal" />
+            <element name="promotionOptIn"      type="xsd:boolean" />
+            <element name="customerMobile"      type="xsd:string" minOccurs="0" />
+            <element name="customerCompany"     type="xsd:string" minOccurs="0" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="CWSUpdateAccountResponse">
+        <complexType>
+          <sequence>
+            <element name="customerId"          type="xsd:int" />
+            <element name="customerTitle"       type="xsd:string" />
+            <element name="customerFirstName"   type="xsd:string" />
+            <element name="customerMiddleName"  type="xsd:string" />
+            <element name="customerLastName"    type="xsd:string" />
+            <element name="customerGender"      type="xsd:string" />
+            <element name="customerBirthdate"   type="xsd:date" />
+            <element name="customerAddress"     type="xsd:string" />
+            <element name="customerCity"        type="xsd:string" />
+            <element name="customerProvince"    type="xsd:string" minOccurs="0" />
+            <element name="customerCounty"      type="xsd:string" />
+            <element name="customerCountry"     type="xsd:string" />
+            <element name="customerPostalCode"  type="xsd:string" />
+            <element name="customerEmail"       type="xsd:string" />
+            <element name="customerPhone"       type="xsd:string" />
+            <element name="customerDiscount"    type="xsd:decimal" />
+            <element name="promotionOptIn"      type="xsd:boolean" />
+            <element name="customerMobile"      type="xsd:string" minOccurs="0" />
+            <element name="customerCompany"     type="xsd:string" minOccurs="0" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="CWSAccountCardList">
+        <complexType>
+          <sequence>
+            <element name="id"                  type="gvxCommon:Identification" />
+            <element name="customerLogin"       type="xsd:string" />
+            <element name="customerPassword"    type="xsd:string" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <complexType name="CardListElement">
+        <sequence>
+          <element name="cardISO"               type="xsd:string" />
+          <element name="serialNumber"          type="xsd:int" />
+          <element name="cardStatus"            type="xsd:int" />
+        </sequence>
+      </complexType>
+
+      <element name="CWSAccountCardListResponse">
+        <complexType>
+          <sequence>
+            <element name="customerId"          type="xsd:int" />
+            <element name="customerFirstName"   type="xsd:string" />
+            <element name="customerLastName"    type="xsd:string" />
+            <element name="cardList"            type="gvxTrans:CardListElement"
+                minOccurs="0" maxOccurs="unbounded" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="CWSLostCard">
+        <complexType>
+          <sequence>
+            <element name="id"                  type="gvxCommon:Identification" />
+            <element name="customerLogin"       type="xsd:string" />
+            <element name="customerPassword"    type="xsd:string" />
+            <element name="cardISO"             type="xsd:string" />
+            <element name="serialNumber"        type="xsd:int" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="CWSLostCardResponse">
+        <complexType>
+          <sequence>
+            <element name="customerId"          type="xsd:int" />
+            <element name="customerFirstName"   type="xsd:string" />
+            <element name="customerLastName"    type="xsd:string" />
+            <element name="cardISO"             type="xsd:string" />
+            <element name="serialNumber"        type="xsd:int" />
+            <element name="lostDate"            type="xsd:date" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="CWSAccountInfo">
+        <complexType>
+          <sequence>
+            <element name="id"                  type="gvxCommon:Identification" />
+            <element name="customerLogin"       type="xsd:string" />
+            <element name="customerPassword"    type="xsd:string" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="CWSAccountInfoResponse">
+        <complexType>
+          <sequence>
+            <element name="customerId"          type="xsd:int" />
+            <element name="registrationDate"    type="xsd:string" />
+            <element name="customerType"        type="xsd:string" />
+            <element name="customerLogin"       type="xsd:string" />
+            <element name="customerTitle"       type="xsd:string" />
+            <element name="customerFirstName"   type="xsd:string" />
+            <element name="customerMiddleName"  type="xsd:string" />
+            <element name="customerLastName"    type="xsd:string" />
+            <element name="customerGender"      type="xsd:string" />
+            <element name="customerBirthdate"   type="xsd:string" />
+            <element name="customerAddress"     type="xsd:string" />
+            <element name="customerCity"        type="xsd:string" />
+            <element name="customerProvince"    type="xsd:string" minOccurs="0" />
+            <element name="customerCounty"      type="xsd:string" />
+            <element name="customerCountry"     type="xsd:string" />
+            <element name="customerPostalCode"  type="xsd:string" />
+            <element name="customerPhone"       type="xsd:string" />
+            <element name="customerDiscount"    type="xsd:decimal" />
+            <element name="promotionOptIn"      type="xsd:boolean" />
+            <element name="customerEmail"       type="xsd:string" />
+            <element name="customerMobile"      type="xsd:string" minOccurs="0" />
+            <element name="customerCompany"     type="xsd:string" minOccurs="0" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="CWSAddCard">
+        <complexType>
+          <sequence>
+            <element name="id"                  type="gvxCommon:Identification" />
+            <element name="customerLogin"       type="xsd:string" />
+            <element name="customerPassword"    type="xsd:string" />
+            <element name="givexNumber"         type="xsd:string" />
+            <element name="securityCode"        type="xsd:string" minOccurs="0" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="CWSAddCardResponse">
+        <complexType>
+          <sequence>
+            <element name="customerId"          type="xsd:int" />
+            <element name="customerFirstName"   type="xsd:string" />
+            <element name="customerLastName"    type="xsd:string" />
+            <element name="cardList"            type="gvxTrans:CardListElement"
+                minOccurs="0" maxOccurs="unbounded" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="CWSRemoveCard">
+        <complexType>
+          <sequence>
+            <element name="id"                  type="gvxCommon:Identification" />
+            <element name="customerLogin"       type="xsd:string" />
+            <element name="customerPassword"    type="xsd:string" />
+            <element name="cardISO"             type="xsd:string" />
+            <element name="serialNumber"        type="xsd:int" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="CWSRemoveCardResponse">
+        <complexType>
+          <sequence>
+            <element name="customerId"          type="xsd:int" />
+            <element name="customerFirstName"   type="xsd:string" />
+            <element name="customerLastName"    type="xsd:string" />
+            <element name="cardList"            type="gvxTrans:CardListElement"
+                minOccurs="0" maxOccurs="unbounded" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="CWSUpdatePassword">
+        <complexType>
+          <sequence>
+            <element name="id"                  type="gvxCommon:Identification" />
+            <element name="customerLogin"       type="xsd:string" />
+            <element name="customerPassword"    type="xsd:string" />
+            <element name="newPassword"         type="xsd:string" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="CWSUpdatePasswordResponse">
+        <complexType>
+          <sequence>
+            <element name="customerId"          type="xsd:int" />
+            <element name="customerFirstName"   type="xsd:string" />
+            <element name="customerLastName"    type="xsd:string" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="CWSResetPassword">
+        <complexType>
+          <sequence>
+            <element name="id"                  type="gvxCommon:Identification" />
+            <element name="customerLogin"       type="xsd:string" />
+            <element name="customerPassword"    type="xsd:string" />
+            <element name="customerEmail"       type="xsd:string" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="CWSResetPasswordResponse">
+        <complexType>
+          <sequence>
+            <element name="customerId"          type="xsd:int" />
+            <element name="customerFirstName"   type="xsd:string" />
+            <element name="customerLastName"    type="xsd:string" />
+            <element name="customerEmail"       type="xsd:string" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="CWSGiftCardOrder">
+        <complexType>
+          <sequence>
+            <element name="id"                  type="gvxCommon:Identification" />
+            <element name="customerOrderRef"    type="xsd:string" minOccurs="0" />
+            <element name="orderSender"         type="xsd:string" minOccurs="0" />
+            <element name="confirmationEmail"   type="xsd:string" minOccurs="0" />
+            <element name="orderTotal"          type="xsd:decimal" />
+            <element name="shippingOrderInfo"   type="gvxCommon:ShippingOrderInfoElement"
+            	   minOccurs="0" maxOccurs="unbounded" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="CWSGiftCardOrderResponse">
+        <complexType>
+          <sequence>
+            <element name="orderInfo" type="gvxTrans:OrderInfoElement" 
+                minOccurs="0" maxOccurs="unbounded" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="CWSEcertOrder">
+        <complexType>
+          <sequence>
+            <element name="id"                    type="gvxCommon:Identification" />
+            <element name="customerOrderRef"      type="xsd:string" minOccurs="0" />
+            <element name="orderSender"           type="xsd:string" minOccurs="0" />
+            <element name="confirmationEmail"     type="xsd:string" minOccurs="0" />
+            <element name="orderTotal"            type="xsd:decimal" />
+            <element name="ecertOrderInfo"        type="gvxCommon:EcertOrderInfoElement"
+            	   minOccurs="0" maxOccurs="unbounded" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="CWSEcertOrderResponse">
+        <complexType>
+          <sequence>
+            <element name="orderCertInfo" type="gvxTrans:OrderCertInfoElement"
+            	   minOccurs="0" maxOccurs="unbounded" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="CWSCancelOrder">
+        <complexType>
+          <sequence>
+            <element name="id"                    type="gvxCommon:Identification" />
+            <element name="orderAddressID"        type="xsd:int" />
+            <element name="cancelReason"          type="xsd:string" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="CWSCancelOrderResponse">
+        <complexType>
+          <sequence>
+            <element name="orderAddressID"        type="xsd:int" />
+            <element name="orderCertCancelInfo"   type="gvxTrans:OrderCertCancelInfoElement" 
+                minOccurs="0" maxOccurs="unbounded" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="CWSLogin">
+        <complexType>
+          <sequence>
+            <element name="id"                  type="gvxCommon:Identification" />
+            <element name="customerLogin"       type="xsd:string" minOccurs="0" />
+            <element name="customerRef"         type="xsd:string" minOccurs="0" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="CWSLoginResponse">
+        <complexType>
+          <sequence>
+            <element name="customerId"          type="xsd:int" />
+            <element name="customerRef"         type="xsd:string" />
+            <element name="customerFirstName"   type="xsd:string" />
+            <element name="customerLastName"    type="xsd:string" />
+            <element name="cwsToken"            type="xsd:string" />
+          </sequence>
+        </complexType>
+      </element>
+      
+      <element name="CWSLogout">
+        <complexType>
+          <sequence>
+            <element name="id"                  type="gvxCommon:Identification" />
+            <element name="cwsToken"            type="xsd:string" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="CWSLogoutResponse">
+        <complexType>
+          <sequence>
+            <element name="customerId"          type="xsd:int" />
+          </sequence>
+        </complexType>
+      </element> 
+
+    </schema>
+  </types>
+
+  <message name="getBalanceRequest">
+    <part name="request"  element="gvxTrans:GetBalance" />
+  </message>
+  <message name="getBalanceResponse">
+    <part name="response" element="gvxTrans:Balance"/>
+  </message>
+  <message name="getHistoryRequest">
+    <part name="request"  element="gvxTrans:GetHistory" />
+  </message>
+  <message name="getHistoryResponse">
+    <part name="response" element="gvxTrans:History" />
+  </message>
+  <message name="redeemRequest">
+    <part name="request"  element="gvxTrans:Redeem" />
+  </message>
+  <message name="redeemResponse">
+    <part name="response" element="gvxTrans:RedeemResponse" />
+  </message>
+  <message name="redeemForcedRequest">
+    <part name="request"  element="gvxTrans:RedeemForced" />
+  </message>
+  <message name="redeemForcedResponse">
+    <part name="response" element="gvxTrans:RedeemForcedResponse" />
+  </message>
+  <message name="cashBackRequest">
+    <part name="request"  element="gvxTrans:CashBack" />
+  </message>
+  <message name="cashBackResponse">
+    <part name="response" element="gvxTrans:CashBackResponse" />
+  </message>
+  <message name="cashBackForcedRequest">
+    <part name="request"  element="gvxTrans:CashBackForced" />
+  </message>
+  <message name="cashBackForcedResponse">
+    <part name="response" element="gvxTrans:CashBackForcedResponse" />
+  </message>
+  <message name="preAuthRequest">
+    <part name="request"  element="gvxTrans:PreAuth" />
+  </message>
+  <message name="preAuthResponse">
+    <part name="response" element="gvxTrans:PreAuthResponse" />
+  </message>
+  <message name="postAuthRequest">
+    <part name="request"  element="gvxTrans:PostAuth" />
+  </message>
+  <message name="postAuthResponse">
+    <part name="response" element="gvxTrans:PostAuthResponse" />
+  </message>
+  <message name="registerRequest">
+    <part name="request"  element="gvxTrans:Register" />
+  </message>
+  <message name="registerResponse">
+    <part name="response" element="gvxTrans:RegisterResponse" />
+  </message>
+  <message name="activateRequest">
+    <part name="request"  element="gvxTrans:Activate" />
+  </message>
+  <message name="activateResponse">
+    <part name="response" element="gvxTrans:ActivateResponse" />
+  </message>
+  <message name="incrementRequest">
+    <part name="request"  element="gvxTrans:Increment" />
+  </message>
+  <message name="incrementResponse">
+    <part name="response" element="gvxTrans:IncrementResponse" />
+  </message>
+  <message name="adjustRequest">
+    <part name="request"  element="gvxTrans:Adjust" />
+  </message>
+  <message name="adjustResponse">
+    <part name="response" element="gvxTrans:AdjustResponse" />
+  </message>
+  <message name="merchandiseCreditRequest">
+    <part name="request"  element="gvxTrans:MerchandiseCredit" />
+  </message>
+  <message name="merchandiseCreditResponse">
+    <part name="response" element="gvxTrans:MerchandiseCreditResponse" />
+  </message>
+  <message name="cancelRequest">
+    <part name="request"  element="gvxTrans:Cancel" />
+  </message>
+  <message name="cancelResponse">
+    <part name="response" element="gvxTrans:CancelResponse" />
+  </message>
+  <message name="reversalRequest">
+    <part name="request"  element="gvxTrans:Reversal" />
+  </message>
+  <message name="reversalResponse">
+    <part name="response" element="gvxTrans:ReversalResponse" />
+  </message>
+  <message name="pointsIssueRequest">
+    <part name="request"  element="gvxTrans:PointsIssue" />
+  </message>
+  <message name="pointsIssueResponse">
+    <part name="response" element="gvxTrans:PointsIssueResponse" />
+  </message>
+  <message name="pointsRedeemRequest">
+    <part name="request"  element="gvxTrans:PointsRedeem" />
+  </message>
+  <message name="pointsRedeemResponse">
+    <part name="response" element="gvxTrans:PointsRedeemResponse" />
+  </message>
+  <message name="pointsCancelRequest">
+    <part name="request"  element="gvxTrans:PointsCancel" />
+  </message>
+  <message name="pointsCancelResponse">
+    <part name="response" element="gvxTrans:PointsCancelResponse" />
+  </message>
+  <message name="balanceTransferRequest">
+    <part name="request"  element="gvxTrans:BalanceTransfer" />
+  </message>
+  <message name="balanceTransferResponse">
+    <part name="response" element="gvxTrans:BalanceTransferResponse" />
+  </message>
+  <message name="terminalRegisterRequest">
+    <part name="request"  element="gvxTrans:TerminalRegister" />
+  </message>
+  <message name="terminalRegisterResponse">
+    <part name="response" element="gvxTrans:TerminalRegisterResponse" />
+  </message>
+  <message name="cashOutRequest">
+    <part name="request"  element="gvxTrans:CashOut" />
+  </message>
+  <message name="cashOutResponse">
+    <part name="response" element="gvxTrans:CashOutResponse" />
+  </message>
+  <message name="verifyCustomerRequest">
+    <part name="request"  element="gvxTrans:VerifyCustomer" />
+  </message>
+  <message name="verifyCustomerResponse">
+    <part name="response" element="gvxTrans:Customer" />
+  </message>
+  <message name="CWSNewAccountRequest">
+    <part name="request"  element="gvxTrans:CWSNewAccount" />
+  </message>
+  <message name="CWSNewAccountResponse">
+    <part name="response" element="gvxTrans:CWSNewAccountResponse" />
+  </message>
+  <message name="CWSUpdateAccountRequest">
+    <part name="request"  element="gvxTrans:CWSUpdateAccount" />
+  </message>
+  <message name="CWSUpdateAccountResponse">
+    <part name="response" element="gvxTrans:CWSUpdateAccountResponse" />
+  </message>
+  <message name="CWSAccountCardListRequest">
+    <part name="request"  element="gvxTrans:CWSAccountCardList" />
+  </message>
+  <message name="CWSAccountCardListResponse">
+    <part name="response" element="gvxTrans:CWSAccountCardListResponse" />
+  </message>
+  <message name="CWSLostCardRequest">
+    <part name="request"  element="gvxTrans:CWSLostCard" />
+  </message>
+  <message name="CWSLostCardResponse">
+    <part name="response" element="gvxTrans:CWSLostCardResponse" />
+  </message>
+  <message name="CWSAccountInfoRequest">
+    <part name="request"  element="gvxTrans:CWSAccountInfo" />
+  </message>
+  <message name="CWSAccountInfoResponse">
+    <part name="response" element="gvxTrans:CWSAccountInfoResponse" />
+  </message>
+  <message name="CWSAddCardRequest">
+    <part name="request"  element="gvxTrans:CWSAddCard" />
+  </message>
+  <message name="CWSAddCardResponse">
+    <part name="response" element="gvxTrans:CWSAddCardResponse" />
+  </message>
+  <message name="CWSRemoveCardRequest">
+    <part name="request"  element="gvxTrans:CWSRemoveCard" />
+  </message>
+  <message name="CWSRemoveCardResponse">
+    <part name="response" element="gvxTrans:CWSRemoveCardResponse" />
+  </message>
+  <message name="CWSUpdatePasswordRequest">
+    <part name="request"  element="gvxTrans:CWSUpdatePassword" />
+  </message>
+  <message name="CWSUpdatePasswordResponse">
+    <part name="response" element="gvxTrans:CWSUpdatePasswordResponse" />
+  </message>
+  <message name="CWSResetPasswordRequest">
+    <part name="request"  element="gvxTrans:CWSResetPassword" />
+  </message>
+  <message name="CWSResetPasswordResponse">
+    <part name="response" element="gvxTrans:CWSResetPasswordResponse" />
+  </message>
+  <message name="CWSGiftCardOrderRequest">
+    <part name="request"  element="gvxTrans:CWSGiftCardOrder" />
+  </message>
+  <message name="CWSGiftCardOrderResponse">
+    <part name="response" element="gvxTrans:CWSGiftCardOrderResponse" />
+  </message>
+  <message name="CWSEcertOrderRequest">
+    <part name="request"  element="gvxTrans:CWSEcertOrder" />
+  </message>
+  <message name="CWSEcertOrderResponse">
+    <part name="response" element="gvxTrans:CWSEcertOrderResponse" />
+  </message>
+  <message name="CWSCancelOrderRequest">
+    <part name="request"  element="gvxTrans:CWSCancelOrder" />
+  </message>
+  <message name="CWSCancelOrderResponse">
+    <part name="response" element="gvxTrans:CWSCancelOrderResponse" />
+  </message> 
+  <message name="CWSLoginRequest">
+    <part name="request"  element="gvxTrans:CWSLogin" />
+  </message>
+  <message name="CWSLoginResponse">
+    <part name="response" element="gvxTrans:CWSLoginResponse" /> 
+  </message>
+  <message name="CWSLogoutRequest">
+    <part name="request"  element="gvxTrans:CWSLogout" />
+  </message>
+  <message name="CWSLogoutResponse">
+    <part name="response" element="gvxTrans:CWSLogoutResponse" /> 
+  </message>
+</definitions>
