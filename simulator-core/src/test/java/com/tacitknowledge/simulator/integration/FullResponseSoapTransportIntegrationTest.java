@@ -58,26 +58,25 @@ public class FullResponseSoapTransportIntegrationTest {
 
 
 
-
-    private static final String SOAP_FILE = "givex_get_balance.xml";
-    private static final String CRITERIA = "payload.GetBalance != null "
+    //success case data
+    private static final String SOAP_FILE_SUCCESS = "givex_get_balance.xml";
+    private static final String CRITERIA_SUCCESS = "payload.GetBalance != null "
             + "&& payload.GetBalance.givexNumber.indexOf(\"111122223333\")==0";
-    private static final String EXECUTION = "var port = payload.GetBalance.response;\n" +
-            "port.responseContent = '<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\" \\\n" +
-            "xmlns:gvxGlobal=\"https://gapi.givex.com/1.0/types_global\" \\\n" +
-            "xmlns:gvxTrans=\"https://gapi.givex.com/1.0/types_trans\" \\\n" +
-            "SOAP-ENV:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">\\\n" +
-            "<SOAP-ENV:Body>\\\n" +
-            "<gvxTrans:Balance>\\\n" +
-            "<certBalance>' + payload.GetBalance.givexNumber.substr(0,4) + '</certBalance>\\\n" +
-            "<pointsBalance></pointsBalance>\\\n" +
-            "<expiryDate></expiryDate>\\\n" +
-            "<securityCode>' + payload.GetBalance.givexNumber.substr(0, 4) + '</securityCode>\\\n" +
-            "</gvxTrans:Balance>\\\n" +
-            "</SOAP-ENV:Body>\\\n" +
-            "</SOAP-ENV:Envelope>';\n" +
-            "\n" +
-            "payload;";
+    /**
+     * set this up in a static private method at end of class to make beginning of class more readable
+     */
+    private static final String EXECUTION_SUCCESS = checkBalanceExecutionScript();
+
+
+    //fault case data
+    private static final String SOAP_FILE_FAULT = "givex_pre_auth_fail.xml";
+    private static final String CRITERIA_FOR_FAULT = "payload.PreAuth != null " +
+            "&& payload.PreAuth.givexNumber.indexOf(\"1111222233330000\") == 0";
+    /**
+     * set this up in a static private method at end of class to make beginning of class more readable
+     */
+    private static final String EXECUTION_FAULT = checkFaultExecutionScript();
+
 
 
     private static final String DESTINATION = "http://localhost:7000/1.0/trans";
@@ -116,12 +115,12 @@ public class FullResponseSoapTransportIntegrationTest {
     @Test
     public void successfulSoapTest() throws Exception
     {
-        String criteriaScript  = CRITERIA;
-        String executionScript = EXECUTION;
+        String criteriaScript  = CRITERIA_SUCCESS;
+        String executionScript = EXECUTION_SUCCESS;
         setupConversation(criteriaScript, executionScript);
 
         //Make web service call
-        SOAPMessage reply = connection.call(createMessage(SOAP_FILE), DESTINATION);
+        SOAPMessage reply = connection.call(createMessage(SOAP_FILE_SUCCESS), DESTINATION);
 
         //Test Validation Section
         SOAPBody body = reply.getSOAPBody();
@@ -143,6 +142,26 @@ public class FullResponseSoapTransportIntegrationTest {
 
 
         }
+    }
+    @SuppressWarnings("rawtypes")
+    @Test
+    public void faultPreAuthSoapTest() throws Exception
+    {
+        String criteriaScript  = CRITERIA_FOR_FAULT;
+        String executionScript = EXECUTION_FAULT;
+        setupConversation(criteriaScript, executionScript);
+
+        //Make web service call
+        SOAPMessage reply = connection.call(createMessage(SOAP_FILE_FAULT), DESTINATION);
+
+        //Test Validation Section
+        SOAPBody body = reply.getSOAPBody();
+        Iterator iter = body.getChildElements();
+        SOAPElement element;
+        element = (SOAPElement) iter.next();
+
+        // --- As a fault we expect a Fault in the aliased SOAP namespace
+        assertEquals("SOAP-ENV:Fault", element.getTagName());
     }
 
     private SOAPMessage createMessage(String messageFile) throws Exception
@@ -196,4 +215,45 @@ public class FullResponseSoapTransportIntegrationTest {
         //Activate the route
         routeManager.activate(conv);
     }
+
+    private static String checkBalanceExecutionScript() {
+        return "var port = payload.GetBalance.response;\n" +
+                "port.responseContent = '<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\" \\\n" +
+                "xmlns:gvxGlobal=\"https://gapi.givex.com/1.0/types_global\" \\\n" +
+                "xmlns:gvxTrans=\"https://gapi.givex.com/1.0/types_trans\" \\\n" +
+                "SOAP-ENV:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">\\\n" +
+                "<SOAP-ENV:Body>\\\n" +
+                "<gvxTrans:Balance>\\\n" +
+                "<certBalance>' + payload.GetBalance.givexNumber.substr(0,4) + '</certBalance>\\\n" +
+                "<pointsBalance></pointsBalance>\\\n" +
+                "<expiryDate></expiryDate>\\\n" +
+                "<securityCode>' + payload.GetBalance.givexNumber.substr(0, 4) + '</securityCode>\\\n" +
+                "</gvxTrans:Balance>\\\n" +
+                "</SOAP-ENV:Body>\\\n" +
+                "</SOAP-ENV:Envelope>';\n" +
+                "\n" +
+                "payload;";
+    }
+
+    private static String checkFaultExecutionScript() {
+        return "var port = payload.PreAuth.response;\n" +
+                "port.responseContent = '<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\" \\\n" +
+                "SOAP-ENV:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">\\\n" +
+                "<SOAP-ENV:Body>\\\n" +
+                "<SOAP-ENV:Fault>\\\n" +
+                "<faultcode>SOAP-ENV:Server</faultcode>\\\n" +
+                "<faultstring>TransErr</faultstring>\\\n" +
+                "<detail xmlns:ns1=\"https://gapi.givex.com/1.0/types_global\">\\\n" +
+                "<ns1:GivexFaultMessage>\\\n" +
+                "<message>Failed to authenticate gift card</message>\\\n" +
+                "</ns1:GivexFaultMessage>\\\n" +
+                "</detail>\\\n" +
+                "</SOAP-ENV:Fault>\\\n" +
+                "</SOAP-ENV:Body>\\\n" +
+                "</SOAP-ENV:Envelope>';\n" +
+                "\n" +
+                "payload;";
+    }
+
+
 }

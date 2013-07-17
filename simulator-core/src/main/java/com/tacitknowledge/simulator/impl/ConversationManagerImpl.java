@@ -48,33 +48,24 @@ public class ConversationManagerImpl implements ConversationManager
      */
     public void loadConversations(String systemsDirectoryPath) throws Exception
     {
+        //conversations variable is for comparing changed vs current instance level conversations
         Map<String, Conversation> conversations =
             conversationLoader.loadAllConversationsInDirectory(systemsDirectoryPath);
 
-        // the first time conversations are just loaded/activated.
         if (noConversationsActivated())
         {
             logger.debug("1st call of conversations load. Enabling all of them ...");
             activateConversations(conversations.values());
-            activeConversations = conversations;
         }
         else
         {
-            boolean deletedAnyConversations =
-                checkAndDeleteConversationsThatDoNotExistAnymore(conversations);
-
-            boolean changedAnyConversations = checkAndReactivateConversationsChanged(conversations);
-
-            boolean addedNewConversations = checkAndActivateNewConversations(conversations);
-
-            boolean conversationChanged =
-                deletedAnyConversations || changedAnyConversations || addedNewConversations;
-
-            if (conversationChanged)
-            {
-                activeConversations = conversations;
-            }
+            checkAndDeleteConversationsThatDoNotExistAnymore(conversations);
+            checkAndReactivateConversationsChanged(conversations);
+            checkAndActivateNewConversations(conversations);
         }
+        //now swap in new conversations for old
+        activeConversations = conversations;
+
     }
 
     /**
