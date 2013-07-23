@@ -62,6 +62,7 @@ public class XmlAdapter extends NativeObjectScriptingAdapter implements Adapter
      * Determines if when reading from the source XML document, namespace should be included
      * as part of the key names in the SimulatorPojo
      */
+    //todo - mws - this should probably be final as its set at config/instantiation.  Low priority
     private boolean useFullyQualifiedNodeNames = true;
 
     /**
