@@ -57,10 +57,6 @@ public class XmlAdapter extends NativeObjectScriptingAdapter implements Adapter
      */
     private static Logger logger = LoggerFactory.getLogger(XmlAdapter.class);
 
-    /**
-     * The Document object used for XML generation in adaptToOutput() and helper methods
-     */
-    private Document doc;
 
     /**
      * Determines if when reading from the source XML document, namespace should be included
@@ -120,7 +116,7 @@ public class XmlAdapter extends NativeObjectScriptingAdapter implements Adapter
             InputSource is = new InputSource();
             is.setCharacterStream(new StringReader(o));
 
-            doc = db.parse(is);
+            Document doc = db.parse(is);
 
             // --- Well-formatted Xml should have a single root, right?
             Element docElem = doc.getDocumentElement();
@@ -173,7 +169,7 @@ public class XmlAdapter extends NativeObjectScriptingAdapter implements Adapter
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
 
-            doc = db.newDocument();
+            Document doc = db.newDocument();
 
             // --- Generate the XML document - In XmlAdapter,
             // the only element in root is guaranteed to be a Map
@@ -189,7 +185,7 @@ public class XmlAdapter extends NativeObjectScriptingAdapter implements Adapter
                 doc.appendChild(
                         getStructuredElement(
                                 rootTagName,
-                                (Map<String, Object>) entry.getValue()));
+                                (Map<String, Object>) entry.getValue(), doc));
             }
 
             // --- Serialize the generated XML document
@@ -328,7 +324,8 @@ public class XmlAdapter extends NativeObjectScriptingAdapter implements Adapter
      * @throws FormatAdapterException If any error occurs
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    protected Element getStructuredElement(final String elemName, final Map<String, Object> childs)
+    protected Element getStructuredElement(final String elemName, final Map<String, Object> childs,
+                                           final Document doc)
         throws FormatAdapterException
     {
         Element element = doc.createElement(elemName);
@@ -343,7 +340,7 @@ public class XmlAdapter extends NativeObjectScriptingAdapter implements Adapter
                 // --- ...a Map, get the structured element
                 child = getStructuredElement(
                         entry.getKey(),
-                        (Map<String, Object>) entry.getValue());
+                        (Map<String, Object>) entry.getValue(), doc);
             }
             else if (entry.getValue() instanceof List)
             {
@@ -360,12 +357,12 @@ public class XmlAdapter extends NativeObjectScriptingAdapter implements Adapter
                             newElName = "anonymous-list";
                         }
                         element.appendChild(
-                                getStructuredElement(newElName, (Map<String, Object>) item));
+                                getStructuredElement(newElName, (Map<String, Object>) item, doc));
                     }
                     else if (item instanceof List)
                     {
                         // --- If it's a recurring list, get an anonymously-name-elements list
-                        element.appendChild(getListElement(entry.getKey(), (List) item));
+                        element.appendChild(getListElement(entry.getKey(), (List) item, doc));
                     }
                     else
                     {
@@ -376,7 +373,7 @@ public class XmlAdapter extends NativeObjectScriptingAdapter implements Adapter
                         {
                             newElName = "anonymous-list-element";
                         }
-                        element.appendChild(getTextElement(newElName, item.toString()));
+                        element.appendChild(getTextElement(newElName, item.toString(), doc));
                     }
                 }
                 // --- We don't return a child Element here,
@@ -386,7 +383,7 @@ public class XmlAdapter extends NativeObjectScriptingAdapter implements Adapter
             else
             {
                 // ...a String (should be), add a text element
-                child = getTextElement(entry.getKey(), entry.getValue().toString());
+                child = getTextElement(entry.getKey(), entry.getValue().toString(), doc);
             }
             // --- Append the returned child to the current Element
             element.appendChild(child);
@@ -403,7 +400,7 @@ public class XmlAdapter extends NativeObjectScriptingAdapter implements Adapter
      * @throws FormatAdapterException If any error occurs
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    private Element getListElement(final String elemName, final List childs)
+    private Element getListElement(final String elemName, final List childs, final Document doc)
         throws FormatAdapterException
     {
         Element element = doc.createElement(elemName);
@@ -417,16 +414,16 @@ public class XmlAdapter extends NativeObjectScriptingAdapter implements Adapter
                 // --- ...a Map, get the structured element
                 child = getStructuredElement(
                         "list-element",
-                        (Map<String, Object>) o);
+                        (Map<String, Object>) o, doc);
             }
             else if (o instanceof List)
             {
-                child = getListElement("list-element", (List) o);
+                child = getListElement("list-element", (List) o, doc);
             }
             else
             {
                 // ...a String (should be), add a text element
-                child = getTextElement("list-element", o.toString());
+                child = getTextElement("list-element", o.toString(), doc);
             }
             // --- Append the returned child to the current Element
             element.appendChild(child);
@@ -442,7 +439,7 @@ public class XmlAdapter extends NativeObjectScriptingAdapter implements Adapter
      * @return The XML Element containing the TextNode
      * @throws FormatAdapterException If any error occurs
      */
-    private Element getTextElement(final String elemName, final String text)
+    private Element getTextElement(final String elemName, final String text, final Document doc)
         throws FormatAdapterException
     {
         Node textNode = doc.createTextNode(text);
