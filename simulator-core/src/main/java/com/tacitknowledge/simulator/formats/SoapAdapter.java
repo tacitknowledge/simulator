@@ -99,16 +99,16 @@ public class SoapAdapter extends XmlAdapter implements Adapter
     /**
      * Soap Factory object
      */
-    private SOAPFactory soapFactory;
+    protected  SOAPFactory soapFactory;
     /**
      * Message factory object
      */
-    private MessageFactory messageFactory;
+    protected  MessageFactory messageFactory;
 
     /**
      * Key for the root where to contain the SOAP message's payload
      */
-    private String payloadKey = DEFAULT_PAYLOAD_KEY;
+    protected String payloadKey = DEFAULT_PAYLOAD_KEY;
 
     /**
      * WSDL service definition.
@@ -118,16 +118,16 @@ public class SoapAdapter extends XmlAdapter implements Adapter
     /**
      *  Payload NS
      */
-    private String payloadNS;
+    protected String payloadNS;
     /**
      *  Payload NSUri
      */
-    private String payloadNSUri;
+    protected  String payloadNSUri;
 
     /**
      * SOAP message body
      */
-    private SOAPMessage soapMessage;
+    protected SOAPMessage soapMessage;
 
     /**
      * Available operations defined in the provided WSDL.

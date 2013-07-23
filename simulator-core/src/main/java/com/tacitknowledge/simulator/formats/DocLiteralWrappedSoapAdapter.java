@@ -115,32 +115,6 @@ public class DocLiteralWrappedSoapAdapter extends SoapAdapter implements Adapter
      */
     private static Logger logger = LoggerFactory.getLogger(DocLiteralWrappedSoapAdapter.class);
 
-    /**
-     * Soap Factory object
-     */
-    private SOAPFactory soapFactory;
-    /**
-     * Message factory object
-     */
-    private MessageFactory messageFactory;
-
-    /**
-     * Key for the root where to contain the SOAP message's payload
-     */
-    private String payloadKey = DEFAULT_PAYLOAD_KEY;
-    /**
-     *  Payload NS
-     */
-    private String payloadNS;
-    /**
-     *  Payload NSUri
-     */
-    private String payloadNSUri;
-
-    /**
-     * SOAP message body
-     */
-    private SOAPMessage soapMessage;
 
 
     /**
