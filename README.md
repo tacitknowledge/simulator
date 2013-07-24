@@ -1,4 +1,5 @@
 
+
 This README is more a generalized todo/next steps list
 
 Adapters are mostly threadsafe now, as long as the convention to only change instance variables at factory instantiation

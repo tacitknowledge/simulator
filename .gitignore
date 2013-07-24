@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Maven	
 target
 
@@ -40,3 +41,11 @@ nb-configuration.xml
 # Derby
 devBootcampDS/
 derby.log
+
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
