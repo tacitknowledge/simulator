@@ -49,3 +49,9 @@ derby.log
 *.war
 *.ear
 
+
+#working directories
+simulator-core/src/main/resources/inbox/
+simulator-core/src/main/resources/outbox/
+simulator-core.log
+simulator-core.log.*
