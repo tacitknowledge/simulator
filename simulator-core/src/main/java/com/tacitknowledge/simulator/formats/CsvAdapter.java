@@ -51,14 +51,6 @@ public class CsvAdapter extends NativeObjectScriptingAdapter implements Adapter
 
 
     /**
-     * List of column names of the CSV being processed.
-     * Used only if isFirstRowHeader is true
-     */
-    //todo - mws - this doesn't seem threadsafe.  Not a high priority right now if using different instances
-    // todo - mws - gets set with values in two places, oddly.  probably for inbound and outbound
-    private List<String> colNames;
-
-    /**
      * @inheritDoc
      */
     public CsvAdapter()
@@ -99,12 +91,12 @@ public class CsvAdapter extends NativeObjectScriptingAdapter implements Adapter
         {
             logger.debug("Expecting first row as headers. Getting header names");
 
-            colNames = getRowAsList(rows[0].trim());
+            List<String> colNames = getRowAsList(rows[0].trim());
 
             // --- Now, populate the pojos using the col names as attribute names
             for (int i = 1; i < rows.length; i++)
             {
-                rowObjects.add(getRowAsMap(rows[i].trim()));
+                rowObjects.add(getRowAsMap(colNames,rows[i].trim()));
             }
         }
         else
@@ -152,16 +144,18 @@ public class CsvAdapter extends NativeObjectScriptingAdapter implements Adapter
             (List<Map<String, Object>>) simulatorPojo.getRoot()
                         .get(configuration.getParamValue(PARAM_CSV_CONTENT));
 
+
+        List<String> colNames = getColumnsFromKeys(list.get(0).keySet());
         // --- If using first row as headers, get the headers from the first row's keys
         if (isFirstRowHeader())
         {
-            sb1.append(getHeadersFromKeys(list.get(0).keySet())).append(LINE_SEP);
+            sb1.append(getDelimitedHeaderFromColumns(colNames)).append(LINE_SEP);
         }
 
         // --- Iterate through each list item
         for (int i = 0; i < list.size(); i++)
         {
-            sb1.append(getValuesFromMap(list.get(i)));
+            sb1.append(getValuesFromMap(colNames,list.get(i)));
 
             if (i < (list.size() - 1))
             {
@@ -221,7 +215,7 @@ public class CsvAdapter extends NativeObjectScriptingAdapter implements Adapter
      * @param row The row values as a String, separated by #columnSeparator
      * @return The Map populated with the given column keys and row values
      */
-    private Map<String, String> getRowAsMap(final String row)
+    private Map<String, String> getRowAsMap(final List<String> colNames, final String row)
     {
         Map<String, String> rowMap = new HashMap<String, String>();
 
@@ -256,16 +250,15 @@ public class CsvAdapter extends NativeObjectScriptingAdapter implements Adapter
     }
 
     /**
-     * @param keySet The key set where to get the header names from
+     * @param colNames The column names to get the delimited header string from
      * @return A String containing the key names, separated by #columnSeparator
      */
-    private String getHeadersFromKeys(final Set<String> keySet)
+    private String getDelimitedHeaderFromColumns(final List<String> colNames)
     {
         StringBuilder sb = new StringBuilder();
-        colNames = new ArrayList<String>();
 
         boolean firstKey = true;
-        for (String key : keySet)
+        for (String column : colNames)
         {
             // ---
             if (firstKey)
@@ -276,19 +269,31 @@ public class CsvAdapter extends NativeObjectScriptingAdapter implements Adapter
             {
                 sb.append(getColumnSeparator());
             }
-            colNames.add(key);
-            sb.append(key);
+
+            sb.append(column);
         }
 
         return sb.toString();
     }
+    /**
+     * @param keySet The key set where to get the header names from
+     * @return A String containing the key names, separated by #columnSeparator
+     */
+    private List<String> getColumnsFromKeys(final Set<String> keySet)
+    {
+        List<String> colNames = new ArrayList<String>();
+        colNames.addAll(keySet);
+        return colNames;
+    }
+
+
 
     /**
      * @param row The Map representing a CSV row
      * @return A String containing the row values, separated by #columnSeparator
      */
     @SuppressWarnings("unchecked")
-    private String getValuesFromMap(final Map<String, Object> row)
+    private String getValuesFromMap(final List<String> colNames,final Map<String, Object> row)
     {
         StringBuilder sb = new StringBuilder();
         // --- If using first-row headers, use them for keeping columns in synch

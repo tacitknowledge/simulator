@@ -193,7 +193,7 @@ public class DocLiteralWrappedSoapAdapter extends SoapAdapter implements Adapter
             soapFactory = SOAPFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
             messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
 
-            soapMessage = messageFactory.createMessage();
+            SOAPMessage soapMessage = messageFactory.createMessage();
             SOAPBody soapBody = soapMessage.getSOAPBody();
 
             // --- First things first. Check if we got a fault string...
@@ -202,7 +202,7 @@ public class DocLiteralWrappedSoapAdapter extends SoapAdapter implements Adapter
                     && !StringUtils.isEmpty((String) fault.get(FAULT_STRING)))
             {
                 // --- If we do, we'll return a SOAP FAULT instead of a regular payload
-                addFaultToResponse(
+                addFaultToResponse(soapMessage,
                 		(String) fault.get(FAULT_CODE),
                 		(String) fault.get(FAULT_STRING),
                 		(String) fault.get(FAULT_ACTOR),
@@ -603,8 +603,11 @@ public class DocLiteralWrappedSoapAdapter extends SoapAdapter implements Adapter
      * @param detailWrapper object containing information about fault detail
      * @throws SOAPException If any SOAP error occurs
      */
-    private void addFaultToResponse(final String code, final String string, final String actor,
-    		final XmlObjectWrapper detailWrapper)
+    private void addFaultToResponse(final SOAPMessage soapMessage,
+                                    final String code,
+                                    final String string,
+                                    final String actor,
+    		                        final XmlObjectWrapper detailWrapper)
         throws SOAPException
     {
         SOAPFault fault = soapMessage.getSOAPBody().addFault();

@@ -118,20 +118,19 @@ public class SoapAdapter extends XmlAdapter implements Adapter
     /**
      *  Payload NS
      */
+    //todo - mws - this is set up when the WSDL is read so does not change. should probably be final with injection
     protected String payloadNS;
     /**
      *  Payload NSUri
      */
+    //todo - mws - this is set up when the WSDL is read so does not change. should probably be final with injection
     protected  String payloadNSUri;
 
-    /**
-     * SOAP message body
-     */
-    protected SOAPMessage soapMessage;
 
     /**
      * Available operations defined in the provided WSDL.
      */
+    //todo - mws - this is set up when the WSDL is read so does not change. should probably be final with injection
     protected Map<String, BindingOperation> availableOps = new HashMap<String, BindingOperation>();
 
     /**
@@ -229,7 +228,7 @@ public class SoapAdapter extends XmlAdapter implements Adapter
             soapFactory = SOAPFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
             messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
 
-            soapMessage = messageFactory.createMessage();
+            SOAPMessage soapMessage = messageFactory.createMessage();
             SOAPBody soapBody = soapMessage.getSOAPBody();
 
             // --- First things first. Check if we got a fault string...
@@ -238,7 +237,7 @@ public class SoapAdapter extends XmlAdapter implements Adapter
                     && !StringUtils.isEmpty(fault.get(FAULT_STRING)))
             {
                 // --- If we do, we'll return a SOAP FAULT instead of a regular payload
-                addFaultToResponse(
+                addFaultToResponse(soapMessage,
                         fault.get(FAULT_CODE),
                         fault.get(FAULT_STRING),
                         fault.get(FAULT_ACTOR));
@@ -246,7 +245,7 @@ public class SoapAdapter extends XmlAdapter implements Adapter
             else
             {
                 // --- Validate the result method and parameters
-                if (validateOperationsAndParameters(payload))
+                if (validateOperationsAndParameters(soapMessage,  payload))
                 {
                     // --- If validation was successful,
                     // remove the fault object
@@ -416,7 +415,7 @@ public class SoapAdapter extends XmlAdapter implements Adapter
             Map<String, Map> payload = (Map<String, Map>) getStructuredChilds(body);
 
             // --- Check that the passed methods/parameters are WSDL-valid
-            validateOperationsAndParameters(payload);
+            validateOperationsAndParameters(message, payload);
 
             pojo.getRoot().put(payloadKey, addResponseParametersAndFault(payload));
         }
@@ -507,7 +506,7 @@ public class SoapAdapter extends XmlAdapter implements Adapter
      * @throws SOAPException If any SOAP generation error occurs
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    private boolean validateOperationsAndParameters(final Map<String, Map> payload)
+    private boolean validateOperationsAndParameters(final SOAPMessage soapMessage, final Map<String, Map> payload)
         throws FormatAdapterException, SOAPException
     {
         try {
@@ -564,7 +563,7 @@ public class SoapAdapter extends XmlAdapter implements Adapter
                     // missing params/parts
                     if (configuration.getBound() == Configurable.BOUND_OUT)
                     {
-                        addFaultToResponse("Sender", errorMsg, null);
+                        addFaultToResponse(soapMessage, "Sender", errorMsg, null);
                         return false;
                     }
                     throw new FormatAdapterException(errorMsg);
@@ -634,7 +633,10 @@ public class SoapAdapter extends XmlAdapter implements Adapter
      * @param actor The fault actor that caused the fault.
      * @throws SOAPException If any SOAP error occurs
      */
-    private void addFaultToResponse(final String code, final String string, final String actor)
+    private void addFaultToResponse(final SOAPMessage soapMessage,
+                                    final String code,
+                                    final String string,
+                                    final String actor)
         throws SOAPException
     {
         SOAPFault fault = soapMessage.getSOAPBody().addFault();
