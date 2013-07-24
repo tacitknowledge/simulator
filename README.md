@@ -1,5 +1,5 @@
 
-This was migrated from svn.tacitknowledge.com:/common/trunk/simulator at revision number 1493
+This was migrated from svn.tacitknowledge.com:/common/trunk/simulator from revision numbers 1493 to 2258.
 
 This README is more a generalized todo/next steps list
 
