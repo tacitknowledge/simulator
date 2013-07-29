@@ -156,16 +156,7 @@ public class FullResponseSoapAdapter extends SoapAdapter implements Adapter
         	return "";
         }
         /*
-        todo - mws and rusnac - this commented out and replaced code seemed buggy to mws,
-        todo -    because some of the maps had multiple keys. needs review
-        todo - mws and rusnac - I can see the nesting metnioned in Andy's email, however.  Set a breakpoint
-                todo - and run the FullResponseSoapTransportIntegrationTest.java
-        Map<String, Map<String, Map<String, Object>>> operationMap = payload.values().iterator().next();
-        Map<String, Map<String, Object>> portMap = operationMap.values().iterator().next();
-        return (String) portMap.values().iterator().next().get(RESPONSE_CONTENT_KEY);
 
-        todo - mws - comment on the above. I set up a success and fault test.  using the operation map seems to
-        todo -     handle things properly.
          */
         final String soapOperationKey = payload.keySet().iterator().next();
         //this returns a Map with the SOAP operation as its key.  For the unit test, key is GetBalance
@@ -179,7 +170,8 @@ public class FullResponseSoapAdapter extends SoapAdapter implements Adapter
     private String findResponsePartNameFromOperations(String operationKey) {
         String result = null;
         BindingOperation availableOp = availableOps.get(operationKey);
-        //TODO - mws - can there ever be more than one part in our response? Its "response" even for faults
+        //TODO - mws - can there ever be more than one part in our response? Right now we cover the entire response
+        //todo          in the scenario, so we shouldn't need more parts unless simulating a multi-part soap service.
         Map<String, Part> parts =
                     availableOp.getOperation().getOutput().getMessage().getParts();
         for (Part part : parts.values()) {
@@ -188,28 +180,7 @@ public class FullResponseSoapAdapter extends SoapAdapter implements Adapter
         return result;
     }
 
-    /*
-        for (Map.Entry<String, Map> methodEntry : payload.entrySet())
-        {
-            Map<String, Object> methodParams = methodEntry.getValue();
 
-            BindingOperation availableOp = availableOps.get(methodEntry.getKey());
-
-            // --- Get the response parameters and add them to the current method
-            Map<String, Part> parts =
-                    availableOp.getOperation().getOutput().getMessage().getParts();
-
-            for (Part part : parts.values())
-            {
-                if (!methodParams.containsKey(part.getName()))
-                {
-                    methodParams.put(part.getName(), new HashMap());
-                }
-            }
-        }
-
-
-     */
    
    /**
      *
