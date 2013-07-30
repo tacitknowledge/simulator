@@ -40,6 +40,15 @@ public class FullResponseSoapTransportIntegrationTest {
 
     static Map<String, String> inboundParams = new HashMap<String, String>();
     static {
+
+
+        inboundParams.put(ConversationFactory.PASS_RATE,"1.0");
+        inboundParams.put(ConversationFactory.DEMAND_TIME,"1000");
+        inboundParams.put(ConversationFactory.SERVICE_TIMEOUT,"1200");
+        inboundParams.put(ConversationFactory.POOL_CAPACITY,"2");
+        inboundParams.put(ConversationFactory.MAX_QUEUE,"3");
+
+
         inboundParams.put("type","http");
         inboundParams.put("format","soapFullResponse");
         inboundParams.put("host","localhost");
