@@ -1,5 +1,6 @@
 package com.tacitknowledge.simulator.camel;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import com.tacitknowledge.simulator.*;
@@ -176,7 +177,7 @@ public class RouteManagerTest extends SimulatorCamelTestSupportBase
         }
 
         public Configurable getConfigurable() {
-            return null;  //To change body of implemented methods use File | Settings | File Templates.
+            return new BaseConfigurable(new HashMap<String, String>());  //To change body of implemented methods use File | Settings | File Templates.
         }
     }
 }
