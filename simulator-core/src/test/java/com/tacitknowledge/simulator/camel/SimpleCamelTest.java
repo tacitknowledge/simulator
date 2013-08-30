@@ -1,7 +1,7 @@
 package com.tacitknowledge.simulator.camel;
 
 import com.tacitknowledge.simulator.BaseConfigurable;
-import com.tacitknowledge.simulator.TestHelper;
+import com.tacitknowledge.simulator.TestFileIOHelper;
 import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.transports.FileTransport;
 import org.apache.camel.CamelContext;
@@ -68,7 +68,7 @@ public class SimpleCamelTest
 
             context.addRoutes(builder);
 
-            File orig = new File(TestHelper.ORIGINAL_FILES_PATH + FILE_NAME);
+            File orig = new File(TestFileIOHelper.ORIGINAL_FILES_PATH + FILE_NAME);
             assertTrue(orig.exists());
 
             // --- Don't assert on these, rather just delete them
@@ -83,7 +83,7 @@ public class SimpleCamelTest
                 copy.delete();
             }
 
-            TestHelper.copyFile(orig, copy);
+            TestFileIOHelper.copyFile(orig, copy);
 
             // --- Wait 5 seconds
             Thread.sleep(10 * 1000);

@@ -333,7 +333,6 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
             @Override
             public long getIboundModifiedDate()
             {
-                // TODO Auto-generated method stub
                 return date1;
             }
         };
@@ -343,7 +342,6 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
             @Override
             public long getIboundModifiedDate()
             {
-                // TODO Auto-generated method stub
                 return date2;
             }
         };
@@ -637,7 +635,6 @@ public class ConversationManagerImplTest extends SimulatorCamelTestSupportBase
         @Override
         public long getLastModifiedDate()
         {
-            // TODO Auto-generated method stub
             return scenario.getLastModifiedDate()+100l;
         }
     }

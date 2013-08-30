@@ -44,8 +44,8 @@ public class SoapTransportIntegrationTest {
     private static final String SOAP_FILE = "soap_test.xml";
     private static final String COMPLEX_SOAP_FILE = "complex_soap_test.xml";
 
-    private String testWSDLFileName = TestHelper.RESOURCES_PATH + "HelloService.wsdl";
-    private String complexWSDLFileName = TestHelper.RESOURCES_PATH + "OrderService.wsdl";
+    private String testWSDLFileName = TestFileIOHelper.RESOURCES_PATH + "HelloService.wsdl";
+    private String complexWSDLFileName = TestFileIOHelper.RESOURCES_PATH + "OrderService.wsdl";
 
     private static final String DESTINATION = "http://0.0.0.0:7000/soapService";
     private static final String RESPONSE_GREETING = "HELLLLLLLOOWWWWWW";
@@ -213,7 +213,7 @@ public class SoapTransportIntegrationTest {
         MessageFactory messageFactory =
                 MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
         InputStream is = new ByteArrayInputStream(
-                TestHelper.readFile(TestHelper.ORIGINAL_FILES_PATH + messageFile).getBytes("UTF-8"));
+                TestFileIOHelper.readFile(TestFileIOHelper.ORIGINAL_FILES_PATH + messageFile).getBytes("UTF-8"));
 
         SOAPMessage message = messageFactory.createMessage(null, is);
 

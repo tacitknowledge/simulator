@@ -35,7 +35,7 @@ public class SoapAdapterTest
 
     private Map<String, String> params;
     private SoapAdapter adapter;
-    private String defaultWSDLFileName = TestHelper.RESOURCES_PATH + WSDL_FILE;
+    private String defaultWSDLFileName = TestFileIOHelper.RESOURCES_PATH + WSDL_FILE;
     private StringBuilder testFileName;
 
     /**
@@ -52,7 +52,7 @@ public class SoapAdapterTest
         adapter = new SoapAdapter();
         setupSoapAdapter();
 
-        testFileName = new StringBuilder(TestHelper.ORIGINAL_FILES_PATH);
+        testFileName = new StringBuilder(TestFileIOHelper.ORIGINAL_FILES_PATH);
     }
 
     @Ignore("may remove this test and delay resource download failure until later.  " +
@@ -262,7 +262,7 @@ public class SoapAdapterTest
             throws Exception
     {
         message.setBody(
-                TestHelper.readFile(fileName));
+                TestFileIOHelper.readFile(fileName));
         exchange.setIn(message);
     }
 

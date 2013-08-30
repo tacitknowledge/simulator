@@ -19,9 +19,6 @@ import java.util.Map;
  */
 public abstract class TestHelper
 {
-    public static final String RESOURCES_PATH = "src/test/resources/";
-    public static final String ORIGINAL_FILES_PATH = RESOURCES_PATH + "original_files/";
-    public static final String GIVEX_FILES_PATH = RESOURCES_PATH + "givex/";
 
     /**
      * Simple XML data for testing
@@ -180,77 +177,6 @@ public abstract class TestHelper
             item.put(ITEM_FIELDS[i], values[i]);
         }
         return item;
-    }
-
-    /**
-     *
-     * @param filePathName The path and name of the file to be read
-     * @return The file contents as a String
-     * @throws Exception If anything goes wrong
-     */
-    public static String readFile(String filePathName)
-            throws Exception
-    {
-        return readFile(new File(filePathName));
-    }
-
-    /**
-     *
-     * @param file The File to be read
-     * @return The file contents as a String
-     * @throws Exception If anything goes wrong
-     */
-    public static String readFile(File file)
-            throws Exception
-    {
-        // --- Make sure file1 exists
-        if (!file.exists())
-        {
-            throw new Exception("Original file must exist: " + file.getAbsolutePath());
-        }
-
-        InputStream is = new FileInputStream(file);
-        StringBuilder sb = new StringBuilder();
-        String line;
-
-        try
-        {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-            
-            while ((line = reader.readLine()) != null)
-            {
-                sb.append(line).append("\n");
-            }
-            
-            return sb.toString();
-        }
-        finally
-        {
-            is.close();
-        }
-    }
-
-    public static void copyFile(File file1, File file2)
-        throws Exception
-    {
-        // --- Make sure file1 exists
-        if (!file1.exists())
-        {
-            throw new Exception("Original file must exist: " + file1.getAbsolutePath());
-        }
-
-        InputStream in = new FileInputStream(file1);
-        OutputStream out = new FileOutputStream(file2);
-
-        byte[] buf = new byte[1024];
-        int len;
-        while ((len = in.read(buf)) > 0)
-        {
-            out.write(buf, 0, len);
-        }
-        in.close();
-        out.close();
-        System.out.println("File copied to " + file2.getAbsolutePath());
     }
 
     public static Map<String, Object> getMapOneEntry(String entryName, Object entryValue)

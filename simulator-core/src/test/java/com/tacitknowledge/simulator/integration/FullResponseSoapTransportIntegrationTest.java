@@ -36,7 +36,7 @@ public class FullResponseSoapTransportIntegrationTest {
 
     SOAPConnection connection;
 
-    private static final String WSDL = TestHelper.GIVEX_FILES_PATH + "gapi_full.wsdl";
+    private static final String WSDL = TestFileIOHelper.GIVEX_FILES_PATH + "gapi_full.wsdl";
 
     static Map<String, String> inboundParams = new HashMap<String, String>();
     static {
@@ -179,7 +179,7 @@ public class FullResponseSoapTransportIntegrationTest {
         MessageFactory messageFactory =
                 MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
         InputStream is = new ByteArrayInputStream(
-                TestHelper.readFile(TestHelper.GIVEX_FILES_PATH + messageFile).getBytes("UTF-8"));
+                TestFileIOHelper.readFile(TestFileIOHelper.GIVEX_FILES_PATH + messageFile).getBytes("UTF-8"));
 
         SOAPMessage message = messageFactory.createMessage(null, is);
 

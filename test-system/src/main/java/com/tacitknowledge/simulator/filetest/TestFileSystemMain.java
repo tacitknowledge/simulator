@@ -104,7 +104,5 @@ public final class TestFileSystemMain
         fis.close();
         System.out.println("Got the result file");
 
-        // TODO add more assertions here
-        //assert (strContent.toString().contains("simulator was here"));
     }
 }
