@@ -10,8 +10,6 @@ public class TransportFactory
 {
     public static Transport createTransport(int bound, String type, Properties properties)
     {
-        // TODO: Need to refactor transport types to have default constructor and 
-        // replace IFs with a get from map
         if (TransportConstants.FILE.equals(type))
         {
             return new FileTransport(new BaseConfigurable(bound, ConfigurationUtil.getPropertiesMap(properties)));
