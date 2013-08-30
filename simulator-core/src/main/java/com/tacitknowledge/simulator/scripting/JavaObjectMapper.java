@@ -14,6 +14,7 @@ import java.util.Map;
  * Time: 18:09:48
  *
  * @author Nikita Belenkiy (nbelenkiy@tacitknowledge.com)
+ * @deprecated removed this capability in latest revision.  may return it later
  */
 public class JavaObjectMapper implements ObjectMapper
 {

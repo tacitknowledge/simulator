@@ -13,6 +13,7 @@ import java.util.Map;
  * Ruby specific pojo populator
  *
  * @author Nikita Belenkiy (nbelenkiy@tacitknowledge.com)
+ * @deprecated removed this capability in latest revision.  may return it later
  */
 public class RubyObjectMapper implements ObjectMapper
 {
