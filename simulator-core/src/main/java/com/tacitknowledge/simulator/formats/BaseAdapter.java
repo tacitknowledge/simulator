@@ -62,8 +62,6 @@ public abstract class BaseAdapter implements Adapter
     public Map<String, Object> adaptForInput(final Exchange exchange)
         throws ConfigurableException, FormatAdapterException
     {
-        //todo - mws - figure out where to handle validations
-//        configuration.validateParameters();
 
         SimulatorPojo pojo = createSimulatorPojo(exchange);
         return generateClasses(pojo);
@@ -107,8 +105,6 @@ public abstract class BaseAdapter implements Adapter
     public Object adaptToOutput(final Object scriptExecutionResult, final Exchange exchange)
         throws ConfigurableException, FormatAdapterException
     {
-        //todo - mws - figure out where to handle validations
-//        configuration.validateParameters();
 
         SimulatorPojo getSimulatorPojo;
         try

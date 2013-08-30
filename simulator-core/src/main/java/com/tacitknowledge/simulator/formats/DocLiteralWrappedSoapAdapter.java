@@ -46,7 +46,6 @@ import com.tacitknowledge.simulator.configuration.beans.XmlObjectWrapper;
  * for SoapAdapter.
  * 
  * TODO:
- * 1. Create a base class for other SoapAdapters.
  * Move the common logic from this class and SoapAdapter to the base class.
  * 2. Create implementations of adapters that would handle
  * RPC/literal, RPC/encoded (current implementation of SoapAdapter already handles some of the RPC messages),
@@ -55,8 +54,6 @@ import com.tacitknowledge.simulator.configuration.beans.XmlObjectWrapper;
  * It would be nice to be able to just choose SOAP as the transport and then on the specific screen for the SOAP
  * transport be able to specify the format of the message. An alternative would be to create separate transports for
  * each type of SOAP message which is uglier.
- * 4. Change the UI to be able to specify whether messages follow SOAP1.1 or SOAP1.2 protocol.
- * Current implementation uses 1.1 only
  */
 public class DocLiteralWrappedSoapAdapter extends SoapAdapter implements Adapter
 {
