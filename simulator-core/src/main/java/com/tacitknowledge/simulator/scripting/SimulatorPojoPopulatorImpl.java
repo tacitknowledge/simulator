@@ -73,6 +73,7 @@ public final class SimulatorPojoPopulatorImpl
         Map<String, Object> stringObjectMap;
 
         String className = bean.getClass().getName();
+        //todo - currently only has been tested as supporting org.mozilla.javascript
         if (className.startsWith("org.mozilla.javascript"))
         {
             stringObjectMap = new JavaScriptObjectMapper().getMapFromObject(bean);
