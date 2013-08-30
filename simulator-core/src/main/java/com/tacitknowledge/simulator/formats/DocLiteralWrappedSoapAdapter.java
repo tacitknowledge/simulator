@@ -629,7 +629,6 @@ public class DocLiteralWrappedSoapAdapter extends SoapAdapter implements Adapter
         }
     }
     
-    @Override
     protected Map<String, Object> generateClasses(SimulatorPojo pojo)
     		throws FormatAdapterException
     {

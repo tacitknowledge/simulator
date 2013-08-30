@@ -114,8 +114,7 @@ public abstract class TestHelper
             "  age: 25";
 
     /**
-     * Creates and populates a SimulatorPojo for consumption of the PojoClassGenerator.
-     * PojoClassGenerator should generate JavaBeans from the Maps inside the SimulatorPojo
+     * Creates and populates a SimulatorPojo
      *
      * @return The generated SimulatorPojo
      */

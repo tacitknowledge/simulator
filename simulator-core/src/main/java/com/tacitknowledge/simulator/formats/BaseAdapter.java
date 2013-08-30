@@ -2,15 +2,8 @@ package com.tacitknowledge.simulator.formats;
 
 import com.tacitknowledge.simulator.*;
 import com.tacitknowledge.simulator.scripting.ObjectMapperException;
-import com.tacitknowledge.simulator.scripting.PojoClassGenerator;
-import com.tacitknowledge.simulator.scripting.ScriptException;
 import com.tacitknowledge.simulator.scripting.SimulatorPojoPopulatorImpl;
-import javassist.CannotCompileException;
-import javassist.ClassPool;
-import javassist.NotFoundException;
 import org.apache.camel.Exchange;
-
-import java.util.Map;
 
 /**
  * Base class for Adapter implementations.
@@ -59,13 +52,13 @@ public abstract class BaseAdapter implements Adapter
      * @throws ConfigurableException  If any required parameter is missing.
      * @throws FormatAdapterException If any other error occurs.
      */
-    public Map<String, Object> adaptForInput(final Exchange exchange)
-        throws ConfigurableException, FormatAdapterException
-    {
-
-        SimulatorPojo pojo = createSimulatorPojo(exchange);
-        return generateClasses(pojo);
-    }
+//    public Map<String, Object> adaptForInput(final Exchange exchange)
+//        throws ConfigurableException, FormatAdapterException
+//    {
+//
+//        SimulatorPojo pojo = createSimulatorPojo(exchange);
+//        return generateClasses(pojo);
+//    }
 
     /**
      * @param o The Camel exchange
@@ -129,39 +122,39 @@ public abstract class BaseAdapter implements Adapter
      * @return Map containing the generated classes
      * @throws FormatAdapterException If any error occurs
      */
-    protected Map<String, Object> generateClasses(final SimulatorPojo pojo)
-        throws FormatAdapterException
-    {
-        Map<String, Object> scriptExecutionBeans;
-        try
-        {
-            /**
-             * Generates the classes for the incoming data *
-             */
-            PojoClassGenerator generator = new PojoClassGenerator(ClassPool.getDefault());
-
-            scriptExecutionBeans = generator.generateBeansMap(pojo);
-        }
-        catch (CannotCompileException e)
-        {
-            String errorMessage = "A compilation error has occured when "
-                    + "generating classes for SimulatorPojo";
-            throw new FormatAdapterException(errorMessage, e);
-        }
-        catch (NotFoundException e)
-        {
-            String errorMessage = "A class was not found in the ClassPool";
-            throw new FormatAdapterException(errorMessage, e);
-        }
-        catch (SimulatorException se)
-        {
-            String errorMsg = "SimulatorPojo was not properly generated: " + se.getMessage();
-            throw new FormatAdapterException(errorMsg, se);
-        }
-        catch (ScriptException e)
-        {
-            throw new FormatAdapterException("", e);
-        }
-        return scriptExecutionBeans;
-    }
+//    protected Map<String, Object> generateClasses(final SimulatorPojo pojo)
+//        throws FormatAdapterException
+//    {
+//        Map<String, Object> scriptExecutionBeans;
+//        try
+//        {
+//            /**
+//             * Generates the classes for the incoming data *
+//             */
+//            PojoClassGenerator generator = new PojoClassGenerator(ClassPool.getDefault());
+//
+//            scriptExecutionBeans = generator.generateBeansMap(pojo);
+//        }
+//        catch (CannotCompileException e)
+//        {
+//            String errorMessage = "A compilation error has occured when "
+//                    + "generating classes for SimulatorPojo";
+//            throw new FormatAdapterException(errorMessage, e);
+//        }
+//        catch (NotFoundException e)
+//        {
+//            String errorMessage = "A class was not found in the ClassPool";
+//            throw new FormatAdapterException(errorMessage, e);
+//        }
+//        catch (SimulatorException se)
+//        {
+//            String errorMsg = "SimulatorPojo was not properly generated: " + se.getMessage();
+//            throw new FormatAdapterException(errorMsg, se);
+//        }
+//        catch (ScriptException e)
+//        {
+//            throw new FormatAdapterException("", e);
+//        }
+//        return scriptExecutionBeans;
+//    }
 }

@@ -293,7 +293,7 @@ public class FullResponseSoapAdapter extends SoapAdapter implements Adapter
         return payload;
     }    
 
-    @Override
+
     protected Map<String, Object> generateClasses(SimulatorPojo pojo)
     		throws FormatAdapterException
     {
