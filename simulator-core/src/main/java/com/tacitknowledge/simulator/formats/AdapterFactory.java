@@ -8,14 +8,7 @@ public class AdapterFactory
 {
     public static Adapter createAdapter(int bound, String format, Properties properties)
     {
-        //TODO: Need to refactor adapter types to have default constructor and
-                // replace IFs with a get from map
-        //TODO - mws - validateParameters is adapter specific and needs to move.
-        final Configurable configurable = new BaseConfigurable(bound, ConfigurationUtil.getPropertiesMap(properties)) {
-                protected void validateParameters() throws ConfigurableException {
-
-                }
-            };
+        final Configurable configurable = new BaseConfigurable(bound, ConfigurationUtil.getPropertiesMap(properties));
 
         if (FormatConstants.CSV.equals(format))
         {
@@ -29,7 +22,6 @@ public class AdapterFactory
 
         if (FormatConstants.PLAIN_TEXT.equals(format))
         {
-            // What is plain text adapter? :)
             return new PlainTextAdapter();
         }
 
