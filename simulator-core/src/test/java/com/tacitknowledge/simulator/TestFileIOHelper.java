@@ -10,7 +10,7 @@ import java.io.*;
  * To change this template use File | Settings | File Templates.
  */
 public class TestFileIOHelper {
-    public static final String RESOURCES_PATH = "simulator-core/src/test/resources/";
+    public static final String RESOURCES_PATH = "src/test/resources/";
     public static final String ORIGINAL_FILES_PATH = RESOURCES_PATH + "original_files/";
     public static final String GIVEX_FILES_PATH = RESOURCES_PATH + "givex/";
 
