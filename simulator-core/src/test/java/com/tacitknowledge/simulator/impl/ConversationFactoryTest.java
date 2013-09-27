@@ -1,6 +1,5 @@
 package com.tacitknowledge.simulator.impl;
 
-import com.sun.source.tree.AssertTree;
 import com.tacitknowledge.perf.degradation.proxy.DegradationHandler;
 import com.tacitknowledge.simulator.Adapter;
 import com.tacitknowledge.simulator.BaseConfigurable;

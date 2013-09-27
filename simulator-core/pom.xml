@@ -3,20 +3,31 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>com.tacitknowledge.simulator</groupId>
+        <groupId>com.tacitknowledge</groupId>
         <artifactId>simulator</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
     <name>Simulator Core Framework</name>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.tacitknowledge.simulator</groupId>
+    <groupId>com.tacitknowledge</groupId>
     <artifactId>simulator-core</artifactId>
     <packaging>jar</packaging>
 
     <properties>
         <camel.version>2.6.0</camel.version>
         <activemq.version>5.3.0</activemq.version>
+
+        <coverage.totalBranchRate>0</coverage.totalBranchRate>
+        <coverage.totalLineRate>0</coverage.totalLineRate>
+        <coverage.packageLineRate>0</coverage.packageLineRate>
+        <coverage.packageBranchRate>0</coverage.packageBranchRate>
+        <!-- per class requirements -->
+        <coverage.branchRate>0</coverage.branchRate>
+        <coverage.lineRate>0</coverage.lineRate>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <downloadSources>true</downloadSources>
+        <downloadJavadocs>true</downloadJavadocs>
     </properties>
 
 
@@ -286,8 +297,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <target>1.5</target>
-                    <source>1.5</source>
+                    <target>1.7</target>
+                    <source>1.7</source>
                 </configuration>
             </plugin>
             <!--<plugin>-->

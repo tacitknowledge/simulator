@@ -62,7 +62,7 @@ public class ScenarioLoader
         }
         catch (IllegalArgumentException e)
         {
-            throw new ScenarioParsingException("Scenario " + fileName + "could not be parsed", e);
+            throw new ScenarioParsingException("Scenario " + fileName + " could not be parsed", e);
         }
         finally
         {
@@ -88,7 +88,7 @@ public class ScenarioLoader
         
         if (!matcher.matches() || matcher.groupCount() != SCENARIO_SECTIONS_COUNT)
         {
-            throw new IllegalArgumentException("Unable to parse the scenario" + scriptText);
+            throw new IllegalArgumentException("Unable to parse the scenario " + scriptText);
         }
         
         return matcher;

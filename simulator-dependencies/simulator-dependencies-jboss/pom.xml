@@ -3,14 +3,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.tacitknowledge.simulator</groupId>
+    <groupId>com.tacitknowledge</groupId>
     <artifactId>simulator-dependencies-jboss</artifactId>
     <name>Dependencies that should be included when the app runs on jboss</name>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <dependencies>
         <dependency>
-          <groupId>com.tacitknowledge.simulator</groupId>
+          <groupId>com.tacitknowledge</groupId>
           <artifactId>simulator-dependencies</artifactId>
           <version>1.0-SNAPSHOT</version>
           <type>pom</type>

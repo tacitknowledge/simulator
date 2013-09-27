@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>com.tacitknowledge.simulator</groupId>
+        <groupId>com.tacitknowledge</groupId>
         <artifactId>simulator</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
@@ -13,7 +13,7 @@
     </modules>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.tacitknowledge.simulator</groupId>
+    <groupId>com.tacitknowledge</groupId>
     <artifactId>simulator-dependencies</artifactId>
     <name>Application dependencies that must be included regardless of the server where the app is runnning</name>
     <version>1.0-SNAPSHOT</version>

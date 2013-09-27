@@ -109,6 +109,13 @@ public class ConversationLoader
                             conversationDir.getAbsolutePath());
                     logger.warn(msg, ex);
                 }
+                catch (IllegalArgumentException ex)
+                {
+                    String msg = String.format("Could not configure conversation from '%s' directory",
+                            conversationDir.getAbsolutePath());
+                    logger.error(msg, ex);
+                }
+
             }
         }
 

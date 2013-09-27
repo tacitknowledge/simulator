@@ -64,8 +64,8 @@ public class SimulatorWithConfigsFromFileTest
         // Camel executes routes in separate threads. Let's wait a little ...
         Thread.sleep(3000);
 
-        File resultFile = new File(getTestsDirectory() + "/output/output.xml");
-        assertTrue(resultFile.exists());
+        File resultFile = new File(getTestsDirectory("output") + "/output.xml");
+        assertTrue("Not found: " + resultFile.getAbsolutePath(),resultFile.exists());
     }
 
     private void workaroundAbsolutePaths(Transport transport) throws IOException
@@ -74,12 +74,12 @@ public class SimulatorWithConfigsFromFileTest
         if (transport instanceof FileTransport)
         {
             String dir = transport.getConfigurable().getParamValue("directoryName");
-            transport.getConfigurable().setParamValue("directoryName", getTestsDirectory() + "/" + dir);
+            transport.getConfigurable().setParamValue("directoryName", getTestsDirectory(dir));
         }
     }
 
-    private String getTestsDirectory() throws IOException
+    private String getTestsDirectory(String packageDirectory) throws IOException
     {
-        return new ClassPathResource(".").getFile().getAbsolutePath();
+        return new ClassPathResource("./" + packageDirectory).getFile().getAbsolutePath();
     }
 }
