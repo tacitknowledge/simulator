@@ -22,6 +22,7 @@
 
     <modules>
         <module>simulator-core</module>
+        <module>test-system</module>
     </modules>
 
     <repositories>

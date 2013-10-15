@@ -39,7 +39,9 @@ import java.util.concurrent.ThreadPoolExecutor;
  * User: mshort
  * Date: 6/26/13
  * Time: 10:51 AM
- * To change this template use File | Settings | File Templates.
+ * This is not a unit test, but exists to apply concurrent load against the simulator
+ * for performance testing and tuning
+ *
  */
 public class TestLoadOnHttpEndpoint {
 
