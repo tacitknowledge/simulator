@@ -1,19 +1,16 @@
 package com.tacitknowledge.simulator.impl;
 
-import com.tacitknowledge.perf.degradation.proxy.DegradationHandler;
 import com.tacitknowledge.simulator.Adapter;
-import com.tacitknowledge.simulator.BaseConfigurable;
 import com.tacitknowledge.simulator.Conversation;
 import com.tacitknowledge.simulator.Transport;
-import com.tacitknowledge.simulator.formats.PlainTextAdapter;
-import com.tacitknowledge.simulator.transports.HttpTransport;
-import org.junit.Assert;
+import org.apache.commons.lang.StringUtils;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.runners.MockitoJUnitRunner;
 
-import java.lang.reflect.Proxy;
-import java.util.HashMap;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -21,54 +18,90 @@ import java.util.concurrent.LinkedBlockingQueue;
  * Date: 7/29/13
  * Time: 11:25 AM
  */
-public class ConversationFactoryTest {
+@RunWith(MockitoJUnitRunner.class)
+public class ConversationFactoryTest
+{
+    private ConversationFactory factory;
 
-    @Test
-    public void testProxyDefaults() {
-        final HashMap<String, String> parameters = new HashMap<String, String>();
-        Transport inboundTransport = new HttpTransport(new BaseConfigurable(parameters));
-        Transport outboundTransport = new HttpTransport(new BaseConfigurable(parameters));
-        Adapter inboundAdapter = new PlainTextAdapter();
-        Adapter outboundAdapter = new PlainTextAdapter();
+    private final String conversationPath = StringUtils.EMPTY;
+    private Adapter iAdapter;
+    private Adapter oAdapter;
+    private Transport iTransport;
+    private Transport oTransport;
 
-        ConversationFactory factory = new ConversationFactory();
-        Conversation conversation =
-                factory.createConversation("somepath",inboundTransport,outboundTransport,inboundAdapter,outboundAdapter);
-        Assert.assertTrue("this should be a proxy", conversation instanceof Proxy);
-        Proxy proxy = (Proxy) conversation;
-        DegradationHandler handler = (DegradationHandler) Proxy.getInvocationHandler(proxy);
-        Assert.assertEquals("default pool",5,handler.getExecutorService().getCorePoolSize());
-        Assert.assertTrue("should be linked", handler.getExecutorService().getQueue() instanceof LinkedBlockingQueue );
-        Assert.assertEquals("passRate",new Double(1.0),handler.getDegradationStrategy().getPassRate());
-        Assert.assertEquals("demandTime",new Long(0),handler.getDegradationStrategy().getServiceDemandTime());
-        Assert.assertEquals("serviceTimeout",new Long(0),handler.getDegradationStrategy().getServiceTimeout());
+    @Before
+    public void setup()
+    {
+        iAdapter = mock(Adapter.class);
+        oAdapter = mock(Adapter.class);
+        iTransport = mock(Transport.class);
+        oTransport = mock(Transport.class);
+
+        factory = spy(new ConversationFactory());
     }
 
     @Test
-    public void testProxyOverrides() {
-        final HashMap<String, String> parameters = new HashMap<String, String>();
-        Transport inboundTransport = new HttpTransport(new BaseConfigurable(parameters));
-        Transport outboundTransport = new HttpTransport(new BaseConfigurable(parameters));
-        Adapter inboundAdapter = new PlainTextAdapter();
-        Adapter outboundAdapter = new PlainTextAdapter();
+    public void shouldCreateConversation()
+    {
+        doReturn(Boolean.TRUE).when(factory).allParamsProvided(iAdapter, oAdapter, iTransport, oTransport);
 
-        parameters.put(ConversationFactory.PASS_RATE,"0.5");
-        parameters.put(ConversationFactory.DEMAND_TIME,"2000");
-        parameters.put(ConversationFactory.SERVICE_TIMEOUT,"2500");
-        parameters.put(ConversationFactory.POOL_CAPACITY,"2");
-        parameters.put(ConversationFactory.MAX_QUEUE,"3");
+        final Conversation conversation = factory.createConversation(conversationPath, iTransport,
+                oTransport, iAdapter, oAdapter);
 
-        ConversationFactory factory = new ConversationFactory();
-        Conversation conversation =
-                factory.createConversation("somepath",inboundTransport,outboundTransport,inboundAdapter,outboundAdapter);
-        Assert.assertTrue("this should be a proxy", conversation instanceof Proxy);
-        Proxy proxy = (Proxy) conversation;
-        DegradationHandler handler = (DegradationHandler) Proxy.getInvocationHandler(proxy);
-        Assert.assertEquals("default pool",2,handler.getExecutorService().getCorePoolSize());
-        Assert.assertTrue("should be linked", handler.getExecutorService().getQueue() instanceof ArrayBlockingQueue);
-        Assert.assertEquals("passRate",new Double(0.5),handler.getDegradationStrategy().getPassRate());
-        Assert.assertEquals("demandTime",new Long(2000),handler.getDegradationStrategy().getServiceDemandTime());
-        Assert.assertEquals("serviceTimeout",new Long(2500),handler.getDegradationStrategy().getServiceTimeout());
+        assertSame(conversationPath, conversation.getId());
+        assertSame(iAdapter, conversation.getInboundAdapter());
+        assertSame(oAdapter, conversation.getOutboundAdapter());
+        assertSame(iTransport, conversation.getInboundTransport());
+        assertSame(oTransport, conversation.getOutboundTransport());
     }
 
+    @Test
+    public void shouldThrowExceptionWhenConversationIsCreated()
+    {
+        final String errorMessage = "some message";
+
+        doReturn(Boolean.FALSE).when(factory).allParamsProvided(iAdapter, oAdapter, iTransport, oTransport);
+        doReturn(errorMessage).when(factory).getErrorMessage(iAdapter, oAdapter, iTransport, oTransport);
+
+        try
+        {
+            final Conversation conversation = factory.createConversation(conversationPath, iTransport,
+                    oTransport, iAdapter, oAdapter);
+            fail("should throw exception");
+        }
+        catch (IllegalArgumentException ex)
+        {
+            assertSame(errorMessage, ex.getMessage());
+        }
+    }
+
+    @Test
+    public void shouldDetectLackOfInboundAdapter()
+    {
+        assertFalse(factory.allParamsProvided(null, oAdapter, iTransport, oTransport));
+    }
+
+    @Test
+    public void shouldDetectLackOfOutboundAdapter()
+    {
+        assertFalse(factory.allParamsProvided(iAdapter, null, iTransport, oTransport));
+    }
+
+    @Test
+    public void shouldDetectLackOfInboundTransport()
+    {
+        assertFalse(factory.allParamsProvided(iAdapter, oAdapter, null, oTransport));
+    }
+
+    @Test
+    public void shouldDetectLackOfOutboundTransport()
+    {
+        assertFalse(factory.allParamsProvided(iAdapter, oAdapter, iTransport, null));
+    }
+
+    @Test
+    public void shouldValidateAllParams()
+    {
+        assertTrue(factory.allParamsProvided(iAdapter, oAdapter, iTransport, oTransport));
+    }
 }

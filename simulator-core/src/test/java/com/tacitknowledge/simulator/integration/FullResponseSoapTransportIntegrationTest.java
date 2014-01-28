@@ -39,16 +39,8 @@ public class FullResponseSoapTransportIntegrationTest {
     private static final String WSDL = TestFileIOHelper.GIVEX_FILES_PATH + "gapi_full.wsdl";
 
     static Map<String, String> inboundParams = new HashMap<String, String>();
+
     static {
-
-
-        inboundParams.put(ConversationFactory.PASS_RATE,"1.0");
-        inboundParams.put(ConversationFactory.DEMAND_TIME,"1000");
-        inboundParams.put(ConversationFactory.SERVICE_TIMEOUT,"1200");
-        inboundParams.put(ConversationFactory.POOL_CAPACITY,"2");
-        inboundParams.put(ConversationFactory.MAX_QUEUE,"3");
-
-
         inboundParams.put("type","http");
         inboundParams.put("format","soapFullResponse");
         inboundParams.put("host","localhost");
@@ -64,8 +56,6 @@ public class FullResponseSoapTransportIntegrationTest {
         outboundParams.put("format", "soapFullResponse");
         outboundParams.put("wsdlURL", WSDL);
     }
-
-
 
     //success case data
     private static final String SOAP_FILE_SUCCESS = "givex_get_balance.xml";
@@ -85,8 +75,6 @@ public class FullResponseSoapTransportIntegrationTest {
      * set this up in a static private method at end of class to make beginning of class more readable
      */
     private static final String EXECUTION_FAULT = checkFaultExecutionScript();
-
-
 
     private static final String DESTINATION = "http://localhost:7000/1.0/trans";
 
@@ -147,11 +135,9 @@ public class FullResponseSoapTransportIntegrationTest {
             element = (SOAPElement) childIter.next();
             assertEquals("certBalance", element.getTagName());
             assertEquals("1111", element.getValue());
-
-
-
         }
     }
+
     @SuppressWarnings("rawtypes")
     @Test
     public void faultPreAuthSoapTest() throws Exception
@@ -263,6 +249,4 @@ public class FullResponseSoapTransportIntegrationTest {
                 "\n" +
                 "payload;";
     }
-
-
 }
