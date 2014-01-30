@@ -35,11 +35,7 @@ fileExtension=
 regexFilter=
 deleteFile=false
 pollingInterval=1000
-
-format=xml
-validate=false
 ``` 
 
-In the above file transport configuration the directory named input will be scanned for files named input.xml. Found files will not be deleted but anyway these will be moved inside __.camel__ folder inside __input__ directory. Input directory polling will happen every 1000 milliseconds.
-
+In the above file transport configuration the directory __input__ will be scanned for files __input.xml__ every 1000 milliseconds. Found files will not be deleted but anyway these will be moved inside __.camel__ folder inside __input__ directory.
 
