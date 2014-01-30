@@ -16,9 +16,9 @@ aid in generating proper responses with tools like JAXB.
 ## File Transport
 
 File Transport has following configuration parameters:
-*directoryName - The underlying directory path to poll from/write to. Required parameter.
-*fileName - Name of the file to listen for/write to. Optional parameter.
-*fileExtension - Extension of files the transport will only poll from. Optional parameter.
-*regexFilter - Only file name matching the provided regex will be polled. Optional parameter.
-*pollingInterval - Milliseconds before the next poll of the directory. Optional parameter.
-*deleteFile - Determines if file should be deleted after processing. Optional parameter.
+* __directoryName__ - The underlying directory path to poll from/write to. Required parameter.
+* __fileName__ - Name of the file to listen for/write to. Optional parameter.
+* __fileExtension__ - Extension of files the transport will only poll from. Optional parameter.
+* __regexFilter__ - Only file name matching the provided regex will be polled. Optional parameter.
+* __pollingInterval__ - Milliseconds before the next poll of the directory. Optional parameter.
+* __deleteFile__ - Determines if file should be deleted after processing. Optional parameter.
