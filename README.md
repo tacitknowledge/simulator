@@ -70,4 +70,24 @@ deleteFile=true
 pollingInterval=10000
 ```
 
-In the above __ftp transport__ example is indicated __127.0.0.1__ as host and __2121__ as port. Username and password are set to __admin/admin__. __input.xml__ file will be searched in __input__ folder every __1000__ milliseconds and after processing the file will be deleted.
+In the above __ftp transport__ example is indicated __127.0.0.1__ as host and __2121__ as port. Username and password are set to __admin/admin__. __input.xml__ file will be searched in __input__ folder every __10000__ milliseconds and after processing the file will be deleted.
+
+## SFTP Transport
+
+SFTP Transport inherit configuration parameters from FTP Transport. The only difference is in type parameter with is sftp like in example below:
+
+```properties
+type=sftp
+
+host=127.0.0.1
+port=2121
+username=admin
+password=admin
+
+directoryName=input
+fileName=input.xml
+fileExtension=
+regexFilter=
+deleteFile=true
+pollingInterval=10000
+```
