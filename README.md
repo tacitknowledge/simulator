@@ -37,5 +37,5 @@ deleteFile=false
 pollingInterval=1000
 ``` 
 
-In the above file transport configuration the directory __input__ will be scanned for files __input.xml__ every 1000 milliseconds. Found files will not be deleted but anyway these will be moved inside __.camel__ folder inside __input__ directory.
+In the above file transport configuration the directory __input__ will be scanned for file __input.xml__ every __1000__ milliseconds. Found files will not be deleted but anyway these will be moved inside __.camel__ folder(automatically created inside __input__ directory).
 
