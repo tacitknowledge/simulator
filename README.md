@@ -39,3 +39,19 @@ pollingInterval=1000
 
 In the above file transport configuration the directory __input__ will be scanned for file __input.xml__ every __1000__ milliseconds. Found files will not be deleted but anyway these will be moved inside __.camel__ folder(automatically created inside __input__ directory).
 
+## FTP Transport
+
+FTP transport has the following config parameters:
+* __host__ Host name parameter is a required one.
+* __port__ Port parameter has default value of 21 for FTP and 22 for SFTP, thus it is an optional one.
+* __sftp__  Sftp parameter indicates if the protocol will be ftp or sftp. A true value corresponds to SFTP and a false value corresponds to FTP. Default value is false and sftp parameter is optional.
+* __binary__ Binary parameter determines transfer mode. A true value corresponds to BINARY and false value corresponds to ASCII.
+* __username__ Username parameter indicates the name of the used for accessing remote ftp resources and is optional.
+* __password__ Password parameter is an optional parameter.
+* __deleteFile__ Determines if the file should be deleted after processing. This parameter is optional.
+
+
+Below is presented config example for FTP Transport:
+
+
+
