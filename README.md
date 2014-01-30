@@ -11,7 +11,7 @@ aid in generating proper responses with tools like JAXB.
 
 # Simulator
 
-**SimulatorTransports**
+#Simulator Transports
 
 ## File Transport
 
@@ -22,3 +22,24 @@ File Transport has following configuration parameters:
 * __regexFilter__ - Only file name matching the provided regex will be polled. Optional parameter.
 * __pollingInterval__ - Milliseconds before the next poll of the directory. Optional parameter.
 * __deleteFile__ - Determines if file should be deleted after processing. Optional parameter.
+
+
+The following snippet is an example of a file type transport configuration:
+
+```properties
+type=file
+
+directoryName=input
+fileName=input.xml
+fileExtension=
+regexFilter=
+deleteFile=false
+pollingInterval=1000
+
+format=xml
+validate=false
+``` 
+
+In the above file transport configuration the directory named input will be scanned for files named input.xml. Found files will not be deleted but anyway these will be moved inside __.camel__ folder inside __input__ directory. Input directory polling will happen every 1000 milliseconds.
+
+
