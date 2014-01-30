@@ -44,14 +44,29 @@ In the above file transport configuration the directory __input__ will be scanne
 FTP transport has the following config parameters:
 * __host__ - Host name parameter is a required one.
 * __port__ - Port parameter has default value of 21 for FTP and 22 for SFTP, thus it is an optional one.
-* __sftp__ - Sftp parameter indicates if the protocol will be ftp or sftp. A true value corresponds to SFTP and a false value corresponds to FTP. Default value is false and sftp parameter is optional.
-* __binary__ - Binary parameter determines transfer mode. A true value corresponds to BINARY and false value corresponds to ASCII.
+* __sftp__ - Sftp parameter indicates if the protocol will be FTP or SFTP. A true value corresponds to SFTP and a false value corresponds to FTP. Default value is false and sftp parameter is optional.
+* __binary__ - Binary parameter determines transfer mode. A true value corresponds to BINARY and false value corresponds to ASCII. Default value is false and this parameter is optional.
 * __username__ - Username parameter indicates the name of the used for accessing remote ftp resources and is optional.
-* __password__ - Password parameter is an optional parameter.
-* __deleteFile__ - Determines if the file should be deleted after processing. This parameter is optional.
+* __password__ - Password parameter is optional.
+
+FTP transport extends file transport and all file transport configuration parameters are available here too.
 
 
 Below is presented config example for FTP Transport:
 
+```properties
+type=ftp
 
+host=127.0.0.1
+port=2121
+username=admin
+password=admin
+
+directoryName=input
+fileName=input.xml
+fileExtension=
+regexFilter=
+deleteFile=true
+pollingInterval=10000
+```
 
