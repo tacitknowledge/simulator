@@ -74,7 +74,7 @@ In the above __ftp transport__ example is indicated __127.0.0.1__ as host and __
 
 ## SFTP Transport
 
-SFTP Transport inherit configuration parameters from FTP Transport. The only difference is in type parameter with is sftp like in example below:
+SFTP Transport inherit configuration parameters from FTP Transport. The only difference is in type parameter which is sftp like in example below:
 
 ```properties
 type=sftp
