@@ -1,11 +1,9 @@
 package com.tacitknowledge.simulator.transports;
 
-import java.util.Map;
-
-import com.tacitknowledge.simulator.Configurable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.tacitknowledge.simulator.Configurable;
 import com.tacitknowledge.simulator.ConfigurableException;
 import com.tacitknowledge.simulator.Transport;
 import com.tacitknowledge.simulator.TransportException;
@@ -28,12 +26,6 @@ public class FtpTransport extends FileTransport implements Transport
      * Defaults to 21 for FTP and 22 for SFTP.
      */
     public static final String PARAM_PORT = "port";
-
-    /**
-     * SFTP parameter. Determines if this transport is SFTP (true) or FTP (false). OPTIONAL.
-     * Defaults to false (FTP)
-     */
-    public static final String PARAM_SFTP = "sftp";
 
     /**
      * Binary parameter. Determines transfer mode, BINARY (true) or ASCII (false). OPTIONAL.
