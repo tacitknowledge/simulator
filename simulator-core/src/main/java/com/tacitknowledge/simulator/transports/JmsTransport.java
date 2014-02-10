@@ -1,11 +1,15 @@
 package com.tacitknowledge.simulator.transports;
 
 import java.util.HashMap;
-import java.util.Map;
 
-import com.tacitknowledge.simulator.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.tacitknowledge.simulator.BaseConfigurable;
+import com.tacitknowledge.simulator.Configurable;
+import com.tacitknowledge.simulator.ConfigurableException;
+import com.tacitknowledge.simulator.Transport;
+import com.tacitknowledge.simulator.TransportException;
 
 /**
  * Transport implementation for Jms endpoints.
@@ -47,7 +51,7 @@ public class JmsTransport extends BaseTransport implements Transport
     /**
      * Logger for this class.
      */
-    private static Logger logger = LoggerFactory.getLogger(HttpTransport.class);
+	private static Logger logger = LoggerFactory.getLogger(JmsTransport.class);
 
     /**
      * @see #PARAM_ACTIVE_MQ
@@ -81,6 +85,7 @@ public class JmsTransport extends BaseTransport implements Transport
     /**
      * {@inheritDoc}
      */
+    @Override
     protected String getUriString() throws ConfigurableException, TransportException
     {
         StringBuilder sb = new StringBuilder();
