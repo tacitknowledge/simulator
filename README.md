@@ -44,7 +44,6 @@ In the above file transport configuration the directory __input__ will be scanne
 FTP transport has the following config parameters:
 * __host__ - Host name parameter is a required one.
 * __port__ - Port parameter has default value of 21 for FTP and 22 for SFTP, thus it is an optional one.
-* __sftp__ - Sftp parameter indicates if the protocol will be FTP or SFTP. A true value corresponds to SFTP and a false value corresponds to FTP. Default value is false and sftp parameter is optional.
 * __binary__ - Binary parameter determines transfer mode. A true value corresponds to BINARY and false value corresponds to ASCII. Default value is false and this parameter is optional.
 * __username__ - Username parameter indicates the name of the used for accessing remote ftp resources and is optional.
 * __password__ - Password parameter is optional.
@@ -91,3 +90,116 @@ regexFilter=
 deleteFile=true
 pollingInterval=10000
 ```
+
+##FTPS Transport
+
+FTPS Transport will allow to transfer data over ftps protocol.
+
+Most configuration parameters are inherited from FTP Transport. Type parameter is ftps as in the example below:
+
+```properties
+type=ftps
+
+host=10.101.1.106
+port=990
+username=ociobanu
+password=password
+
+directoryName=/var/ftp/input/
+fileName=input.xml
+fileExtension=
+regexFilter=
+deleteFile=true
+pollingInterval=10000
+
+format=xml
+validate=false
+```
+
+##Http Transport
+
+Http Transport will allow to transport data on http protocol. Configuration parameters are presented below:
+
+* __isSSL__ this parameter will indicate if communication will happen over ssl.
+* __keyStoreFile__ path to file containing X.509 certificate
+* __keyPassword__ the key password, which is used to access the certificate's key entry in the keystore 
+* __storePassword__ the store password, which is required to access the keystore file.
+* __port__ port parameter will indicate the port on which the server will listen incoming requests
+* __resourceURI__ resource uri at which this service will be available
+* __httpOut__ If this transport is an HTTP OUT, Camel route is just ended, so the result from the execution script will fill HTTP response body
+
+```properties
+type=http
+
+host=127.0.0.1
+port=8080
+resourceURI=/testHelloService
+
+# ssl parameters
+#isSSL=false
+# keyStoreFile=filename.jks
+# keyPassword=password
+# storePassword=password
+
+format=PLAIN TEXT
+```
+
+In the above example the service will be accessible at the following address http://127.0.0.1:8080/testHelloService.
+
+##JMS Transport
+
+JMS Transport has following configuration parameters:
+* __destinationName__ JMS destination name is a required parameter.
+* __brokerUrl__ Broker URL is a required parameter.
+* __userName__ JSM broker user name is an optional parameter.
+* __password__ JSM broker password is an optional parameter.
+* __activeMQ__ Active MQ parameter. Determines if JMS is Apache ActiveMQ (true) or generic JMS (false). Default value is false.
+* __isTopic__ JMS topic name parameter is optional.
+
+Below is presented an example for jms transport 
+
+```properties
+type=jms
+
+activemq=true
+
+isTopic=true
+
+destinationName=test
+
+brokerUrl=tcp://localhost:61616
+
+userName=admin
+
+password=admin
+
+format=PLAIN TEXT
+```
+
+##REST Transport
+
+Rest Transport inherits all properties from HTTP Transport. Configuration parameter type has value rest. Below is presented an example of rest transport configuration:
+
+```properties
+type=rest
+
+host=127.0.0.1
+port=8085
+resourceURI=/testHelloService
+
+format=PLAIN TEXT
+```
+
+##Simulator Formats
+
+Following Formats are available:
+
+##CSV Format
+
+CSV Format is one that will not…
+
+Following configuration parameters are available for CSV format:
+```properties
+* __isFirstRowHeader__ This configuration parameter will not indicate if first row is header(true) or not(false).
+* ____
+
