@@ -203,7 +203,7 @@ Following configuration parameters are available for CSV format:
 * __rowContent__ String describing what each row represents. REQUIRED if isFirstRowHeader is false. This will be used as bean name during the simulation. e.g.: employee, order, product, etc.
 * __csvContent__ String describing what are the CSV contents. This configuration parameter is required. This will be used as the SimulatorPojo root's record key. e.g.: employees, orders, products, etc.
 
-Below config example is for csv format:
+Below config example indicates that first row of the csv file will be header and csv content will be named "names":
 
 ```properties
 format=CSV
