@@ -196,7 +196,6 @@ Following Formats are available:
 
 ##CSV Format
 
-CSV Format is one that will not…
 Following configuration parameters are available for CSV format:
 
 * __isFirstRowHeader__ This configuration parameter will not indicate if first row is header(true) or not(false).
@@ -211,5 +210,5 @@ csvContent=names
 isFirstRowHeader=true
 ```
 
-
+##JSON Format
 
