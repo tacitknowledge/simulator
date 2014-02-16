@@ -235,3 +235,7 @@ Content example that may be served by this json format config is presented below
 ```json
 [{ "firstName":"John" , "lastName":"Doe" }, { "firstName":"Anna" , "lastName":"Smith" },{ "firstName":"Peter" , "lastName":"Jones" }]
 ```
+
+##Plain Text Format
+
+This format does not need any config parameters. The only thing to keep in mind is the fact that text content may be referenced as "text".
