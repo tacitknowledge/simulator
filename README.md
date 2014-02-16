@@ -229,3 +229,9 @@ jsonArrayContent=employee
 ```
 
 Every element in the array will be named as employee and all array may be referenced as employees.
+
+Content example that may be served by this json format config is presented below:
+
+```json
+[{ "firstName":"John" , "lastName":"Doe" }, { "firstName":"Anna" , "lastName":"Smith" },{ "firstName":"Peter" , "lastName":"Jones" }]
+```
