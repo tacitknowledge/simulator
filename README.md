@@ -212,3 +212,20 @@ isFirstRowHeader=true
 
 ##JSON Format
 
+Json format has following configuration parameters:
+
+* __jsonContent__ Describes what are the JSON contents. This parameter is required. e.g.: employee(s), order(s), product(s), etc.
+* __isArray__ Determines if the JSON content is an Array. This parameter is optional.Defaults to false (JSON Object). If this parameter is true, it's recommended that "jsonContent" uses a plural word and "jsonArrayContent" uses its singular form.
+* __jsonArrayContent__ Describes each array element content. Optional parameter. Required if "isArray" is true. e.g.: employee, order, product, etc.
+
+A Json configuration example  may be found below:
+
+```properties
+format=JSON
+
+jsonContent=employees
+isArray=true
+jsonArrayContent=employee
+```
+
+Every element in the array will be named as employee and all array may be referenced as employees.
