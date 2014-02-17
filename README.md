@@ -305,13 +305,7 @@ extractionPattern=testHelloService/:name/:surname
 objectName=person
 ```
 
-The following request may be used for accessing the rest format configuration presented above:
-
-```hhtp request
-http://127.0.0.1:8085/testHelloService/Vasea/Turcanu
-```
-
-As result we get name=Vasea and surname=Turcanu that may be referenced in the following way:
+The following request may be used for accessing the rest format configuration presented above http://127.0.0.1:8085/testHelloService/Vasea/Turcanu . As result we get name=Vasea and surname=Turcanu that may be referenced in the following way:
 
 ```javascript
 person['request']['params'];
