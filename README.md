@@ -289,3 +289,32 @@ Configuration example for yaml format:
 format=yaml
 yamlContent=invoice
 ```
+
+##Rest Format
+
+Rest Format configuration parameters:
+
+* __objectName__ Extracted object name parameter is optional. Default value is obj.
+* __extractionPattern__  pattern to extract values from http request
+
+Rest format configuration example:
+
+```properties
+format=rest
+extractionPattern=testHelloService/:name/:surname
+objectName=person
+```
+
+The following request may be used for accessing the rest format configuration presented above:
+
+```hhtp request
+http://127.0.0.1:8085/testHelloService/Vasea/Turcanu
+```
+
+As result we get name=Vasea and surname=Turcanu that may be referenced in the following way:
+
+```javascript
+person['request']['params'];
+```
+
+
