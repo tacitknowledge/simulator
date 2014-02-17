@@ -239,3 +239,24 @@ Content example that may be served by this json format config is presented below
 ##Plain Text Format
 
 This format does not need any config parameters. The only thing to keep in mind is the fact that text content may be referenced as "text".
+
+##Properties Format
+
+This format has only one configuration parameter:
+
+* __propertySeparator__ Property level separator parameter name, which is optional. Defaults to dot (".")
+
+Following properties content was accepted by Simulator:
+
+```properties
+person.lastName=Doe
+person.firstName=John
+```
+with the following result:
+
+```properties
+nativeobject.lastName=Doe
+nativeobject.firstName=John
+```
+
+[TO DO] Resulting properties content should not contain nativeobject as the root element.
