@@ -260,3 +260,17 @@ nativeobject.firstName=John
 ```
 
 [TO DO] Resulting properties content should not contain nativeobject as the root element.
+
+#XML Format
+
+XML Format configuration parameters:
+
+* __validate__ Validate parameter. If the XML text should DTD validated. This parameter is optional. Defaults to false (no DTD validation).
+* __rootTagName__ Override root tag name if one is provided.
+
+XML Format example presented below will override root tag name to users, otherwise it will be "nativeobject".
+
+```properties
+format=xml
+rootTagName=users
+```
