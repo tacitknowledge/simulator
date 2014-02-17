@@ -261,7 +261,7 @@ nativeobject.firstName=John
 
 [TO DO] Resulting properties content should not contain nativeobject as the root element.
 
-#XML Format
+##XML Format
 
 XML Format configuration parameters:
 
@@ -273,4 +273,19 @@ XML Format example presented below will override root tag name to users, otherwi
 ```properties
 format=xml
 rootTagName=users
+```
+
+##YAML Format
+
+YAML Format configuration parameters:
+
+* __yamlContent__ String describing what are YAML contents. This parameter is required. This will be used as the SimulatorPojo root's record key. e.g.: employees, orders, products, etc.
+* __isArray__ IsArray parameter determines if YAML content is an Array. This parameter is optional. Defaults to false. If this parameter is true, it's recommended that "yamlContent" uses a plural word and "yamlArrayContent" its singular form.
+* __yamlArrayContent__ Yaml array content parameter describes each array element content. This parameter is optional. Required if "isArray" parameter is true. e.g.: employee, order, product, etc.
+
+Configuration example for yaml format:
+
+```properties
+format=yaml
+yamlContent=invoice
 ```
