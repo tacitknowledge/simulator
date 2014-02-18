@@ -78,7 +78,7 @@ true
 invoice;
 ```
 
-Here used language is javascript. This script will be executed always and this script just will output "invoice" variable.
+Here is used JavaScriptlanguage. This script will be executed always and this script just will output "invoice" variable.
 
 #Simulator Transports
 
