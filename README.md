@@ -13,7 +13,12 @@ aid in generating proper responses with tools like JAXB.
 
 # Fow To Start Simulator
 
-# Configuration Folder Structure 
+1. cd to simulator installation folder in a console
+2. mvn clean install
+3. cd ./simulator-core
+4. java -DsystemsDirectory=[configuration folder path] -jar ./target/simulator-core.one-jar.jar 
+
+# Configuration Folder Structure
 
 #Simulator Transports
 
