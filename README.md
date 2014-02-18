@@ -420,6 +420,4 @@ format=SOAPFULLRESPONSE
 wsdlURL=http://127.0.0.1/testHelloService/wsdl
 ```
 
-#Scripting Capabilities
-
 
