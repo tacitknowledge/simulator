@@ -78,6 +78,8 @@ true
 invoice;
 ```
 
+Here used language is javascript. This script will be executed always and this script just will output "invoice" variable.
+
 #Simulator Transports
 
 ## File Transport
