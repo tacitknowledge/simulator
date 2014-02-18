@@ -319,10 +319,34 @@ SOAP Format configuration parameters:
 
 * __wsdlURL__ real wsdl url to simulated web service, This is needed for validation of incoming messages.
 
-Below example is a configuration for soap format with a certain wsdl url to validate against:
+Below is presented a configuration for soap format with a certain wsdl url to validate against:
 
 ```properties
 format=soap
 wsdlURL=http://127.0.0.1/testHelloService/wsdl
 ```
 
+##Doc Literal Soap Format
+
+Configuration parameters:
+* __wsdlURL__ real wsdl url to simulated web service, This is needed for validation of incoming messages.
+
+Configuration example for doc literal soap format
+
+```properties
+format=DOCLITERALSOAP
+wsdlURL=http://127.0.0.1/testHelloService/wsdl
+```
+
+##SOAP Full Response Format
+
+Configuration parameters:
+
+* __wsdlURL__ real wsdl url to simulated web service, This is needed for validation of incoming messages.
+
+Configuration example:
+
+```properties
+format=SOAPFULLRESPONSE
+wsdlURL=http://127.0.0.1/testHelloService/wsdl
+```
