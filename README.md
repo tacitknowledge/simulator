@@ -311,4 +311,18 @@ The following request may be used for accessing the rest format configuration pr
 person['request']['params'];
 ```
 
+##SOAP Format
+
+SOAP Format will handle SOAP 1.2
+
+SOAP Format configuration parameters:
+
+* __wsdlURL__ real wsdl url to simulated web service, This is needed for validation of incoming messages.
+
+Below example is a configuration for soap format with a certain wsdl url to validate against:
+
+```properties
+format=soap
+wsdlURL=http://127.0.0.1/testHelloService/wsdl
+```
 
