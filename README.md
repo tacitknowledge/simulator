@@ -20,6 +20,32 @@ aid in generating proper responses with tools like JAXB.
 
 # Configuration Folder Structure
 
+Below is presented an example of a configuration folder structure:
+
+```config
+`-- system1
+    |-- fileConversation
+    |   |-- inbound.properties
+    |   |-- outbound.properties
+    |   `-- scenario1.scn
+    |-- httpConversation
+    |   |-- inbound.properties
+    |   |-- outbound.properties
+    |   `-- scenario1.scn
+    |-- jmsConversation
+    |   |-- inbound.properties
+    |   |-- outbound.properties
+    |   `-- scenario1.scn
+    |-- restConversation
+    |   |-- inbound.properties
+    |   |-- outbound.properties
+    |   `-- scenario1.scn
+    `-- soapConversation
+        |-- inbound.properties
+        |-- outbound.properties
+        `-- scenario1.scn
+```
+
 #Simulator Transports
 
 ## File Transport
