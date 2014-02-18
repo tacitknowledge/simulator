@@ -11,6 +11,10 @@ aid in generating proper responses with tools like JAXB.
 
 # Simulator
 
+# Fow To Start Simulator
+
+# Configuration Folder Structure 
+
 #Simulator Transports
 
 ## File Transport
@@ -190,7 +194,7 @@ resourceURI=/testHelloService
 format=PLAIN TEXT
 ```
 
-##Simulator Formats
+#Simulator Formats
 
 Following Formats are available:
 
@@ -350,3 +354,7 @@ Configuration example:
 format=SOAPFULLRESPONSE
 wsdlURL=http://127.0.0.1/testHelloService/wsdl
 ```
+
+#Scripting Capabilities
+
+
