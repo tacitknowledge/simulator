@@ -78,7 +78,7 @@ true
 invoice;
 ```
 
-Here is used JavaScriptlanguage. This script will be executed always and this script just will output "invoice" variable.
+Here is used JavaScript language. This script will be executed always and this script just will output "invoice" variable. Any BSF-compatible scripting language is supported.
 
 #Simulator Transports
 
