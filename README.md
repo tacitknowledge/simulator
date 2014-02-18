@@ -313,7 +313,7 @@ person['request']['params'];
 
 ##SOAP Format
 
-SOAP Format will handle SOAP 1.2
+SOAP Format will handle SOAP 1.2 protocol messages.
 
 SOAP Format configuration parameters:
 
