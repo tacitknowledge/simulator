@@ -39,7 +39,7 @@ systems
         `-- scenario1.scn
 ```
 
-As it may be seen from folder structure every conversation has three types of config files: inbound.properties, outbound.properties and scenario files like scenario1.scn, scenario2.xml, etc. Inbound.properties file contains configuration for inbound communication protocol and format of the incoming data. Outbound.properties contains configuration for outbound communication protocol and format of the outcoming data. Scenario files contain some instructions for execution of certain operations over incoming data in case of certain conditions and also is indicated the output data.
+As it may be seen from folder structure every conversation has three types of config files: inbound.properties, outbound.properties and scenario files like scenario1.scn, scenario2.xml, etc. Inbound.properties file contains configuration for inbound communication protocol/transport and format of the incoming data. Outbound.properties contains configuration for outbound communication protocol/transport and format of the outcoming data. Scenario files contain some instructions for execution of certain operations over incoming data in case of certain conditions and also is indicated the output data.
 
 Example of inbound.properties is presented below:
 
