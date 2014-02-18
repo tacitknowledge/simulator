@@ -11,6 +11,9 @@ aid in generating proper responses with tools like JAXB.
 
 # Simulator
 
+##Overview
+Simulator is a functional tool that allows handling of different transports and their content based on predefined criteria and outputting expected results based on the situation being modeled
+
 # Fow To Start Simulator
 
 1. cd to simulator installation folder in a console
