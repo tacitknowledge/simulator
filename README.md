@@ -23,6 +23,7 @@ aid in generating proper responses with tools like JAXB.
 Below is presented an example of a configuration folder structure:
 
 ```config
+systems
 `-- system1
     |-- fileConversation
     |   |-- inbound.properties
