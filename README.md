@@ -1,7 +1,8 @@
 # Simulator
 
 ##Overview
-Simulator is a functional tool that allows handling of different transports and their content based on predefined criteria and outputting expected results based on the situation being modeled. This tool may help simulate the behavior of a third party service like paypal or cybersource and from which depends the functionality of your application. This tool many help test your application.
+Simulator is a functional tool that allows handling of different transports and their content based on predefined criteria and outputting expected results based on the situation being modeled. This tool may help simulate the behavior of a third party service like paypal or cybersource and from which depends the functionality of a given application, thus Simulator may help test it.
+
 
 # How To Start Simulator
 
