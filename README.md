@@ -1,9 +1,9 @@
 # Simulator
 
 ##Overview
-Simulator is a functional tool that allows handling of different transports and their content based on predefined criteria and outputting expected results based on the situation being modeled
+Simulator is a functional tool that allows handling of different transports and their content based on predefined criteria and outputting expected results based on the situation being modeled. This tool may help simulate the behavior of a third party service like paypal or cybersource and from which depends the functionality of your application. This tool many help test your application.
 
-# Fow To Start Simulator
+# How To Start Simulator
 
 1. cd to simulator installation folder in a console
 2. mvn clean install
