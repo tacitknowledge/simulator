@@ -3,6 +3,7 @@
 ##Overview
 Simulator is a functional tool that allows handling of different transports and their content based on predefined criteria and outputting expected results based on the situation being modeled. This tool may help simulate the behavior of a third party service like paypal or cybersource and from which depends the functionality of a given application, thus Simulator may help test it.
 
+In order to simulate a third party service you have to define the inbound and outbound transport protocol for that service. Also it is possible to use a scripting language to execute conditionally certain operations over incoming data and to determine what data will be presented to output. In below sections are presented more details pertaining to inbound/outbound protocol configuration and scripting possibilities with examples.  
 
 # How To Start Simulator
 
