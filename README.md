@@ -45,7 +45,7 @@ systems
         `-- scenario1.scn
 ```
 
-As it may be seen from folder structure every conversation has three types of config files: inbound.properties, outbound.properties and scenario files like scenario1.scn, scenario2.xml, etc. Inbound.properties file contains configuration for inbound communication protocol/transport and format of the incoming data. Outbound.properties contains configuration for outbound communication protocol/transport and format of the outcoming data. Scenario files contain some instructions for execution of certain operations over incoming data in case of certain conditions and also is indicated the output data.
+As it may be seen from folder structure every conversation has three types of config files: inbound.properties, outbound.properties and scenario files like scenario1.scn, scenario2.scn, etc. Inbound.properties file contains configuration for inbound communication protocol/transport and format of the incoming data. Outbound.properties contains configuration for outbound communication protocol/transport and format of the outgoing data. Scenario files contain some instructions for execution of certain operations over incoming data in case of certain conditions and also the output data is indicated.
 
 Example of inbound.properties is presented below:
 
@@ -76,7 +76,7 @@ true
 invoice;
 ```
 
-Here is used JavaScript language. This script will be executed always and this script just will output "invoice" variable. Any BSF-compatible scripting language is supported.
+Here JavaScript language is used. This script will always be executed and this script just will output "invoice" variable. Any BSF-compatible scripting language is supported.
 
 ## Conversation Required Configurations
 
