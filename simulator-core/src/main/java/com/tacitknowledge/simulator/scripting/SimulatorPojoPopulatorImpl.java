@@ -1,11 +1,12 @@
 package com.tacitknowledge.simulator.scripting;
 
-import com.tacitknowledge.simulator.SimulatorPojo;
-import com.tacitknowledge.simulator.StructuredSimulatorPojo;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
+import com.tacitknowledge.simulator.SimulatorPojo;
+import com.tacitknowledge.simulator.StructuredSimulatorPojo;
 
 /**
  * This classes will take an dynamically-generated-class object and its attributes
@@ -74,7 +75,7 @@ public final class SimulatorPojoPopulatorImpl
 
         String className = bean.getClass().getName();
         //todo - currently only has been tested as supporting org.mozilla.javascript
-        if (className.startsWith("org.mozilla.javascript"))
+		if (className.startsWith("org.mozilla.javascript"))
         {
             stringObjectMap = new JavaScriptObjectMapper().getMapFromObject(bean);
         }
@@ -91,7 +92,7 @@ public final class SimulatorPojoPopulatorImpl
         	pojo.getRoot().putAll((Map) bean);
     		logger.info("Object parameter is already a map. Just adding it to POJO's root: " + bean);
 
-        	return pojo; 
+        	return pojo;
         }
         else
         {
@@ -108,12 +109,12 @@ public final class SimulatorPojoPopulatorImpl
 
     public SimulatorPojo populateSimulatorPojoFromBean(final Object bean, String rootOverride) throws ObjectMapperException {
         StructuredSimulatorPojo pojo = (StructuredSimulatorPojo) populateSimulatorPojoFromBean(bean);
-        Map map = (Map) pojo.getRoot().get(NATIVEOBJECT);
-        pojo.getRoot().put(rootOverride,map);
-        pojo.getRoot().remove(NATIVEOBJECT);
+		if (pojo.getRoot() != null && pojo.getRoot().entrySet().size() > 0) {
+			Map map = (Map) pojo.getRoot().entrySet().iterator().next()
+			        .getValue();
+			pojo.getRoot().clear();
+			pojo.getRoot().put(rootOverride, map);
+    		}
         return pojo;
-
     }
-
-
 }

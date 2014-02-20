@@ -7,12 +7,18 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import com.tacitknowledge.simulator.*;
-import com.tacitknowledge.simulator.scripting.ObjectMapperException;
-import com.tacitknowledge.simulator.scripting.SimulatorPojoPopulatorImpl;
 import org.apache.camel.Exchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.tacitknowledge.simulator.Adapter;
+import com.tacitknowledge.simulator.Configurable;
+import com.tacitknowledge.simulator.ConfigurableException;
+import com.tacitknowledge.simulator.FormatAdapterException;
+import com.tacitknowledge.simulator.SimulatorPojo;
+import com.tacitknowledge.simulator.StructuredSimulatorPojo;
+import com.tacitknowledge.simulator.scripting.ObjectMapperException;
+import com.tacitknowledge.simulator.scripting.SimulatorPojoPopulatorImpl;
 
 /**
  * Implementation of the Adapter interface for the CSV format
@@ -140,10 +146,10 @@ public class CsvAdapter extends NativeObjectScriptingAdapter implements Adapter
         }
 
         // --- Use the CsvContent parameter to get the only object, which should be a List
-        List<Map<String, Object>> list =
-            (List<Map<String, Object>>) simulatorPojo.getRoot()
-                        .get(configuration.getParamValue(PARAM_CSV_CONTENT));
-
+        Map<String, Object> map = simulatorPojo.getRoot();
+		List<Map<String, Object>> list = (List<Map<String, Object>>) ((Map) map
+		        .get(configuration.getParamValue(PARAM_CSV_CONTENT)))
+.get(null);
 
         List<String> colNames = getColumnsFromKeys(list.get(0).keySet());
         // --- If using first row as headers, get the headers from the first row's keys
@@ -166,6 +172,7 @@ public class CsvAdapter extends NativeObjectScriptingAdapter implements Adapter
         return sb1.toString();
     }
 
+    @Override
     protected SimulatorPojo getSimulatorPojo(final Object object) throws ObjectMapperException
     {
         final SimulatorPojo payload = SimulatorPojoPopulatorImpl.getInstance().populateSimulatorPojoFromBean(object,
@@ -179,6 +186,7 @@ public class CsvAdapter extends NativeObjectScriptingAdapter implements Adapter
      * @throws ConfigurableException If any required parameter is missing
      * @inheritDoc
      */
+    @Override
     public void validateParameters() throws ConfigurableException
     {
         // ---
