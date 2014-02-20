@@ -14,6 +14,8 @@ In order to simulate a third party service you have to define the inbound and ou
 
 # Configuration Folder Structure
 
+Configuration folder has one or more system folders. The notion of system is just for grouping of conversations. One ore more conversations are grouped in one system. All systems' folders are grouped in one folder. In the example presented below is present one folder systems, that contains all configured systems, in the below example is present only one system named system1. System1 has following conversations: fileConversation, httpConversation, jmsConversation, restConversation, soapConversation. Every conversation has required files: inbound.properties, outbound.properties and at least one scenario file.
+
 Below is presented an example of a configuration folder structure:
 
 ```config
@@ -83,7 +85,7 @@ For every conversation it is necessary to have configured inbound transport, inb
 
 If these preconditions are not met, errors should be expected in log files. 
 
-## Scenario file structure
+## Scenario File Structure
 
 As mentioned above every conversation may have one or more scenario files. Every scenario file has a three blocks:
 * __[language]__ this block mentions one of BSF-compatible scripting languages.
