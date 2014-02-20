@@ -74,12 +74,12 @@ invoice;
 
 Here is used JavaScript language. This script will be executed always and this script just will output "invoice" variable. Any BSF-compatible scripting language is supported.
 
-##Conversation Required configurations
+##Conversation Required Configurations
 
 For every conversation it is necessary to have configured inbound transport, inbound format, outbound transport, outbound format and at least one scenario file,  respectively there should be present at least following files:
 * __inbound.properties__,
 * __outbound.properties__, 
-* __scenation.scn__ 
+* __scenario.scn__ 
 
 If these preconditions are not met, errors should be expected in log files. 
 
