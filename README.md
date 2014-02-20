@@ -96,7 +96,7 @@ As mentioned above every conversation may have one or more scenario files. Every
 
 #Simulator Transports
 
-Simulator supports a set of transports that may be configured for input and for output. In the case of http input transport, simulator will start jetty web server that will handle incoming requests. The same is true for rest transport. For other transport types like ftp or jsp, Simulator will try to access an existing ftp server as for input messages, as for output messages. Below are described the supported transports:
+Simulator supports a set of transports that may be configured for input and for output. In the case of http input transport, simulator will start jetty web server that will handle incoming requests. The same is true for rest transport. For other transport types like ftp or jsp, Simulator will try to access an existing ftp server as for input messages, as for output messages. Below are described supported transports:
 
 ## File Transport
 
