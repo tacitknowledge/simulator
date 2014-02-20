@@ -11,6 +11,7 @@ For every conversation it is necessary to have configured inbound transport, inb
 * __inbound.properties__,
 * __outbound.properties__, 
 * __scenation.scn__ 
+
 If these preconditions are not met, errors should be expected in log files.   
 
 # How To Start Simulator
