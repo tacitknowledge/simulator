@@ -5,10 +5,12 @@ Simulator is a functional tool that allows handling of different transports and 
 
 In order to simulate a third party service you have to define the inbound and outbound transport protocol for that service. Also it is possible to use a scripting language to execute conditionally certain operations over incoming data and to determine what data will be presented to output. In below sections are presented more details pertaining to inbound/outbound protocol configuration and scripting possibilities with examples.  
 
+##Conversation Required configurations
+
 For every conversation it is necessary to have configured inbound transport, inbound format, outbound transport, outbound format and at least one scenario file,  respectively there should be present at least following files:
 * __inbound.properties__,
 * __outbound.properties__, 
-* __scenation.scn__. 
+* __scenation.scn__ 
 If these preconditions are not met, errors should be expected in log files.   
 
 # How To Start Simulator
