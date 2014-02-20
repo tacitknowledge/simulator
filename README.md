@@ -86,7 +86,7 @@ If these preconditions are not met, errors should be expected in log files.
 ## Scenario file structure
 
 As mentioned above every conversation may have one or more scenario files. Every scenario file has a three blocks:
-* __[language]__ this block is one of BSF-compatible scripting language.
+* __[language]__ this block mentions one of BSF-compatible scripting languages.
 * __[when]__ condition for execution of the statements indicated in [execute] block
 * __[execute]__ statements to be executed if conditions indicated in [when] block are true  
 
