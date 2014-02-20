@@ -5,8 +5,8 @@ javascript
 payload.GetBalance != null && payload.GetBalance.givexNumber.indexOf("111122223333")==0
 
 [execute]
-var port = payload.GetBalance.response;
-port.responseContent = '<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" \
+var part = payload.GetBalance.response;
+part.responseContent = '<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" \
 xmlns:gvxGlobal="https://gapi.givex.com/1.0/types_global" \
 xmlns:gvxTrans="https://gapi.givex.com/1.0/types_trans" \
 SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">\

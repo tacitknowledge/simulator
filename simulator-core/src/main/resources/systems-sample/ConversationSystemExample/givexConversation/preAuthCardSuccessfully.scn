@@ -5,8 +5,8 @@ javascript
 payload.PreAuth != null && payload.PreAuth.givexNumber.indexOf("111122223333") == 0 && payload.PreAuth.givexNumber.indexOf("1111222233330000") != 0
 
 [execute]
-var port = payload.PreAuth.response;
-port.responseContent = '<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" \
+var part = payload.PreAuth.response;
+part.responseContent = '<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" \
 xmlns:gvxGlobal="https://gapi.givex.com/1.0/types_global" \
 xmlns:gvxTrans="https://gapi.givex.com/1.0/types_trans" \
 SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">\

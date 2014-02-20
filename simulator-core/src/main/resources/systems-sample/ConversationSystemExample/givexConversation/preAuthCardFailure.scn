@@ -5,8 +5,8 @@ javascript
 payload.PreAuth != null && payload.PreAuth.givexNumber.indexOf("1111222233330000") == 0
 
 [execute]
-var port = payload.PreAuth.response;
-port.responseContent = '<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" \
+var part = payload.PreAuth.response;
+part.responseContent = '<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" \
 SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">\
 <SOAP-ENV:Body>\
 <SOAP-ENV:Fault>\
