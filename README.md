@@ -5,7 +5,7 @@ Simulator is a functional tool that allows handling of different transports and 
 
 In order to simulate a third party service you have to define the inbound and outbound transport protocol for that service. Also it is possible to use a scripting language to execute conditionally certain operations over incoming data and to determine what data will be presented to output. In below sections are presented more details pertaining to inbound/outbound protocol configuration and scripting possibilities with examples.    
 
-# How To Start Simulator
+# How To Start Simulator from source
 
 1. cd to simulator installation folder in a console
 2. mvn clean install
@@ -45,7 +45,7 @@ systems
         `-- scenario1.scn
 ```
 
-As it may be seen from folder structure every conversation has three types of config files: inbound.properties, outbound.properties and scenario files like scenario1.scn, scenario2.xml, etc. Inbound.properties file contains configuration for inbound communication protocol/transport and format of the incoming data. Outbound.properties contains configuration for outbound communication protocol/transport and format of the outcoming data. Scenario files contain some instructions for execution of certain operations over incoming data in case of certain conditions and also is indicated the output data.
+As it may be seen from folder structure every conversation has three types of config files: inbound.properties, outbound.properties and scenario files like scenario1.scn, scenario2.scn, etc. Inbound.properties file contains configuration for inbound communication protocol/transport and format of the incoming data. Outbound.properties contains configuration for outbound communication protocol/transport and format of the outgoing data. Scenario files contain some instructions for execution of certain operations over incoming data in case of certain conditions and also the output data is indicated.
 
 Example of inbound.properties is presented below:
 
@@ -76,7 +76,7 @@ true
 invoice;
 ```
 
-Here is used JavaScript language. This script will be executed always and this script just will output "invoice" variable. Any BSF-compatible scripting language is supported.
+Here JavaScript language is used. This script will always be executed and this script just will output "invoice" variable. Any BSF-compatible scripting language is supported.
 
 ## Conversation Required Configurations
 
@@ -94,7 +94,15 @@ As mentioned above every conversation may have one or more scenario files. Every
 * __[when]__ condition for execution of the statements indicated in [execute] block
 * __[execute]__ statements to be executed if conditions indicated in [when] block are true  
 
+Examples of for various configurations can be found in 
+
+```properties
+simulator-core/src/main/resources/systems-sample/ConversationSystemExample
+```
+
 #Simulator Transports
+
+Simulator supports a set of transports that may be configured for input and for output. In the case of http input transport, simulator will start jetty web server that will handle incoming requests. The same is true for rest transport. For other transport types like ftp or jsp, Simulator will try to access an existing ftp server as for input messages, as for output messages. Below are described supported transports:
 
 ## File Transport
 

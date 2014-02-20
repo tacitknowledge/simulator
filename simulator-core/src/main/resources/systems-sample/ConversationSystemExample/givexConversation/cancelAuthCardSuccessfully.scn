@@ -1,0 +1,23 @@
+[language]
+javascript
+
+[when]
+payload.Cancel != null && payload.Cancel.givexNumber.indexOf("111122223333") == 0
+
+[execute]
+var part = payload.Cancel.response;
+part.responseContent = '<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" \
+xmlns:gvxGlobal="https://gapi.givex.com/1.0/types_global" \
+xmlns:gvxTrans="https://gapi.givex.com/1.0/types_trans" \
+SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">\
+<SOAP-ENV:Body>\
+<gvxTrans:CancelResponse>\
+<authCode>' + Math.floor((Math.random()*1000000)+1) + '</authCode>\
+<certBalance></certBalance>\
+<expiryDate></expiryDate>\
+<securityCode></securityCode>\
+</gvxTrans:CancelResponse>\
+</SOAP-ENV:Body>\
+</SOAP-ENV:Envelope>';
+
+payload;

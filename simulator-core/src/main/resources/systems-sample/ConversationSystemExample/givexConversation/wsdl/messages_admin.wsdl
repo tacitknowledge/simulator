@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="gapi"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  
+             targetNamespace="https://gapi.givex.com/1.0/messages_admin"
+             xmlns:tns="https://gapi.givex.com/1.0/messages_admin"
+
+             xmlns:gvxCommon="https://gapi.givex.com/1.0/types_common"
+             xmlns:gvxGlobal="https://gapi.givex.com/1.0/types_global"
+             xmlns:gvxAdmin="https://gapi.givex.com/1.0/types_admin">
+
+  <types>
+    <schema xmlns="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="https://gapi.givex.com/1.0/types_admin">
+      
+      <import namespace="https://gapi.givex.com/1.0/types_common"
+              schemaLocation="types_common.xsd"/>
+
+      <complexType name="EntityListElement">
+        <sequence>
+          <element name="entityId" type="xsd:long" />
+          <element name="listAtt" type="xsd:string" minOccurs="0"
+              maxOccurs="unbounded" />
+        </sequence>
+      </complexType>
+
+      <element name="GetDetail">
+        <complexType>
+          <sequence>
+            <element name="id"             type="gvxCommon:Identification" />
+            <element name="entityType"     type="xsd:string" />
+            <element name="entityId"       type="xsd:long" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="Detail">
+        <complexType>
+          <sequence>
+            <element name="attributes"     type="gvxCommon:AttributeElement" 
+                minOccurs="0" maxOccurs="unbounded" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="Activate">
+        <complexType>
+          <sequence>
+            <element name="id"             type="gvxCommon:Identification" />
+            <element name="entityType"     type="xsd:string" />
+            <element name="entityId"       type="xsd:long" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="ActivateResponse">
+        <complexType>
+          <sequence>
+            <element name="confirmation"  type="xsd:string" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="GetList">
+        <complexType>
+          <sequence>
+            <element name="id"             type="gvxCommon:Identification" />
+            <element name="entityType"     type="xsd:string" />
+            <element name="entityId"       type="xsd:long" />
+            <element name="childType"      type="xsd:string" />
+            <element name="filter"         type="gvxCommon:FilterElement"
+                minOccurs="0" maxOccurs="unbounded" />
+            <element name="attributeNames" type="xsd:string"
+                minOccurs="0" maxOccurs="unbounded" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="List">
+        <complexType>
+          <sequence>
+            <element name="entityId"       type="xsd:long" 
+                minOccurs="0" maxOccurs="unbounded" />
+            <element name="entityList"     type="gvxAdmin:EntityListElement"
+                minOccurs="0" maxOccurs="unbounded" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="Create">
+        <complexType>
+          <sequence>
+            <element name="id"             type="gvxCommon:Identification" />
+            <element name="entityType"     type="xsd:string" />
+            <element name="entityId"       type="xsd:long" />
+            <element name="childType"      type="xsd:string" />
+            <element name="attributes"     type="gvxCommon:AttributeElement" 
+                minOccurs="0" maxOccurs="unbounded" />
+            <element name="profile" type="xsd:string" minOccurs="0" />
+            <element name="country"        type="xsd:string" minOccurs="0" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="CreateResponse">
+        <complexType>
+          <sequence>
+            <element name="entityId"       type="xsd:long" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="Schedule">
+        <complexType>
+          <sequence>
+            <element name="id"             type="gvxCommon:Identification" />
+            <element name="entityType"     type="xsd:string" />
+            <element name="entityId"       type="xsd:long" />
+            <element name="childType"      type="xsd:string" />
+            <element name="attributes"     type="gvxCommon:AttributeElement" 
+                minOccurs="0" maxOccurs="unbounded" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="ScheduleResponse">
+        <complexType>
+          <sequence>
+            <element name="entityId"       type="xsd:long" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="Update">
+        <complexType>
+          <sequence>
+            <element name="id"             type="gvxCommon:Identification" />
+            <element name="entityType"     type="xsd:string" />
+            <element name="entityId"       type="xsd:long" />
+            <element name="attributes"     type="gvxCommon:AttributeElement" 
+                minOccurs="0" maxOccurs="unbounded" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="UpdateResponse">
+        <complexType>
+          <sequence>
+            <element name="confirmation"  type="xsd:string" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="Delete">
+        <complexType>
+          <sequence>
+            <element name="id"          type="gvxCommon:Identification" />
+            <element name="entityType"  type="xsd:string" />
+            <element name="entityId"    type="xsd:long" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="DeleteResponse">
+        <complexType>
+          <sequence>
+            <element name="confirmation"  type="xsd:string" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="GetEvents">
+        <complexType>
+          <sequence>
+            <element name="id"             type="gvxCommon:Identification" />
+            <element name="entityType"     type="xsd:string" />
+            <element name="entityId"       type="xsd:long" />
+            <element name="filter"         type="gvxCommon:FilterElement"
+                minOccurs="0" maxOccurs="unbounded" />
+          </sequence>
+        </complexType>
+      </element>
+      
+      <element name="Events">
+        <complexType>
+          <sequence>
+            <element name="eventHist" type="gvxCommon:EventElement" 
+                minOccurs="0" maxOccurs="unbounded"/>
+          </sequence>
+        </complexType>
+      </element>
+    </schema>  
+  </types>
+
+  <message name="getActivateRequest">
+    <part name="request"  element="gvxAdmin:Activate" />
+  </message>
+  <message name="getActivateResponse">
+    <part name="response" element="gvxAdmin:ActivateResponse" />
+  </message>
+  <message name="getDetailRequest">
+    <part name="request"  element="gvxAdmin:GetDetail" />
+  </message>
+  <message name="getDetailResponse">
+    <part name="response" element="gvxAdmin:Detail" />
+  </message>
+  <message name="getListRequest">
+    <part name="request"  element="gvxAdmin:GetList" />
+  </message>
+  <message name="getListResponse">
+    <part name="response" element="gvxAdmin:List" />
+  </message>
+  <message name="createRequest">
+    <part name="request"  element="gvxAdmin:Create" />
+  </message>
+  <message name="createResponse">
+    <part name="response" element="gvxAdmin:CreateResponse" />
+  </message>
+  <message name="scheduleRequest">
+    <part name="request"  element="gvxAdmin:Schedule" />
+  </message>
+  <message name="scheduleResponse">
+    <part name="response" element="gvxAdmin:ScheduleResponse" />
+  </message>
+  <message name="updateRequest">
+    <part name="request"  element="gvxAdmin:Update" />
+  </message>
+  <message name="updateResponse">
+    <part name="response" element="gvxAdmin:UpdateResponse" />
+  </message>
+  <message name="deleteRequest">
+    <part name="request"  element="gvxAdmin:Delete" />
+  </message>
+  <message name="deleteResponse">
+    <part name="response" element="gvxAdmin:DeleteResponse" />
+  </message>
+  <message name="getEventsRequest">
+    <part name="request"  element="gvxAdmin:GetEvents" />
+  </message>
+  <message name="getEventsResponse">
+    <part name="response" element="gvxAdmin:Events" />
+  </message>
+  
+</definitions>

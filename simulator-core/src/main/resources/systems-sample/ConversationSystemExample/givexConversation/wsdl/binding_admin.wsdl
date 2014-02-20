@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="gapi"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+
+             targetNamespace="https://gapi.givex.com/1.0/binding_admin"
+             xmlns:tns="https://gapi.givex.com/1.0/binding_admin"
+
+             xmlns:gvxAdmin="https://gapi.givex.com/1.0/messages_admin"
+             xmlns:gvxGlobal="https://gapi.givex.com/1.0/messages_global">
+
+  <import namespace="https://gapi.givex.com/1.0/messages_admin"
+          location="messages_admin.wsdl"/>
+  <import namespace="https://gapi.givex.com/1.0/messages_global"
+          location="messages_global.wsdl"/>
+
+  <portType name="adminPortType">
+    <operation name="Activate">
+      <input  message="gvxAdmin:getActivateRequest"  />
+      <output message="gvxAdmin:getActivateResponse" />
+      <fault  name="GivexFaultMessage" message="gvxGlobal:GivexFaultMessage" />
+    </operation>
+    <operation name="GetDetail">
+      <documentation>
+You may optionally receive display information for the
+attributes returned.  Verbosity is set with 'description' to
+'full', 'partial', or 'none'.  These options will describe all
+attributes, non-standard attributes, or no attributes.
+      </documentation>
+      <input  message="gvxAdmin:getDetailRequest"  />
+      <output message="gvxAdmin:getDetailResponse" />
+      <fault  name="GivexFaultMessage" message="gvxGlobal:GivexFaultMessage" />
+    </operation>
+    <operation name="GetList">
+      <documentation>
+The FilterElement is the same one used for GetHistory, however
+the only parameter used for GetList is 'activeFlag'.
+      </documentation>
+      <input  message="gvxAdmin:getListRequest"  />
+      <output message="gvxAdmin:getListResponse" />
+      <fault  name="GivexFaultMessage" message="gvxGlobal:GivexFaultMessage" />
+    </operation>
+    <operation name="Create">
+      <input  message="gvxAdmin:createRequest"  />
+      <output message="gvxAdmin:createResponse" />
+      <fault  name="GivexFaultMessage" message="gvxGlobal:GivexFaultMessage" />
+    </operation>
+    <operation name="Schedule">
+      <input  message="gvxAdmin:scheduleRequest"  />
+      <output message="gvxAdmin:scheduleResponse" />
+      <fault  name="GivexFaultMessage" message="gvxGlobal:GivexFaultMessage" />
+    </operation>
+    <operation name="Update">
+      <input  message="gvxAdmin:updateRequest"  />
+      <output message="gvxAdmin:updateResponse" />
+      <fault  name="GivexFaultMessage" message="gvxGlobal:GivexFaultMessage" />
+    </operation>
+    <operation name="Delete">
+      <input  message="gvxAdmin:deleteRequest"  />
+      <output message="gvxAdmin:deleteResponse" />
+      <fault  name="GivexFaultMessage" message="gvxGlobal:GivexFaultMessage" />
+    </operation>
+    <operation name="GetVersion">
+      <input  message="gvxGlobal:getVersionRequest"  />
+      <output message="gvxGlobal:getVersionResponse" />
+      <fault  name="GivexFaultMessage" message="gvxGlobal:GivexFaultMessage" />
+    </operation>
+    <operation name="GetDescription">
+      <input  message="gvxGlobal:getDescriptionRequest"  />
+      <output message="gvxGlobal:getDescriptionResponse" />
+      <fault  name="GivexFaultMessage" message="gvxGlobal:GivexFaultMessage" />
+    </operation>
+    <operation name="GetEvents">
+      <input  message="gvxAdmin:getEventsRequest"  />
+      <output message="gvxAdmin:getEventsResponse" />
+      <fault  name="GivexFaultMessage" message="gvxGlobal:GivexFaultMessage" />
+    </operation>
+  </portType>
+
+  <binding name="adminBinding" type="tns:adminPortType">
+    <soap:binding style="document"
+        transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="Activate">
+      <soap:operation soapAction="Activate" />
+      <input><soap:body use="literal" /></input>
+      <output><soap:body use="literal" /></output>
+      <fault name="GivexFaultMessage"><soap:fault name="GivexFaultMessage" use="literal"/></fault>
+    </operation>
+    <operation name="GetDetail">
+      <soap:operation soapAction="GetDetail" />
+      <input><soap:body use="literal" /></input>
+      <output><soap:body use="literal" /></output>
+      <fault name="GivexFaultMessage"><soap:fault name="GivexFaultMessage" use="literal"/></fault>
+    </operation>
+    <operation name="GetList">
+      <soap:operation soapAction="GetList" />
+      <input><soap:body use="literal" /></input>
+      <output><soap:body use="literal" /></output>
+      <fault name="GivexFaultMessage"><soap:fault name="GivexFaultMessage" use="literal"/></fault>
+    </operation>
+    <operation name="Create">
+      <soap:operation soapAction="Create" />
+      <input><soap:body use="literal" /></input>
+      <output><soap:body use="literal" /></output>
+      <fault name="GivexFaultMessage"><soap:fault name="GivexFaultMessage" use="literal"/></fault>
+    </operation>
+    <operation name="Schedule">
+      <soap:operation soapAction="Schedule" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+      <fault name="GivexFaultMessage"><soap:fault name="GivexFaultMessage" use="literal"/></fault>
+    </operation>
+    <operation name="Update">
+      <soap:operation soapAction="Update" />
+      <input><soap:body use="literal" /></input>
+      <output><soap:body use="literal" /></output>
+      <fault name="GivexFaultMessage"><soap:fault name="GivexFaultMessage" use="literal"/></fault>
+    </operation>
+    <operation name="Delete">
+      <soap:operation soapAction="Delete" />
+      <input><soap:body use="literal" /></input>
+      <output><soap:body use="literal" /></output>
+      <fault name="GivexFaultMessage"><soap:fault name="GivexFaultMessage" use="literal"/></fault>
+    </operation>
+    <operation name="GetVersion">
+      <soap:operation soapAction="GetVersion" />
+      <input><soap:body use="literal" /></input>
+      <output><soap:body use="literal" /></output>
+      <fault name="GivexFaultMessage"><soap:fault name="GivexFaultMessage" use="literal"/></fault>
+    </operation>
+    <operation name="GetDescription">
+      <soap:operation soapAction="GetDescription" />
+      <input><soap:body use="literal" /></input>
+      <output><soap:body use="literal" /></output>
+      <fault name="GivexFaultMessage"><soap:fault name="GivexFaultMessage" use="literal"/></fault>
+    </operation>
+    <operation name="GetEvents">
+      <soap:operation soapAction="GetEvents" />
+      <input><soap:body use="literal" /></input>
+      <output><soap:body use="literal" /></output>
+      <fault name="GivexFaultMessage"><soap:fault name="GivexFaultMessage" use="literal"/></fault>
+    </operation>
+  </binding>
+
+</definitions>

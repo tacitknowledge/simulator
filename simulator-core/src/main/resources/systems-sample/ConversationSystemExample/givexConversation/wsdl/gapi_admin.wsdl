@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="gapi"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             
+             targetNamespace="https://gapi.givex.com/1.0/gapi.wsdl"
+             xmlns:tns="https://gapi.givex.com/1.0/gapi.wsdl"
+             
+             xmlns:gvxAdmin="https://gapi.givex.com/1.0/binding_admin">
+
+  <import namespace="https://gapi.givex.com/1.0/binding_admin"
+          location="binding_admin.wsdl"/>
+
+  <service name="gapiAdmin">
+    <port name="adminPort" binding="gvxAdmin:adminBinding">
+      <soap:address location="https://gapi.givex.com:50081/1.0/admin/"/>
+    </port>
+  </service>
+
+</definitions>
+
