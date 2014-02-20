@@ -3,13 +3,13 @@
     <parent>
         <artifactId>simulator</artifactId>
         <groupId>com.tacitknowledge</groupId>
-        <version>1.1-SNAPSHOT</version>
+        <version>1.1</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.tacitknowledge</groupId>
     <artifactId>test-system</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.1</version>
     <packaging>jar</packaging>
 
     <name>Simulator Test System</name>
