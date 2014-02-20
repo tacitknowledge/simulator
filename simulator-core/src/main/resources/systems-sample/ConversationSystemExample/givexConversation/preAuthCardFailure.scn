@@ -1,0 +1,24 @@
+[language]
+javascript
+
+[when]
+payload.PreAuth != null && payload.PreAuth.givexNumber.indexOf("1111222233330000") == 0
+
+[execute]
+var port = payload.PreAuth.response;
+port.responseContent = '<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" \
+SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">\
+<SOAP-ENV:Body>\
+<SOAP-ENV:Fault>\
+<faultcode>SOAP-ENV:Server</faultcode>\
+<faultstring>TransErr</faultstring>\
+<detail xmlns:ns1="https://gapi.givex.com/1.0/types_global">\
+<ns1:GivexFaultMessage>\
+<message>Failed to authenticate gift card</message>\
+</ns1:GivexFaultMessage>\
+</detail>\
+</SOAP-ENV:Fault>\
+</SOAP-ENV:Body>\
+</SOAP-ENV:Envelope>';
+
+payload;
