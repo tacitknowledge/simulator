@@ -94,6 +94,12 @@ As mentioned above every conversation may have one or more scenario files. Every
 * __[when]__ condition for execution of the statements indicated in [execute] block
 * __[execute]__ statements to be executed if conditions indicated in [when] block are true  
 
+Examples of for various configurations can be found in 
+
+```properties
+simulator-core/src/main/resources/systems-sample/ConversationSystemExample
+```
+
 #Simulator Transports
 
 Simulator supports a set of transports that may be configured for input and for output. In the case of http input transport, simulator will start jetty web server that will handle incoming requests. The same is true for rest transport. For other transport types like ftp or jsp, Simulator will try to access an existing ftp server as for input messages, as for output messages. Below are described supported transports:
