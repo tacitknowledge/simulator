@@ -10,10 +10,31 @@
 
     <groupId>com.tacitknowledge</groupId>
     <artifactId>simulator</artifactId>
-    <name>Simulator System</name>
     <version>1.0</version>
     <packaging>pom</packaging>
-    
+
+    <name>Simulator System</name>
+    <description>
+        Simulator is a functional tool that allows handling of different transports and their content based on predefined criteria and outputting expected results based on the situation being modeled
+    </description>
+    <url>https://github.com/tacitknowledge/simulator</url>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:https://github.com/tacitknowledge/simulator.git</connection>
+        <developerConnection>scm:git:git@github.com:tacitknowledge/simulator.git</developerConnection>
+        <url>https://github.com/tacitknowledge/simulator</url>
+    </scm>
+
+    <developers>
+    </developers>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <standalone.lib.output.directory>../simulator-core/target/</standalone.lib.output.directory>

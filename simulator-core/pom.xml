@@ -6,11 +6,29 @@
         <version>1.0</version>
     </parent>
 
-    <name>Simulator Core Framework</name>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.tacitknowledge</groupId>
     <artifactId>simulator-core</artifactId>
     <packaging>jar</packaging>
+
+    <name>Simulator Core Framework</name>
+    <url>https://github.com/tacitknowledge/simulator</url>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:https://github.com/tacitknowledge/simulator.git</connection>
+        <developerConnection>scm:git:git@github.com:tacitknowledge/simulator.git</developerConnection>
+        <url>https://github.com/tacitknowledge/simulator</url>
+    </scm>
+
+    <developers>
+    </developers>
 
     <properties>
         <camel.version>2.6.0</camel.version>
