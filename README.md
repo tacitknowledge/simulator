@@ -12,6 +12,8 @@ In order to simulate a third party service you have to define the inbound and ou
 3. cd ./simulator-core
 4. java -DsystemsDirectory=[configuration folder path] -jar ./target/simulator-core.one-jar.jar 
 
+* __[configuration folder path]__ should be the path to the systems folder, that is describes below in __Configuration Folder Structure__ section. 
+
 # Configuration Folder Structure
 
 Configuration folder has one or more system folders. The notion of system is just for grouping of conversations. One ore more conversations are grouped in one system. All systems' folders are grouped in one folder. In the example presented below is present one folder systems, that contains all configured systems, in the below example is present only one system named system1. System1 has following conversations: fileConversation, httpConversation, jmsConversation, restConversation, soapConversation. Every conversation has required files: inbound.properties, outbound.properties and at least one scenario file. This systems folder should be indicated when Simulator application is started.
