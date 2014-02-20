@@ -12,7 +12,7 @@ In order to simulate a third party service you have to define the inbound and ou
 3. cd ./simulator-core
 4. java -DsystemsDirectory=[configuration folder path] -jar ./target/simulator-core.one-jar.jar 
 
-* __[configuration folder path]__ should be the path to the systems folder, that is describes below in __Configuration Folder Structure__ section. 
+* __[configuration folder path]__ should be the path to the systems folder, that is described below in __Configuration Folder Structure__ section. 
 
 # Configuration Folder Structure
 
