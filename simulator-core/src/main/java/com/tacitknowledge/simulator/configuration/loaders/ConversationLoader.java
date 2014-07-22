@@ -170,7 +170,7 @@ public class ConversationLoader
         {
             Properties properties = loadConversationProperties(is);
 
-            return getConversationTransport(Configurable.BOUND_IN, properties);
+            return getConversationTransport(bound, properties);
         }
         finally
         {
@@ -190,7 +190,7 @@ public class ConversationLoader
         {
             Properties properties = loadConversationProperties(is);
 
-            return getConversationAdapter(Configurable.BOUND_IN, properties);
+            return getConversationAdapter(bound, properties);
         }
         finally
         {
